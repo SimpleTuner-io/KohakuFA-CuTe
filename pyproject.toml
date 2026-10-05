@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kohakufa-cute"
+version = "0.1.0"
+description = "CuTe attention with stable large-logit backward for Ada and Hopper"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE", "NOTICE", "LICENSES/*.txt"]
+dependencies = ["torch>=2.11", "packaging>=23"]
+
+[project.optional-dependencies]
+cuda = ["nvidia-cutlass-dsl>=4.8,<4.9", "apache-tvm-ffi>=0.1.14,<0.2", "ninja>=1.11", "triton>=3.6,<4"]
+dev = ["build", "black==24.8.0", "isort==5.13.2"]
+plots = ["matplotlib>=3.8"]
+
+[project.urls]
+Repository = "https://github.com/SimpleTuner-io/KohakuFA-CuTe"
+Origin = "https://github.com/KohakuBlueleaf/KohakuFA"
+Integration = "https://github.com/bghira/SimpleTuner/pull/3256"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+kohakufa_cute = ["native.cpp", "py.typed"]
+
+[tool.black]
+line-length = 125
+target-version = ["py312", "py313"]
+
+[tool.isort]
+profile = "black"
+line_length = 125
+known_first_party = ["kohakufa_cute"]

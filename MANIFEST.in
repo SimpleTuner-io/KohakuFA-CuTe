@@ -1,0 +1,3 @@
+recursive-include benchmarks *.py
+recursive-include tests *.py
+recursive-include results *.md *.json *.svg

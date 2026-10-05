@@ -1,0 +1,79 @@
+{
+  "kernel_sha256": "62fe6d18457c5d6443b0c2b08efb37803073257fc3f15d4c13be7d39a54cba9c",
+  "kernel_source": "SimpleTuner commit 128a33f2b; byte-identical kernels.py",
+  "local": {
+    "tests": 37,
+    "passed": 11,
+    "skipped": 26,
+    "skips": "CUDA kernel and training tests",
+    "mps": "forward and gradient parity passed"
+  },
+  "cuda": {
+    "h100": {
+      "environment": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "capability": [
+          9,
+          0
+        ],
+        "python": "3.13.11",
+        "torch": "2.11.0+cu128",
+        "cuda": "12.8",
+        "cudnn": 91900,
+        "dependencies": {
+          "nvidia-cutlass-dsl": "4.8.0",
+          "apache-tvm-ffi": "0.1.14.post1",
+          "ninja": "1.13.2",
+          "triton": "3.6.0"
+        }
+      },
+      "kernel_regressions": {
+        "tests": 22,
+        "passed": 22
+      },
+      "api_reference_training": {
+        "tests": 15,
+        "passed": 14,
+        "skipped": 1,
+        "skip": "MPS unavailable"
+      },
+      "commands": [
+        "python -m unittest -v -f tests.test_kernels",
+        "python -m unittest -v -f tests.test_api tests.test_reference tests.test_training"
+      ]
+    },
+    "l40s": {
+      "environment": {
+        "device": "NVIDIA L40S",
+        "capability": [
+          8,
+          9
+        ],
+        "python": "3.13.11",
+        "torch": "2.11.0+cu128",
+        "cuda": "12.8",
+        "cudnn": 91900,
+        "dependencies": {
+          "nvidia-cutlass-dsl": "4.8.0",
+          "apache-tvm-ffi": "0.1.14.post1",
+          "ninja": "1.13.2",
+          "triton": "3.6.0"
+        }
+      },
+      "kernel_regressions": {
+        "tests": 22,
+        "passed": 22
+      },
+      "api_reference_training": {
+        "tests": 15,
+        "passed": 14,
+        "skipped": 1,
+        "skip": "MPS unavailable"
+      },
+      "commands": [
+        "python -m unittest -v -f tests.test_kernels",
+        "python -m unittest -v -f tests.test_api tests.test_reference tests.test_training"
+      ]
+    }
+  }
+}

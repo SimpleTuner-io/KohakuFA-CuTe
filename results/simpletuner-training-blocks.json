@@ -1,0 +1,717 @@
+{
+  "measurement": "CUDA event milliseconds per complete optimizer step",
+  "warmup_steps": 20,
+  "timed_steps": 100,
+  "repeats": 12,
+  "ordering": "rotate backend order each repetition",
+  "reports": [
+    {
+      "device": "NVIDIA H100 80GB HBM3",
+      "torch": "2.11.0+cu128",
+      "family": "flux",
+      "shape": [
+        1,
+        4096,
+        3072
+      ],
+      "lora": true,
+      "checkpoint": true,
+      "compiled": true,
+      "learning_rate": 0.0,
+      "weights": "random initialization; production block dimensions; same model and inputs reused across backends",
+      "trainable_parameters": 2457600,
+      "steps_per_sample": 100,
+      "samples": [
+        {
+          "backend": "sdpa",
+          "repeat": 0,
+          "wall_ms_per_step": 10.622350769117475,
+          "cuda_ms_per_step": 10.6219921875,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 0,
+          "wall_ms_per_step": 11.515481192618608,
+          "cuda_ms_per_step": 11.515179443359376,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 0,
+          "wall_ms_per_step": 11.464825673028827,
+          "cuda_ms_per_step": 11.464482421875,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 1,
+          "wall_ms_per_step": 11.53635473921895,
+          "cuda_ms_per_step": 11.536031494140625,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 1,
+          "wall_ms_per_step": 11.429589623585343,
+          "cuda_ms_per_step": 11.429251708984374,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 1,
+          "wall_ms_per_step": 10.581109076738358,
+          "cuda_ms_per_step": 10.5808447265625,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 2,
+          "wall_ms_per_step": 11.460021222010255,
+          "cuda_ms_per_step": 11.459718017578124,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 2,
+          "wall_ms_per_step": 10.598465129733086,
+          "cuda_ms_per_step": 10.598145751953124,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 2,
+          "wall_ms_per_step": 11.575508788228035,
+          "cuda_ms_per_step": 11.5752294921875,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 3,
+          "wall_ms_per_step": 10.629683546721935,
+          "cuda_ms_per_step": 10.62941162109375,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 3,
+          "wall_ms_per_step": 11.586884642019868,
+          "cuda_ms_per_step": 11.586553955078125,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 3,
+          "wall_ms_per_step": 11.473999442532659,
+          "cuda_ms_per_step": 11.473714599609375,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 4,
+          "wall_ms_per_step": 11.560699976980686,
+          "cuda_ms_per_step": 11.560350341796875,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 4,
+          "wall_ms_per_step": 11.471813209354877,
+          "cuda_ms_per_step": 11.471478271484376,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 4,
+          "wall_ms_per_step": 10.65991492010653,
+          "cuda_ms_per_step": 10.65962158203125,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 5,
+          "wall_ms_per_step": 11.474067075178027,
+          "cuda_ms_per_step": 11.473720703125,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 5,
+          "wall_ms_per_step": 10.705856774002314,
+          "cuda_ms_per_step": 10.705582275390626,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 5,
+          "wall_ms_per_step": 11.583048282191157,
+          "cuda_ms_per_step": 11.582781982421874,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 6,
+          "wall_ms_per_step": 10.668325228616595,
+          "cuda_ms_per_step": 10.668021240234374,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 6,
+          "wall_ms_per_step": 11.569125261157751,
+          "cuda_ms_per_step": 11.568756103515625,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 6,
+          "wall_ms_per_step": 11.48274858482182,
+          "cuda_ms_per_step": 11.482437744140626,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 7,
+          "wall_ms_per_step": 11.581894401460886,
+          "cuda_ms_per_step": 11.5816064453125,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 7,
+          "wall_ms_per_step": 11.4797483664006,
+          "cuda_ms_per_step": 11.479473876953126,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 7,
+          "wall_ms_per_step": 10.691450340673327,
+          "cuda_ms_per_step": 10.69119140625,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 8,
+          "wall_ms_per_step": 11.493273181840777,
+          "cuda_ms_per_step": 11.492979736328126,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 8,
+          "wall_ms_per_step": 10.643475530669093,
+          "cuda_ms_per_step": 10.643204345703126,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 8,
+          "wall_ms_per_step": 11.587010389193892,
+          "cuda_ms_per_step": 11.586632080078125,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 9,
+          "wall_ms_per_step": 10.636603171005845,
+          "cuda_ms_per_step": 10.636317138671876,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 9,
+          "wall_ms_per_step": 11.57462902367115,
+          "cuda_ms_per_step": 11.57434326171875,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 9,
+          "wall_ms_per_step": 11.498466664925218,
+          "cuda_ms_per_step": 11.498192138671875,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 10,
+          "wall_ms_per_step": 11.589682390913367,
+          "cuda_ms_per_step": 11.5893505859375,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 10,
+          "wall_ms_per_step": 11.49057156406343,
+          "cuda_ms_per_step": 11.490264892578125,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 10,
+          "wall_ms_per_step": 10.621982356533408,
+          "cuda_ms_per_step": 10.621673583984375,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 11,
+          "wall_ms_per_step": 11.504293670877814,
+          "cuda_ms_per_step": 11.503968505859374,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 11,
+          "wall_ms_per_step": 10.64712317660451,
+          "cuda_ms_per_step": 10.646790771484374,
+          "peak_vram_gib": 1.629190444946289,
+          "initial_loss": 2.0077929496765137,
+          "final_loss": 2.0077929496765137
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 11,
+          "wall_ms_per_step": 11.571574648842216,
+          "cuda_ms_per_step": 11.571239013671875,
+          "peak_vram_gib": 1.6296019554138184,
+          "initial_loss": 2.0077927112579346,
+          "final_loss": 2.0077927112579346
+        }
+      ],
+      "median_wall_ms_per_step": {
+        "sdpa": 10.640039350837469,
+        "cute-strict": 11.575068905949593,
+        "cute-auto": 11.476907720789313
+      },
+      "median_cuda_ms_per_step": {
+        "sdpa": 10.639760742187502,
+        "cute-strict": 11.574786376953124,
+        "cute-auto": 11.476597290039063
+      },
+      "source": "SimpleTuner CuTe integration; compiled checkpointed transformer block, LoRA rank 16"
+    },
+    {
+      "device": "NVIDIA H100 80GB HBM3",
+      "torch": "2.11.0+cu128",
+      "family": "minimax",
+      "shape": [
+        1,
+        4096,
+        5376
+      ],
+      "lora": true,
+      "checkpoint": true,
+      "compiled": true,
+      "learning_rate": 0.0,
+      "weights": "random initialization; production block dimensions; same model and inputs reused across backends",
+      "trainable_parameters": 3254272,
+      "steps_per_sample": 100,
+      "samples": [
+        {
+          "backend": "sdpa",
+          "repeat": 0,
+          "wall_ms_per_step": 24.20959916897118,
+          "cuda_ms_per_step": 24.2089453125,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 0,
+          "wall_ms_per_step": 25.70801604539156,
+          "cuda_ms_per_step": 25.7076123046875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 0,
+          "wall_ms_per_step": 25.714364489540458,
+          "cuda_ms_per_step": 25.7139404296875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 1,
+          "wall_ms_per_step": 25.71348486468196,
+          "cuda_ms_per_step": 25.71315185546875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 1,
+          "wall_ms_per_step": 25.763420974835753,
+          "cuda_ms_per_step": 25.763046875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 1,
+          "wall_ms_per_step": 24.211290385574102,
+          "cuda_ms_per_step": 24.21068603515625,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 2,
+          "wall_ms_per_step": 25.74459752999246,
+          "cuda_ms_per_step": 25.74410888671875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 2,
+          "wall_ms_per_step": 24.270508978515863,
+          "cuda_ms_per_step": 24.26994384765625,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 2,
+          "wall_ms_per_step": 25.658760545775294,
+          "cuda_ms_per_step": 25.65836181640625,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 3,
+          "wall_ms_per_step": 24.2177520878613,
+          "cuda_ms_per_step": 24.21740234375,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 3,
+          "wall_ms_per_step": 25.630667405202985,
+          "cuda_ms_per_step": 25.63026611328125,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 3,
+          "wall_ms_per_step": 25.570705914869905,
+          "cuda_ms_per_step": 25.57034423828125,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 4,
+          "wall_ms_per_step": 25.689840596169233,
+          "cuda_ms_per_step": 25.689443359375,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 4,
+          "wall_ms_per_step": 25.689326832070947,
+          "cuda_ms_per_step": 25.6889013671875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 4,
+          "wall_ms_per_step": 24.204134503379464,
+          "cuda_ms_per_step": 24.2037060546875,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 5,
+          "wall_ms_per_step": 25.63278785906732,
+          "cuda_ms_per_step": 25.63233154296875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 5,
+          "wall_ms_per_step": 24.18803500942886,
+          "cuda_ms_per_step": 24.18755615234375,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 5,
+          "wall_ms_per_step": 25.64215368591249,
+          "cuda_ms_per_step": 25.64177001953125,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 6,
+          "wall_ms_per_step": 24.18658509850502,
+          "cuda_ms_per_step": 24.18622314453125,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 6,
+          "wall_ms_per_step": 25.69569882005453,
+          "cuda_ms_per_step": 25.69515869140625,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 6,
+          "wall_ms_per_step": 25.667463820427656,
+          "cuda_ms_per_step": 25.667060546875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 7,
+          "wall_ms_per_step": 25.658533349633217,
+          "cuda_ms_per_step": 25.658173828125,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 7,
+          "wall_ms_per_step": 25.66183863207698,
+          "cuda_ms_per_step": 25.6614892578125,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 7,
+          "wall_ms_per_step": 24.175017410889268,
+          "cuda_ms_per_step": 24.1746435546875,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 8,
+          "wall_ms_per_step": 25.677774446085095,
+          "cuda_ms_per_step": 25.67740234375,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 8,
+          "wall_ms_per_step": 24.246615124866366,
+          "cuda_ms_per_step": 24.2462158203125,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 8,
+          "wall_ms_per_step": 25.681115612387657,
+          "cuda_ms_per_step": 25.6806298828125,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 9,
+          "wall_ms_per_step": 24.222338097169995,
+          "cuda_ms_per_step": 24.22196044921875,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 9,
+          "wall_ms_per_step": 25.667061051353812,
+          "cuda_ms_per_step": 25.6666064453125,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 9,
+          "wall_ms_per_step": 25.669784266501665,
+          "cuda_ms_per_step": 25.66914794921875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 10,
+          "wall_ms_per_step": 25.699731316417456,
+          "cuda_ms_per_step": 25.69929443359375,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 10,
+          "wall_ms_per_step": 25.662683695554733,
+          "cuda_ms_per_step": 25.662255859375,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 10,
+          "wall_ms_per_step": 24.180275881662965,
+          "cuda_ms_per_step": 24.17990234375,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-auto",
+          "repeat": 11,
+          "wall_ms_per_step": 25.66412303596735,
+          "cuda_ms_per_step": 25.6636669921875,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "sdpa",
+          "repeat": 11,
+          "wall_ms_per_step": 24.15427016094327,
+          "cuda_ms_per_step": 24.15390380859375,
+          "peak_vram_gib": 2.906167984008789,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        },
+        {
+          "backend": "cute-strict",
+          "repeat": 11,
+          "wall_ms_per_step": 25.635446021333337,
+          "cuda_ms_per_step": 25.6351025390625,
+          "peak_vram_gib": 2.907021999359131,
+          "initial_loss": 2.0030553340911865,
+          "final_loss": 2.0030553340911865
+        }
+      ],
+      "median_wall_ms_per_step": {
+        "sdpa": 24.206866836175323,
+        "cute-strict": 25.674088331870735,
+        "cute-auto": 25.66862404346466
+      },
+      "median_cuda_ms_per_step": {
+        "sdpa": 24.20632568359375,
+        "cute-strict": 25.6736181640625,
+        "cute-auto": 25.668104248046873
+      },
+      "source": "SimpleTuner CuTe integration; compiled checkpointed transformer block, LoRA rank 16"
+    }
+  ]
+}

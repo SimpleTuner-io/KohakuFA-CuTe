@@ -1,5 +1,7 @@
 # Measurements
 
+[RTX 5090 full-width D512 tiles](sm120-wide-tiles/README.md) records paired main/SDPA timings, shared score work, assembly comparisons, scheduling controls, and FP64 qualification.
+
 [RTX 5090 pipeline profiling](sm120-pipeline-profiling/README.md) records Nsight captures, fitting D256 TMA stages, rejected pipeline schedules, and dense/causal qualification.
 
 [Blackwell probability overlap from latency interventions](blackwell-intervention-profiling/README.md) records controlled role delays, shorter dV register lifetimes, early FP32 probability reconstruction, and dense/causal qualification.

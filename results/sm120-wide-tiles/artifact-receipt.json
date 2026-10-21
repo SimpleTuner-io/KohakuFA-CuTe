@@ -1,0 +1,53 @@
+{
+  "storage": "KohakuFA-CuTe-artifacts beside the checkout; raw captures are external.",
+  "archives": [
+    {
+      "archive": "kohakufa-sm120-stage-attribution-evidence-v1-20261021.tar.gz",
+      "bytes": 6579809,
+      "sha256": "5cf26ed33eb4cefa039e564257e307a10e36e63f6de203a7a09e967cfcdd3dc7",
+      "manifest_files": 564,
+      "all_manifest_files_verified": true,
+      "location": "2026-10-21-sm120-stage-attribution"
+    },
+    {
+      "archive": "kohakufa-sm120-stage-attribution-extension-v2-20261021.tar.gz",
+      "bytes": 3026178,
+      "sha256": "6b12d546b60c2220a09e8c3fab477f2a6d25c38e3382b43a69a6a9e235c35514",
+      "manifest_files": 38,
+      "all_manifest_files_verified": true,
+      "location": "2026-10-21-sm120-stage-attribution"
+    },
+    {
+      "archive": "kohakufa-sm120-stage-attribution-extension-v3-20261021.tar.gz",
+      "bytes": 9380312,
+      "sha256": "42b2696f0f13179a3dea8ee2fd118ad1b7b6af2e05a721bcb248372dfcfe5e79",
+      "manifest_files": 57,
+      "all_manifest_files_verified": true,
+      "location": "2026-10-21-sm120-stage-attribution"
+    },
+    {
+      "archive": "kohakufa-sm120-stage-attribution-extension-v4-20261021.tar.gz",
+      "bytes": 5212501,
+      "sha256": "666946e4449134e1c44d0ed2e11837d9a1f9bbfdd9c5ae943250404c5bbfb031",
+      "manifest_files": 30,
+      "all_manifest_files_verified": true,
+      "location": "2026-10-21-sm120-stage-attribution"
+    },
+    {
+      "archive": "kohakufa-sm120-stage-root-oldhost-20261021.tar.gz",
+      "bytes": 2532627,
+      "sha256": "84e82250c29ce29d57cac7e61ea0b9f9b954aaa1770d97dbe244907c00a48773",
+      "manifest_files": 126,
+      "all_manifest_files_verified": true,
+      "location": "2026-10-21-sm120-wide-tiles"
+    },
+    {
+      "archive": "kohakufa-sm120-wide-stable-20261021.tar.gz",
+      "bytes": 29535118,
+      "sha256": "8f9e3d3ea8329cb7cc966e61b974512069aa5deae36e8aae9a732cae5864025f",
+      "manifest_files": 1753,
+      "all_manifest_files_verified": true,
+      "location": "2026-10-21-sm120-wide-tiles"
+    }
+  ]
+}

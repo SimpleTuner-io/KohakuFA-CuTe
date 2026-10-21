@@ -1,0 +1,458 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="520" viewBox="0 0 1160 520">
+<rect width="100%" height="100%" fill="#fff"/>
+<style>text{font-family:Arial,sans-serif;fill:#172b4d} .small{font-size:12px}.label{font-size:14px}</style>
+<text x="28" y="34" font-size="22" font-weight="bold">GPU context events align with stretched kernel spans</text>
+<text x="28" y="60" font-size="14">RTX 5090 · BF16 · D512 · S1024 · dense · native CUDA graphs · no telemetry collectors</text>
+<text x="28" y="84" font-size="13">Raw kernel intervals stay intact. Shading marks SAVE_END → next RESTORE_START; no latency subtraction.</text>
+<line x1="155.00" y1="110" x2="155.00" y2="371" stroke="#e5eaf0"/>
+<text x="155.00" y="394" text-anchor="middle" class="small">0</text>
+<line x1="276.25" y1="110" x2="276.25" y2="371" stroke="#e5eaf0"/>
+<text x="276.25" y="394" text-anchor="middle" class="small">75</text>
+<line x1="397.50" y1="110" x2="397.50" y2="371" stroke="#e5eaf0"/>
+<text x="397.50" y="394" text-anchor="middle" class="small">150</text>
+<line x1="518.75" y1="110" x2="518.75" y2="371" stroke="#e5eaf0"/>
+<text x="518.75" y="394" text-anchor="middle" class="small">225</text>
+<line x1="640.00" y1="110" x2="640.00" y2="371" stroke="#e5eaf0"/>
+<text x="640.00" y="394" text-anchor="middle" class="small">300</text>
+<line x1="761.25" y1="110" x2="761.25" y2="371" stroke="#e5eaf0"/>
+<text x="761.25" y="394" text-anchor="middle" class="small">375</text>
+<line x1="882.50" y1="110" x2="882.50" y2="371" stroke="#e5eaf0"/>
+<text x="882.50" y="394" text-anchor="middle" class="small">450</text>
+<line x1="1003.75" y1="110" x2="1003.75" y2="371" stroke="#e5eaf0"/>
+<text x="1003.75" y="394" text-anchor="middle" class="small">525</text>
+<line x1="1125.00" y1="110" x2="1125.00" y2="371" stroke="#e5eaf0"/>
+<text x="1125.00" y="394" text-anchor="middle" class="small">600</text>
+<rect x="196.81" y="110" width="52.94" height="261" fill="#ffe5a8" opacity=".68"/>
+<rect x="362.15" y="110" width="49.19" height="261" fill="#ffe5a8" opacity=".68"/>
+<rect x="524.68" y="110" width="48.80" height="261" fill="#ffe5a8" opacity=".68"/>
+<rect x="686.66" y="110" width="47.42" height="261" fill="#ffe5a8" opacity=".68"/>
+<rect x="848.36" y="110" width="49.92" height="261" fill="#ffe5a8" opacity=".68"/>
+<rect x="1011.79" y="110" width="47.26" height="261" fill="#ffe5a8" opacity=".68"/>
+<text x="20" y="163" class="label">CuTe control</text>
+<rect x="155.00" y="145" width="0.81" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5016 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="155.81" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="155.82" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3483 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="158.00" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4166 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="160.30" y="145" width="0.78" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4821 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="161.08" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="161.09" y="145" width="2.17" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3429 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="163.26" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4162 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="165.55" y="145" width="0.81" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5031 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="166.37" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="166.38" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3456 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="168.56" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4160 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="170.85" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5097 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="171.67" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="171.69" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3474 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="173.87" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4134 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="176.15" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4936 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="176.95" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="176.97" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3461 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="179.14" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4101 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="181.43" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4943 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="182.23" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="182.24" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3482 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="184.42" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4137 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="186.71" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4977 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="187.51" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0085 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="187.53" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3495 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="189.71" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4105 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="191.99" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4923 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="192.79" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="192.80" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3469 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="194.98" y="145" width="55.43" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 34.2897 ms, context-interval overlap 32.7455 ms</title></rect>
+<rect x="250.42" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5057 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="251.24" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0118 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="251.26" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3485 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="253.44" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4073 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="255.71" y="145" width="0.78" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4852 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="256.50" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="256.51" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3463 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="258.69" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4100 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="260.97" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5054 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="261.79" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="261.80" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3469 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="263.98" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4087 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="266.26" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4940 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="267.06" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="267.07" y="145" width="2.17" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3448 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="269.25" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4116 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="271.53" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5096 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="272.36" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0085 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="272.37" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3485 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="274.55" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4161 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="276.84" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="277.67" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="277.68" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3505 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="279.86" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4133 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="282.15" y="145" width="0.79" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4905 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="282.95" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="282.96" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3503 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="285.14" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4099 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="287.42" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5070 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="288.24" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="288.26" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3483 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="290.44" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4166 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="292.73" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4927 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="293.53" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="293.54" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3461 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="295.72" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4160 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="298.01" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5070 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="298.83" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="298.84" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3509 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="301.03" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4138 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="303.32" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4950 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="304.12" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="304.13" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3469 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="306.31" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4122 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="308.59" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5046 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="309.41" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="309.42" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3477 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="311.60" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4117 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="313.89" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4932 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="314.69" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="314.70" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3463 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="316.88" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4178 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="319.17" y="145" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.5069 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="319.99" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="320.01" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3465 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="322.18" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4109 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="324.47" y="145" width="0.81" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4989 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="325.27" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="325.29" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3479 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="327.47" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4133 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="329.76" y="145" width="0.78" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4810 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="330.53" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="330.55" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3468 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="332.73" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4074 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="335.00" y="145" width="0.77" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4743 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="335.77" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="335.79" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3454 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="337.96" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4120 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="340.25" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4946 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="341.05" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="341.06" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3472 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="343.24" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4123 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="345.53" y="145" width="0.79" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4859 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="346.31" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0085 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="346.32" y="145" width="2.19" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3537 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="348.51" y="145" width="2.29" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4167 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="350.81" y="145" width="0.78" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4854 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="351.59" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="351.61" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3455 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="353.78" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4077 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="356.06" y="145" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 0.4919 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="356.85" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="356.87" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3473 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="359.05" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4100 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="361.33" y="145" width="50.09" height="28" rx="1" fill="#3478c0"><title>CuTe control: forward, raw duration 30.9865 ms, context-interval overlap 30.4263 ms</title></rect>
+<rect x="411.42" y="145" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe control: delta / copy, raw duration 0.0089 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="411.44" y="145" width="2.18" height="28" rx="1" fill="#249d7e"><title>CuTe control: query / fill, raw duration 1.3465 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="413.61" y="145" width="2.28" height="28" rx="1" fill="#9466b5"><title>CuTe control: KV / backward, raw duration 1.4075 ms, context-interval overlap 0.0000 ms</title></rect>
+<text x="20" y="248" class="label">CuTe split query</text>
+<rect x="437.64" y="230" width="0.83" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5116 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="438.47" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="438.48" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7398 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="439.68" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3839 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="441.92" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4950 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="442.72" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="442.73" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7395 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="443.93" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3846 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="446.17" y="230" width="0.83" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5136 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="447.00" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="447.02" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7430 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="448.22" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3855 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="450.46" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5086 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="451.28" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="451.30" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7414 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="452.50" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3886 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="454.75" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4943 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="455.54" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="455.56" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7407 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="456.76" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3853 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="459.00" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4946 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="459.80" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="459.81" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7441 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="461.01" y="230" width="2.25" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3918 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="463.27" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4938 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="464.07" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="464.08" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7389 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="465.27" y="230" width="2.23" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3818 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="467.51" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4931 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="468.31" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="468.32" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7381 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="469.51" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3827 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="471.76" y="230" width="0.77" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4789 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="472.53" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="472.54" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7375 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="473.74" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3862 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="475.98" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4929 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="476.78" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="476.79" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7371 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="477.98" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3856 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="480.23" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5050 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="481.04" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="481.06" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7387 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="482.25" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3836 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="484.49" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4965 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="485.30" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="485.31" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7372 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="486.50" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3838 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="488.74" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5072 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="489.56" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="489.58" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7435 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="490.78" y="230" width="2.25" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3916 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="493.03" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5098 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="493.86" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="493.87" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7407 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="495.07" y="230" width="2.25" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3902 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="497.32" y="230" width="0.79" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4901 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="498.11" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="498.12" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7411 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="499.32" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3862 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="501.57" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5065 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="502.39" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="502.40" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7419 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="503.60" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3845 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="505.84" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5055 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="506.66" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="506.67" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7401 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="507.87" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3843 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="510.11" y="230" width="0.83" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5149 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="510.94" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="510.96" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7433 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="512.16" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3833 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="514.40" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4939 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="515.20" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="515.21" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7377 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="516.40" y="230" width="2.25" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3891 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="518.65" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4956 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="519.45" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="519.47" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7361 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="520.66" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3835 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="522.90" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4919 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="523.69" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="523.71" y="230" width="50.14" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 31.0170 ms, context-interval overlap 30.1856 ms</title></rect>
+<rect x="573.85" y="230" width="2.59" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.6022 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="576.44" y="230" width="0.81" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4996 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="577.25" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="577.26" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7365 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="578.46" y="230" width="2.25" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3893 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="580.71" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4939 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="581.51" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="581.52" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7393 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="582.71" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3873 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="584.96" y="230" width="0.83" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5130 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="585.79" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="585.80" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7432 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="587.00" y="230" width="2.25" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3911 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="589.26" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4976 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="590.06" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0082 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="590.08" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7399 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="591.27" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3859 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="593.52" y="230" width="0.77" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4765 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="594.29" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="594.30" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7368 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="595.49" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3854 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="597.74" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5072 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="598.56" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="598.57" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7372 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="599.76" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3834 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="602.00" y="230" width="0.81" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5029 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="602.82" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0085 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="602.83" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7389 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="604.02" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3837 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="606.27" y="230" width="0.84" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5181 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="607.10" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="607.12" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7385 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="608.31" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3853 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="610.55" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4954 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="611.36" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="611.37" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7374 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="612.56" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3849 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1071.73" y="230" width="0.81" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4985 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1072.54" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1072.55" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7410 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1073.75" y="230" width="2.25" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3914 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1076.00" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4927 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1076.80" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1076.81" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7366 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1078.00" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3834 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1080.25" y="230" width="0.83" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5149 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1081.08" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1081.09" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7403 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1082.29" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3830 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1084.53" y="230" width="0.83" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5116 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1085.36" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1085.37" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7389 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1086.56" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3839 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1088.81" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4943 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1089.61" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0085 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1089.62" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7368 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1090.81" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3886 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1093.06" y="230" width="0.83" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5157 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1093.89" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0079 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1093.91" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7405 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1095.10" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3865 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1097.35" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4935 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1098.15" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0080 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1098.16" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7379 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1099.35" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3860 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1101.60" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5078 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1102.42" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1102.43" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7407 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1103.63" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3861 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1105.88" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4942 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1106.68" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0085 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1106.69" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7422 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1107.89" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3836 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1110.13" y="230" width="0.82" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5093 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1110.95" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0083 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1110.97" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7404 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1112.16" y="230" width="2.23" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3823 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1114.40" y="230" width="0.77" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4762 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1115.17" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1115.19" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7367 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1116.38" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3861 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1118.62" y="230" width="0.81" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.5016 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1119.43" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0081 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1119.45" y="230" width="1.20" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7412 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1120.64" y="230" width="2.24" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3829 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1122.88" y="230" width="0.80" height="28" rx="1" fill="#3478c0"><title>CuTe split query: forward, raw duration 0.4939 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1123.68" y="230" width="0.30" height="28" rx="1" fill="#7895a8"><title>CuTe split query: delta / copy, raw duration 0.0084 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1123.70" y="230" width="1.19" height="28" rx="1" fill="#249d7e"><title>CuTe split query: query / fill, raw duration 0.7381 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="1124.89" y="230" width="0.30" height="28" rx="1" fill="#9466b5"><title>CuTe split query: KV / backward, raw duration 1.3855 ms, context-interval overlap 0.0000 ms</title></rect>
+<text x="20" y="333" class="label">Torch SDPA</text>
+<rect x="656.56" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5584 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="657.47" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="657.50" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0339 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="657.55" y="315" width="7.27" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4970 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="664.83" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5569 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="665.73" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0200 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="665.76" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0330 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="665.81" y="315" width="7.37" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5562 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="673.18" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5580 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="674.09" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="674.12" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0334 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="674.17" y="315" width="7.27" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4950 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="681.44" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5582 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="682.34" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0200 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="682.38" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0340 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="682.43" y="315" width="54.87" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 33.9413 ms, context-interval overlap 29.3350 ms</title></rect>
+<rect x="737.31" y="315" width="0.89" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5536 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="738.20" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="738.23" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0337 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="738.29" y="315" width="7.28" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5014 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="745.57" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5590 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="746.47" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="746.51" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0327 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="746.56" y="315" width="7.28" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5038 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="753.84" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5578 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="754.75" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0200 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="754.78" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0328 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="754.83" y="315" width="7.30" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5134 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="762.13" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5586 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="763.04" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="763.07" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0338 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="763.12" y="315" width="7.26" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4920 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="770.39" y="315" width="0.91" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5601 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="771.29" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="771.33" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0331 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="771.38" y="315" width="7.33" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5315 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="778.71" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5569 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="779.61" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="779.64" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0334 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="779.70" y="315" width="7.34" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5390 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="787.04" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5586 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="787.94" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="787.97" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0331 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="788.02" y="315" width="7.28" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5006 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="795.31" y="315" width="0.91" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5620 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="796.21" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="796.25" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0323 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="796.30" y="315" width="7.25" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4818 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="803.55" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5595 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="804.45" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="804.49" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0336 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="804.54" y="315" width="7.28" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5008 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="811.82" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5581 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="812.72" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0200 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="812.75" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0330 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="812.81" y="315" width="7.30" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5140 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="820.11" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5561 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="821.01" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="821.04" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0341 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="821.10" y="315" width="7.25" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4868 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="828.35" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5582 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="829.26" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0204 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="829.29" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0327 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="829.34" y="315" width="7.27" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4943 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="836.61" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5560 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="837.51" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0200 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="837.54" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0333 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="837.60" y="315" width="7.29" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5116 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="844.90" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5537 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="845.79" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="845.82" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0335 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="845.88" y="315" width="57.36" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 35.4821 ms, context-interval overlap 30.8779 ms</title></rect>
+<rect x="903.24" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5591 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="904.15" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="904.18" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0328 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="904.23" y="315" width="7.29" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5120 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="911.53" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5548 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="912.43" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="912.46" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0329 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="912.51" y="315" width="7.26" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4886 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="919.77" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5559 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="920.67" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="920.71" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0329 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="920.76" y="315" width="7.29" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5097 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="928.05" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5548 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="928.95" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="928.98" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0349 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="929.04" y="315" width="7.27" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4981 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="936.32" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5573 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="937.22" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="937.25" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0324 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="937.30" y="315" width="7.33" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5352 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="944.64" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5586 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="945.54" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0203 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="945.57" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0341 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="945.63" y="315" width="7.26" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4880 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="952.89" y="315" width="0.91" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5606 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="953.79" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="953.82" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0333 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="953.88" y="315" width="7.28" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5048 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="961.16" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5597 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="962.07" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0202 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="962.10" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0332 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="962.15" y="315" width="7.37" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5561 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="969.53" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5561 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="970.42" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="970.46" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0326 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="970.51" y="315" width="7.30" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5163 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="977.82" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5569 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="978.72" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0201 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="978.75" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0337 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="978.80" y="315" width="7.30" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.5126 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="986.10" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5573 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="987.00" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0199 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="987.04" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0336 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="987.09" y="315" width="7.25" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4856 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="994.35" y="315" width="0.90" height="28" rx="1" fill="#3478c0"><title>Torch SDPA: forward, raw duration 0.5589 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="995.25" y="315" width="0.30" height="28" rx="1" fill="#7895a8"><title>Torch SDPA: delta / copy, raw duration 0.0203 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="995.28" y="315" width="0.30" height="28" rx="1" fill="#249d7e"><title>Torch SDPA: query / fill, raw duration 0.0336 ms, context-interval overlap 0.0000 ms</title></rect>
+<rect x="995.34" y="315" width="7.25" height="28" rx="1" fill="#9466b5"><title>Torch SDPA: KV / backward, raw duration 4.4858 ms, context-interval overlap 0.0000 ms</title></rect>
+<text x="640" y="420" text-anchor="middle" font-size="14">Time within displayed window (ms)</text>
+<rect x="28" y="446" width="18" height="14" fill="#ffe5a8"/><text x="54" y="458" class="small">Observed context interval</text>
+<rect x="270" y="446" width="18" height="14" fill="#3478c0"/>
+<text x="296" y="458" class="small">forward</text>
+<rect x="480" y="446" width="18" height="14" fill="#7895a8"/>
+<text x="506" y="458" class="small">delta / copy</text>
+<rect x="690" y="446" width="18" height="14" fill="#249d7e"/>
+<text x="716" y="458" class="small">query / fill</text>
+<rect x="900" y="446" width="18" height="14" fill="#9466b5"/>
+<text x="926" y="458" class="small">KV / backward</text>
+<text x="28" y="487" class="small">All 23 matched kernel spans longer than 10ms overlap recorded context intervals.</text>
+<text x="28" y="507" class="small">Scheduling cause and context ownership are unresolved; these events are not per-warp stall counters.</text>
+</svg>

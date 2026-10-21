@@ -15,7 +15,11 @@ from kohakufa_cute import attention, scaled_dot_product_attention
 
 
 def candidates(mode, dimension, baseline, shared_limit, tcgen=False, sm103=False):
-    widths = sorted({baseline[1], min(dimension, 128), min(dimension, 256)})
+    widths = sorted(
+        {baseline[1], min(dimension, 128), min(dimension, 256), dimension}
+        if dimension == 512 and not (tcgen or sm103)
+        else {baseline[1], min(dimension, 128), min(dimension, 256)}
+    )
     result = {baseline}
     for columns, width, warps, tma, pipelined in itertools.product(
         (16, 32, 64), widths, (1, 2, 4), (False, True), (False, True)
@@ -25,6 +29,25 @@ def candidates(mode, dimension, baseline, shared_limit, tcgen=False, sm103=False
         if pipelined and not tma:
             continue
         column_warps = 2 if mode == "kv" and width > 128 else 1
+        full_forward = mode == "forward" and (columns, width, warps, tma, pipelined) == (32, 512, 4, False, False)
+        wide_query = (
+            mode == "q"
+            and not (tcgen or sm103)
+            and dimension == 512
+            and columns == 32
+            and not (tma or pipelined)
+            and (width, warps) in ((256, 2), (512, 4))
+        )
+        wide_kv = (
+            mode == "kv"
+            and not (tcgen or sm103)
+            and dimension == 512
+            and (columns, width, warps, tma, pipelined) == (32, 512, 4, False, False)
+        )
+        if full_forward:
+            column_warps = 2
+        elif wide_query or wide_kv:
+            column_warps = warps
         if warps < column_warps:
             continue
         if column_warps > 1 and columns < 32:
@@ -34,7 +57,11 @@ def candidates(mode, dimension, baseline, shared_limit, tcgen=False, sm103=False
         shared = 2 * padded * (rows * (1 if mode == "forward" else 2) + (4 if pipelined else 2) * columns)
         if tma:
             shared += 1024  # barriers and alignment padding
-        if column_warps > 1:
+        if full_forward or wide_query:
+            # P (and dS) reuse the consumed source tile; only row reductions
+            # need additional shared storage for these N-warp layouts.
+            shared += 8 * column_warps * rows
+        elif column_warps > 1 and not wide_kv:
             shared += 4 * rows * columns
         # Keep tiles inside the existing 64x64 mask classification cells.
         if rows <= 64 and shared <= shared_limit:

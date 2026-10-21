@@ -14,6 +14,24 @@ class SM120TuningTests(unittest.TestCase):
         self.assertNotIn((32, 256, 4, False, True, True, True), keyvalue)
         self.assertIn((32, 256, 2, False, True, True, True), keyvalue)
 
+    def test_full_width_tiles_count_source_alias_and_row_reductions(self):
+        forward = (32, 512, 4, False, False, False, False)
+        query = (32, 512, 4, False, True, False, False)
+        old_forward = (16, 256, 4, False, False, False, False)
+        old_query = (16, 128, 2, False, True, False, False)
+        for mode, baseline, option in (("forward", old_forward, forward), ("q", old_query, query)):
+            with self.subTest(mode=mode):
+                self.assertIn(option, candidates(mode, 512, baseline, 101376))
+                # The 98304-byte operand tiles fit, but the 512-byte row
+                # reduction buffer must also fit before the tile is admitted.
+                self.assertNotIn(option, candidates(mode, 512, baseline, 98304))
+
+    def test_full_width_keyvalue_reuses_v_for_weights(self):
+        baseline = (32, 256, 2, False, True, False, False)
+        option = (32, 512, 4, False, True, False, False)
+        self.assertIn(option, candidates("kv", 512, baseline, 98304))
+        self.assertNotIn(option, candidates("kv", 512, baseline, 98303))
+
 
 if __name__ == "__main__":
     unittest.main()

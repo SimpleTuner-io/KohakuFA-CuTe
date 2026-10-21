@@ -19,6 +19,7 @@ def configuration_context(backend, initial, upstream_defaults):
 
         original = kernels.kernel_configuration
         original_query = kernels.backward_query_configuration
+        original_options = kernels.backward_options
 
         def configuration(device, mode, descriptors):
             return initial[(descriptors[0][1][-1], mode)]
@@ -29,10 +30,14 @@ def configuration_context(backend, initial, upstream_defaults):
             kernels.backward_query_configuration = lambda device, causal, masked, descriptors: configuration(
                 device, "q", descriptors
             )
+            # New wide tiles require their column layout even when replaying a
+            # configuration table; archived tables predate shared statistics.
+            kernels.backward_options = lambda *args: (original_options(*args)[0], False)
             yield
         finally:
             kernels.kernel_configuration = original
             kernels.backward_query_configuration = original_query
+            kernels.backward_options = original_options
             native.extension().clear_cache()
     elif backend == "kohakufa-default":
         from kohakufa.sm100 import config, tune
@@ -158,6 +163,17 @@ def main():
                                 }
                                 selected["q"] = list(
                                     kernels.backward_query_configuration(q.device.index, args.causal, False, descriptors)
+                                )
+                                columns, statistics = kernels.backward_options(
+                                    q.device.index,
+                                    args.causal,
+                                    False,
+                                    descriptors,
+                                    tuple(selected["q"]),
+                                    tuple(selected["kv"]),
+                                )
+                                selected["backward_options"] = dict(
+                                    query_column_warps=columns, shared_kv_statistics=statistics
                                 )
                             elif backend in ("kohakufa", "kohakufa-default"):
                                 selected = upstream_configurations(q, k, args.causal)

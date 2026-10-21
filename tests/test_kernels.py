@@ -9,24 +9,24 @@ import torch
     "Requires Ada, Hopper or Blackwell",
 )
 class CuTeAttentionTests(unittest.TestCase):
-    def test_sm120_dense_d256_pipeline_reuses_warm_programs(self):
+    def test_sm120_backward_layouts_reuse_warm_programs(self):
         if torch.cuda.get_device_capability() != (12, 0):
             self.skipTest("Requires the SM120 query pipeline.")
         from unittest.mock import patch
 
         from kohakufa_cute import native
 
-        for dtype in (torch.float16, torch.bfloat16):
+        for dimension, dtype in itertools.product((64, 256, 512), (torch.float16, torch.bfloat16)):
             native.extension().clear_cache()
             try:
                 with patch.object(native, "compile_kernel", wraps=native.compile_kernel) as compiler:
                     for queries, keys in ((257, 261), (513, 517), (273, 261)):
                         for causal in (False, True):
-                            with self.subTest(dtype=dtype, queries=queries, keys=keys, causal=causal):
+                            with self.subTest(dim=dimension, dtype=dtype, queries=queries, keys=keys, causal=causal):
                                 torch.manual_seed(409)
-                                q = torch.randn(1, queries, 2, 256, device="cuda", dtype=dtype).transpose(1, 2)
+                                q = torch.randn(1, queries, 2, dimension, device="cuda", dtype=dtype).transpose(1, 2)
                                 k, v = [
-                                    torch.randn(1, keys, 2, 256, device="cuda", dtype=dtype).transpose(1, 2)
+                                    torch.randn(1, keys, 2, dimension, device="cuda", dtype=dtype).transpose(1, 2)
                                     for _ in range(2)
                                 ]
                                 self.compare(q, k, v, causal=causal, scale=-0.125)
@@ -35,17 +35,19 @@ class CuTeAttentionTests(unittest.TestCase):
             finally:
                 native.extension().clear_cache()
 
-    def test_sm120_dense_d256_pipeline_reads_changed_graph_inputs(self):
+    def test_sm120_backward_layouts_read_changed_graph_inputs(self):
         if torch.cuda.get_device_capability() != (12, 0):
             self.skipTest("Requires the SM120 query pipeline.")
         from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
 
-        for dtype, causal in itertools.product((torch.float16, torch.bfloat16), (False, True)):
-            with self.subTest(dtype=dtype, causal=causal):
+        for dimension, dtype, causal in itertools.product((64, 256, 512), (torch.float16, torch.bfloat16), (False, True)):
+            with self.subTest(dim=dimension, dtype=dtype, causal=causal):
                 native.extension().clear_cache()
                 try:
-                    inputs = [torch.randn(1, 2, 257, 256, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)]
+                    inputs = [
+                        torch.randn(1, 2, 257, dimension, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)
+                    ]
                     dout = torch.randn_like(inputs[0])
 
                     def run():

@@ -1,0 +1,12 @@
+{
+  "archive": "kohakufa-sm120-sdpa-evidence-20261021.tar.gz",
+  "archive_sha256": "aac0a13d8741527eaf5fd13d1dedd125b8cbb7dd05e77fb1672c7cec65a0b2df",
+  "archive_bytes": 20840553,
+  "manifest_files": 1783,
+  "source_snapshot_files": 60,
+  "all_manifest_and_source_files_independently_verified": true,
+  "runtime_kernels_sha256": "7de31cb7528549c0aa6e3060aa7f5f0dbbf6bd60e725846704bfeed02c73b7cd",
+  "local_directory": "2026-10-21-sm120-sdpa-ptx",
+  "runtime_commit": "be44f47",
+  "lifecycle": "Instance57077447 retained at explicit user request for continued FA2 pipeline analysis; completed archive stays immutable."
+}

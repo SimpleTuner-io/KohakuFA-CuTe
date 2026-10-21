@@ -1408,8 +1408,28 @@ def kernel_configuration(device, mode, descriptors):
     return (columns, width, warps, hopper, centered, tma, tma and dimension in (64, 128))
 
 
+def backward_query_configuration(device, causal, masked, descriptors):
+    configuration = kernel_configuration(device, "q", descriptors)
+    if (
+        torch.cuda.get_device_capability(device) == (12, 0)
+        and not causal
+        and not masked
+        and descriptors[0][0] in (torch.float16, torch.bfloat16)
+        and descriptors[0][1][-1] == 256
+        and configuration == (32, 128, 4, False, True, False, False)
+        and _tma_compatible(256, descriptors)
+    ):
+        # Sixteen-column stages remove query spills within the SM120 shared limit.
+        return 16, 128, 4, False, True, True, True
+    return configuration
+
+
 def compile_kernel(device, mode, causal, masked, descriptors):
-    configuration = kernel_configuration(device, "q" if mode == "backward" else mode, descriptors)
+    configuration = (
+        backward_query_configuration(device, causal, masked, descriptors)
+        if mode == "backward"
+        else kernel_configuration(device, mode, descriptors)
+    )
     specialized_load = (
         mode == "forward"
         and not (causal or masked)

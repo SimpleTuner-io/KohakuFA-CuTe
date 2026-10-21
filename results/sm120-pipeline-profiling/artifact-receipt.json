@@ -1,0 +1,46 @@
+{
+  "created_unix": 1792597018.0216813,
+  "root": "artifacts/kohakufa-sm120-nsys-20261021",
+  "files": 585,
+  "manifest_sha256": "c1f4d536ac1263598443aa09db0a20408f5a6c96daa33ec7c92451528d3727f3",
+  "runtime_commit_baseline": "cc3475b",
+  "candidate": "perf/sm120-nsys-pipeline frozen review source",
+  "instance_id": 57071037,
+  "raw_capture_protocol": "Nsight Systems2025.3.2 cuda,nvtx node graphs; serial unprofiled paired CUDA graphs; no hardware counter utilization claim",
+  "archive": "kohakufa-sm120-nsys-evidence-20261021.tar.gz",
+  "archive_bytes": 15235839,
+  "archive_sha256": "c75a357f847b3b6ab3a9d69aa8b28d001d3d0e1ebfc3e919134b1b09242b08aa",
+  "locally_verified_manifest_files": 585,
+  "rental": {
+    "instance_id": 57071037,
+    "offer_id": 52002273,
+    "machine_id": 151742,
+    "hourly_with_80GB_storage_usd": 1.0681481481481483,
+    "transfer_usd_per_gb": 0,
+    "start_unix": 1792594645.2362537,
+    "cap_usd": 5,
+    "previous_failed_instance": 57069980,
+    "destroy_completed_unix": 1792597063.054878,
+    "destroy_response": {
+      "success": true
+    },
+    "remaining_instances": [],
+    "estimated_rental_usd": 0.7173856905720363,
+    "failed_startup_instance": {
+      "instance_id": 57069980,
+      "offer_id": 56677449,
+      "machine_id": 150428,
+      "hourly_with_80GB_storage_usd": 0.6148148148148148,
+      "transfer_usd_per_gb": 0,
+      "start_unix": 1792594159.1649566,
+      "cap_usd": 5,
+      "existing_instances": [],
+      "failed_startup": "nvidia-container-cli: GPU unknown device",
+      "destroyed": true,
+      "destroy_completed_unix": 1792594610.8260193,
+      "estimated_rental_usd": 0.07713553128713443
+    },
+    "estimated_total_rental_usd": 0.7945212218591707,
+    "estimate_note": "Rate times wall time through successful destruction; excludes any startup billing waivers; network transfer free."
+  }
+}

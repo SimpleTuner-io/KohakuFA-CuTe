@@ -18,6 +18,7 @@ def configuration_context(backend, initial, upstream_defaults):
         from kohakufa_cute import kernels, native
 
         original = kernels.kernel_configuration
+        original_query = kernels.backward_query_configuration
 
         def configuration(device, mode, descriptors):
             return initial[(descriptors[0][1][-1], mode)]
@@ -25,9 +26,13 @@ def configuration_context(backend, initial, upstream_defaults):
         native.extension().clear_cache()
         try:
             kernels.kernel_configuration = configuration
+            kernels.backward_query_configuration = lambda device, causal, masked, descriptors: configuration(
+                device, "q", descriptors
+            )
             yield
         finally:
             kernels.kernel_configuration = original
+            kernels.backward_query_configuration = original_query
             native.extension().clear_cache()
     elif backend == "kohakufa-default":
         from kohakufa.sm100 import config, tune
@@ -151,6 +156,9 @@ def main():
                                     mode: list(kernels.kernel_configuration(q.device.index, mode, descriptors))
                                     for mode in ("forward", "q", "kv")
                                 }
+                                selected["q"] = list(
+                                    kernels.backward_query_configuration(q.device.index, args.causal, False, descriptors)
+                                )
                             elif backend in ("kohakufa", "kohakufa-default"):
                                 selected = upstream_configurations(q, k, args.causal)
                             else:

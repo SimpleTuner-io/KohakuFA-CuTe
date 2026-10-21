@@ -229,6 +229,7 @@ def main():
                 mode: list(kernels.kernel_configuration(q.device.index, mode, descriptors))
                 for mode in ("forward", "q", "kv")
             }
+            configurations["q"] = list(kernels.backward_query_configuration(q.device.index, args.causal, False, descriptors))
         else:
             configurations = upstream_configurations(q, k, args.causal) if backend == "kohakufa" else None
         report["backends"][backend] = dict(

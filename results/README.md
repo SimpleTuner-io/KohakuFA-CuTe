@@ -1,5 +1,7 @@
 # Measurements
 
+[RTX 5090 pipeline profiling](sm120-pipeline-profiling/README.md) records Nsight captures, fitting D256 TMA stages, rejected pipeline schedules, and dense/causal qualification.
+
 [Blackwell probability overlap from latency interventions](blackwell-intervention-profiling/README.md) records controlled role delays, shorter dV register lifetimes, early FP32 probability reconstruction, and dense/causal qualification.
 
 [Register-resident Blackwell backward auxiliary](blackwell-readout-profiling/README.md) records the wider causal BF16 path, verified PTX/SASS register redistribution, paired native comparisons, and readout ablations.

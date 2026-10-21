@@ -229,6 +229,11 @@ def main():
                 mode: list(kernels.kernel_configuration(q.device.index, mode, descriptors))
                 for mode in ("forward", "q", "kv")
             }
+            configurations["q"] = list(kernels.backward_query_configuration(q.device.index, args.causal, False, descriptors))
+            columns, statistics = kernels.backward_options(
+                q.device.index, args.causal, False, descriptors, tuple(configurations["q"]), tuple(configurations["kv"])
+            )
+            configurations["backward_options"] = dict(query_column_warps=columns, shared_kv_statistics=statistics)
         else:
             configurations = upstream_configurations(q, k, args.causal) if backend == "kohakufa" else None
         report["backends"][backend] = dict(

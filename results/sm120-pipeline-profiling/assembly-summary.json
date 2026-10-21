@@ -1,0 +1,365 @@
+{
+  "note": "Static instruction sites and frame sizes; not dynamic local-memory traffic or occupancy counters.",
+  "rows": [
+    {
+      "name": "baseline-d64",
+      "archive_path": "assembly/baseline-d64/backward",
+      "sass_sha256": "bdcbe83006b7073e249f82c3eaf4006f2be9e1e21ec732ae83e562e57da18653",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 255,
+          "stack_bytes": 16,
+          "static_shared": 1024,
+          "ldl_sites": 3,
+          "stl_sites": 3,
+          "hmma_sites": 128,
+          "ldsm_sites": 72,
+          "tma_sites": 6
+        },
+        {
+          "role": "query",
+          "registers": 176,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 64,
+          "ldsm_sites": 32,
+          "tma_sites": 4
+        },
+        {
+          "role": "output_delta",
+          "registers": 42,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 8,
+          "ldsm_sites": 8,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "baseline-d128",
+      "archive_path": "assembly/baseline-d128/backward",
+      "sass_sha256": "4e23bd6e21b62f967e172453cc54088a7007cbf12ec044dea48fac3c2af6cf34",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 255,
+          "stack_bytes": 8,
+          "static_shared": 1024,
+          "ldl_sites": 1,
+          "stl_sites": 1,
+          "hmma_sites": 128,
+          "ldsm_sites": 80,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 255,
+          "stack_bytes": 24,
+          "static_shared": 1024,
+          "ldl_sites": 3,
+          "stl_sites": 4,
+          "hmma_sites": 128,
+          "ldsm_sites": 64,
+          "tma_sites": 0
+        },
+        {
+          "role": "output_delta",
+          "registers": 50,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 16,
+          "ldsm_sites": 16,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "baseline-d256",
+      "archive_path": "assembly/baseline-initial-d256/backward",
+      "sass_sha256": "c195330221782dfb7462716d23da07ac43d619cb587f3a302dfe58a230895ff8",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 246,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 128,
+          "ldsm_sites": 100,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 255,
+          "stack_bytes": 40,
+          "static_shared": 1024,
+          "ldl_sites": 10,
+          "stl_sites": 5,
+          "hmma_sites": 192,
+          "ldsm_sites": 112,
+          "tma_sites": 0
+        },
+        {
+          "role": "output_delta",
+          "registers": 46,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 32,
+          "ldsm_sites": 32,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "baseline-d512",
+      "archive_path": "assembly/baseline-d512/backward",
+      "sass_sha256": "2a2e75418d65e6f8cd9b44ca53c8a0bc88a4002cb93f7536e5cc80b11b37495a",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 254,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 192,
+          "ldsm_sites": 164,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 255,
+          "stack_bytes": 24,
+          "static_shared": 1024,
+          "ldl_sites": 6,
+          "stl_sites": 3,
+          "hmma_sites": 160,
+          "ldsm_sites": 136,
+          "tma_sites": 0
+        },
+        {
+          "role": "output_delta",
+          "registers": 46,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 64,
+          "ldsm_sites": 64,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "selected-dense-d256",
+      "archive_path": "qualified-final/assembly/dense/backward",
+      "sass_sha256": "b8bed00346403c25c8121f7d9c54ae4206b2f5fa02eac0e8ac4327b9e0194019",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 246,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 128,
+          "ldsm_sites": 100,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 244,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 96,
+          "ldsm_sites": 72,
+          "tma_sites": 16
+        },
+        {
+          "role": "output_delta",
+          "registers": 46,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 32,
+          "ldsm_sites": 32,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "selected-causal-d256",
+      "archive_path": "qualified-final/assembly/causal/backward",
+      "sass_sha256": "4ff218cb76edca0358676721f4c0eff2639858e4867dac584bfe6c4fa0b983b3",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 240,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 128,
+          "ldsm_sites": 100,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 255,
+          "stack_bytes": 24,
+          "static_shared": 1024,
+          "ldl_sites": 4,
+          "stl_sites": 5,
+          "hmma_sites": 192,
+          "ldsm_sites": 112,
+          "tma_sites": 0
+        },
+        {
+          "role": "output_delta",
+          "registers": 46,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 32,
+          "ldsm_sites": 32,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "dot-pair-q-d128",
+      "archive_path": "assembly/q_dot_pair-d128/backward",
+      "sass_sha256": "f10bb6d9849d22bb2876a66d9edb32250367141ac97a3ab5be927a105fd5669e",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 255,
+          "stack_bytes": 8,
+          "static_shared": 1024,
+          "ldl_sites": 1,
+          "stl_sites": 1,
+          "hmma_sites": 128,
+          "ldsm_sites": 80,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 255,
+          "stack_bytes": 32,
+          "static_shared": 1024,
+          "ldl_sites": 8,
+          "stl_sites": 4,
+          "hmma_sites": 128,
+          "ldsm_sites": 64,
+          "tma_sites": 0
+        },
+        {
+          "role": "output_delta",
+          "registers": 50,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 16,
+          "ldsm_sites": 16,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "async-qwide-d512",
+      "archive_path": "assembly/d512_async-d512/backward",
+      "sass_sha256": "db7287320eda2641936f6d4f935254050d32ce73a414c11b099aa3d3d61d9314",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 240,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 160,
+          "ldsm_sites": 144,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 80,
+          "stack_bytes": 2784,
+          "static_shared": 1024,
+          "ldl_sites": 879,
+          "stl_sites": 900,
+          "hmma_sites": 192,
+          "ldsm_sites": 144,
+          "tma_sites": 0
+        },
+        {
+          "role": "output_delta",
+          "registers": 46,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 64,
+          "ldsm_sites": 64,
+          "tma_sites": 0
+        }
+      ]
+    },
+    {
+      "name": "async-q128-d512",
+      "archive_path": "assembly/d512_async_q128-d512/backward",
+      "sass_sha256": "fea2f879d0fb68c773513a98a4a6cd3fa9c91e5edc96faef6e56c202085f7add",
+      "functions": [
+        {
+          "role": "keyvalue",
+          "registers": 240,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 160,
+          "ldsm_sites": 144,
+          "tma_sites": 0
+        },
+        {
+          "role": "query",
+          "registers": 212,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 160,
+          "ldsm_sites": 136,
+          "tma_sites": 0
+        },
+        {
+          "role": "output_delta",
+          "registers": 46,
+          "stack_bytes": 0,
+          "static_shared": 1024,
+          "ldl_sites": 0,
+          "stl_sites": 0,
+          "hmma_sites": 64,
+          "ldsm_sites": 64,
+          "tma_sites": 0
+        }
+      ]
+    }
+  ]
+}

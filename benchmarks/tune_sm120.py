@@ -24,8 +24,6 @@ def candidates(mode, dimension, baseline, shared_limit, tcgen=False, sm103=False
             continue
         if pipelined and not tma:
             continue
-        if not tcgen and pipelined != (tma and dimension <= 128):
-            continue
         column_warps = 2 if mode == "kv" and width > 128 else 1
         if warps < column_warps:
             continue
@@ -168,6 +166,7 @@ def main(capability=(12, 0)):
             )
         )
     original = kernels.kernel_configuration
+    original_query = kernels.backward_query_configuration
     overrides = {}
 
     def configuration(device, mode, descriptors):
@@ -181,6 +180,9 @@ def main(capability=(12, 0)):
 
     try:
         kernels.kernel_configuration = configuration
+        kernels.backward_query_configuration = lambda device, causal, masked, descriptors: configuration(
+            device, "q", descriptors
+        )
         for dimension in args.dim:
             overrides.clear()
             torch.manual_seed(128)
@@ -191,7 +193,7 @@ def main(capability=(12, 0)):
             q, k, v, dout = cases[0]
             descriptors = tuple(kernels.descriptor(t) for t in (q, k, v, q, q, q, q, dout))
             for mode in ("forward", "q", "kv"):
-                baseline = original(0, mode, descriptors)
+                baseline = original_query(0, False, False, descriptors) if mode == "q" else original(0, mode, descriptors)
                 selected, best = baseline, float("inf")
                 options = candidates(
                     mode,
@@ -271,6 +273,7 @@ def main(capability=(12, 0)):
                 checkpoint()
     finally:
         kernels.kernel_configuration = original
+        kernels.backward_query_configuration = original_query
         native.extension().clear_cache()
 
 

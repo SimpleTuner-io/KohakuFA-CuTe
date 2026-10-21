@@ -1,0 +1,1464 @@
+[
+  {
+    "name": "d256-initial",
+    "causal": false,
+    "dtype": "bf16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.10930132865905762,
+            "forward_backward_ms": 0.74509596824646
+          },
+          "d256_tma_w2": {
+            "forward_ms": 0.109415998061498,
+            "forward_backward_ms": 1.1502853234608967
+          },
+          "d256_tma_w4": {
+            "forward_ms": 0.10958400368690491,
+            "forward_backward_ms": 0.9212400118509928
+          },
+          "d256_tma_forward": {
+            "forward_ms": 0.1335333287715912,
+            "forward_backward_ms": 0.768181324005127
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.11112800240516663,
+            "forward_backward_ms": 0.7328399817148844
+          },
+          "d256_tma_kv_only": {
+            "forward_ms": 0.10973067084948222,
+            "forward_backward_ms": 0.9401600360870361
+          },
+          "d256_async": {
+            "forward_ms": 0.10982666412989299,
+            "forward_backward_ms": 0.9006079832712809
+          },
+          "d256_narrow": {
+            "forward_ms": 0.11034933725992839,
+            "forward_backward_ms": 0.9337946573893229
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_w2": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ],
+          "d256_tma_w4": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ],
+          "d256_tma_forward": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ],
+          "d256_tma_kv_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_async": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ],
+          "d256_narrow": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "d512-initial",
+    "causal": false,
+    "dtype": "bf16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 512,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.46409865220387775,
+            "forward_backward_ms": 3.7525625228881836
+          },
+          "d512_narrow": {
+            "forward_ms": 0.4713786840438843,
+            "forward_backward_ms": 13.454154968261719
+          },
+          "d512_async": {
+            "forward_ms": 0.47385064760843915,
+            "forward_backward_ms": 12.883914947509766
+          },
+          "d512_async_q128": {
+            "forward_ms": 0.4599786599477132,
+            "forward_backward_ms": 7.308733622233073
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d512_narrow": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d512_async": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d512_async_q128": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "q-prefetch-dense",
+    "causal": false,
+    "dtype": "bf16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 128,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.05867120027542114,
+            "forward_backward_ms": 0.2773959994316101
+          },
+          "q_early_v": {
+            "forward_ms": 0.05942640006542206,
+            "forward_backward_ms": 0.2755919933319092
+          },
+          "q_early_v_less_join": {
+            "forward_ms": 0.05888479948043823,
+            "forward_backward_ms": 0.27603679895401
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.05928560197353363,
+            "forward_backward_ms": 0.27727919816970825
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v_less_join": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 128,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.7440351963043212,
+            "forward_backward_ms": 3.6042552947998048
+          },
+          "q_early_v": {
+            "forward_ms": 0.7441328048706055,
+            "forward_backward_ms": 3.5921625137329105
+          },
+          "q_early_v_less_join": {
+            "forward_ms": 0.744534397125244,
+            "forward_backward_ms": 3.5904623031616207
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.7439656019210816,
+            "forward_backward_ms": 3.599893569946289
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v_less_join": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.10916399955749512,
+            "forward_backward_ms": 0.7459480047225953
+          },
+          "q_early_v": {
+            "forward_ms": 0.11017760038375854,
+            "forward_backward_ms": 0.763421607017517
+          },
+          "q_early_v_less_join": {
+            "forward_ms": 0.1093176007270813,
+            "forward_backward_ms": 0.762499213218689
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.10993759632110596,
+            "forward_backward_ms": 0.7322431802749634
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v_less_join": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 1.5808360099792482,
+            "forward_backward_ms": 10.42903823852539
+          },
+          "q_early_v": {
+            "forward_ms": 1.5798527717590334,
+            "forward_backward_ms": 10.627250289916994
+          },
+          "q_early_v_less_join": {
+            "forward_ms": 1.5771000385284424,
+            "forward_backward_ms": 10.618886184692382
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 1.5792688369750976,
+            "forward_backward_ms": 9.977960968017578
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v_less_join": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            6.103515625e-05,
+            0.00048828125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 512,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.46415119171142577,
+            "forward_backward_ms": 3.759720802307129
+          },
+          "q_early_v": {
+            "forward_ms": 0.47032320499420166,
+            "forward_backward_ms": 3.8044174194335936
+          },
+          "q_early_v_less_join": {
+            "forward_ms": 0.4699951887130737,
+            "forward_backward_ms": 3.8048879623413088
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.4746295928955078,
+            "forward_backward_ms": 3.7555959701538084
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v_less_join": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 512,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 6.276075935363769,
+            "forward_backward_ms": 63.47457580566406
+          },
+          "q_early_v": {
+            "forward_ms": 6.2590143203735344,
+            "forward_backward_ms": 62.226034545898436
+          },
+          "q_early_v_less_join": {
+            "forward_ms": 6.271634292602539,
+            "forward_backward_ms": 62.244415283203125
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 6.278804779052734,
+            "forward_backward_ms": 63.521923828125
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_early_v_less_join": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "dotpair-dense",
+    "causal": false,
+    "dtype": "bf16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 64,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.031007999181747438,
+            "forward_backward_ms": 0.14158560037612916
+          },
+          "q_dot_pair": {
+            "forward_ms": 0.03121519982814789,
+            "forward_backward_ms": 0.14375280141830443
+          },
+          "both_dot_pair": {
+            "forward_ms": 0.031222400069236753,
+            "forward_backward_ms": 0.143588000535965
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 64,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.3833135962486267,
+            "forward_backward_ms": 1.816810417175293
+          },
+          "q_dot_pair": {
+            "forward_ms": 0.38440560102462773,
+            "forward_backward_ms": 1.8404271125793459
+          },
+          "both_dot_pair": {
+            "forward_ms": 0.383897602558136,
+            "forward_backward_ms": 1.8303071975708007
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 128,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.05953200161457062,
+            "forward_backward_ms": 0.2782496094703674
+          },
+          "q_dot_pair": {
+            "forward_ms": 0.05893679857254028,
+            "forward_backward_ms": 0.2759087920188904
+          },
+          "both_dot_pair": {
+            "forward_ms": 0.05966959893703461,
+            "forward_backward_ms": 0.2767287969589234
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 128,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.7453399896621704,
+            "forward_backward_ms": 3.6180414199829105
+          },
+          "q_dot_pair": {
+            "forward_ms": 0.7455728054046631,
+            "forward_backward_ms": 3.5849863052368165
+          },
+          "both_dot_pair": {
+            "forward_ms": 0.7443160057067871,
+            "forward_backward_ms": 3.604641532897949
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.10928239822387695,
+            "forward_backward_ms": 0.7459527969360351
+          },
+          "q_dot_pair": {
+            "forward_ms": 0.10939840078353882,
+            "forward_backward_ms": 0.7453304052352905
+          },
+          "both_dot_pair": {
+            "forward_ms": 0.10971200466156006,
+            "forward_backward_ms": 0.7535520076751709
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 1.5848648071289064,
+            "forward_backward_ms": 10.424723434448243
+          },
+          "q_dot_pair": {
+            "forward_ms": 1.5834231853485106,
+            "forward_backward_ms": 10.398413848876952
+          },
+          "both_dot_pair": {
+            "forward_ms": 1.5838560104370116,
+            "forward_backward_ms": 10.55954475402832
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 512,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.47272958755493166,
+            "forward_backward_ms": 3.7495599746704102
+          },
+          "q_dot_pair": {
+            "forward_ms": 0.4685760021209717,
+            "forward_backward_ms": 3.7419912338256838
+          },
+          "both_dot_pair": {
+            "forward_ms": 0.46762158870697024,
+            "forward_backward_ms": 3.749774551391601
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 512,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 6.2724607467651365,
+            "forward_backward_ms": 63.51687316894531
+          },
+          "q_dot_pair": {
+            "forward_ms": 6.296562576293946,
+            "forward_backward_ms": 63.57530822753907
+          },
+          "both_dot_pair": {
+            "forward_ms": 6.297173500061035,
+            "forward_backward_ms": 63.41295166015625
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "q_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "both_dot_pair": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "d256-causal",
+    "causal": true,
+    "dtype": "bf16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 256,
+        "seq": 512,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.04528320133686066,
+            "forward_backward_ms": 0.1766703963279724
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.04530400037765503,
+            "forward_backward_ms": 0.18048479557037353
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.001953125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.11073440313339233,
+            "forward_backward_ms": 0.48669281005859377
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.11066080331802368,
+            "forward_backward_ms": 0.5028960227966308
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.001953125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.9187376022338867,
+            "forward_backward_ms": 5.323473739624023
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.9182463645935058,
+            "forward_backward_ms": 5.493875122070312
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            9.5367431640625e-07,
+            0.0009765625,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 8192,
+        "medians": {
+          "baseline": {
+            "forward_ms": 3.0912879943847655,
+            "forward_backward_ms": 19.670669555664062
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 3.082259178161621,
+            "forward_backward_ms": 20.397293090820312
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0001220703125,
+            0.00390625,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "d256-fp16-dense",
+    "causal": false,
+    "dtype": "fp16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 256,
+        "seq": 512,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.04527199864387512,
+            "forward_backward_ms": 0.21218879222869874
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.04527519941329956,
+            "forward_backward_ms": 0.20705440044403076
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            1.52587890625e-05,
+            0.0001220703125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.11092159748077393,
+            "forward_backward_ms": 0.7471663951873779
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.11093599796295166,
+            "forward_backward_ms": 0.7316991806030273
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            1.52587890625e-05,
+            0.0001220703125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 1.5894720077514648,
+            "forward_backward_ms": 10.310038757324218
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 1.5891263961791993,
+            "forward_backward_ms": 9.945848083496093
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            6.103515625e-05,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "d256-fp16-causal",
+    "causal": true,
+    "dtype": "fp16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 256,
+        "seq": 512,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.045204800367355344,
+            "forward_backward_ms": 0.17437119483947755
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.04524959921836853,
+            "forward_backward_ms": 0.18022559881210326
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            1.9073486328125e-06,
+            0.000244140625,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.10903840065002442,
+            "forward_backward_ms": 0.4804207801818848
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.10886240005493164,
+            "forward_backward_ms": 0.49925761222839354
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            3.0517578125e-05,
+            0.00048828125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 4096,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.9120400428771973,
+            "forward_backward_ms": 5.240607833862304
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.9111455917358399,
+            "forward_backward_ms": 5.452017593383789
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            3.0517578125e-05,
+            0.000244140625,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "d256-short-h2",
+    "causal": false,
+    "dtype": "bf16",
+    "heads": 2,
+    "cases": [
+      {
+        "dim": 256,
+        "seq": 128,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.01645248055458069,
+            "forward_backward_ms": 0.041104001998901366
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.01643839955329895,
+            "forward_backward_ms": 0.041034879684448244
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 256,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.0246726393699646,
+            "forward_backward_ms": 0.06971839904785156
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.024673280715942384,
+            "forward_backward_ms": 0.06969600200653076
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 512,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.04511616230010986,
+            "forward_backward_ms": 0.12699904441833496
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.04512191772460938,
+            "forward_backward_ms": 0.1249766445159912
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.0819865608215332,
+            "forward_backward_ms": 0.2397760009765625
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.08198464393615723,
+            "forward_backward_ms": 0.23751232147216797
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            3.0517578125e-05,
+            0.00048828125,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "d256-short-h8",
+    "causal": false,
+    "dtype": "bf16",
+    "heads": 8,
+    "cases": [
+      {
+        "dim": 256,
+        "seq": 128,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.01644927978515625,
+            "forward_backward_ms": 0.04241280078887939
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.016496000289916993,
+            "forward_backward_ms": 0.04110847949981689
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 256,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.024678399562835695,
+            "forward_backward_ms": 0.07008575916290283
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.024676480293273927,
+            "forward_backward_ms": 0.06971712112426758
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 512,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.045123839378356935,
+            "forward_backward_ms": 0.1319647979736328
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.04511936187744141,
+            "forward_backward_ms": 0.12866944313049317
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.00048828125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.0830624008178711,
+            "forward_backward_ms": 0.40328128814697267
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.08373184204101562,
+            "forward_backward_ms": 0.395425910949707
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.000244140625,
+            0.0
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "d256-short-h16",
+    "causal": false,
+    "dtype": "bf16",
+    "heads": 16,
+    "cases": [
+      {
+        "dim": 256,
+        "seq": 128,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.01646080017089844,
+            "forward_backward_ms": 0.04305920124053955
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.016522239446640014,
+            "forward_backward_ms": 0.04192768096923828
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 256,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.025316479206085204,
+            "forward_backward_ms": 0.07384064197540283
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.025572481155395507,
+            "forward_backward_ms": 0.0717471981048584
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 512,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.04511616230010986,
+            "forward_backward_ms": 0.21301567077636718
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.045123839378356935,
+            "forward_backward_ms": 0.20855295181274414
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            6.103515625e-05,
+            0.00048828125,
+            0.0
+          ]
+        }
+      },
+      {
+        "dim": 256,
+        "seq": 1024,
+        "medians": {
+          "baseline": {
+            "forward_ms": 0.10913599967956543,
+            "forward_backward_ms": 0.7452294158935547
+          },
+          "d256_tma_q_only": {
+            "forward_ms": 0.10903871536254883,
+            "forward_backward_ms": 0.732336654663086
+          }
+        },
+        "errors": {},
+        "max_difference": {
+          "baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "d256_tma_q_only": [
+            0.0,
+            0.0,
+            0.0009765625,
+            0.0
+          ]
+        }
+      }
+    ]
+  }
+]

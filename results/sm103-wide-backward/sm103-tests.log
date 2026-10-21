@@ -1,9 +1,0 @@
-test_sm103_fused_dispatch_crosses_sequence_threshold (tests.test_kernels.CuTeAttentionTests.test_sm103_fused_dispatch_crosses_sequence_threshold) ... ok
-test_blackwell_fused_probability_and_ds_pipeline (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_probability_and_ds_pipeline) ... ok
-test_blackwell_fused_pipeline_retains_saturated_gradients (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_pipeline_retains_saturated_gradients) ... ok
-test_blackwell_fused_pipeline_reads_changed_graph_inputs (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_pipeline_reads_changed_graph_inputs) ... ok
-
-----------------------------------------------------------------------
-Ran 4 tests in 344.266s
-
-OK

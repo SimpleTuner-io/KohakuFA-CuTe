@@ -1,9 +1,0 @@
-{
-  "archive": "kohakufa-intervention-evidence-20261021.tar.gz",
-  "bytes": 35844083,
-  "sha256": "ed44dd59587eb479d830ad3deb119b569fe3726d71695a1895ebcac55b693c16",
-  "manifest": "kohakufa-intervention-evidence-20261021.manifest.json",
-  "manifest_sha256": "62e0f4cbc6a1aa53ca02f2c225b4c963614eac29045d2aa622396179ff1ecf72",
-  "manifest_files_verified": 620,
-  "status": "Downloaded; archive hash and every manifest entry verified locally. All ten runtime files, GPU tests and executed profiling/comparison drivers byte-match the worktree."
-}

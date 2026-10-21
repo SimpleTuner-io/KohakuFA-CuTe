@@ -1,7 +1,0 @@
-{
-  "scope": "Offline SM100 assembly only. No B200 execution, dispatch selection or performance claim.",
-  "passed": true,
-  "source_ptx_sha256": "0cec1994e977c88e95f7c8fa8569b6de10da527e07b8f65fcc252c51ce90571e",
-  "target_ptx_sha256": "8888d10a93d4de7777a651c4a5dfb4ac26d37b1cf64649d53ffc0d44127b30f3",
-  "assembler_log_sha256": "11e21a8f38c059f693378fa800f63d0eb37bff678b77d1810e9f1bcd8d21bc74"
-}

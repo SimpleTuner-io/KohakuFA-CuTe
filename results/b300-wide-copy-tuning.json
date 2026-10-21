@@ -1,0 +1,672 @@
+{
+  "device": "NVIDIA B300 SXM6 AC",
+  "capability": [
+    10,
+    3
+  ],
+  "dtype": "bf16",
+  "selection": "2% improvement in geometric mean forward time at S=1024/4096",
+  "reason": "128-row output tiles wider than one 128-register TMEM load",
+  "source_sha256": {
+    "src/kohakufa_cute/kernels.py": "867804291b5426916aa0d117833ad276fb305465b06f1e5b07563b6b423f6475",
+    "src/kohakufa_cute/sm103.py": "c8ff2613701124ec4d64a5f30ac438ed5d7a718bdf43a55aec3ff10a6b195771"
+  },
+  "trials": [
+    {
+      "dimension": 256,
+      "mode": "forward",
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        true,
+        true
+      ],
+      "status": "ok",
+      "score_ms": 0.25743354870670326,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 25,
+          "repetitions": [
+            {
+              "forward_ms": 0.07459968090057373,
+              "forward_backward_ms": 0.38345088958740237,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.07433599948883057,
+              "forward_backward_ms": 0.3854528045654297,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.07420544147491455,
+              "forward_backward_ms": 0.38420097351074217,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 0.8915583610534668,
+              "forward_backward_ms": 5.021177673339844,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.8914175987243652,
+              "forward_backward_ms": 5.017343902587891,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.8915200233459473,
+              "forward_backward_ms": 5.021414566040039,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 13.08253812789917
+    },
+    {
+      "dimension": 256,
+      "mode": "forward",
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        false,
+        false,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 1.1363622673619216,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 17,
+          "repetitions": [
+            {
+              "forward_ms": 0.2987482407513787,
+              "forward_backward_ms": 0.6110851624432732,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.2985374226289637,
+              "forward_backward_ms": 0.6108800102682674,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.29860328225528493,
+              "forward_backward_ms": 0.6130070405847886,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 4.324531173706054,
+              "forward_backward_ms": 8.466809844970703,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 4.324288177490234,
+              "forward_backward_ms": 8.45489273071289,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 4.327660751342774,
+              "forward_backward_ms": 8.45462417602539,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 6.15677809715271
+    },
+    {
+      "dimension": 256,
+      "mode": "forward",
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        true,
+        false,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 1.1228790754682583,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 17,
+          "repetitions": [
+            {
+              "forward_ms": 0.2977449473212747,
+              "forward_backward_ms": 0.6133232677684111,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.2975152801064884,
+              "forward_backward_ms": 0.6128922630758846,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.2972913068883559,
+              "forward_backward_ms": 0.6132856256821576,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 4.236921691894532,
+              "forward_backward_ms": 8.392960357666016,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 4.242668914794922,
+              "forward_backward_ms": 8.381298828125,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 4.237958526611328,
+              "forward_backward_ms": 8.387532806396484,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 5.93130350112915
+    },
+    {
+      "dimension": 256,
+      "mode": "forward",
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        true,
+        true,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 0.546891174708778,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 22,
+          "repetitions": [
+            {
+              "forward_ms": 0.1540203636342829,
+              "forward_backward_ms": 0.46692362698641693,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.15255563909357245,
+              "forward_backward_ms": 0.4718298045071689,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.15383563258431174,
+              "forward_backward_ms": 0.47029092095114966,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 1.9442176818847656,
+              "forward_backward_ms": 6.076012802124024,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.947667121887207,
+              "forward_backward_ms": 6.070297622680664,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.9401216506958008,
+              "forward_backward_ms": 6.075481414794922,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 5.788899898529053
+    },
+    {
+      "dimension": 256,
+      "mode": "forward",
+      "configuration": [
+        64,
+        256,
+        4,
+        false,
+        false,
+        false,
+        false,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 0.5136480278072137,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 22,
+          "repetitions": [
+            {
+              "forward_ms": 0.14140945131128485,
+              "forward_backward_ms": 0.45507634769786487,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.14149381897666238,
+              "forward_backward_ms": 0.45730764215642755,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.14130181616002863,
+              "forward_backward_ms": 0.45870109037919476,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 1.8651456832885742,
+              "forward_backward_ms": 6.010316848754883,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.8657472610473633,
+              "forward_backward_ms": 6.016339111328125,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.8663040161132813,
+              "forward_backward_ms": 6.000972747802734,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 6.972089529037476
+    },
+    {
+      "dimension": 256,
+      "mode": "forward",
+      "configuration": [
+        64,
+        256,
+        4,
+        false,
+        false,
+        true,
+        false,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 0.3614806635494688,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 24,
+          "repetitions": [
+            {
+              "forward_ms": 0.10306400060653687,
+              "forward_backward_ms": 0.4143400192260742,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.1031493345896403,
+              "forward_backward_ms": 0.41591068108876544,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.10313866535822551,
+              "forward_backward_ms": 0.4173853397369385,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 1.2669183731079101,
+              "forward_backward_ms": 5.410432052612305,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.2684800148010253,
+              "forward_backward_ms": 5.404204940795898,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.2662591934204102,
+              "forward_backward_ms": 5.416428756713867,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 6.467495918273926
+    },
+    {
+      "dimension": 256,
+      "mode": "forward",
+      "configuration": [
+        64,
+        256,
+        4,
+        false,
+        false,
+        true,
+        true,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 0.4691978505858916,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 23,
+          "repetitions": [
+            {
+              "forward_ms": 0.13161877963853919,
+              "forward_backward_ms": 0.4403255711431089,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.13133078036100967,
+              "forward_backward_ms": 0.4428813768469769,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.13162713465483292,
+              "forward_backward_ms": 0.4439193062160326,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 1.67260799407959,
+              "forward_backward_ms": 5.809241485595703,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.6709760665893554,
+              "forward_backward_ms": 5.80263671875,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 1.6730432510375977,
+              "forward_backward_ms": 5.803507232666016,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 6.372558116912842
+    },
+    {
+      "dimension": 512,
+      "mode": "forward",
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "status": "ok",
+      "score_ms": 0.970683348243751,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 6,
+          "repetitions": [
+            {
+              "forward_ms": 0.27509333690007526,
+              "forward_backward_ms": 1.7438079516092937,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.27271467447280884,
+              "forward_backward_ms": 1.7338186899820964,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.27214399973551434,
+              "forward_backward_ms": 1.7330986658732097,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 3.4549888610839843,
+              "forward_backward_ms": 25.864569091796874,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 3.455788803100586,
+              "forward_backward_ms": 25.911962890625,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 3.4540287017822267,
+              "forward_backward_ms": 26.000039672851564,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 13.254042387008667
+    },
+    {
+      "dimension": 512,
+      "mode": "forward",
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        false,
+        false,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 2.4329545064772216,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 0.6959424018859863,
+              "forward_backward_ms": 2.1660032272338867,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.6946688175201416,
+              "forward_backward_ms": 2.1656959533691404,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.6942592144012452,
+              "forward_backward_ms": 2.1632064819335937,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 8.520992279052734,
+              "forward_backward_ms": 31.036639404296874,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 8.509120178222656,
+              "forward_backward_ms": 31.016116333007812,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 8.525625610351563,
+              "forward_backward_ms": 30.992376708984374,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 8.641793489456177
+    },
+    {
+      "dimension": 512,
+      "mode": "forward",
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        true,
+        false,
+        false,
+        128
+      ],
+      "status": "ok",
+      "score_ms": 2.2406754607243666,
+      "samples": [
+        {
+          "sequence": 1024,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 0.6331583976745605,
+              "forward_backward_ms": 2.116876792907715,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.6326272010803222,
+              "forward_backward_ms": 2.0899200439453125,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 0.6322559833526611,
+              "forward_backward_ms": 2.0912191390991213,
+              "graph_verified": true
+            }
+          ]
+        },
+        {
+          "sequence": 4096,
+          "iterations": 5,
+          "repetitions": [
+            {
+              "forward_ms": 7.935129547119141,
+              "forward_backward_ms": 30.407199096679687,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 7.9381568908691404,
+              "forward_backward_ms": 30.478878784179688,
+              "graph_verified": true
+            },
+            {
+              "forward_ms": 7.936153411865234,
+              "forward_backward_ms": 30.460305786132814,
+              "graph_verified": true
+            }
+          ]
+        }
+      ],
+      "fp16_normal_validated": true,
+      "seconds": 8.283745288848877
+    }
+  ],
+  "selected": {
+    "256:forward": {
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        true,
+        true
+      ],
+      "score_ms": 0.25743354870670326,
+      "baseline_score_ms": 0.25743354870670326
+    },
+    "512:forward": {
+      "configuration": [
+        32,
+        256,
+        4,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "score_ms": 0.970683348243751,
+      "baseline_score_ms": 0.970683348243751
+    }
+  }
+}

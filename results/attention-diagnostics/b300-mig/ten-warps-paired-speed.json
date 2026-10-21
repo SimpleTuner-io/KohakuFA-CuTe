@@ -1,0 +1,885 @@
+{
+  "device": "NVIDIA B300 SXM6 AC MIG 1g.34gb",
+  "torch": "2.12.0+cu130",
+  "dtype": "bf16",
+  "causal": false,
+  "iterations": 20,
+  "repeats": 4,
+  "ordering": "rotate backend order by one each repetition",
+  "timing": "CUDA event milliseconds per graph replay; forward_backward includes forward",
+  "upstream_tuning": [
+    {
+      "name": "b300-gluon-d128.json",
+      "sha256": "6ef5c4ac8ed44bf5047fea7af73a0fca21498cec71268d43d0c881f9fed24990"
+    },
+    {
+      "name": "b300-gluon-d512.json",
+      "sha256": "7dc303334a64508a7cd8ce802efaf8f8edb968d1e85d368986ead7f2814e7b42"
+    }
+  ],
+  "upstream_source": {
+    "source_sha256": {
+      "kohakufa/__init__.py": "424554334e33018f28f3f9d62d998103c5844f2108dc07b26f2f8ffbfeb54b76",
+      "kohakufa/api.py": "c48d84d2f87b625840704008eeeb12abcdaae03bb88b0ce1b01af6d1a8f7f4c9",
+      "kohakufa/device.py": "45ffc0ac3245fa5e6e0dedeee62199528997712edff118651bbf8b2a0a1d0313",
+      "kohakufa/mask.py": "d9d89fb750dc9867bef3f0486a54412443edc35f1037daed8f10688c93c25961",
+      "kohakufa/sm100/__init__.py": "5b2faec4d91958090fcb9bc0de44d80038f10092a8396e2a74e8dd5d53a86593",
+      "kohakufa/sm100/bwd.py": "fbe1759bfc2507fb47baf021acc23b1e4c45b9cdf351cfed1874c4c654988c3e",
+      "kohakufa/sm100/config.py": "8963b01de0e0d404e81625633aab41ae4551d6bfae7fadfb6f66c8b2488b897d",
+      "kohakufa/sm100/fwd.py": "4f0f623cc0ff98250a3af310dac16f5cbe19e79e19a72e0242ec75a32446cf28",
+      "kohakufa/sm100/op.py": "ce28b1fd236a3807f8c23bfbffd2f2f4253f863928155e6de5735cbd145662e4",
+      "kohakufa/sm100/plan.py": "d306eb9463e9f002080bc897b2e4486355fbf2dd696a09c87eb0c2a3ca63bbba",
+      "kohakufa/sm100/tune.py": "7ff68bf869460bbd02e136a20fd21c3b28bbb62c5aaf0890c9388ada26a4deae"
+    },
+    "revision": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+    "modified": false,
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "initial_cute_configurations": {
+    "128:forward": [
+      128,
+      128,
+      12,
+      false,
+      false,
+      true,
+      true,
+      false,
+      128
+    ],
+    "128:q": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "128:kv": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "512:forward": [
+      128,
+      256,
+      12,
+      false,
+      false,
+      true,
+      true,
+      false,
+      128
+    ],
+    "512:q": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "512:kv": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ]
+  },
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.13346400260925292,
+            "forward_backward_ms": 0.6129439830780029,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.13368799686431884,
+            "forward_backward_ms": 0.6130256175994873,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.13413599729537964,
+            "forward_backward_ms": 0.6141551971435547,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.13348959684371947,
+            "forward_backward_ms": 0.6130720138549804,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.13366400003433226,
+            "forward_backward_ms": 0.610811185836792,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.1334447979927063,
+            "forward_backward_ms": 0.6105023860931397,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.13333760499954223,
+            "forward_backward_ms": 0.6119872093200683,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.13361599445343017,
+            "forward_backward_ms": 0.6124576091766357,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.0611840009689331,
+            "forward_backward_ms": 0.29343039989471437,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.06086080074310303,
+            "forward_backward_ms": 0.29301440715789795,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.06210079789161682,
+            "forward_backward_ms": 0.2961855888366699,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.06261119842529297,
+            "forward_backward_ms": 0.29554879665374756,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.13358879685401914,
+          "forward_backward_ms": 0.6130488157272338
+        },
+        "cute": {
+          "forward_ms": 0.13353039622306823,
+          "forward_backward_ms": 0.6113991975784301
+        },
+        "kohakufa": {
+          "forward_ms": 0.06164239943027496,
+          "forward_backward_ms": 0.29448959827423093
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 2,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 9,
+            "kv_group": 1,
+            "halves": 1,
+            "vsplit": 1,
+            "out_bufs": 2
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 2,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 1,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": false,
+            "nsl": 1,
+            "nw": 2,
+            "k_res": true
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.6286096096038818,
+            "forward_backward_ms": 3.205916976928711,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.6274208068847656,
+            "forward_backward_ms": 3.200447845458984,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.623905611038208,
+            "forward_backward_ms": 3.1903263092041017,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.6295872211456299,
+            "forward_backward_ms": 3.1798208236694334,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.624510383605957,
+            "forward_backward_ms": 3.185291290283203,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.6252848148345947,
+            "forward_backward_ms": 3.1776432037353515,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.6252480030059815,
+            "forward_backward_ms": 3.1798336029052736,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.6249152183532715,
+            "forward_backward_ms": 3.1797935485839846,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.27024800777435304,
+            "forward_backward_ms": 1.6270063400268555,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2693279981613159,
+            "forward_backward_ms": 1.625668716430664,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2689631938934326,
+            "forward_backward_ms": 1.6255855560302734,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2701744079589844,
+            "forward_backward_ms": 1.6302192687988282,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.6280152082443238,
+          "forward_backward_ms": 3.195387077331543
+        },
+        "cute": {
+          "forward_ms": 0.6250816106796264,
+          "forward_backward_ms": 3.179813575744629
+        },
+        "kohakufa": {
+          "forward_ms": 0.26975120306015016,
+          "forward_backward_ms": 1.6263375282287598
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 8,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 4,
+            "kv_group": 1,
+            "halves": 1,
+            "vsplit": 2,
+            "out_bufs": 1
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 8,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 3,
+            "do_slots": 8,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": true,
+            "nsl": 4,
+            "nw": 2,
+            "k_res": false
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 1.2662816047668457,
+            "forward_backward_ms": 6.580619049072266,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.266592025756836,
+            "forward_backward_ms": 6.580312347412109,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.2672863960266114,
+            "forward_backward_ms": 6.580854034423828,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.2656047821044922,
+            "forward_backward_ms": 6.580919647216797,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 1.2658960342407226,
+            "forward_backward_ms": 6.563388824462891,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.2669664382934571,
+            "forward_backward_ms": 6.562979125976563,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.2661104202270508,
+            "forward_backward_ms": 6.558566284179688,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.2659728050231933,
+            "forward_backward_ms": 6.560630035400391,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.719211196899414,
+            "forward_backward_ms": 3.3708576202392577,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.7151055812835694,
+            "forward_backward_ms": 3.375174331665039,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.7149712085723877,
+            "forward_backward_ms": 3.3719966888427733,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.7144576072692871,
+            "forward_backward_ms": 3.372119903564453,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 1.2664368152618408,
+          "forward_backward_ms": 6.580736541748047
+        },
+        "cute": {
+          "forward_ms": 1.2660416126251222,
+          "forward_backward_ms": 6.561804580688477
+        },
+        "kohakufa": {
+          "forward_ms": 0.7150383949279786,
+          "forward_backward_ms": 3.372058296203613
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 2,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 4,
+            "kv_group": 2,
+            "halves": 1,
+            "vsplit": 1,
+            "out_bufs": 2
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 2,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 1,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": false,
+            "nsl": 1,
+            "nw": 2,
+            "k_res": true
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 6.615265655517578,
+            "forward_backward_ms": 40.18632507324219,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 6.619149017333984,
+            "forward_backward_ms": 40.21281127929687,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 6.618531036376953,
+            "forward_backward_ms": 40.261965942382815,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 6.620505523681641,
+            "forward_backward_ms": 40.222738647460936,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 6.6275489807128904,
+            "forward_backward_ms": 40.267904663085936,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 6.631782531738281,
+            "forward_backward_ms": 40.336700439453125,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 6.622698974609375,
+            "forward_backward_ms": 40.2785400390625,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 6.624244689941406,
+            "forward_backward_ms": 40.283447265625,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 3.888195037841797,
+            "forward_backward_ms": 24.806985473632814,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 3.9148174285888673,
+            "forward_backward_ms": 24.817724609375,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 3.907516860961914,
+            "forward_backward_ms": 24.800857543945312,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 3.8763473510742186,
+            "forward_backward_ms": 24.797767639160156,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 6.618840026855469,
+          "forward_backward_ms": 40.2177749633789
+        },
+        "cute": {
+          "forward_ms": 6.625896835327149,
+          "forward_backward_ms": 40.28099365234375
+        },
+        "kohakufa": {
+          "forward_ms": 3.8978559494018556,
+          "forward_backward_ms": 24.803921508789063
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            10,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 32,
+            "nch": 16,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 5,
+            "kv_group": 2,
+            "halves": 1,
+            "vsplit": 2,
+            "out_bufs": 1
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 8,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 8,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": true,
+            "nsl": 4,
+            "nw": 2,
+            "k_res": false
+          }
+        }
+      }
+    }
+  ],
+  "experimental_override": "Experimental 320-thread launch/TMEM barrier versus 384-thread fused baseline. Both use 128-column/32-column dP. Separate frozen source; production dispatch unchanged."
+}

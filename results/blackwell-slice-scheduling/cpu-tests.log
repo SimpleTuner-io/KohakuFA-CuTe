@@ -1,0 +1,34 @@
+test_architecture_and_feature_selection (tests.test_api.DispatchTests.test_architecture_and_feature_selection) ... ok
+test_cpu_fullgraph_compile_stays_native (tests.test_api.DispatchTests.test_cpu_fullgraph_compile_stays_native) ... ok
+test_cpu_native_outputs_and_gradients_match (tests.test_api.DispatchTests.test_cpu_native_outputs_and_gradients_match) ... ok
+test_import_and_cpu_dispatch_do_not_load_cuda_dependencies (tests.test_api.DispatchTests.test_import_and_cpu_dispatch_do_not_load_cuda_dependencies) ... ok
+test_missing_dependency_selects_native (tests.test_api.DispatchTests.test_missing_dependency_selects_native) ... ok
+test_mps_native_dispatch (tests.test_api.DispatchTests.test_mps_native_dispatch) ... skipped 'Requires MPS'
+test_selected_kernel_errors_are_not_suppressed (tests.test_api.DispatchTests.test_selected_kernel_errors_are_not_suppressed) ... ok
+test_strict_cpu_calls_fail_before_importing_cuda (tests.test_api.DispatchTests.test_strict_cpu_calls_fail_before_importing_cuda) ... ok
+test_matches_autograd_for_normal_logits_masks_gqa_and_signed_scale (tests.test_reference.AttentionPrecisionReferenceTests.test_matches_autograd_for_normal_logits_masks_gqa_and_signed_scale) ... ok
+test_metrics_preserve_tiny_reference_norms_and_cosines (tests.test_reference.AttentionPrecisionReferenceTests.test_metrics_preserve_tiny_reference_norms_and_cosines) ... ok
+test_saturated_softmax_matches_decimal_finite_difference (tests.test_reference.AttentionPrecisionReferenceTests.test_saturated_softmax_matches_decimal_finite_difference) ... ok
+test_graph_profile_captures_then_replays_changed_inputs (tests.test_profile_attention.ProfileTests.test_graph_profile_captures_then_replays_changed_inputs) ... ok
+test_incomplete_capture_does_not_invent_iteration_slots (tests.test_profile_attention.ProfileTests.test_incomplete_capture_does_not_invent_iteration_slots) ... ok
+test_record_function_gpu_projection_is_not_counted_as_a_kernel (tests.test_profile_attention.ProfileTests.test_record_function_gpu_projection_is_not_counted_as_a_kernel) ... torch/profiler/profiler.py:272: UserWarning: Warning: Profiler clears events at the end of each cycle.Only events from the current cycle will be reported.To keep events across cycles, set acc_events=True.
+  _warn_once(
+USDT:2026-10-20 21:43:09 18522:18522 ActivityProfilerController.cpp:415] profiler_start
+USDT:2026-10-20 21:43:09 18522:18522 ActivityProfilerController.cpp:455] profiler_stop
+ok
+test_timeline_preserves_gaps_and_does_not_double_count_concurrent_kernels (tests.test_profile_attention.ProfileTests.test_timeline_preserves_gaps_and_does_not_double_count_concurrent_kernels) ... ok
+test_log_relative_error_survives_overflow_in_the_ratio (tests.test_row_metrics.RowMetricsTests.test_log_relative_error_survives_overflow_in_the_ratio) ... ok
+test_matches_individual_row_metrics_in_batch_head_sequence_order (tests.test_row_metrics.RowMetricsTests.test_matches_individual_row_metrics_in_batch_head_sequence_order) ... ok
+test_tiny_zero_and_nonfinite_rows_are_preserved_without_json_nan (tests.test_row_metrics.RowMetricsTests.test_tiny_zero_and_nonfinite_rows_are_preserved_without_json_nan) ... ok
+test_underflowed_ratio_is_not_counted_as_exact_zero_error (tests.test_row_metrics.RowMetricsTests.test_underflowed_ratio_is_not_counted_as_exact_zero_error) ... ok
+test_violin_plot_handles_constant_exact_and_undefined_rows (tests.test_row_metrics.RowMetricsTests.test_violin_plot_handles_constant_exact_and_undefined_rows) ... skipped 'Requires optional plots dependency'
+test_cpu_sweep_matches_fp64_for_both_dtypes_and_visibility_modes (tests.test_length_precision.LengthPrecisionTests.test_cpu_sweep_matches_fp64_for_both_dtypes_and_visibility_modes) ... ok
+test_unavailable_backend_is_reported_without_losing_other_results (tests.test_length_precision.LengthPrecisionTests.test_unavailable_backend_is_reported_without_losing_other_results) ... ok
+test_centered_strict_cpu_calls_still_reject_unsupported_device (tests.test_center_keys.KeyCenteringTests.test_centered_strict_cpu_calls_still_reject_unsupported_device) ... ok
+test_centering_handles_noncontiguous_keys_without_mutating_them (tests.test_center_keys.KeyCenteringTests.test_centering_handles_noncontiguous_keys_without_mutating_them) ... ok
+test_outputs_and_original_key_gradients_match_uncentered_attention (tests.test_center_keys.KeyCenteringTests.test_outputs_and_original_key_gradients_match_uncentered_attention) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 4.769s
+
+OK (skipped=2)

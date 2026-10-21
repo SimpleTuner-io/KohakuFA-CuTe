@@ -1,0 +1,30 @@
+[
+  {
+    "backend": "main",
+    "dtype": "torch.float16",
+    "expected_dq_max_abs": 0.0,
+    "actual_dq_max_abs": 0.0,
+    "actual_dq_nonzero": 0
+  },
+  {
+    "backend": "main",
+    "dtype": "torch.bfloat16",
+    "expected_dq_max_abs": 0.0,
+    "actual_dq_max_abs": 0.0,
+    "actual_dq_nonzero": 0
+  },
+  {
+    "backend": "rejected_anchor",
+    "dtype": "torch.float16",
+    "expected_dq_max_abs": 0.0,
+    "actual_dq_max_abs": 0.0003254413604736328,
+    "actual_dq_nonzero": 514
+  },
+  {
+    "backend": "rejected_anchor",
+    "dtype": "torch.bfloat16",
+    "expected_dq_max_abs": 0.0,
+    "actual_dq_max_abs": 0.0026092529296875,
+    "actual_dq_nonzero": 514
+  }
+]

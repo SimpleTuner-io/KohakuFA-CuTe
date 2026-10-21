@@ -1,0 +1,144 @@
+{
+  "scope": "Separate Nsight Systems observer passes; all kernels in a selected full graph replay are retained, including initialization. Gaps are not proof of accelerator idle time.",
+  "sqlite_sha256": "70f1f8a371e43d68aefeffd7b75c005ae1e2e2398f37e1fad0a78b125847cccf",
+  "timelines": [
+    {
+      "mask": "dense",
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "70f1f8a371e43d68aefeffd7b75c005ae1e2e2398f37e1fad0a78b125847cccf",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 3.900927
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_kernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i_0",
+          "start_ms": 3.900799,
+          "end_ms": 4.09392
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+          "start_ms": 4.093792,
+          "end_ms": 16.08112
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+          "start_ms": 16.081024,
+          "end_ms": 28.523587
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "70f1f8a371e43d68aefeffd7b75c005ae1e2e2398f37e1fad0a78b125847cccf",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 3.831135
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 3.831263,
+          "end_ms": 4.025216
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 4.025088,
+          "end_ms": 14.186161
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 14.186033,
+          "end_ms": 25.493867
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "70f1f8a371e43d68aefeffd7b75c005ae1e2e2398f37e1fad0a78b125847cccf",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.001216
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001248,
+          "end_ms": 0.001984
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.002016,
+          "end_ms": 0.002752
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.002784,
+          "end_ms": 3.82883
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 3.828734,
+          "end_ms": 3.830238
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 3.830142,
+          "end_ms": 4.252194
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 4.252066,
+          "end_ms": 4.253058
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 4.25293,
+          "end_ms": 4.253665
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 4.253666,
+          "end_ms": 4.254434
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 4.254466,
+          "end_ms": 24.581348
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 24.581476,
+          "end_ms": 24.828966
+        }
+      ]
+    }
+  ]
+}

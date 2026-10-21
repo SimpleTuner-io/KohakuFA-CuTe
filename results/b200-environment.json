@@ -1,0 +1,38 @@
+{
+  "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+  "torch": "2.12.0+cu130",
+  "triton": "3.7.0",
+  "cuda": "13.0",
+  "cudnn": 92000,
+  "device": "NVIDIA B200",
+  "capability": [
+    10,
+    0
+  ],
+  "multiprocessors": 148,
+  "total_memory": 191503007744,
+  "shared_per_block_optin": 232448,
+  "packages": {
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15",
+    "kohakufa": "0.1.0",
+    "kohakufa-cute": "0.2.0"
+  },
+  "upstream_revision": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+  "nvidia_smi": "Mon Oct 19 21:35:21 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA B200                    On  |   00000000:52:00.0 Off |                    0 |\n| N/A   28C    P0            192W / 1000W |       4MiB / 183359MiB |      0%      Default |\n|                                         |                        |             Disabled |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+  "host": {
+    "architecture": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Platinum 8559C",
+    "visible_logical_cpus": 192,
+    "affinity_logical_cpus": 192
+  },
+  "rental_allocation": {
+    "cpu_cores_effective": 24,
+    "cpu_ram_mb": 255489,
+    "disk_gb": 80,
+    "region": "Oregon, US",
+    "hourly_with_storage_usd": 6.270833333333333,
+    "download_per_gb_usd": 0.0001220703125,
+    "upload_per_gb_usd": 0.003662109375
+  }
+}

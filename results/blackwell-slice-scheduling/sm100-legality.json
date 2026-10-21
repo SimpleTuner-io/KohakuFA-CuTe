@@ -1,0 +1,8 @@
+[
+  {
+    "dimension": 512,
+    "passed": true,
+    "scope": "Offline assembly of the same backward PTX retargeted to sm_100a; no B200 execution or performance claim.",
+    "log": "selected/assembly/backward/sm100-legality.log"
+  }
+]

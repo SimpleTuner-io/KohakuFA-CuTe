@@ -1,0 +1,624 @@
+{
+  "device": "NVIDIA H100 80GB HBM3",
+  "torch": "2.11.0+cu128",
+  "dtype": "bf16",
+  "causal": false,
+  "iterations": 100,
+  "repeats": 6,
+  "ordering": "rotate backend order by one each repetition",
+  "timing": "CUDA event milliseconds per graph replay; forward_backward includes forward",
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.014415359497070313,
+            "forward_backward_ms": 0.05233791828155518
+          },
+          {
+            "forward_ms": 0.01462399959564209,
+            "forward_backward_ms": 0.05223487854003906
+          },
+          {
+            "forward_ms": 0.014593919515609741,
+            "forward_backward_ms": 0.05268127918243408
+          },
+          {
+            "forward_ms": 0.014653760194778442,
+            "forward_backward_ms": 0.0527561616897583
+          },
+          {
+            "forward_ms": 0.014798400402069091,
+            "forward_backward_ms": 0.05267007827758789
+          },
+          {
+            "forward_ms": 0.014750720262527465,
+            "forward_backward_ms": 0.05254784107208252
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.014672960042953492,
+            "forward_backward_ms": 0.05239007949829102
+          },
+          {
+            "forward_ms": 0.014612799882888794,
+            "forward_backward_ms": 0.05263967990875244
+          },
+          {
+            "forward_ms": 0.01462656021118164,
+            "forward_backward_ms": 0.05229311943054199
+          },
+          {
+            "forward_ms": 0.014699519872665405,
+            "forward_backward_ms": 0.053024640083312986
+          },
+          {
+            "forward_ms": 0.014789119958877564,
+            "forward_backward_ms": 0.05281760215759277
+          },
+          {
+            "forward_ms": 0.014776639938354492,
+            "forward_backward_ms": 0.05294623851776123
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.01979743957519531,
+            "forward_backward_ms": 0.06872543811798096
+          },
+          {
+            "forward_ms": 0.01977952003479004,
+            "forward_backward_ms": 0.06873568058013917
+          },
+          {
+            "forward_ms": 0.01989951968193054,
+            "forward_backward_ms": 0.06870528221130372
+          },
+          {
+            "forward_ms": 0.019987839460372924,
+            "forward_backward_ms": 0.06859776020050048
+          },
+          {
+            "forward_ms": 0.019847999811172485,
+            "forward_backward_ms": 0.06883872032165528
+          },
+          {
+            "forward_ms": 0.019994239807128906,
+            "forward_backward_ms": 0.06887199878692626
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.014638879895210266,
+          "forward_backward_ms": 0.052608959674835205
+        },
+        "cudnn": {
+          "forward_ms": 0.014686239957809448,
+          "forward_backward_ms": 0.05272864103317261
+        },
+        "cute": {
+          "forward_ms": 0.019873759746551513,
+          "forward_backward_ms": 0.06873055934906006
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.018852479457855224,
+            "forward_backward_ms": 0.07715744018554688
+          },
+          {
+            "forward_ms": 0.018935999870300292,
+            "forward_backward_ms": 0.07734015941619873
+          },
+          {
+            "forward_ms": 0.018948800563812256,
+            "forward_backward_ms": 0.07661600112915039
+          },
+          {
+            "forward_ms": 0.018954559564590454,
+            "forward_backward_ms": 0.07666368007659913
+          },
+          {
+            "forward_ms": 0.01912608027458191,
+            "forward_backward_ms": 0.0777177619934082
+          },
+          {
+            "forward_ms": 0.0191212797164917,
+            "forward_backward_ms": 0.0775817584991455
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.018949760198593138,
+            "forward_backward_ms": 0.07661471843719482
+          },
+          {
+            "forward_ms": 0.018910399675369262,
+            "forward_backward_ms": 0.07713183879852295
+          },
+          {
+            "forward_ms": 0.01893056035041809,
+            "forward_backward_ms": 0.07689888000488282
+          },
+          {
+            "forward_ms": 0.018889600038528444,
+            "forward_backward_ms": 0.07702943801879883
+          },
+          {
+            "forward_ms": 0.01923519968986511,
+            "forward_backward_ms": 0.07778495788574219
+          },
+          {
+            "forward_ms": 0.019266560077667236,
+            "forward_backward_ms": 0.07771552085876465
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.026293759346008302,
+            "forward_backward_ms": 0.08973664283752442
+          },
+          {
+            "forward_ms": 0.026268479824066163,
+            "forward_backward_ms": 0.09020671844482422
+          },
+          {
+            "forward_ms": 0.026155838966369627,
+            "forward_backward_ms": 0.08981311798095704
+          },
+          {
+            "forward_ms": 0.02615488052368164,
+            "forward_backward_ms": 0.09117280006408691
+          },
+          {
+            "forward_ms": 0.026587200164794923,
+            "forward_backward_ms": 0.09152064323425294
+          },
+          {
+            "forward_ms": 0.026446080207824706,
+            "forward_backward_ms": 0.09046879768371582
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.018951680064201355,
+          "forward_backward_ms": 0.0772487998008728
+        },
+        "cudnn": {
+          "forward_ms": 0.018940160274505614,
+          "forward_backward_ms": 0.07708063840866089
+        },
+        "cute": {
+          "forward_ms": 0.026281119585037233,
+          "forward_backward_ms": 0.09033775806427002
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.032173120975494386,
+            "forward_backward_ms": 0.1989993667602539
+          },
+          {
+            "forward_ms": 0.031811840534210205,
+            "forward_backward_ms": 0.19901376724243164
+          },
+          {
+            "forward_ms": 0.03198559999465942,
+            "forward_backward_ms": 0.19877376556396484
+          },
+          {
+            "forward_ms": 0.0317737603187561,
+            "forward_backward_ms": 0.19925119400024413
+          },
+          {
+            "forward_ms": 0.03238879919052124,
+            "forward_backward_ms": 0.19848960876464844
+          },
+          {
+            "forward_ms": 0.03243103981018067,
+            "forward_backward_ms": 0.199237117767334
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.032321279048919675,
+            "forward_backward_ms": 0.19905696868896483
+          },
+          {
+            "forward_ms": 0.032003519535064695,
+            "forward_backward_ms": 0.19810848236083983
+          },
+          {
+            "forward_ms": 0.03215392112731934,
+            "forward_backward_ms": 0.1996931266784668
+          },
+          {
+            "forward_ms": 0.03204031944274902,
+            "forward_backward_ms": 0.19999711990356445
+          },
+          {
+            "forward_ms": 0.03213279962539673,
+            "forward_backward_ms": 0.19830848693847655
+          },
+          {
+            "forward_ms": 0.0323907208442688,
+            "forward_backward_ms": 0.1993996810913086
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.05146463871002197,
+            "forward_backward_ms": 0.3566080093383789
+          },
+          {
+            "forward_ms": 0.05131423950195312,
+            "forward_backward_ms": 0.3557670211791992
+          },
+          {
+            "forward_ms": 0.051741437911987306,
+            "forward_backward_ms": 0.35789630889892576
+          },
+          {
+            "forward_ms": 0.05223008155822754,
+            "forward_backward_ms": 0.3575081634521484
+          },
+          {
+            "forward_ms": 0.052626237869262696,
+            "forward_backward_ms": 0.35790721893310545
+          },
+          {
+            "forward_ms": 0.05177055835723877,
+            "forward_backward_ms": 0.35784225463867186
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.0320793604850769,
+          "forward_backward_ms": 0.19900656700134278
+        },
+        "cudnn": {
+          "forward_ms": 0.03214336037635804,
+          "forward_backward_ms": 0.1992283248901367
+        },
+        "cute": {
+          "forward_ms": 0.05175599813461304,
+          "forward_backward_ms": 0.35767520904541017
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.1487996768951416,
+            "forward_backward_ms": 0.558133430480957
+          },
+          {
+            "forward_ms": 0.14870431900024414,
+            "forward_backward_ms": 0.5627222442626953
+          },
+          {
+            "forward_ms": 0.17517215728759766,
+            "forward_backward_ms": 0.6026473617553711
+          },
+          {
+            "forward_ms": 0.15494688034057616,
+            "forward_backward_ms": 0.5731382369995117
+          },
+          {
+            "forward_ms": 0.15445216178894042,
+            "forward_backward_ms": 0.5751619338989258
+          },
+          {
+            "forward_ms": 0.14915295600891113,
+            "forward_backward_ms": 0.5867929458618164
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.1497977638244629,
+            "forward_backward_ms": 0.5613616180419921
+          },
+          {
+            "forward_ms": 0.14934783935546875,
+            "forward_backward_ms": 0.558595199584961
+          },
+          {
+            "forward_ms": 0.15754303932189942,
+            "forward_backward_ms": 0.5641795349121094
+          },
+          {
+            "forward_ms": 0.15215935707092285,
+            "forward_backward_ms": 0.561918716430664
+          },
+          {
+            "forward_ms": 0.164815673828125,
+            "forward_backward_ms": 0.6390544128417969
+          },
+          {
+            "forward_ms": 0.15936767578125,
+            "forward_backward_ms": 0.6103363037109375
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.19434080123901368,
+            "forward_backward_ms": 0.8565283203125
+          },
+          {
+            "forward_ms": 0.20155839920043944,
+            "forward_backward_ms": 0.8449958038330078
+          },
+          {
+            "forward_ms": 0.20154176712036131,
+            "forward_backward_ms": 0.9943212890625
+          },
+          {
+            "forward_ms": 0.20231136322021484,
+            "forward_backward_ms": 0.8752207946777344
+          },
+          {
+            "forward_ms": 0.21977344512939453,
+            "forward_backward_ms": 0.8775641632080078
+          },
+          {
+            "forward_ms": 0.20432992935180663,
+            "forward_backward_ms": 0.8576796722412109
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.15180255889892577,
+          "forward_backward_ms": 0.5741500854492188
+        },
+        "cudnn": {
+          "forward_ms": 0.15485119819641113,
+          "forward_backward_ms": 0.5630491256713868
+        },
+        "cute": {
+          "forward_ms": 0.20193488121032716,
+          "forward_backward_ms": 0.8664502334594726
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.20670623779296876,
+            "forward_backward_ms": 0.9070941162109375
+          },
+          {
+            "forward_ms": 0.256694393157959,
+            "forward_backward_ms": 0.9371644592285157
+          },
+          {
+            "forward_ms": 0.22092287063598634,
+            "forward_backward_ms": 0.9103616333007812
+          },
+          {
+            "forward_ms": 0.2399407958984375,
+            "forward_backward_ms": 0.9176905822753906
+          },
+          {
+            "forward_ms": 0.23822975158691406,
+            "forward_backward_ms": 0.9387142181396484
+          },
+          {
+            "forward_ms": 0.232346248626709,
+            "forward_backward_ms": 0.9376175689697266
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.22316864013671875,
+            "forward_backward_ms": 0.9079225921630859
+          },
+          {
+            "forward_ms": 0.21790048599243164,
+            "forward_backward_ms": 0.900223388671875
+          },
+          {
+            "forward_ms": 0.2196988868713379,
+            "forward_backward_ms": 0.9698249816894531
+          },
+          {
+            "forward_ms": 0.22306623458862304,
+            "forward_backward_ms": 1.0011321258544923
+          },
+          {
+            "forward_ms": 0.22016864776611328,
+            "forward_backward_ms": 0.9623027038574219
+          },
+          {
+            "forward_ms": 0.22099584579467774,
+            "forward_backward_ms": 0.9644032287597656
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.28546335220336916,
+            "forward_backward_ms": 1.2741206359863282
+          },
+          {
+            "forward_ms": 0.30161567687988283,
+            "forward_backward_ms": 1.3886119079589845
+          },
+          {
+            "forward_ms": 0.30192319869995116,
+            "forward_backward_ms": 1.267787857055664
+          },
+          {
+            "forward_ms": 0.31385087966918945,
+            "forward_backward_ms": 1.2859616088867187
+          },
+          {
+            "forward_ms": 0.30704832077026367,
+            "forward_backward_ms": 1.314712677001953
+          },
+          {
+            "forward_ms": 0.3023535919189453,
+            "forward_backward_ms": 1.3175424194335938
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.23528800010681153,
+          "forward_backward_ms": 0.9274275207519531
+        },
+        "cudnn": {
+          "forward_ms": 0.2205822467803955,
+          "forward_backward_ms": 0.9633529663085938
+        },
+        "cute": {
+          "forward_ms": 0.3021383953094482,
+          "forward_backward_ms": 1.3003371429443358
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.39983840942382814,
+            "forward_backward_ms": 2.3702691650390624
+          },
+          {
+            "forward_ms": 0.4073328018188477,
+            "forward_backward_ms": 2.4382063293457032
+          },
+          {
+            "forward_ms": 0.39774593353271487,
+            "forward_backward_ms": 2.483257293701172
+          },
+          {
+            "forward_ms": 0.4442617416381836,
+            "forward_backward_ms": 2.4593714904785156
+          },
+          {
+            "forward_ms": 0.41666465759277344,
+            "forward_backward_ms": 2.4843907165527344
+          },
+          {
+            "forward_ms": 0.399700813293457,
+            "forward_backward_ms": 2.479061737060547
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.39312545776367186,
+            "forward_backward_ms": 2.6095941162109373
+          },
+          {
+            "forward_ms": 0.40960384368896485,
+            "forward_backward_ms": 2.493203582763672
+          },
+          {
+            "forward_ms": 0.445263671875,
+            "forward_backward_ms": 2.413091583251953
+          },
+          {
+            "forward_ms": 0.4184902572631836,
+            "forward_backward_ms": 2.466172180175781
+          },
+          {
+            "forward_ms": 0.39085567474365235,
+            "forward_backward_ms": 2.4924137878417967
+          },
+          {
+            "forward_ms": 0.445873908996582,
+            "forward_backward_ms": 2.4234602355957033
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.6519631958007812,
+            "forward_backward_ms": 4.660564880371094
+          },
+          {
+            "forward_ms": 0.6834300994873047,
+            "forward_backward_ms": 4.653412780761719
+          },
+          {
+            "forward_ms": 0.6834925079345703,
+            "forward_backward_ms": 4.712068786621094
+          },
+          {
+            "forward_ms": 0.6855001831054688,
+            "forward_backward_ms": 4.708011779785156
+          },
+          {
+            "forward_ms": 0.6881100463867188,
+            "forward_backward_ms": 4.711400146484375
+          },
+          {
+            "forward_ms": 0.6831228637695312,
+            "forward_backward_ms": 4.712677612304687
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.40358560562133794,
+          "forward_backward_ms": 2.4692166137695315
+        },
+        "cudnn": {
+          "forward_ms": 0.41404705047607426,
+          "forward_backward_ms": 2.479292984008789
+        },
+        "cute": {
+          "forward_ms": 0.6834613037109375,
+          "forward_backward_ms": 4.709705963134766
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "source_sha256": {
+    "bf16": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356",
+    "fp16": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33",
+    "before": "dbdaa74ad904fa4ad2a52c5e210b52c5d647c44dd6436be9bf0267579429c415",
+    "after": "36921a887c9992c7c35040242f8ad18ca2f392d72cd844d5d4c8c2b2eadfbb33"
+  },
+  "representative_ctas": [
+    {
+      "dimension": 128,
+      "mode": "dQ",
+      "variant": "before",
+      "sample": 1,
+      "head": 4,
+      "tile_and_slice": 19,
+      "clock_cycles": [
+        2039,
+        18461,
+        2639,
+        1829,
+        2635,
+        7185,
+        2153,
+        2087,
+        136929
+      ]
+    },
+    {
+      "dimension": 128,
+      "mode": "dQ",
+      "variant": "after",
+      "sample": 1,
+      "head": 6,
+      "tile_and_slice": 10,
+      "clock_cycles": [
+        2039,
+        6179,
+        2641,
+        1829,
+        2635,
+        9567,
+        2013,
+        2149,
+        127793
+      ]
+    },
+    {
+      "dimension": 128,
+      "mode": "dK/dV",
+      "variant": "before",
+      "sample": 3,
+      "head": 9,
+      "tile_and_slice": 18,
+      "clock_cycles": [
+        2306,
+        106761,
+        8219,
+        1522,
+        4897,
+        2179,
+        2151,
+        1617,
+        202703
+      ]
+    },
+    {
+      "dimension": 128,
+      "mode": "dK/dV",
+      "variant": "after",
+      "sample": 1,
+      "head": 7,
+      "tile_and_slice": 22,
+      "clock_cycles": [
+        16696,
+        2644,
+        7685,
+        1895,
+        2073,
+        2262,
+        1654,
+        1360,
+        126413
+      ]
+    },
+    {
+      "dimension": 512,
+      "mode": "dQ",
+      "variant": "before",
+      "sample": 2,
+      "head": 13,
+      "tile_and_slice": 41,
+      "clock_cycles": [
+        141842,
+        2178,
+        6906,
+        1746,
+        1321,
+        1419,
+        0,
+        0,
+        255221
+      ]
+    },
+    {
+      "dimension": 512,
+      "mode": "dQ",
+      "variant": "after",
+      "sample": 1,
+      "head": 2,
+      "tile_and_slice": 113,
+      "clock_cycles": [
+        142913,
+        1696,
+        6868,
+        1673,
+        1305,
+        1437,
+        0,
+        0,
+        248396
+      ]
+    },
+    {
+      "dimension": 512,
+      "mode": "dK/dV",
+      "variant": "before",
+      "sample": 1,
+      "head": 7,
+      "tile_and_slice": 48,
+      "clock_cycles": [
+        139914,
+        43267,
+        4408,
+        1797,
+        1333,
+        1385,
+        0,
+        0,
+        296089
+      ]
+    },
+    {
+      "dimension": 512,
+      "mode": "dK/dV",
+      "variant": "after",
+      "sample": 1,
+      "head": 14,
+      "tile_and_slice": 113,
+      "clock_cycles": [
+        153907,
+        1993,
+        4698,
+        1535,
+        1333,
+        1449,
+        0,
+        0,
+        265787
+      ]
+    }
+  ],
+  "selection": "Actual CTA interval nearest median total time; no joining of independent per-field medians; first sample excluded as warmup.",
+  "scope": "Instrumented matrix-warp intervals include timer overhead; these are not PM-counter stall percentages or GPU utilization."
+}

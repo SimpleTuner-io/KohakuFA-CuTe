@@ -1,0 +1,293 @@
+{
+  "protocol": "Paired new-64 versus new-128 from the exact same probability-tile source; isolates the tile-table change after PR 13. All outputs/gradients validated and all CUDA graphs verified in the linked source reports.",
+  "rows": [
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "previous_after_bounds_ms": 3.80666561126709,
+      "wide_after_bounds_ms": 3.353786277770996,
+      "gluon_ms": 2.1114175796508787,
+      "time_reduction_percent": 11.897008556665645,
+      "source_report": "../blackwell-probability-tiles/paired-bf16-causal.json",
+      "source_report_sha256": "0ed03d9c628aa122e03fcd28569cd8ca62364c2da980aee4188a57f2cae300ed"
+    },
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "previous_after_bounds_ms": 45.393882751464844,
+      "wide_after_bounds_ms": 22.636215209960938,
+      "gluon_ms": 13.654920196533203,
+      "time_reduction_percent": 50.13377609953298,
+      "source_report": "../blackwell-probability-tiles/paired-bf16-causal.json",
+      "source_report_sha256": "0ed03d9c628aa122e03fcd28569cd8ca62364c2da980aee4188a57f2cae300ed"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "previous_after_bounds_ms": 0.4539624214172363,
+      "wide_after_bounds_ms": 0.3709648013114929,
+      "gluon_ms": 0.1818168044090271,
+      "time_reduction_percent": 18.282927438493946,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "previous_after_bounds_ms": 0.5712615966796875,
+      "wide_after_bounds_ms": 0.5432567834854126,
+      "gluon_ms": 0.2962040066719055,
+      "time_reduction_percent": 4.902274782174343,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "previous_after_bounds_ms": 1.2457032203674316,
+      "wide_after_bounds_ms": 1.063754415512085,
+      "gluon_ms": 0.6404575824737548,
+      "time_reduction_percent": 14.606111783325016,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "previous_after_bounds_ms": 5.231288909912109,
+      "wide_after_bounds_ms": 3.1227848052978517,
+      "gluon_ms": 1.6258655548095704,
+      "time_reduction_percent": 40.3056329123616,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "previous_after_bounds_ms": 5.526903915405273,
+      "wide_after_bounds_ms": 4.192835044860839,
+      "gluon_ms": 1.976095962524414,
+      "time_reduction_percent": 24.1377250439609,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "previous_after_bounds_ms": 6.121038436889648,
+      "wide_after_bounds_ms": 5.556169700622558,
+      "gluon_ms": 3.370681571960449,
+      "time_reduction_percent": 9.228315458089554,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "previous_after_bounds_ms": 14.286084747314455,
+      "wide_after_bounds_ms": 11.549430465698244,
+      "gluon_ms": 7.751114273071289,
+      "time_reduction_percent": 19.156083209786757,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "previous_after_bounds_ms": 71.98573303222656,
+      "wide_after_bounds_ms": 38.33578796386719,
+      "gluon_ms": 24.809881591796874,
+      "time_reduction_percent": 46.74529750679203,
+      "source_report": "../blackwell-probability-tiles/paired-bf16.json",
+      "source_report_sha256": "b4867779719f57e65ce3d056c1e24db1285bdbf2fe6e5f925563216090f35356"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "previous_after_bounds_ms": 0.4252400159835815,
+      "wide_after_bounds_ms": 0.3823855996131897,
+      "gluon_ms": 0.1829088032245636,
+      "time_reduction_percent": 10.07770077123843,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "previous_after_bounds_ms": 0.5565239906311035,
+      "wide_after_bounds_ms": 0.5409208059310913,
+      "gluon_ms": 0.2947824001312256,
+      "time_reduction_percent": 2.8036859080087573,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "previous_after_bounds_ms": 1.2437623977661132,
+      "wide_after_bounds_ms": 1.0571656227111816,
+      "gluon_ms": 0.6282079935073852,
+      "time_reduction_percent": 15.002606236534632,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "previous_after_bounds_ms": 5.232925605773926,
+      "wide_after_bounds_ms": 3.1348423957824707,
+      "gluon_ms": 1.6264871597290038,
+      "time_reduction_percent": 40.09388567795544,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "previous_after_bounds_ms": 5.1495672225952145,
+      "wide_after_bounds_ms": 4.3487712860107415,
+      "gluon_ms": 2.019696807861328,
+      "time_reduction_percent": 15.550742459885747,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "previous_after_bounds_ms": 5.908234405517578,
+      "wide_after_bounds_ms": 5.490147972106934,
+      "gluon_ms": 3.372979164123535,
+      "time_reduction_percent": 7.076334564860898,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "previous_after_bounds_ms": 14.369937896728516,
+      "wide_after_bounds_ms": 11.532287979125977,
+      "gluon_ms": 7.583013534545898,
+      "time_reduction_percent": 19.74712721791625,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    },
+    {
+      "dtype": "fp16",
+      "causal": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "previous_after_bounds_ms": 71.8978759765625,
+      "wide_after_bounds_ms": 38.860041809082034,
+      "gluon_ms": 25.138076782226562,
+      "time_reduction_percent": 45.95105727219292,
+      "source_report": "../blackwell-probability-tiles/paired-fp16.json",
+      "source_report_sha256": "4993537740c708094370caf00c149e0c6c21b8966e08b2069f331aac59562e33"
+    }
+  ]
+}

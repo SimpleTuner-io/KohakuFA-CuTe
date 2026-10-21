@@ -1,0 +1,1189 @@
+{
+  "baseline_revision": "cbd83c84f155667971483c67bd487f8e5659772c",
+  "cases": 20,
+  "selected_cases": 12,
+  "graph_verified_samples": 240,
+  "enforced_bitwise_candidate_evaluations": 52,
+  "rows": [
+    {
+      "shape": [
+        2,
+        8,
+        2048,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.9206615924835204,
+          "forward_backward_ms": 4.696539115905761
+        },
+        "candidate": {
+          "forward_ms": 0.9193280220031739,
+          "forward_backward_ms": 4.216407966613769
+        },
+        "gluon": {
+          "forward_ms": 0.82499680519104,
+          "forward_backward_ms": 3.677864837646484
+        }
+      },
+      "latency_percent_lower": 10.2230842210157,
+      "candidate_percent_above_gluon": 14.642820025759985,
+      "source_report": "paired-causal-b2h8.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": true,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.33634319305419924,
+          "forward_backward_ms": 1.5981279850006103
+        },
+        "candidate": {
+          "forward_ms": 0.3352144002914429,
+          "forward_backward_ms": 1.5955584049224854
+        },
+        "gluon": {
+          "forward_ms": 0.24201200008392332,
+          "forward_backward_ms": 1.1448919773101807
+        }
+      },
+      "latency_percent_lower": 0.16078687703625638,
+      "candidate_percent_above_gluon": 39.36322697195453,
+      "source_report": "paired-causal-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        2048,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.9092847824096679,
+          "forward_backward_ms": 4.689748001098632
+        },
+        "candidate": {
+          "forward_ms": 0.9097896099090577,
+          "forward_backward_ms": 4.204963874816895
+        },
+        "gluon": {
+          "forward_ms": 0.8272639751434326,
+          "forward_backward_ms": 3.678335189819336
+        }
+      },
+      "latency_percent_lower": 10.337103958851745,
+      "candidate_percent_above_gluon": 14.317039035896695,
+      "source_report": "paired-causal-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 2.629917526245117,
+          "forward_backward_ms": 15.864199829101562
+        },
+        "candidate": {
+          "forward_ms": 2.63494873046875,
+          "forward_backward_ms": 14.14381103515625
+        },
+        "gluon": {
+          "forward_ms": 3.0037168502807616,
+          "forward_backward_ms": 13.670922088623048
+        }
+      },
+      "latency_percent_lower": 10.844472538661542,
+      "candidate_percent_above_gluon": 3.459085959730124,
+      "source_report": "paired-causal-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        8192,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 8.672332000732421,
+          "forward_backward_ms": 57.87034301757812
+        },
+        "candidate": {
+          "forward_ms": 8.671302032470702,
+          "forward_backward_ms": 51.85041809082031
+        },
+        "gluon": {
+          "forward_ms": 11.278774642944336,
+          "forward_backward_ms": 51.28218994140625
+        }
+      },
+      "latency_percent_lower": 10.402435190213499,
+      "candidate_percent_above_gluon": 1.1080418953701265,
+      "source_report": "paired-causal-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        2048,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.4654328107833862,
+          "forward_backward_ms": 2.3921816825866697
+        },
+        "candidate": {
+          "forward_ms": 0.46702318191528325,
+          "forward_backward_ms": 2.143124008178711
+        },
+        "gluon": {
+          "forward_ms": 0.3982599973678589,
+          "forward_backward_ms": 1.8506120681762694
+        }
+      },
+      "latency_percent_lower": 10.41131935006928,
+      "candidate_percent_above_gluon": 15.806226763165142,
+      "source_report": "paired-causal-h8.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 1.3377575874328613,
+          "forward_backward_ms": 7.978131866455078
+        },
+        "candidate": {
+          "forward_ms": 1.3376464366912841,
+          "forward_backward_ms": 7.113311767578125
+        },
+        "gluon": {
+          "forward_ms": 1.433803176879883,
+          "forward_backward_ms": 6.766051864624023
+        }
+      },
+      "latency_percent_lower": 10.839882235002696,
+      "candidate_percent_above_gluon": 5.132386063573269,
+      "source_report": "paired-causal-h8.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        2,
+        8,
+        2048,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 1.082582378387451,
+          "forward_backward_ms": 7.627096557617188
+        },
+        "candidate": {
+          "forward_ms": 1.082540798187256,
+          "forward_backward_ms": 6.7264556884765625
+        },
+        "gluon": {
+          "forward_ms": 0.9392127990722656,
+          "forward_backward_ms": 5.872596740722656
+        }
+      },
+      "latency_percent_lower": 11.808436701134383,
+      "candidate_percent_above_gluon": 14.539717018758447,
+      "source_report": "paired-dense-b2h8.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 8,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 4,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.3469280004501343,
+          "forward_backward_ms": 2.1670432090759277
+        },
+        "candidate": {
+          "forward_ms": 0.3469816088676453,
+          "forward_backward_ms": 2.1677976608276364
+        },
+        "gluon": {
+          "forward_ms": 0.2694383978843689,
+          "forward_backward_ms": 1.6288623809814453
+        }
+      },
+      "latency_percent_lower": -0.034814799656457396,
+      "candidate_percent_above_gluon": 33.08660609630287,
+      "source_report": "paired-dense-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 8,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 4,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        2048,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 1.0791232109069826,
+          "forward_backward_ms": 7.625552368164062
+        },
+        "candidate": {
+          "forward_ms": 1.0921767711639405,
+          "forward_backward_ms": 6.715266418457031
+        },
+        "gluon": {
+          "forward_ms": 0.9566815853118896,
+          "forward_backward_ms": 5.873566436767578
+        }
+      },
+      "latency_percent_lower": 11.937311630136927,
+      "candidate_percent_above_gluon": 14.330304947613225,
+      "source_report": "paired-dense-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 8,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 4,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 3.9093791961669924,
+          "forward_backward_ms": 28.520680236816407
+        },
+        "candidate": {
+          "forward_ms": 3.9103193283081055,
+          "forward_backward_ms": 25.6469970703125
+        },
+        "gluon": {
+          "forward_ms": 3.902831268310547,
+          "forward_backward_ms": 24.911816406249997
+        }
+      },
+      "latency_percent_lower": 10.07578761320833,
+      "candidate_percent_above_gluon": 2.9511323143745605,
+      "source_report": "paired-dense-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        8192,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 16.346080780029297,
+          "forward_backward_ms": 115.349267578125
+        },
+        "candidate": {
+          "forward_ms": 16.343277740478516,
+          "forward_backward_ms": 102.94912109375
+        },
+        "gluon": {
+          "forward_ms": 16.337383270263672,
+          "forward_backward_ms": 99.35747680664062
+        }
+      },
+      "latency_percent_lower": 10.750086883712973,
+      "candidate_percent_above_gluon": 3.614870669571313,
+      "source_report": "paired-dense-h16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        2048,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.5603384017944336,
+          "forward_backward_ms": 3.9054023742675783
+        },
+        "candidate": {
+          "forward_ms": 0.5597543954849243,
+          "forward_backward_ms": 3.4789585113525394
+        },
+        "gluon": {
+          "forward_ms": 0.48490161895751954,
+          "forward_backward_ms": 3.001605606079101
+        }
+      },
+      "latency_percent_lower": 10.919332300426909,
+      "candidate_percent_above_gluon": 15.903252056388206,
+      "source_report": "paired-dense-h8.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 8,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 4,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": true,
+      "medians": {
+        "baseline": {
+          "forward_ms": 2.007142353057861,
+          "forward_backward_ms": 14.34830093383789
+        },
+        "candidate": {
+          "forward_ms": 1.9957207679748534,
+          "forward_backward_ms": 13.04153823852539
+        },
+        "gluon": {
+          "forward_ms": 1.9751015663146974,
+          "forward_backward_ms": 12.466987991333008
+        }
+      },
+      "latency_percent_lower": 9.107438583412586,
+      "candidate_percent_above_gluon": 4.608573037784325,
+      "source_report": "paired-dense-h8.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.14956799745559693,
+          "forward_backward_ms": 0.8493023872375488
+        },
+        "candidate": {
+          "forward_ms": 0.14938160181045532,
+          "forward_backward_ms": 0.8477583885192871
+        },
+        "gluon": {
+          "forward_ms": 0.10066720247268676,
+          "forward_backward_ms": 0.6394320011138916
+        }
+      },
+      "latency_percent_lower": 0.18179611189882428,
+      "candidate_percent_above_gluon": 32.57991264786413,
+      "source_report": "controls-bf16-d256.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 3,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 1.4363728046417237,
+          "forward_backward_ms": 9.70694465637207
+        },
+        "candidate": {
+          "forward_ms": 1.4556496143341064,
+          "forward_backward_ms": 9.706038284301759
+        },
+        "gluon": {
+          "forward_ms": 1.1375263690948487,
+          "forward_backward_ms": 7.792444229125977
+        }
+      },
+      "latency_percent_lower": 0.009337356937710872,
+      "candidate_percent_above_gluon": 24.55704524676998,
+      "source_report": "controls-bf16-d256.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 8,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.14151040315628052,
+          "forward_backward_ms": 0.659878396987915
+        },
+        "candidate": {
+          "forward_ms": 0.1415511965751648,
+          "forward_backward_ms": 0.659717607498169
+        },
+        "gluon": {
+          "forward_ms": 0.08643839955329895,
+          "forward_backward_ms": 0.4683768033981323
+        }
+      },
+      "latency_percent_lower": 0.024366533361286358,
+      "candidate_percent_above_gluon": 40.851895890623794,
+      "source_report": "controls-fp16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 7,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.3351696014404297,
+          "forward_backward_ms": 1.5943559646606444
+        },
+        "candidate": {
+          "forward_ms": 0.3357288002967834,
+          "forward_backward_ms": 1.5947904109954834
+        },
+        "gluon": {
+          "forward_ms": 0.2414944052696228,
+          "forward_backward_ms": 1.1428695678710938
+        }
+      },
+      "latency_percent_lower": -0.027249017438291112,
+      "candidate_percent_above_gluon": 39.54264387022006,
+      "source_report": "controls-fp16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.9852231979370116,
+          "forward_backward_ms": 5.859050369262695
+        },
+        "candidate": {
+          "forward_ms": 0.9830848217010498,
+          "forward_backward_ms": 5.859728813171387
+        },
+        "gluon": {
+          "forward_ms": 1.187504768371582,
+          "forward_backward_ms": 4.7595054626464846
+        }
+      },
+      "latency_percent_lower": -0.011579417583629237,
+      "candidate_percent_above_gluon": 23.116337593467783,
+      "source_report": "controls-fp16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 7,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "medians": {
+        "baseline": {
+          "forward_ms": 2.6342336654663088,
+          "forward_backward_ms": 16.443233489990234
+        },
+        "candidate": {
+          "forward_ms": 2.682191181182861,
+          "forward_backward_ms": 16.43988037109375
+        },
+        "gluon": {
+          "forward_ms": 3.0059688568115233,
+          "forward_backward_ms": 13.729019165039062
+        }
+      },
+      "latency_percent_lower": 0.020392089539600367,
+      "candidate_percent_above_gluon": 19.745483442530933,
+      "source_report": "controls-fp16.json",
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      }
+    }
+  ]
+}

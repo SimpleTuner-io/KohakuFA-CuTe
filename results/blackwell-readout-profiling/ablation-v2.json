@@ -1,0 +1,113 @@
+{
+  "shape": [
+    1,
+    16,
+    4096,
+    512
+  ],
+  "production_base": "1dcaebe81cbecdfdbc01926d2fd7ab01caa8d333",
+  "scope": "Backward only, graph timing includes workspace zeroing, centered row statistics, gradients and finish. Diagnostic variants only validate dQ; their dK/dV results are invalid by design. Every variant uses three workspace planes (extra third plane holds bypass checksums).",
+  "source_sha256": {
+    "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+    "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+    "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "blackwell_joint.py": "dbae65dc589c9da35ab47969946ca30054a662063b2ebd47fa45818526c71603",
+    "blackwell_pipeline.py": "743ca206e93d7ad7256182d6462d35920ee0c1dccb7984fcf261d5aec3970970",
+    "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+    "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+    "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+  },
+  "variants": {
+    "joint-baseline": {
+      "source_sha256": "dbae65dc589c9da35ab47969946ca30054a662063b2ebd47fa45818526c71603",
+      "diagnostic": false,
+      "sdpa_dq_checked": true,
+      "sdpa_dk_dv_checked": true,
+      "graph_checked": true,
+      "max_abs_error_dq": 0.001953125,
+      "median_ms": 40.066880798339845
+    },
+    "joint-plain-store": {
+      "source_sha256": "0e0440efe12cea8574444faea15cd30bd00a81ff0377ea83f3e9bc9e6e54a5a0",
+      "diagnostic": true,
+      "sdpa_dq_checked": true,
+      "sdpa_dk_dv_checked": false,
+      "graph_checked": true,
+      "max_abs_error_dq": 0.001953125,
+      "median_ms": 36.56351776123047
+    },
+    "joint-readout-bypass": {
+      "source_sha256": "454977a9c24ab7ecf341ac2c492edabf40fae9d59f272c5a69d4abfbbffd6e63",
+      "diagnostic": true,
+      "sdpa_dq_checked": true,
+      "sdpa_dk_dv_checked": false,
+      "graph_checked": true,
+      "max_abs_error_dq": 0.001953125,
+      "median_ms": 28.84303436279297
+    }
+  },
+  "samples": [
+    {
+      "name": "joint-baseline",
+      "repeat": 0,
+      "backward_ms": 40.067752075195315
+    },
+    {
+      "name": "joint-plain-store",
+      "repeat": 0,
+      "backward_ms": 36.55951843261719
+    },
+    {
+      "name": "joint-readout-bypass",
+      "repeat": 0,
+      "backward_ms": 28.84046325683594
+    },
+    {
+      "name": "joint-plain-store",
+      "repeat": 1,
+      "backward_ms": 36.560546875
+    },
+    {
+      "name": "joint-readout-bypass",
+      "repeat": 1,
+      "backward_ms": 28.843142700195312
+    },
+    {
+      "name": "joint-baseline",
+      "repeat": 1,
+      "backward_ms": 40.066104125976565
+    },
+    {
+      "name": "joint-readout-bypass",
+      "repeat": 2,
+      "backward_ms": 28.84715881347656
+    },
+    {
+      "name": "joint-baseline",
+      "repeat": 2,
+      "backward_ms": 40.067657470703125
+    },
+    {
+      "name": "joint-plain-store",
+      "repeat": 2,
+      "backward_ms": 36.575921630859376
+    },
+    {
+      "name": "joint-baseline",
+      "repeat": 3,
+      "backward_ms": 40.06269836425781
+    },
+    {
+      "name": "joint-plain-store",
+      "repeat": 3,
+      "backward_ms": 36.566488647460936
+    },
+    {
+      "name": "joint-readout-bypass",
+      "repeat": 3,
+      "backward_ms": 28.842926025390625
+    }
+  ],
+  "passed": true
+}

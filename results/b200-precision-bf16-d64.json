@@ -1,0 +1,2126 @@
+{
+  "torch": "2.12.0+cu130",
+  "device": "NVIDIA B200",
+  "causal": false,
+  "input_source": "synthetic",
+  "reference": "FP64 centered analytical backward on identical rounded inputs",
+  "upstream_tuning": [
+    {
+      "name": "b200-d64.json",
+      "sha256": "982162ce5c8f0b8c50e5299037da6289ac3a56a88dd071b66f60dae58f2c367e"
+    },
+    {
+      "name": "b200-d128.json",
+      "sha256": "996a838b3bacfeb4e3a4a444d0ecfd701b6ca089cfa0b60be5e5892597b3243e"
+    },
+    {
+      "name": "b200-d256.json",
+      "sha256": "51c62711ce9e8f3710ee3da5a3ccb4ffd3d3a2f5306346780c4d8ae7075790e9"
+    },
+    {
+      "name": "b200-d512.json",
+      "sha256": "b3b90101c7c8065fc8db62d415b3b4cd03b6523147de39c2fd8b9f74308f4b2b"
+    }
+  ],
+  "upstream_source": {
+    "source_sha256": {
+      "kohakufa/__init__.py": "424554334e33018f28f3f9d62d998103c5844f2108dc07b26f2f8ffbfeb54b76",
+      "kohakufa/api.py": "c48d84d2f87b625840704008eeeb12abcdaae03bb88b0ce1b01af6d1a8f7f4c9",
+      "kohakufa/device.py": "45ffc0ac3245fa5e6e0dedeee62199528997712edff118651bbf8b2a0a1d0313",
+      "kohakufa/mask.py": "d9d89fb750dc9867bef3f0486a54412443edc35f1037daed8f10688c93c25961",
+      "kohakufa/sm100/__init__.py": "5b2faec4d91958090fcb9bc0de44d80038f10092a8396e2a74e8dd5d53a86593",
+      "kohakufa/sm100/bwd.py": "fbe1759bfc2507fb47baf021acc23b1e4c45b9cdf351cfed1874c4c654988c3e",
+      "kohakufa/sm100/config.py": "8963b01de0e0d404e81625633aab41ae4551d6bfae7fadfb6f66c8b2488b897d",
+      "kohakufa/sm100/fwd.py": "b96875c8dd6aea4bb69f0d15ddc3bac675278d03cf97d46ebf152f4f7fe6ba39",
+      "kohakufa/sm100/op.py": "ce28b1fd236a3807f8c23bfbffd2f2f4253f863928155e6de5735cbd145662e4",
+      "kohakufa/sm100/plan.py": "d306eb9463e9f002080bc897b2e4486355fbf2dd696a09c87eb0c2a3ca63bbba",
+      "kohakufa/sm100/tune.py": "7ff68bf869460bbd02e136a20fd21c3b28bbb62c5aaf0890c9388ada26a4deae"
+    },
+    "revision": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+    "modified": true,
+    "diff_sha256": "6a45793bb95506a70a86326fc12b91cd7511d756f99882bf42c61c42f5970a56"
+  },
+  "rows": [
+    {
+      "backend": "auto",
+      "requested_scale": 10.0,
+      "max_absolute_logit": 11.631349310278893,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 47.77719014218381,
+          "relative_error": 0.0022242355716566523,
+          "log10_relative_error": -2.652819217965597,
+          "norm_ratio": 0.9999909331941553,
+          "cosine": 0.9999975264067367,
+          "max_absolute_error": 0.004420488135274958
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 12.053888649981744,
+          "relative_error": 0.011815702642704881,
+          "log10_relative_error": -1.92754044713563,
+          "norm_ratio": 1.0000844944286211,
+          "cosine": 0.9999302040525524,
+          "max_absolute_error": 0.007922791503972682
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 52.94403455109836,
+          "relative_error": 0.00235853830512871,
+          "log10_relative_error": -2.627357065964416,
+          "norm_ratio": 1.0000887912250673,
+          "cosine": 0.9999972228370602,
+          "max_absolute_error": 0.00684345632442529
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 47.8817233176129,
+          "relative_error": 0.0022977579506679477,
+          "log10_relative_error": -2.638695722482308,
+          "norm_ratio": 1.000022540632252,
+          "cosine": 0.9999973604677366,
+          "max_absolute_error": 0.00431179565691564
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "cudnn",
+      "requested_scale": 10.0,
+      "max_absolute_logit": 11.631349310278893,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 47.77719014218381,
+          "relative_error": 0.0022242355716566523,
+          "log10_relative_error": -2.652819217965597,
+          "norm_ratio": 0.9999909331941553,
+          "cosine": 0.9999975264067367,
+          "max_absolute_error": 0.004420488135274958
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 12.053888649981744,
+          "relative_error": 0.011815702642704881,
+          "log10_relative_error": -1.92754044713563,
+          "norm_ratio": 1.0000844944286211,
+          "cosine": 0.9999302040525524,
+          "max_absolute_error": 0.007922791503972682
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 52.94403455109836,
+          "relative_error": 0.00235853830512871,
+          "log10_relative_error": -2.627357065964416,
+          "norm_ratio": 1.0000887912250673,
+          "cosine": 0.9999972228370602,
+          "max_absolute_error": 0.00684345632442529
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 47.8817233176129,
+          "relative_error": 0.0022977579506679477,
+          "log10_relative_error": -2.638695722482308,
+          "norm_ratio": 1.000022540632252,
+          "cosine": 0.9999973604677366,
+          "max_absolute_error": 0.00431179565691564
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute",
+      "requested_scale": 10.0,
+      "max_absolute_logit": 11.631349310278893,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 47.77719014218381,
+          "relative_error": 0.0021170683341890837,
+          "log10_relative_error": -2.6742651237083708,
+          "norm_ratio": 1.000007994320884,
+          "cosine": 0.9999977590607035,
+          "max_absolute_error": 0.003737270804808901
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 12.053888649981744,
+          "relative_error": 0.0022639201622035544,
+          "log10_relative_error": -2.6451388927336845,
+          "norm_ratio": 0.9999899677361737,
+          "cosine": 0.9999974373573635,
+          "max_absolute_error": 0.0010923764160952198
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 52.94403455109836,
+          "relative_error": 0.0022866951885873177,
+          "log10_relative_error": -2.6407917220294554,
+          "norm_ratio": 0.9999835657076549,
+          "cosine": 0.9999973856046346,
+          "max_absolute_error": 0.009464271452850337
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 47.8817233176129,
+          "relative_error": 0.0022977234196340807,
+          "log10_relative_error": -2.638702249170702,
+          "norm_ratio": 1.0000259591583025,
+          "cosine": 0.9999973606389978,
+          "max_absolute_error": 0.00431179565691564
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute-auto",
+      "requested_scale": 10.0,
+      "max_absolute_logit": 11.631349310278893,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 47.77719014218381,
+          "relative_error": 0.0021170683341890837,
+          "log10_relative_error": -2.6742651237083708,
+          "norm_ratio": 1.000007994320884,
+          "cosine": 0.9999977590607035,
+          "max_absolute_error": 0.003737270804808901
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 12.053888649981744,
+          "relative_error": 0.0022639201622035544,
+          "log10_relative_error": -2.6451388927336845,
+          "norm_ratio": 0.9999899677361737,
+          "cosine": 0.9999974373573635,
+          "max_absolute_error": 0.0010923764160952198
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 52.94403455109836,
+          "relative_error": 0.0022866951885873177,
+          "log10_relative_error": -2.6407917220294554,
+          "norm_ratio": 0.9999835657076549,
+          "cosine": 0.9999973856046346,
+          "max_absolute_error": 0.009464271452850337
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 47.8817233176129,
+          "relative_error": 0.0022977234196340807,
+          "log10_relative_error": -2.638702249170702,
+          "norm_ratio": 1.0000259591583025,
+          "cosine": 0.9999973606389978,
+          "max_absolute_error": 0.00431179565691564
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa",
+      "requested_scale": 10.0,
+      "max_absolute_logit": 11.631349310278893,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 47.77719014218381,
+          "relative_error": 0.0021561025179277784,
+          "log10_relative_error": -2.6663305932479013,
+          "norm_ratio": 0.9999875156767126,
+          "cosine": 0.9999976756598772,
+          "max_absolute_error": 0.003737270804808901
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 12.053888649981744,
+          "relative_error": 0.013463759078552639,
+          "log10_relative_error": -1.8708336682585616,
+          "norm_ratio": 1.0002340181325915,
+          "cosine": 0.9999094121771734,
+          "max_absolute_error": 0.008683859941897607
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 52.94403455109836,
+          "relative_error": 0.0029372510114065386,
+          "log10_relative_error": -2.5320589379815868,
+          "norm_ratio": 1.0000410752203954,
+          "cosine": 0.9999956872989799,
+          "max_absolute_error": 0.01102384644919674
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 47.8817233176129,
+          "relative_error": 0.0022977366376366287,
+          "log10_relative_error": -2.6386997508329966,
+          "norm_ratio": 1.0000255089420218,
+          "cosine": 0.9999973605958534,
+          "max_absolute_error": 0.00431179565691564
+        }
+      },
+      "configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 1,
+          "block_n": 128,
+          "s_slots": 3,
+          "q_bufs": 2,
+          "kv_slots": 9,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 1,
+          "alias": false,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 2,
+          "p_regs": 152,
+          "ds_regs": 200,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": false,
+          "nsl": 1,
+          "nw": 1,
+          "k_res": true
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "auto",
+      "requested_scale": 1000.0,
+      "max_absolute_logit": 1163.2524003982544,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 175.372570855285,
+          "relative_error": 0.0009851040385434402,
+          "log10_relative_error": -3.0065179004878804,
+          "norm_ratio": 1.0000566554849835,
+          "cosine": 0.9999995164173365,
+          "max_absolute_error": 0.01157800983144952
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 60.76664471178683,
+          "relative_error": 0.033050727554438795,
+          "log10_relative_error": -1.480818975833402,
+          "norm_ratio": 1.0001544442442667,
+          "cosine": 0.9994539209693369,
+          "max_absolute_error": 0.21006350169569293
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 270.31351696993914,
+          "relative_error": 0.00730597708427782,
+          "log10_relative_error": -2.1363216943178194,
+          "norm_ratio": 1.0002852417050299,
+          "cosine": 0.999973359629782,
+          "max_absolute_error": 0.2596533940287902
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 179.09207835919952,
+          "relative_error": 0.0018192558760685338,
+          "log10_relative_error": -2.740106213663612,
+          "norm_ratio": 1.000056099379923,
+          "cosine": 0.9999983468203413,
+          "max_absolute_error": 0.03264353806665987
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "cudnn",
+      "requested_scale": 1000.0,
+      "max_absolute_logit": 1163.2524003982544,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 175.372570855285,
+          "relative_error": 0.0009851040385434402,
+          "log10_relative_error": -3.0065179004878804,
+          "norm_ratio": 1.0000566554849835,
+          "cosine": 0.9999995164173365,
+          "max_absolute_error": 0.01157800983144952
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 60.76664471178683,
+          "relative_error": 0.033050727554438795,
+          "log10_relative_error": -1.480818975833402,
+          "norm_ratio": 1.0001544442442667,
+          "cosine": 0.9994539209693369,
+          "max_absolute_error": 0.21006350169569293
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 270.31351696993914,
+          "relative_error": 0.00730597708427782,
+          "log10_relative_error": -2.1363216943178194,
+          "norm_ratio": 1.0002852417050299,
+          "cosine": 0.999973359629782,
+          "max_absolute_error": 0.2596533940287902
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 179.09207835919952,
+          "relative_error": 0.0018192558760685338,
+          "log10_relative_error": -2.740106213663612,
+          "norm_ratio": 1.000056099379923,
+          "cosine": 0.9999983468203413,
+          "max_absolute_error": 0.03264353806665987
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute",
+      "requested_scale": 1000.0,
+      "max_absolute_logit": 1163.2524003982544,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 175.372570855285,
+          "relative_error": 0.0009317401528557857,
+          "log10_relative_error": -3.030705188413665,
+          "norm_ratio": 1.0000551557809536,
+          "cosine": 0.9999995674750803,
+          "max_absolute_error": 0.007798001756895712
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 60.76664471178683,
+          "relative_error": 0.0020186795225267053,
+          "log10_relative_error": -2.6949326224360526,
+          "norm_ratio": 0.999821484492472,
+          "cosine": 0.9999979780394348,
+          "max_absolute_error": 0.019071505890464024
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 270.31351696993914,
+          "relative_error": 0.0023842509090989776,
+          "log10_relative_error": -2.6226480430999044,
+          "norm_ratio": 0.9996781636119559,
+          "cosine": 0.9999972085647463,
+          "max_absolute_error": 0.07365095179375913
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 179.09207835919952,
+          "relative_error": 0.0018213185940041958,
+          "log10_relative_error": -2.7396140786336014,
+          "norm_ratio": 1.0000550354532236,
+          "cosine": 0.9999983430049336,
+          "max_absolute_error": 0.03264353806665987
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute-auto",
+      "requested_scale": 1000.0,
+      "max_absolute_logit": 1163.2524003982544,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 175.372570855285,
+          "relative_error": 0.0009317401528557857,
+          "log10_relative_error": -3.030705188413665,
+          "norm_ratio": 1.0000551557809536,
+          "cosine": 0.9999995674750803,
+          "max_absolute_error": 0.007798001756895712
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 60.76664471178683,
+          "relative_error": 0.0020186795225267053,
+          "log10_relative_error": -2.6949326224360526,
+          "norm_ratio": 0.999821484492472,
+          "cosine": 0.9999979780394348,
+          "max_absolute_error": 0.019071505890464024
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 270.31351696993914,
+          "relative_error": 0.0023842509090989776,
+          "log10_relative_error": -2.6226480430999044,
+          "norm_ratio": 0.9996781636119559,
+          "cosine": 0.9999972085647463,
+          "max_absolute_error": 0.07365095179375913
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 179.09207835919952,
+          "relative_error": 0.0018213185940041958,
+          "log10_relative_error": -2.7396140786336014,
+          "norm_ratio": 1.0000550354532236,
+          "cosine": 0.9999983430049336,
+          "max_absolute_error": 0.03264353806665987
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa",
+      "requested_scale": 1000.0,
+      "max_absolute_logit": 1163.2524003982544,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 175.372570855285,
+          "relative_error": 0.0009341638199474156,
+          "log10_relative_error": -3.0295769568956628,
+          "norm_ratio": 1.0000534781267554,
+          "cosine": 0.9999995651221905,
+          "max_absolute_error": 0.008499031295927217
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 60.76664471178683,
+          "relative_error": 0.030165035553021042,
+          "log10_relative_error": -1.5204961584804542,
+          "norm_ratio": 0.9998163131008844,
+          "cosine": 0.9995449686021745,
+          "max_absolute_error": 0.13561493118197998
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 270.31351696993914,
+          "relative_error": 0.006861554325742765,
+          "log10_relative_error": -2.163577493822311,
+          "norm_ratio": 0.9989194800291994,
+          "cosine": 0.9999770184658147,
+          "max_absolute_error": 0.19715339402879017
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 179.09207835919952,
+          "relative_error": 0.0018213185940041958,
+          "log10_relative_error": -2.7396140786336014,
+          "norm_ratio": 1.0000550354532236,
+          "cosine": 0.9999983430049336,
+          "max_absolute_error": 0.03264353806665987
+        }
+      },
+      "configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 1,
+          "block_n": 128,
+          "s_slots": 3,
+          "q_bufs": 2,
+          "kv_slots": 9,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 1,
+          "alias": false,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 2,
+          "p_regs": 152,
+          "ds_regs": 200,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": false,
+          "nsl": 1,
+          "nw": 1,
+          "k_res": true
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "auto",
+      "requested_scale": 100000.0,
+      "max_absolute_logit": 116268.80102539062,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.71395084008182,
+          "relative_error": 0.002389016484345514,
+          "log10_relative_error": -2.621780853583904,
+          "norm_ratio": 0.9999170965946264,
+          "cosine": 0.9999971495002902,
+          "max_absolute_error": 0.015625
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 4.022738925416405,
+          "relative_error": 11.93712470716849,
+          "log10_relative_error": 1.076899730965173,
+          "norm_ratio": 11.964688091162154,
+          "cosine": 0.06932127405520876,
+          "max_absolute_error": 4.0625
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 17.132260148692303,
+          "relative_error": 2.546579758007642,
+          "log10_relative_error": 0.40595728267994424,
+          "norm_ratio": 2.51309474978896,
+          "cosine": 0.16524978964528117,
+          "max_absolute_error": 5.126804355949496
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.5164211576895,
+          "relative_error": 0.003984751167856449,
+          "log10_relative_error": -2.3995987934149094,
+          "norm_ratio": 0.9999155709994091,
+          "cosine": 0.9999920637731453,
+          "max_absolute_error": 0.05517578125
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "cudnn",
+      "requested_scale": 100000.0,
+      "max_absolute_logit": 116268.80102539062,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.71395084008182,
+          "relative_error": 0.002389016484345514,
+          "log10_relative_error": -2.621780853583904,
+          "norm_ratio": 0.9999170965946264,
+          "cosine": 0.9999971495002902,
+          "max_absolute_error": 0.015625
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 4.022738925416405,
+          "relative_error": 11.93712470716849,
+          "log10_relative_error": 1.076899730965173,
+          "norm_ratio": 11.964688091162154,
+          "cosine": 0.06932127405520876,
+          "max_absolute_error": 4.0625
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 17.132260148692303,
+          "relative_error": 2.546579758007642,
+          "log10_relative_error": 0.40595728267994424,
+          "norm_ratio": 2.51309474978896,
+          "cosine": 0.16524978964528117,
+          "max_absolute_error": 5.126804355949496
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.5164211576895,
+          "relative_error": 0.003984751167856449,
+          "log10_relative_error": -2.3995987934149094,
+          "norm_ratio": 0.9999155709994091,
+          "cosine": 0.9999920637731453,
+          "max_absolute_error": 0.05517578125
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute",
+      "requested_scale": 100000.0,
+      "max_absolute_logit": 116268.80102539062,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.71395084008182,
+          "relative_error": 7.493933887681632e-05,
+          "log10_relative_error": -4.12529014261955,
+          "norm_ratio": 1.0000001748307565,
+          "cosine": 0.9999999971920637,
+          "max_absolute_error": 0.00678621216155717
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 4.022738925416405,
+          "relative_error": 0.007260986338849882,
+          "log10_relative_error": -2.1390043803434367,
+          "norm_ratio": 0.9928902252970485,
+          "cosine": 0.999998905706678,
+          "max_absolute_error": 0.009064879796597314
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 17.132260148692303,
+          "relative_error": 0.006735448621453899,
+          "log10_relative_error": -2.171633472348836,
+          "norm_ratio": 0.993424629290386,
+          "cosine": 0.9999989275642557,
+          "max_absolute_error": 0.02579246586357664
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.5164211576895,
+          "relative_error": 0.0016628593719640078,
+          "log10_relative_error": -2.7791444775167844,
+          "norm_ratio": 0.9999643007265903,
+          "cosine": 0.9999986180372383,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute-auto",
+      "requested_scale": 100000.0,
+      "max_absolute_logit": 116268.80102539062,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.71395084008182,
+          "relative_error": 7.493933887681632e-05,
+          "log10_relative_error": -4.12529014261955,
+          "norm_ratio": 1.0000001748307565,
+          "cosine": 0.9999999971920637,
+          "max_absolute_error": 0.00678621216155717
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 4.022738925416405,
+          "relative_error": 0.007260986338849882,
+          "log10_relative_error": -2.1390043803434367,
+          "norm_ratio": 0.9928902252970485,
+          "cosine": 0.999998905706678,
+          "max_absolute_error": 0.009064879796597314
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 17.132260148692303,
+          "relative_error": 0.006735448621453899,
+          "log10_relative_error": -2.171633472348836,
+          "norm_ratio": 0.993424629290386,
+          "cosine": 0.9999989275642557,
+          "max_absolute_error": 0.02579246586357664
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.5164211576895,
+          "relative_error": 0.0016628593719640078,
+          "log10_relative_error": -2.7791444775167844,
+          "norm_ratio": 0.9999643007265903,
+          "cosine": 0.9999986180372383,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa",
+      "requested_scale": 100000.0,
+      "max_absolute_logit": 116268.80102539062,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.71395084008182,
+          "relative_error": 7.493933887681632e-05,
+          "log10_relative_error": -4.12529014261955,
+          "norm_ratio": 1.0000001748307565,
+          "cosine": 0.9999999971920637,
+          "max_absolute_error": 0.00678621216155717
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 4.022738925416405,
+          "relative_error": 0.41198359677142377,
+          "log10_relative_error": -0.3851200751646148,
+          "norm_ratio": 1.1436035004893752,
+          "cosine": 0.9348075978290946,
+          "max_absolute_error": 0.5168773797965973
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 17.132260148692303,
+          "relative_error": 0.08743757394443796,
+          "log10_relative_error": -1.0583019008886398,
+          "norm_ratio": 1.0603044928854797,
+          "cosine": 0.9981096479822481,
+          "max_absolute_error": 0.5372581440505044
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.5164211576895,
+          "relative_error": 0.0016628593719640078,
+          "log10_relative_error": -2.7791444775167844,
+          "norm_ratio": 0.9999643007265903,
+          "cosine": 0.9999986180372383,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 1,
+          "block_n": 128,
+          "s_slots": 3,
+          "q_bufs": 2,
+          "kv_slots": 9,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 1,
+          "alias": false,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 2,
+          "p_regs": 152,
+          "ds_regs": 200,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": false,
+          "nsl": 1,
+          "nw": 1,
+          "k_res": true
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "auto",
+      "requested_scale": 1000000.0,
+      "max_absolute_logit": 1162900.6513671875,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.96877759949498,
+          "relative_error": 0.0018406300056052253,
+          "log10_relative_error": -2.7350335024645416,
+          "norm_ratio": 1.0000474075602779,
+          "cosine": 0.999998307244579,
+          "max_absolute_error": 0.015625
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 5.406980272066346,
+          "relative_error": 22.732387998376907,
+          "log10_relative_error": 1.3566450600119693,
+          "norm_ratio": 22.742248098791457,
+          "cosine": 0.03184347633403155,
+          "max_absolute_error": 15.375
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 21.82171108407626,
+          "relative_error": 4.955541909387499,
+          "log10_relative_error": 0.6950911533496598,
+          "norm_ratio": 4.71001483202231,
+          "cosine": -0.1457698061256601,
+          "max_absolute_error": 20.974354693030033
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.593364305179,
+          "relative_error": 0.024315384799549925,
+          "log10_relative_error": -1.6141188531778998,
+          "norm_ratio": 1.0008956553757622,
+          "cosine": 0.9997050463071615,
+          "max_absolute_error": 0.33768194539714025
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "cudnn",
+      "requested_scale": 1000000.0,
+      "max_absolute_logit": 1162900.6513671875,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.96877759949498,
+          "relative_error": 0.0018406300056052253,
+          "log10_relative_error": -2.7350335024645416,
+          "norm_ratio": 1.0000474075602779,
+          "cosine": 0.999998307244579,
+          "max_absolute_error": 0.015625
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 5.406980272066346,
+          "relative_error": 22.732387998376907,
+          "log10_relative_error": 1.3566450600119693,
+          "norm_ratio": 22.742248098791457,
+          "cosine": 0.03184347633403155,
+          "max_absolute_error": 15.375
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 21.82171108407626,
+          "relative_error": 4.955541909387499,
+          "log10_relative_error": 0.6950911533496598,
+          "norm_ratio": 4.71001483202231,
+          "cosine": -0.1457698061256601,
+          "max_absolute_error": 20.974354693030033
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.593364305179,
+          "relative_error": 0.024315384799549925,
+          "log10_relative_error": -1.6141188531778998,
+          "norm_ratio": 1.0008956553757622,
+          "cosine": 0.9997050463071615,
+          "max_absolute_error": 0.33768194539714025
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute",
+      "requested_scale": 1000000.0,
+      "max_absolute_logit": 1162900.6513671875,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.96877759949498,
+          "relative_error": 7.53342625349636e-05,
+          "log10_relative_error": -4.123007458784848,
+          "norm_ratio": 1.0000004053501483,
+          "cosine": 0.9999999971624579,
+          "max_absolute_error": 0.007080358174183843
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 5.406980272066346,
+          "relative_error": 0.007937983094279222,
+          "log10_relative_error": -2.1002898303556714,
+          "norm_ratio": 0.9922374639736796,
+          "cosine": 0.9999986119199561,
+          "max_absolute_error": 0.017708350209070245
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 21.82171108407626,
+          "relative_error": 0.007124794162066506,
+          "log10_relative_error": -2.147227678066117,
+          "norm_ratio": 0.9930832400051525,
+          "cosine": 0.9999985292657716,
+          "max_absolute_error": 0.0368546930300333
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.593364305179,
+          "relative_error": 0.0016387629438780994,
+          "log10_relative_error": -2.7854838649844633,
+          "norm_ratio": 1.0000059264997931,
+          "cosine": 0.9999986572535262,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute-auto",
+      "requested_scale": 1000000.0,
+      "max_absolute_logit": 1162900.6513671875,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.96877759949498,
+          "relative_error": 7.53342625349636e-05,
+          "log10_relative_error": -4.123007458784848,
+          "norm_ratio": 1.0000004053501483,
+          "cosine": 0.9999999971624579,
+          "max_absolute_error": 0.007080358174183843
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 5.406980272066346,
+          "relative_error": 0.007937983094279222,
+          "log10_relative_error": -2.1002898303556714,
+          "norm_ratio": 0.9922374639736796,
+          "cosine": 0.9999986119199561,
+          "max_absolute_error": 0.017708350209070245
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 21.82171108407626,
+          "relative_error": 0.007124794162066506,
+          "log10_relative_error": -2.147227678066117,
+          "norm_ratio": 0.9930832400051525,
+          "cosine": 0.9999985292657716,
+          "max_absolute_error": 0.0368546930300333
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.593364305179,
+          "relative_error": 0.0016387629438780994,
+          "log10_relative_error": -2.7854838649844633,
+          "norm_ratio": 1.0000059264997931,
+          "cosine": 0.9999986572535262,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa",
+      "requested_scale": 1000000.0,
+      "max_absolute_logit": 1162900.6513671875,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.96877759949498,
+          "relative_error": 7.53342625349636e-05,
+          "log10_relative_error": -4.123007458784848,
+          "norm_ratio": 1.0000004053501483,
+          "cosine": 0.9999999971624579,
+          "max_absolute_error": 0.007080358174183843
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 5.406980272066346,
+          "relative_error": 0.685239824685502,
+          "log10_relative_error": -0.16415740469871276,
+          "norm_ratio": 1.0680102579615496,
+          "cosine": 0.7823390652471804,
+          "max_absolute_error": 1.4558613431708691
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 21.82171108407626,
+          "relative_error": 0.1631925284728469,
+          "log10_relative_error": -0.7872997286538059,
+          "norm_ratio": 0.8913742811531145,
+          "cosine": 0.991680119749938,
+          "max_absolute_error": 1.3493546930300333
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.593364305179,
+          "relative_error": 0.0016387629438780994,
+          "log10_relative_error": -2.7854838649844633,
+          "norm_ratio": 1.0000059264997931,
+          "cosine": 0.9999986572535262,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 1,
+          "block_n": 128,
+          "s_slots": 3,
+          "q_bufs": 2,
+          "kv_slots": 9,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 1,
+          "alias": false,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 2,
+          "p_regs": 152,
+          "ds_regs": 200,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": false,
+          "nsl": 1,
+          "nw": 1,
+          "k_res": true
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "auto",
+      "requested_scale": 10000000.0,
+      "max_absolute_logit": 11636770.328125,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.81136946647743,
+          "relative_error": 0.0015800372672760438,
+          "log10_relative_error": -2.8013326695130027,
+          "norm_ratio": 1.0000625232085842,
+          "cosine": 0.9999987537736111,
+          "max_absolute_error": 0.015625
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 9.100883927514144e-260,
+          "relative_error": 4.2520416146209474e+261,
+          "log10_relative_error": 261.6285975063009,
+          "norm_ratio": 4.2520416146209474e+261,
+          "cosine": 0.0028514146200047333,
+          "max_absolute_error": 31.75
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 4.087246671395695e-259,
+          "relative_error": 7.401123154497021e+260,
+          "log10_relative_error": 260.8692976309184,
+          "norm_ratio": 7.401123154497021e+260,
+          "cosine": 0.021924178205741957,
+          "max_absolute_error": 37.0
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.03943417940607,
+          "relative_error": 0.19999555279843403,
+          "log10_relative_error": -0.6989796614188866,
+          "norm_ratio": 1.0328118055903488,
+          "cosine": 0.9811574546580608,
+          "max_absolute_error": 3.001953125
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "cudnn",
+      "requested_scale": 10000000.0,
+      "max_absolute_logit": 11636770.328125,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.81136946647743,
+          "relative_error": 0.0015800372672760438,
+          "log10_relative_error": -2.8013326695130027,
+          "norm_ratio": 1.0000625232085842,
+          "cosine": 0.9999987537736111,
+          "max_absolute_error": 0.015625
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 9.100883927514144e-260,
+          "relative_error": 4.2520416146209474e+261,
+          "log10_relative_error": 261.6285975063009,
+          "norm_ratio": 4.2520416146209474e+261,
+          "cosine": 0.0028514146200047333,
+          "max_absolute_error": 31.75
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 4.087246671395695e-259,
+          "relative_error": 7.401123154497021e+260,
+          "log10_relative_error": 260.8692976309184,
+          "norm_ratio": 7.401123154497021e+260,
+          "cosine": 0.021924178205741957,
+          "max_absolute_error": 37.0
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.03943417940607,
+          "relative_error": 0.19999555279843403,
+          "log10_relative_error": -0.6989796614188866,
+          "norm_ratio": 1.0328118055903488,
+          "cosine": 0.9811574546580608,
+          "max_absolute_error": 3.001953125
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute",
+      "requested_scale": 10000000.0,
+      "max_absolute_logit": 11636770.328125,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.81136946647743,
+          "relative_error": 0.0,
+          "log10_relative_error": null,
+          "norm_ratio": 1.0,
+          "cosine": 1.0000000000000004,
+          "max_absolute_error": 0.0
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 9.100883927514144e-260,
+          "relative_error": 1.0,
+          "log10_relative_error": 0.0,
+          "norm_ratio": 0.0,
+          "cosine": null,
+          "max_absolute_error": 2.6029411996395798e-260
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 4.087246671395695e-259,
+          "relative_error": 1.0,
+          "log10_relative_error": 0.0,
+          "norm_ratio": 0.0,
+          "cosine": null,
+          "max_absolute_error": 9.93235650204855e-260
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.03943417940607,
+          "relative_error": 0.001626824294752168,
+          "log10_relative_error": -2.7886593505297923,
+          "norm_ratio": 0.9999873371180642,
+          "cosine": 0.9999986767847755,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa-cute-auto",
+      "requested_scale": 10000000.0,
+      "max_absolute_logit": 11636770.328125,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.81136946647743,
+          "relative_error": 0.0,
+          "log10_relative_error": null,
+          "norm_ratio": 1.0,
+          "cosine": 1.0000000000000004,
+          "max_absolute_error": 0.0
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 9.100883927514144e-260,
+          "relative_error": 1.0,
+          "log10_relative_error": 0.0,
+          "norm_ratio": 0.0,
+          "cosine": null,
+          "max_absolute_error": 2.6029411996395798e-260
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 4.087246671395695e-259,
+          "relative_error": 1.0,
+          "log10_relative_error": 0.0,
+          "norm_ratio": 0.0,
+          "cosine": null,
+          "max_absolute_error": 9.93235650204855e-260
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.03943417940607,
+          "relative_error": 0.001626824294752168,
+          "log10_relative_error": -2.7886593505297923,
+          "norm_ratio": 0.9999873371180642,
+          "cosine": 0.9999986767847755,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "backend": "kohakufa",
+      "requested_scale": 10000000.0,
+      "max_absolute_logit": 11636770.328125,
+      "dtype": "torch.bfloat16",
+      "shape": [
+        1,
+        2,
+        256,
+        64
+      ],
+      "strides": {
+        "q": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "k": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "v": [
+          32768,
+          16384,
+          64,
+          1
+        ],
+        "dout": [
+          32768,
+          16384,
+          64,
+          1
+        ]
+      },
+      "metrics": {
+        "out": {
+          "finite": true,
+          "reference_norm": 179.81136946647743,
+          "relative_error": 0.0,
+          "log10_relative_error": null,
+          "norm_ratio": 1.0,
+          "cosine": 1.0000000000000004,
+          "max_absolute_error": 0.0
+        },
+        "dq": {
+          "finite": true,
+          "reference_norm": 9.100883927514144e-260,
+          "relative_error": 1.8882313350347525e+257,
+          "log10_relative_error": 257.2760552004358,
+          "norm_ratio": 1.8882313350347525e+257,
+          "cosine": 0.0,
+          "max_absolute_error": 0.00179290771484375
+        },
+        "dk": {
+          "finite": true,
+          "reference_norm": 4.087246671395695e-259,
+          "relative_error": 4.253852069167696e+256,
+          "log10_relative_error": 256.6287823829195,
+          "norm_ratio": 4.253852069167696e+256,
+          "cosine": 0.2253571464086415,
+          "max_absolute_error": 0.00225830078125
+        },
+        "dv": {
+          "finite": true,
+          "reference_norm": 183.03943417940607,
+          "relative_error": 0.001626824294752168,
+          "log10_relative_error": -2.7886593505297923,
+          "norm_ratio": 0.9999873371180642,
+          "cosine": 0.9999986767847755,
+          "max_absolute_error": 0.0311279296875
+        }
+      },
+      "configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 1,
+          "block_n": 128,
+          "s_slots": 3,
+          "q_bufs": 2,
+          "kv_slots": 9,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 1,
+          "alias": false,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 2,
+          "p_regs": 152,
+          "ds_regs": 200,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": false,
+          "nsl": 1,
+          "nw": 1,
+          "k_res": true
+        }
+      },
+      "status": "ok"
+    }
+  ],
+  "row_metrics_note": "Per-row arrays are retained in the archived raw measurements; this report contains aggregate metrics."
+}

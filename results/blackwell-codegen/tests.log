@@ -1,0 +1,11 @@
+test_blackwell_fused_probability_and_ds_pipeline (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_probability_and_ds_pipeline) ... torch/autograd/graph.py:882: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:370.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+ok
+test_blackwell_fused_pipeline_retains_saturated_gradients (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_pipeline_retains_saturated_gradients) ... ok
+test_blackwell_fused_pipeline_reads_changed_graph_inputs (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_pipeline_reads_changed_graph_inputs) ... ok
+test_blackwell_probability_tiles_match_checked_reconstruction (tests.test_kernels.CuTeAttentionTests.test_blackwell_probability_tiles_match_checked_reconstruction) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 484.589s
+
+OK

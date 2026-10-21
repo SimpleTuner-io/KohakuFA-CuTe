@@ -1,0 +1,32 @@
+[
+  {
+    "label": "d128-systems",
+    "returncode": 0,
+    "seconds": 21.188284158706665
+  },
+  {
+    "label": "d512-systems",
+    "returncode": 0,
+    "seconds": 25.176803827285767
+  },
+  {
+    "label": "d128-cute-compute",
+    "returncode": 0,
+    "seconds": 28.130962371826172
+  },
+  {
+    "label": "d128-kohakufa-compute",
+    "returncode": 0,
+    "seconds": 7.382392883300781
+  },
+  {
+    "label": "paired-speed",
+    "returncode": 0,
+    "seconds": 62.72989201545715
+  },
+  {
+    "label": "pipeline-regressions",
+    "returncode": 0,
+    "seconds": 232.34900450706482
+  }
+]

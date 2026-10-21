@@ -1,0 +1,36 @@
+{
+  "build_passed": true,
+  "artifacts": [
+    {
+      "name": "kohakufa_cute-0.2.0-py3-none-any.whl",
+      "sha256": "308c134bb378f11785ddd04b3dade9c4ad4b43ae1bba8017da9992d3b2fb2faf",
+      "runtime_fingerprints_match_checkout": {
+        "blackwell.py": true,
+        "_ops.py": true,
+        "__init__.py": true,
+        "native.py": true,
+        "native.cpp": true,
+        "api.py": true,
+        "sm103.py": true,
+        "kernels.py": true,
+        "blackwell_pipeline.py": true
+      }
+    },
+    {
+      "name": "kohakufa_cute-0.2.0.tar.gz",
+      "sha256": "af4a68108e2b6f6bd100eebaf64cee6a2941305011c49ce7a0a264cf8e70568f",
+      "runtime_fingerprints_match_checkout": {
+        "blackwell.py": true,
+        "_ops.py": true,
+        "__init__.py": true,
+        "native.py": true,
+        "native.cpp": true,
+        "api.py": true,
+        "sm103.py": true,
+        "kernels.py": true,
+        "blackwell_pipeline.py": true,
+        "benchmark_adapter": true
+      }
+    }
+  ]
+}

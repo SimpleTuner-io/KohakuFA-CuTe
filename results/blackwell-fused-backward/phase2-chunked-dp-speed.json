@@ -1,0 +1,1260 @@
+{
+  "device": "NVIDIA B200",
+  "torch": "2.12.0+cu130",
+  "dtype": "bf16",
+  "causal": false,
+  "iterations": 20,
+  "repeats": 4,
+  "ordering": "rotate backend order by one each repetition",
+  "timing": "CUDA event milliseconds per graph replay; forward_backward includes forward",
+  "upstream_tuning": [],
+  "upstream_source": null,
+  "initial_cute_configurations": {
+    "64:forward": [
+      128,
+      64,
+      12,
+      false,
+      false,
+      true,
+      true,
+      false,
+      128
+    ],
+    "64:q": [
+      128,
+      64,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "64:kv": [
+      128,
+      64,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "128:forward": [
+      128,
+      128,
+      12,
+      false,
+      false,
+      true,
+      true,
+      false,
+      128
+    ],
+    "128:q": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "128:kv": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "256:forward": [
+      128,
+      256,
+      12,
+      false,
+      false,
+      true,
+      true,
+      false,
+      128
+    ],
+    "256:q": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "256:kv": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "512:forward": [
+      128,
+      256,
+      12,
+      false,
+      false,
+      true,
+      true,
+      false,
+      128
+    ],
+    "512:q": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ],
+    "512:kv": [
+      128,
+      128,
+      12,
+      false,
+      true,
+      true,
+      true,
+      false,
+      128
+    ]
+  },
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.01865279972553253,
+            "forward_backward_ms": 0.07500479817390442,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.018667200207710268,
+            "forward_backward_ms": 0.07603999972343445,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.018680000305175783,
+            "forward_backward_ms": 0.0750656008720398,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.01865919977426529,
+            "forward_backward_ms": 0.0747215986251831,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.018668800592422485,
+            "forward_backward_ms": 0.07399359941482545,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.01873439997434616,
+            "forward_backward_ms": 0.0741216003894806,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.018654400110244752,
+            "forward_backward_ms": 0.07384480237960815,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.01871200054883957,
+            "forward_backward_ms": 0.07361119985580444,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.018663199990987776,
+          "forward_backward_ms": 0.0750351995229721
+        },
+        "cute": {
+          "forward_ms": 0.018690400570631028,
+          "forward_backward_ms": 0.07391920089721679
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            64,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            64,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.022654399275779724,
+            "forward_backward_ms": 0.09041119813919067,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.022676800191402436,
+            "forward_backward_ms": 0.09217280149459839,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.022652800381183624,
+            "forward_backward_ms": 0.09040799736976624,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.022767999768257143,
+            "forward_backward_ms": 0.09241920113563537,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.02269279956817627,
+            "forward_backward_ms": 0.0903823971748352,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.02268960028886795,
+            "forward_backward_ms": 0.09050080180168152,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.022567999362945557,
+            "forward_backward_ms": 0.09022079706192017,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.022580799460411072,
+            "forward_backward_ms": 0.0902895987033844,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.02266559973359108,
+          "forward_backward_ms": 0.09129199981689454
+        },
+        "cute": {
+          "forward_ms": 0.022635199874639512,
+          "forward_backward_ms": 0.0903359979391098
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.030979201197624207,
+            "forward_backward_ms": 0.2290879964828491,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03094559907913208,
+            "forward_backward_ms": 0.23162879943847656,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03099839985370636,
+            "forward_backward_ms": 0.2294895887374878,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.030955201387405394,
+            "forward_backward_ms": 0.23102080821990967,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.030964800715446474,
+            "forward_backward_ms": 0.19703999757766724,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03096640110015869,
+            "forward_backward_ms": 0.19638559818267823,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.030955201387405394,
+            "forward_backward_ms": 0.19635360240936278,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03097119927406311,
+            "forward_backward_ms": 0.19654239416122438,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.0309672012925148,
+          "forward_backward_ms": 0.23025519847869874
+        },
+        "cute": {
+          "forward_ms": 0.030965600907802582,
+          "forward_backward_ms": 0.19646399617195132
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.09530879855155945,
+            "forward_backward_ms": 0.6228384017944336,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.0956272006034851,
+            "forward_backward_ms": 0.6255055904388428,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09572960138320923,
+            "forward_backward_ms": 0.6219632148742675,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09722560048103332,
+            "forward_backward_ms": 0.6387440204620362,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.09532319903373718,
+            "forward_backward_ms": 0.4906591892242432,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09570720195770263,
+            "forward_backward_ms": 0.49295840263366697,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09689120054244996,
+            "forward_backward_ms": 0.49176640510559083,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09512640237808227,
+            "forward_backward_ms": 0.48891677856445315,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.09567840099334717,
+          "forward_backward_ms": 0.6241719961166382
+        },
+        "cute": {
+          "forward_ms": 0.0955152004957199,
+          "forward_backward_ms": 0.491212797164917
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.18292479515075682,
+            "forward_backward_ms": 0.8937024116516114,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18260639905929565,
+            "forward_backward_ms": 0.8919952392578125,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.1836400032043457,
+            "forward_backward_ms": 0.8919055938720704,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18354560136795045,
+            "forward_backward_ms": 0.8929295539855957,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.18335200548171998,
+            "forward_backward_ms": 0.8563920021057129,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18335679769515992,
+            "forward_backward_ms": 0.8547743797302246,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18316639661788942,
+            "forward_backward_ms": 0.8545472145080566,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18279680013656616,
+            "forward_backward_ms": 0.8542719841003418,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.18323519825935364,
+          "forward_backward_ms": 0.8924623966217041
+        },
+        "cute": {
+          "forward_ms": 0.1832592010498047,
+          "forward_backward_ms": 0.8546607971191407
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            64,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            64,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.20302879810333252,
+            "forward_backward_ms": 1.0297039985656737,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2030400037765503,
+            "forward_backward_ms": 1.0315839767456054,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.20282399654388428,
+            "forward_backward_ms": 1.0281536102294921,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.203108811378479,
+            "forward_backward_ms": 1.0286016464233398,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.203108811378479,
+            "forward_backward_ms": 1.0010815620422364,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.20309920310974122,
+            "forward_backward_ms": 1.00076322555542,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.20269920825958251,
+            "forward_backward_ms": 1.0012639999389648,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.20286879539489747,
+            "forward_backward_ms": 1.0015472412109374,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.2030344009399414,
+          "forward_backward_ms": 1.0291528224945068
+        },
+        "cute": {
+          "forward_ms": 0.20298399925231936,
+          "forward_backward_ms": 1.0011727809906006
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.299561595916748,
+            "forward_backward_ms": 2.371615982055664,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.31261119842529295,
+            "forward_backward_ms": 2.3908559799194338,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.30583360195159914,
+            "forward_backward_ms": 2.3982511520385743,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3254080057144165,
+            "forward_backward_ms": 2.4026575088500977,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.29819679260253906,
+            "forward_backward_ms": 2.0684320449829103,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3194224119186401,
+            "forward_backward_ms": 2.1016016006469727,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3008847951889038,
+            "forward_backward_ms": 2.104340744018555,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3079247951507568,
+            "forward_backward_ms": 2.1183359146118166,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.30922240018844604,
+          "forward_backward_ms": 2.3945535659790043
+        },
+        "cute": {
+          "forward_ms": 0.3044047951698303,
+          "forward_backward_ms": 2.1029711723327638
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 1.0054415702819823,
+            "forward_backward_ms": 7.351573181152344,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0505423545837402,
+            "forward_backward_ms": 7.477321624755859,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0139472007751464,
+            "forward_backward_ms": 7.478782653808594,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0388400077819824,
+            "forward_backward_ms": 7.421593475341797,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 1.0105680465698241,
+            "forward_backward_ms": 6.371900939941407,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.04301118850708,
+            "forward_backward_ms": 6.3056190490722654,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.037668800354004,
+            "forward_backward_ms": 6.369935989379883,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0447711944580078,
+            "forward_backward_ms": 6.311558532714844,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 1.0263936042785644,
+          "forward_backward_ms": 7.4494575500488285
+        },
+        "cute": {
+          "forward_ms": 1.040339994430542,
+          "forward_backward_ms": 6.340747261047364
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ],
+          "kv": [
+            128,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128,
+            true
+          ]
+        }
+      }
+    }
+  ]
+}

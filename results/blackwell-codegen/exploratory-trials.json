@@ -1,0 +1,365 @@
+{
+  "scope": "Exploratory rotating probes, separate from the final production-source comparison. Incomplete reports and assembly failures are not successful measurements.",
+  "trials": [
+    {
+      "experiment": "register-roles",
+      "report": "exploratory/register-roles/measurements/initial.json",
+      "passed": false,
+      "source_sha256": "212371f2b17b3b04a57d91b8ff3ebd81fc6dd5834f45cf9e884d98cb90c5015c",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": null
+        }
+      ]
+    },
+    {
+      "experiment": "register-roles",
+      "report": "exploratory/register-roles/measurements/register216.json",
+      "passed": false,
+      "source_sha256": "212371f2b17b3b04a57d91b8ff3ebd81fc6dd5834f45cf9e884d98cb90c5015c",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": null
+        }
+      ]
+    },
+    {
+      "experiment": "register-roles-v2",
+      "report": "exploratory/register-roles-v2/measurements/register216.json",
+      "passed": false,
+      "source_sha256": "8629a952b4c3d037e7eb19617923c78c4ccc98f556a7325837d680d48ad2ca76",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": null
+        }
+      ]
+    },
+    {
+      "experiment": "register-roles-v2",
+      "report": "exploratory/register-roles-v2/measurements/feasible.json",
+      "passed": true,
+      "source_sha256": "8629a952b4c3d037e7eb19617923c78c4ccc98f556a7325837d680d48ad2ca76",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 5.559332656860351,
+            "208-88": 7.877003479003906,
+            "200-104": 6.797772979736328,
+            "gluon": 3.3737857818603514
+          }
+        },
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.48165283203125,
+            "208-88": 42.995697021484375,
+            "200-104": 42.349465942382814,
+            "gluon": 24.81617431640625
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "register-roles-v3",
+      "report": "exploratory/register-roles-v3/measurements/chunked.json",
+      "passed": true,
+      "source_sha256": "f71fe5c989228825cf206fe7eb708ba3a5e817f707b5f4304bca4f12a812dd0b",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 5.5620464324951175,
+            "chunked": 6.405230712890625,
+            "chunked-200-104": 7.1976478576660154,
+            "gluon": 3.374195098876953
+          }
+        },
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.34771728515625,
+            "chunked": 43.319061279296875,
+            "chunked-200-104": 47.0887451171875,
+            "gluon": 24.813874816894533
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "packed-math",
+      "report": "exploratory/packed-math/measurements/initial.json",
+      "passed": true,
+      "source_sha256": "8a862995804438cce01d753b83d4d3242bd9b0198dac3315576dfea94fb2fcb4",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 5.557238388061523,
+            "prob": 5.429430389404297,
+            "ds": 5.530031967163086,
+            "prob-ds": 5.227665710449219,
+            "all": 5.2425537109375,
+            "rcp": 5.464720153808594,
+            "all-rcp": 5.143072128295898,
+            "gluon": 3.3724639892578123
+          }
+        },
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.4039794921875,
+            "prob": 38.192578125,
+            "ds": 38.1376220703125,
+            "prob-ds": 37.934268188476565,
+            "all": 37.295111083984374,
+            "rcp": 37.42280578613281,
+            "all-rcp": 36.45008544921875,
+            "gluon": 24.82841796875
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "simt-delta",
+      "report": "exploratory/simt-delta/measurements/paired.json",
+      "passed": true,
+      "source_sha256": "e83fe55d5a5ae54362a278f35e6c38a2b16e5320a6a9b77dafed98299e2fa56e",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 5.556689453125,
+            "simt": 5.615134429931641,
+            "gluon": 3.3733665466308596
+          }
+        },
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.48697509765625,
+            "simt": 38.64888305664063,
+            "gluon": 24.82374725341797
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "wide128",
+      "report": "exploratory/wide128/measurements/initial.json",
+      "passed": true,
+      "source_sha256": "026fc66e5c70d1265049854ad68b72931f7bf0f844fa0289aa0d984ec121c29b",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 5.597225570678711,
+            "wide128": 5.09021110534668,
+            "wide128-packed": 4.807412719726562,
+            "gluon": 3.3732673645019533
+          }
+        },
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.573358154296876,
+            "wide128": 49.473324584960935,
+            "wide128-packed": 49.238827514648435,
+            "gluon": 24.814328002929688
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "wide128",
+      "report": "exploratory/wide128/measurements/profile.json",
+      "passed": true,
+      "source_sha256": "026fc66e5c70d1265049854ad68b72931f7bf0f844fa0289aa0d984ec121c29b",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 5.5942543029785154,
+            "wide128": 5.090241622924805,
+            "wide128-packed": 4.811513519287109
+          }
+        },
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.438235473632815,
+            "wide128": 49.4176513671875,
+            "wide128-packed": 49.188360595703124
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "forward-wide",
+      "report": "exploratory/forward-wide/measurements/initial.json",
+      "passed": true,
+      "source_sha256": "36c899e58af06a65fa5eb0822709dbd7df257753e381b287f3c294ef4790c35f",
+      "rows": [
+        {
+          "dimension": 128,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 5.599510383605957,
+            "fwd128": 5.596493721008301,
+            "fwd128-packed": 5.614573669433594,
+            "fwd128-packed-rcp": 5.5426383972167965,
+            "gluon": 3.3709665298461915
+          }
+        },
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.46136474609375,
+            "fwd128": 40.211552429199216,
+            "fwd128-packed": 39.98589935302734,
+            "fwd128-packed-rcp": 37.953514099121094,
+            "gluon": 24.833664703369138
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "tmem-ds",
+      "report": "exploratory/tmem-ds/measurements/smoke.json",
+      "passed": false,
+      "source_sha256": "3fdeae01a4f8fe184afe0670842f360620239e8f8565e10ecf76eec77d619b99",
+      "rows": [
+        {
+          "dimension": 512,
+          "sequence": 1024,
+          "medians": null
+        }
+      ]
+    },
+    {
+      "experiment": "tmem-ds-v2",
+      "report": "exploratory/tmem-ds-v2/measurements/smoke.json",
+      "passed": true,
+      "source_sha256": "9bbe0a43f65105deb1b5de153a74ecfeaa66ea485cea2950938a3ebb006cbfdd",
+      "rows": [
+        {
+          "dimension": 512,
+          "sequence": 1024,
+          "medians": {
+            "baseline": 3.1174936294555664,
+            "tmem128-packed": 3.0964280128479005,
+            "gluon": 1.6260671615600586
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "tmem-ds-v2",
+      "report": "exploratory/tmem-ds-v2/measurements/paired.json",
+      "passed": true,
+      "source_sha256": "9bbe0a43f65105deb1b5de153a74ecfeaa66ea485cea2950938a3ebb006cbfdd",
+      "rows": [
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.455935668945315,
+            "tmem128-packed": 38.541717529296875,
+            "gluon": 24.81036376953125
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "tmem-ds-v3",
+      "report": "exploratory/tmem-ds-v3/measurements/paired.json",
+      "passed": true,
+      "source_sha256": "8411293a18886e509ee2f5ccad5ed8a110f19c3d530963ebc3b4589e57d5691d",
+      "rows": [
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.49446411132813,
+            "tmem64-packed": 35.40934753417969,
+            "gluon": 24.81543426513672
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "query-cache",
+      "report": "exploratory/query-cache/measurements/smoke.json",
+      "passed": true,
+      "source_sha256": "04458606738488c32cf3d51773da24fe62f7dc1aadbec34069a247a4a968161c",
+      "rows": [
+        {
+          "dimension": 512,
+          "sequence": 1024,
+          "medians": {
+            "baseline": 3.124577522277832,
+            "packed": 3.0701679229736327,
+            "cache-smem-packed": 3.155356788635254,
+            "cache-tmem-packed": 2.996406364440918,
+            "gluon": 1.6279296875
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "query-cache",
+      "report": "exploratory/query-cache/measurements/paired.json",
+      "passed": true,
+      "source_sha256": "04458606738488c32cf3d51773da24fe62f7dc1aadbec34069a247a4a968161c",
+      "rows": [
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "baseline": 38.551596069335936,
+            "packed": 37.62527160644531,
+            "cache-smem-packed": 39.926473999023436,
+            "cache-tmem-packed": 37.06229858398437,
+            "gluon": 24.809298706054687
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "query-cache",
+      "report": "exploratory/query-cache/measurements/both.json",
+      "passed": true,
+      "source_sha256": "04458606738488c32cf3d51773da24fe62f7dc1aadbec34069a247a4a968161c",
+      "rows": [
+        {
+          "dimension": 512,
+          "sequence": 4096,
+          "medians": {
+            "tmem-packed": 35.392462158203124,
+            "cache-tmem-packed": 36.24964904785156,
+            "gluon": 24.808421325683593
+          }
+        }
+      ]
+    }
+  ]
+}

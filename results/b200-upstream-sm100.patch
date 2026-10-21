@@ -1,0 +1,88 @@
+diff --git a/src/kohakufa/sm100/fwd.py b/src/kohakufa/sm100/fwd.py
+index 9b11ead..593fbab 100644
+--- a/src/kohakufa/sm100/fwd.py
++++ b/src/kohakufa/sm100/fwd.py
+@@ -119,6 +119,7 @@ class Problem:
+     HALVES: gl.constexpr  # 128-row query halves per CTA tile (1: O of a wide head fits)
+     VSPLIT: gl.constexpr  # CTAs per tile, each the output's columns of NV chunks
+     NV: gl.constexpr  # head-dim chunks of O (and V) per CTA: NCH / VSPLIT
++    HAS_TMEM_REDUCTIONS: gl.constexpr  # tcgen05.ld.red requires sm_103
+ 
+     @gluon.constexpr_function
+     def __init__(
+@@ -126,7 +127,7 @@ class Problem:
+         num_pairs, num_tiles, mask_ptr, mask_b_stride, mask_h_stride, mask_words,
+         tiles_ptr, cu_q_ptr, cu_k_ptr, o_ptr, o_row_stride, list_start_ptr,
+         list_count_ptr, list_ptr, list_cls_ptr, q_tiles,
+-        BLOCK_N, TAIL_N, DC, NCH, S_SLOTS, Q_BUFS, CAUSAL, MASK, VARLEN, HALVES, VSPLIT,
++        BLOCK_N, TAIL_N, DC, NCH, S_SLOTS, Q_BUFS, CAUSAL, MASK, VARLEN, HALVES, VSPLIT, HAS_TMEM_REDUCTIONS,
+     ):  # fmt: skip
+         self.qk_scale = qk_scale
+         self.heads = heads
+@@ -165,6 +166,7 @@ class Problem:
+         self.HALVES = gl.constexpr(HALVES)
+         self.VSPLIT = gl.constexpr(VSPLIT)
+         self.NV = gl.constexpr(NCH // VSPLIT)
++        self.HAS_TMEM_REDUCTIONS = gl.constexpr(HAS_TMEM_REDUCTIONS)
+ 
+     @gluon.jit
+     def narrow(self, j):
+@@ -884,9 +886,12 @@ def _softmax_step(
+                 visible = cols[None, :] < col_limit[:, None]
+             s = gl.where(visible, s, -float("inf"))
+             chunk_max = gl.max(s, axis=1)
+-        else:
++        elif p.HAS_TMEM_REDUCTIONS:
+             s, chunk_max = s_slot.slice(c * CHUNK, CHUNK).load_max(s_regs)
+             chunk_max = gl.convert_layout(chunk_max, rows_layout)
++        else:
++            s = s_slot.slice(c * CHUNK, CHUNK).load(s_regs)
++            chunk_max = gl.max(s, axis=1)
+         row_max = gl.maximum(row_max, chunk_max)
+         chunks = chunks + (s,)
+     m_new = gl.maximum(m_i, row_max)  # raw scores (see _softmax_partition)
+@@ -1072,6 +1077,7 @@ def attention_fwd_kernel(
+     S_SLOTS: gl.constexpr, Q_BUFS: gl.constexpr, KV_SLOTS: gl.constexpr, KV_GROUP: gl.constexpr,
+     HALVES: gl.constexpr, VSPLIT: gl.constexpr, OUT_BUFS: gl.constexpr,
+     CAUSAL: gl.constexpr, MASK: gl.constexpr, VARLEN: gl.constexpr,
++    HAS_TMEM_REDUCTIONS: gl.constexpr,
+ ):  # fmt: skip
+     problem = Problem(
+         gl.to_tensor(qk_scale), gl.to_tensor(heads), gl.to_tensor(group),
+@@ -1082,7 +1088,7 @@ def attention_fwd_kernel(
+         gl.to_tensor(mask_words), tiles_ptr, cu_q_ptr, cu_k_ptr, o_ptr,
+         gl.to_tensor(o_row_stride), list_start_ptr, list_count_ptr, list_ptr, list_cls_ptr,
+         gl.to_tensor(q_tiles),
+-        BLOCK_N, TAIL_N, DC, NCH, S_SLOTS, Q_BUFS, CAUSAL, MASK, VARLEN, HALVES, VSPLIT,
++        BLOCK_N, TAIL_N, DC, NCH, S_SLOTS, Q_BUFS, CAUSAL, MASK, VARLEN, HALVES, VSPLIT, HAS_TMEM_REDUCTIONS,
+     )  # fmt: skip
+     vector_layout: gl.constexpr = gl.SwizzledSharedLayout(1, 1, 1, [0])
+     # head-dim chunks are separate buffers: [slot * NCH + chunk, 1, 1, rows, DC]
+@@ -1226,15 +1232,16 @@ def attention_forward(
+         *_no_varlen(q.device), *(mask_lists or _no_lists(q.device)),
+         DC=cfg.dc, NCH=cfg.nch, BLOCK_N=cfg.block_n,
+         TAIL_N=cfg.block_n if mask_words is not None else tail_width(seq_kv),
+-        **_constexprs(cfg),
++        **_constexprs(cfg, q.device),
+         CAUSAL=block > 0, MASK=mask_words is not None, VARLEN=False, num_warps=4,
+     )  # fmt: skip
+     return out, lse
+ 
+ 
+-def _constexprs(cfg) -> dict:
++def _constexprs(cfg, device) -> dict:
+     """The kernel's compile-time configuration from a ``ForwardConfig``."""
+     return {
++        "HAS_TMEM_REDUCTIONS": torch.cuda.get_device_capability(device) == (10, 3),
+         "S_SLOTS": cfg.s_slots,
+         "Q_BUFS": cfg.q_bufs,
+         "KV_SLOTS": cfg.kv_slots,
+@@ -1302,7 +1309,7 @@ def attention_forward_varlen(
+         max(block, 1), 0, 0, num_tiles, *mask_arguments(None, q.device),
+         tiles, cu_seqlens_q, cu_seqlens_k, out, heads * dim, *_no_lists(q.device),
+         DC=cfg.dc, NCH=cfg.nch, BLOCK_N=cfg.block_n, TAIL_N=cfg.block_n,
+-        **_constexprs(cfg),
++        **_constexprs(cfg, q.device),
+         CAUSAL=block > 0, MASK=False, VARLEN=True, num_warps=4,
+     )  # fmt: skip
+     return out, lse

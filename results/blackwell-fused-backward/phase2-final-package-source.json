@@ -1,0 +1,23 @@
+{
+  "kernel_test_reference": "01815f859a555bfea0fc9cc42ef8f3a89c279e62",
+  "sha256": {
+    "src/kohakufa_cute/__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "src/kohakufa_cute/_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+    "src/kohakufa_cute/api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+    "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "src/kohakufa_cute/blackwell_pipeline.py": "58a2d1173e8954f76444685d9b34ba939084c5c1aa355fe76926cdb315594ee2",
+    "src/kohakufa_cute/kernels.py": "b8f3486f63a92dc77e0a097a868d4e4a152fe176ca5cc2ade1ed674e2ef702fd",
+    "src/kohakufa_cute/native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+    "src/kohakufa_cute/native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+    "src/kohakufa_cute/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/kohakufa_cute/sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/test_api.py": "2b7646ec443e419d2c58d8bd432dbf7b01560fb5af52f3f8f1b5c3936eeb8fa3",
+    "tests/test_center_keys.py": "0f95ee952455efce716aac44ef8358e9f01250fd39282c76c3de01d854efbf54",
+    "tests/test_kernels.py": "83d29a8800f3f8004cffbbc7e0e58abce97a0a61e156f865e493ee8fc198662b",
+    "tests/test_length_precision.py": "fe84d863cbb841ea1d5cd46fd895f6e704196c5b23814256fc734eb06ebfb2ca",
+    "tests/test_reference.py": "b949c027dddd4d48581d594a809c88f5ab06453ea7aecded10a4a265bbce2943",
+    "tests/test_row_metrics.py": "bf290db6eccc58c3ad4fdd1dacf11bd09910e1b7630f8cc9130403225152ac7d",
+    "tests/test_training.py": "789b4dbae78e1eb0f929b39400ce500d303c9cffa14b4f34ed3e9c8be81cf761"
+  }
+}

@@ -1,0 +1,5432 @@
+{
+  "scope": "Executed run logs and their raw measurements; a completed random-input benchmark is not a general precision approval. The anchor shortcut is excluded after selected/anchor-negative-control.json demonstrates nonzero gradients for a true zero-covariance case. The earlier FP16 cancellation failure is a baseline fixture underflow, documented in selected/cancellation-range.json. Prepared blackwell-control-{184,200,216}.py files were not executed.",
+  "runs": [
+    {
+      "log": "anchor-v1-d512.log",
+      "sha256": "3646e3a8f8f13a740acbb6c2c9784216c8274c0f8af6319535b47d8eea72cd34",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.879727935791015,
+          "forward_backward_ms": 33.66132507324219,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.878550338745117,
+          "forward_backward_ms": 28.161618041992188,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.83166389465332,
+          "forward_backward_ms": 24.823097229003906,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.883881759643555,
+          "forward_backward_ms": 28.47459716796875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8517887115478517,
+          "forward_backward_ms": 24.807760620117186,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.881020736694336,
+          "forward_backward_ms": 33.635003662109376,
+          "graph_verified": true
+        }
+      ],
+      "report": "anchor-v1-d512.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.880374336242676,
+              "forward_backward_ms": 33.64816436767578
+            },
+            "candidate": {
+              "forward_ms": 4.881216049194336,
+              "forward_backward_ms": 28.31810760498047
+            },
+            "gluon": {
+              "forward_ms": 3.841726303100586,
+              "forward_backward_ms": 24.815428924560546
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "anchor-validation.log",
+      "sha256": "07f7e4dcacee0e20682af39f78649e367aecbea67f168d105da5a5234cbe16af",
+      "json_records": [],
+      "report": "anchor-validation.json",
+      "paired_run_completed": false,
+      "cases": [],
+      "errors": [
+        "AssertionError: 1.0 not less than 0.3"
+      ]
+    },
+    {
+      "log": "bench-v10-d512.log",
+      "sha256": "74500ecdc58751190e72625b07e088204f192776921db0d37a093606a0f0a4dc",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            62.443939208984375,
+            62.4283203125,
+            62.4303466796875,
+            62.4329345703125
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.327713012695312,
+            28.742471313476564,
+            28.76598205566406,
+            28.84017333984375
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "bench-v11-d512.log",
+      "sha256": "b4b8f8ec038672286d73052d9016af1f974b781e7620023560ce52bf337ad3bc",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            59.2550537109375,
+            59.261834716796876,
+            59.25794677734375,
+            59.257958984375
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.42379150390625,
+            28.73686828613281,
+            28.6850830078125,
+            28.78646240234375
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "bench-v11-dynamic-d512.log",
+      "sha256": "d394e9f677607847c7ba3edf681c7415c51e5cf82830e5bcf71ad36a6160bd75",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            59.118310546875,
+            59.125634765625,
+            59.12867431640625,
+            59.124542236328125
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.31946716308594,
+            28.70401611328125,
+            28.734466552734375,
+            28.8209228515625
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "bench-v7-d512-v2.log",
+      "sha256": "b6914dcd71efdfd3789145e38466333e4ad3bc7dbf75d2507f4da7e7c2af9fa8",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            120.72921142578124,
+            120.651708984375,
+            120.576220703125,
+            120.648974609375
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.58035888671875,
+            28.69461669921875,
+            28.69403991699219,
+            28.68359375
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "bench-v7-d512.log",
+      "sha256": "d5a7cfdbc9911e79902133fae61e78d702a398975cdb955eff97f1685adc4b8e",
+      "json_records": [],
+      "errors": [
+        "AssertionError: The values for attribute 'dtype' do not match: torch.float64 != torch.bfloat16."
+      ]
+    },
+    {
+      "log": "bench-v8-d512.log",
+      "sha256": "0dd65fed97c5800504567ec117a44ee5c1fd0e70bd2bcd4687a0de84c8ecdf35",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            74.18677978515625,
+            74.18639526367187,
+            74.18871459960937,
+            74.190625
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.541973876953126,
+            28.69852294921875,
+            28.69769287109375,
+            28.703616333007812
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "bench-v9-d512.log",
+      "sha256": "5ea44a52ef94dd727e777812adfb32f418b0535a56a73f901ac7fb2b2d772056",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            75.46537475585937,
+            75.4677978515625,
+            75.46746826171875,
+            75.4680419921875
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.527999877929688,
+            28.687884521484374,
+            28.68818359375,
+            28.6822509765625
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "compact-query-v1-bf16.log",
+      "sha256": "5aa00ed13a475c2886c1c099ccb8dfa875285e9fea9535f6d66a1dd91cb2609d",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.888969421386719,
+          "forward_backward_ms": 33.62366943359375,
+          "graph_verified": true
+        }
+      ],
+      "report": "compact-query-v1-bf16.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7600) Register allocation failed with register count of '104'. Compile the program with a higher register target",
+        "ptxas fatal   : (C7600) Register allocation failed with register count of '104'. Compile the",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "compact-query-v2-bf16.log",
+      "sha256": "a92bba7402f1456aca4f269abb4c44b69818cebe1b73608b6eaad41dc98c34e5",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.881958389282227,
+          "forward_backward_ms": 33.617086791992186,
+          "graph_verified": true
+        }
+      ],
+      "report": "compact-query-v2-bf16.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7600) Register allocation failed with register count of '112'. Compile the program with a higher register target",
+        "ptxas fatal   : (C7600) Register allocation failed with register count of '112'. Compile the",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "compact-query-v3-bf16.log",
+      "sha256": "27c81f21349117cc1bed4013e5ecf1b3dd95d25ac89344f52f1d65dc9d9973e7",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 5.087440109252929,
+          "forward_backward_ms": 33.62590637207031,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.897894287109375,
+          "forward_backward_ms": 151.39495849609375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8328319549560548,
+          "forward_backward_ms": 24.81134033203125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.881244659423828,
+          "forward_backward_ms": 151.8015625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8363006591796873,
+          "forward_backward_ms": 24.813693237304687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.879580688476563,
+          "forward_backward_ms": 33.64225769042969,
+          "graph_verified": true
+        }
+      ],
+      "report": "compact-query-v3-bf16.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.9835103988647464,
+              "forward_backward_ms": 33.63408203125
+            },
+            "candidate": {
+              "forward_ms": 4.889569473266602,
+              "forward_backward_ms": 151.59826049804687
+            },
+            "gluon": {
+              "forward_ms": 3.8345663070678713,
+              "forward_backward_ms": 24.81251678466797
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "deferred-compact-v1-d512.log",
+      "sha256": "b1aa4069745a6a1ffa0ca6dd379ab563237ee78100a872c6a89d66f1fa8139ad",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.881388854980469,
+          "forward_backward_ms": 33.65912780761719,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.885590362548828,
+          "forward_backward_ms": 35.14525146484375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8349822998046874,
+          "forward_backward_ms": 24.80560302734375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.883695983886719,
+          "forward_backward_ms": 35.12858581542969,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.884076690673828,
+          "forward_backward_ms": 24.81883544921875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.881158447265625,
+          "forward_backward_ms": 33.606832885742186,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-compact-v1-d512.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.881273651123047,
+              "forward_backward_ms": 33.63298034667969
+            },
+            "candidate": {
+              "forward_ms": 4.884643173217773,
+              "forward_backward_ms": 35.13691864013672
+            },
+            "gluon": {
+              "forward_ms": 3.859529495239258,
+              "forward_backward_ms": 24.81221923828125
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "deferred-compact-v2-bf16.log",
+      "sha256": "367eed90513f2fdbcb5f05e05f6eae826061db86944123f0a36d1d53cfc8b4c3",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.1477728009223938,
+          "forward_backward_ms": 0.931334400177002,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14733439683914185,
+          "forward_backward_ms": 1.072099208831787,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10001280307769775,
+          "forward_backward_ms": 0.6385632038116456,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14808640480041504,
+          "forward_backward_ms": 1.0714912414550781,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.09997760057449341,
+          "forward_backward_ms": 0.6371776103973389,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14789119958877564,
+          "forward_backward_ms": 0.9305983543395996,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.42143998146057127,
+          "forward_backward_ms": 2.7200544357299803,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.4210976123809814,
+          "forward_backward_ms": 2.9536767959594727,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.27127680778503416,
+          "forward_backward_ms": 1.6303712844848632,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.42086081504821776,
+          "forward_backward_ms": 2.9465375900268556,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.27026240825653075,
+          "forward_backward_ms": 1.6303359985351562,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.42134718894958495,
+          "forward_backward_ms": 2.732480049133301,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.42706241607666,
+          "forward_backward_ms": 10.079730987548828,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.426095962524414,
+          "forward_backward_ms": 10.030009460449218,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1244192123413086,
+          "forward_backward_ms": 7.746227264404297,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.4260255813598632,
+          "forward_backward_ms": 10.035945892333984,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1228063583374024,
+          "forward_backward_ms": 7.755977630615234,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.427132797241211,
+          "forward_backward_ms": 10.16711654663086,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.888444900512695,
+          "forward_backward_ms": 33.6052490234375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.886624145507812,
+          "forward_backward_ms": 32.6648193359375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8785953521728516,
+          "forward_backward_ms": 24.796479797363283,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.884675216674805,
+          "forward_backward_ms": 32.552459716796875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8363422393798827,
+          "forward_backward_ms": 24.804019165039062,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.884534454345703,
+          "forward_backward_ms": 33.675070190429686,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-compact-v2-bf16.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.14783200025558474,
+              "forward_backward_ms": 0.9309663772583008
+            },
+            "candidate": {
+              "forward_ms": 0.14771040081977843,
+              "forward_backward_ms": 1.0717952251434326
+            },
+            "gluon": {
+              "forward_ms": 0.09999520182609559,
+              "forward_backward_ms": 0.6378704071044923
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.4213935852050781,
+              "forward_backward_ms": 2.7262672424316405
+            },
+            "candidate": {
+              "forward_ms": 0.42097921371459956,
+              "forward_backward_ms": 2.950107192993164
+            },
+            "gluon": {
+              "forward_ms": 0.2707696080207824,
+              "forward_backward_ms": 1.6303536415100097
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 1.4270976066589354,
+              "forward_backward_ms": 10.123423767089843
+            },
+            "candidate": {
+              "forward_ms": 1.4260607719421388,
+              "forward_backward_ms": 10.032977676391601
+            },
+            "gluon": {
+              "forward_ms": 1.1236127853393554,
+              "forward_backward_ms": 7.751102447509766
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.886489677429199,
+              "forward_backward_ms": 33.640159606933594
+            },
+            "candidate": {
+              "forward_ms": 4.885649681091309,
+              "forward_backward_ms": 32.608639526367185
+            },
+            "gluon": {
+              "forward_ms": 3.8574687957763674,
+              "forward_backward_ms": 24.80024948120117
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "deferred-v1-d512.log",
+      "sha256": "bc6beede1c8546751c04664a0010a7246da4e0c19a71968c966edff8a7d124ef",
+      "json_records": []
+    },
+    {
+      "log": "deferred-v2-d512.log",
+      "sha256": "d194b02eed78d9501829be7104164c6b641bb5f7f0ae0111697476ac8ff3f0ad",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8769279479980465,
+          "forward_backward_ms": 33.584738159179686,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-v2-d512.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ]
+    },
+    {
+      "log": "deferred-v3-d512.log",
+      "sha256": "498f027740c357718e200d6e986748e14652845cfa4433470bc198b461c8cac1",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8817695617675785,
+          "forward_backward_ms": 33.57095947265625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.901542282104492,
+          "forward_backward_ms": 32.49134521484375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8331329345703127,
+          "forward_backward_ms": 24.814793395996094,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.884291076660157,
+          "forward_backward_ms": 32.68828430175781,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.927654266357422,
+          "forward_backward_ms": 24.826707458496095,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.873616027832031,
+          "forward_backward_ms": 33.62478942871094,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-v3-d512.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.877692794799804,
+              "forward_backward_ms": 33.59787445068359
+            },
+            "candidate": {
+              "forward_ms": 4.892916679382324,
+              "forward_backward_ms": 32.589814758300776
+            },
+            "gluon": {
+              "forward_ms": 3.8803936004638673,
+              "forward_backward_ms": 24.820750427246097
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "deferred-wide-v1-d512.log",
+      "sha256": "f27073c2a7219bf19da11b2beb48a66e9e6f2b431b30a861d6f80d7c71472231",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.880780792236328,
+          "forward_backward_ms": 33.362936401367186,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v1-d512.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7600) Register allocation failed with register count of '208'. Compile the program with a higher register target",
+        "ptxas fatal   : (C7600) Register allocation failed with register count of '208'. Compile the",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "deferred-wide-v2-d512.log",
+      "sha256": "937699d7737afda4fd9c3fea9398f8033be455891d2a6d416ed3b00810fbf01e",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8842113494873045,
+          "forward_backward_ms": 33.66895751953125,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v2-d512.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7600) Register allocation failed with register count of '208'. Compile the program with a higher register target",
+        "ptxas fatal   : (C7600) Register allocation failed with register count of '208'. Compile the",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "deferred-wide-v3-d512.log",
+      "sha256": "7c23899b9c46eb9b59146927de06f69f6e329b1ca19f366051e421ee7a84bfc6",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.881427383422851,
+          "forward_backward_ms": 33.43603515625,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v3-d512.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7600) Register allocation failed with register count of '200'. Compile the program with a higher register target",
+        "ptxas fatal   : (C7600) Register allocation failed with register count of '200'. Compile the",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "deferred-wide-v4-d512.log",
+      "sha256": "cdc78454519160a98bea7676b02b3a4917ff57210a4932d8265ba0fbf7e6f658",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.886463928222656,
+          "forward_backward_ms": 33.2760986328125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.886111831665039,
+          "forward_backward_ms": 35.65787963867187,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8349632263183593,
+          "forward_backward_ms": 24.817170715332033,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.884076690673828,
+          "forward_backward_ms": 35.7491455078125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.912313461303711,
+          "forward_backward_ms": 24.812112426757814,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877478408813476,
+          "forward_backward_ms": 33.6368896484375,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v4-d512.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.881971168518066,
+              "forward_backward_ms": 33.456494140625
+            },
+            "candidate": {
+              "forward_ms": 4.885094261169433,
+              "forward_backward_ms": 35.703512573242186
+            },
+            "gluon": {
+              "forward_ms": 3.8736383438110353,
+              "forward_backward_ms": 24.814641571044923
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "deferred-wide-v5-d512.log",
+      "sha256": "c1a7726f6998e93b5cb34fe674646a5fab28ab1992e039be1429c83a2208d68a",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8785247802734375,
+          "forward_backward_ms": 33.26833801269531,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v5-d512.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "AssertionError: Tensor-likes are not close!"
+      ]
+    },
+    {
+      "log": "deferred-wide-v6-d512.log",
+      "sha256": "90287bbd890777e6abd9e6f902e5bfab8a4c51230ff99930be3475cbf3fba97a",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877916717529297,
+          "forward_backward_ms": 33.676605224609375,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v6-d512.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "AssertionError: Tensor-likes are not equal!"
+      ]
+    },
+    {
+      "log": "deferred-wide-v7-d512.log",
+      "sha256": "5b939142f230b0bb08a6ffe490f2aea0597501b3955ab069627c82cbe625a6b6",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.891772842407226,
+          "forward_backward_ms": 33.6156494140625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.883216094970703,
+          "forward_backward_ms": 34.587744140625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.833945465087891,
+          "forward_backward_ms": 24.80188751220703,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.882499313354492,
+          "forward_backward_ms": 34.60606384277344,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.826784133911133,
+          "forward_backward_ms": 24.807308959960938,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8941184997558596,
+          "forward_backward_ms": 33.70771179199219,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v7-d512.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.892945671081543,
+              "forward_backward_ms": 33.66168060302735
+            },
+            "candidate": {
+              "forward_ms": 4.882857704162598,
+              "forward_backward_ms": 34.59690399169922
+            },
+            "gluon": {
+              "forward_ms": 3.830364799499512,
+              "forward_backward_ms": 24.804598236083983
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "deferred-wide-v8-d512.log",
+      "sha256": "d5ef80e6ceb992687208ff14f35a8ab4d5c8749d2572f0ba4380cb6253c903d1",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.894867324829102,
+          "forward_backward_ms": 33.64014587402344,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.881865692138672,
+          "forward_backward_ms": 36.15868225097656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.829091262817383,
+          "forward_backward_ms": 24.807289123535156,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.876675033569336,
+          "forward_backward_ms": 36.15983276367187,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.900569534301758,
+          "forward_backward_ms": 24.80909118652344,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.873859024047851,
+          "forward_backward_ms": 33.61817626953125,
+          "graph_verified": true
+        }
+      ],
+      "report": "deferred-wide-v8-d512.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.884363174438477,
+              "forward_backward_ms": 33.62916107177735
+            },
+            "candidate": {
+              "forward_ms": 4.879270362854005,
+              "forward_backward_ms": 36.15925750732421
+            },
+            "gluon": {
+              "forward_ms": 3.8648303985595707,
+              "forward_backward_ms": 24.808190155029298
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward32-v1-bf16.log",
+      "sha256": "e7973b35be8ab420758237fb8af877112c8bb7da02804ed73435285ce2f9f765",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.884969711303711,
+          "forward_backward_ms": 33.587640380859376,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 8.279110717773438,
+          "forward_backward_ms": 36.81452941894531,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8317214965820314,
+          "forward_backward_ms": 24.803610229492186,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 8.279523468017578,
+          "forward_backward_ms": 37.03972473144531,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.88568000793457,
+          "forward_backward_ms": 24.818540954589842,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.892432022094726,
+          "forward_backward_ms": 33.61192321777344,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward32-v1-bf16.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.888700866699219,
+              "forward_backward_ms": 33.5997817993164
+            },
+            "candidate": {
+              "forward_ms": 8.279317092895507,
+              "forward_backward_ms": 36.927127075195315
+            },
+            "gluon": {
+              "forward_ms": 3.858700752258301,
+              "forward_backward_ms": 24.811075592041014
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward5-d512.log",
+      "sha256": "6c4c0df76f5ededc27c4ee8c45279689c456ab916a70d639d0d72d14e55ad4df",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8835296630859375,
+          "forward_backward_ms": 33.648931884765624,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.855033493041992,
+          "forward_backward_ms": 33.622805786132815,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.834524917602539,
+          "forward_backward_ms": 24.826783752441408,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.851971054077149,
+          "forward_backward_ms": 33.6072021484375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8887039184570313,
+          "forward_backward_ms": 24.862535095214845,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.885504150390625,
+          "forward_backward_ms": 33.62492980957031,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward5-d512.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.884516906738281,
+              "forward_backward_ms": 33.63693084716797
+            },
+            "candidate": {
+              "forward_ms": 4.85350227355957,
+              "forward_backward_ms": 33.61500396728516
+            },
+            "gluon": {
+              "forward_ms": 3.8616144180297853,
+              "forward_backward_ms": 24.844659423828126
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "grouped-v1-d512.log",
+      "sha256": "5a96243675641c6c1818f6a3197469405930a2710faa78497a6c6ad1434045dd",
+      "json_records": []
+    },
+    {
+      "log": "grouped-v1-small.log",
+      "sha256": "86599751e0cad647367df91a0a406410c29d9e7476011281af5a23cfbff8417c",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "backward_ms": [
+            0.03989120125770569,
+            0.03910239934921265,
+            0.039139199256896975,
+            0.03904480040073395
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "backward_ms": [
+            0.021473599970340727,
+            0.020657600462436677,
+            0.020707200467586517,
+            0.020684799551963805
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "grouped-v2-d512.log",
+      "sha256": "ef9fe3947b07b91116dd1cc9c197f2d3bbec3a2d0c6c2f3c22ca0c724353d31f",
+      "json_records": []
+    },
+    {
+      "log": "grouped-v3-dynamic-d512.log",
+      "sha256": "9c213f6fd18bed545acd28823746ac1323381e4a75293452580bbad0473d30c5",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            89.21663818359374,
+            89.11062622070312,
+            89.2096435546875,
+            89.23973999023437
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.615386962890625,
+            28.713949584960936,
+            28.718283081054686,
+            28.715945434570312
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "grouped-v4-d512.log",
+      "sha256": "d6c56f2a43d419116fc2e21c03a6bc750d09885142374db6f35eb9ae4d0fcd6a",
+      "json_records": [],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7602) Insufficient registers (128) to compile instruction at line 10520 in function kernel_cutlass_kernel_kohakufa_cuteblackwell_groupedGrouped_object_at__tensorptrbf16_gmem_align16_o_1165120i64_div5125121_tensorptrbf16_gmem_align16_o_1165120i64_div5125121_tensorptrf32_g_2. Try to compile with register target of 146 or higher.",
+        "ptxas fatal   : (C7602) Insufficient registers (128) to compile instruction at line 10520 in",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "grouped-v5-d512.log",
+      "sha256": "718448c56236071cc826a68aca3e790068fe6598f5e45aed9a875f6626edb1d3",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            77.54701538085938,
+            77.55670776367188,
+            77.54910278320312,
+            77.55617065429688
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.553848266601562,
+            28.705422973632814,
+            28.711813354492186,
+            28.712362670898436
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "joint-v3.log",
+      "sha256": "1653ca28f9b5ba57155fd6e394b441eb4fec16845fe3e58e2afa71dcc19b08e8",
+      "json_records": []
+    },
+    {
+      "log": "joint-v4.log",
+      "sha256": "4b64601c30f223f9487d87a0b926daa8444b78f78d5f1f047e43949babb75453",
+      "json_records": []
+    },
+    {
+      "log": "joint-v5.log",
+      "sha256": "ba42de5b9f0264b3235b97be78f84c79b341e6cf5b0a4609e81756947c953bc9",
+      "json_records": []
+    },
+    {
+      "log": "joint-v7.log",
+      "sha256": "f92380475ae11e893581346cd0654a077a22a6d40e920f955981a8cfb69b8d24",
+      "json_records": []
+    },
+    {
+      "log": "keyowned-v1-small.log",
+      "sha256": "89ad363cd095a5a7b43e64a09ee87349c681c6f4d67a5fd85427183098429013",
+      "json_records": []
+    },
+    {
+      "log": "keyowned-v2-small.log",
+      "sha256": "0e8f7e577596f668bc5142c1cbbb6cb0363070413505c28e38693314b4adedd2",
+      "json_records": [],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7600) Register allocation failed with register count of '192'. Compile the program with a higher register target",
+        "ptxas fatal   : (C7600) Register allocation failed with register count of '192'. Compile the",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "keyowned-v3-d512.log",
+      "sha256": "7fbc29ff386a3900e3e370b814001188d4a0f30ee6d6bf59a7021c44dec58f7f",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            46.86607666015625,
+            46.860836791992185,
+            46.840109252929686,
+            46.85891418457031
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backward_ms": [
+            28.362393188476563,
+            28.64757385253906,
+            28.700469970703125,
+            28.78326416015625
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "keyowned-v3-small.log",
+      "sha256": "f7f71d8aee31ad98aa465141f3c2d13a5c2212246865dc953650786b8bd5db6c",
+      "json_records": [
+        {
+          "backend": "candidate",
+          "shape": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "backward_ms": [
+            0.027521601319313048,
+            0.026918399333953857,
+            0.02682879865169525,
+            0.026895999908447266
+          ],
+          "graph_verified": true
+        },
+        {
+          "backend": "baseline",
+          "shape": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "backward_ms": [
+            0.021289600431919097,
+            0.02064639925956726,
+            0.020688000321388244,
+            0.020683200657367708
+          ],
+          "graph_verified": true
+        }
+      ]
+    },
+    {
+      "log": "profile-deferred256.log",
+      "sha256": "5597e27bcb2d69303669e430887fe7444a6ccd054c1828178efd14ae6323802c",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.90181318918864,
+          "forward_backward_ms": 33.22339121500651,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.896085421244304,
+          "forward_backward_ms": 32.37320454915365,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8339945475260415,
+          "forward_backward_ms": 24.816309611002605,
+          "graph_verified": true
+        }
+      ],
+      "report": "profile-deferred256.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.90181318918864,
+              "forward_backward_ms": 33.22339121500651
+            },
+            "candidate": {
+              "forward_ms": 4.896085421244304,
+              "forward_backward_ms": 32.37320454915365
+            },
+            "gluon": {
+              "forward_ms": 3.8339945475260415,
+              "forward_backward_ms": 24.816309611002605
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "profile-v8.log",
+      "sha256": "70b5e37c7e77e4b95423a538f632f9241b501323f4e3ccb3485152659db49b7e",
+      "json_records": []
+    },
+    {
+      "log": "reduce-v7.log",
+      "sha256": "82bbb1ee2e80489d4898e857907af2f6915ca682a0fbf1be13cea02fa3e88e79",
+      "json_records": []
+    },
+    {
+      "log": "reduce-warp.log",
+      "sha256": "e594f3b2eeb0df2063cd925cff4c2a3197854788829caff05085def927c26805",
+      "json_records": []
+    },
+    {
+      "log": "register-mean-v1-bf16.log",
+      "sha256": "1cc61fd5dd1f0b44c6eb727619eed9a5e70359e726f0527e35301644a6e968bf",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.882246398925782,
+          "forward_backward_ms": 33.614419555664064,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.889311981201172,
+          "forward_backward_ms": 38.832638549804685,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8373790740966798,
+          "forward_backward_ms": 24.803453063964845,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.88238410949707,
+          "forward_backward_ms": 38.829464721679685,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.859132766723633,
+          "forward_backward_ms": 24.81030731201172,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.874054336547852,
+          "forward_backward_ms": 33.62691955566406,
+          "graph_verified": true
+        }
+      ],
+      "report": "register-mean-v1-bf16.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.878150367736817,
+              "forward_backward_ms": 33.620669555664065
+            },
+            "candidate": {
+              "forward_ms": 4.885848045349121,
+              "forward_backward_ms": 38.831051635742185
+            },
+            "gluon": {
+              "forward_ms": 3.848255920410156,
+              "forward_backward_ms": 24.806880187988284
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "slices-v1-bf16.log",
+      "sha256": "19b9588dc2bec8ce6f775df5a578a647bb9702306b80166da1753e8a3847c126",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.886959838867187,
+          "forward_backward_ms": 33.618716430664065,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.933849716186524,
+          "forward_backward_ms": 31.071734619140624,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8344383239746094,
+          "forward_backward_ms": 24.817733764648438,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.9264991760253904,
+          "forward_backward_ms": 31.053585815429688,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9048225402832033,
+          "forward_backward_ms": 24.818112182617188,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.887724685668945,
+          "forward_backward_ms": 33.63255310058594,
+          "graph_verified": true
+        }
+      ],
+      "report": "slices-v1-bf16.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.887342262268066,
+              "forward_backward_ms": 33.625634765625
+            },
+            "candidate": {
+              "forward_ms": 4.930174446105957,
+              "forward_backward_ms": 31.062660217285156
+            },
+            "gluon": {
+              "forward_ms": 3.8696304321289063,
+              "forward_backward_ms": 24.81792297363281
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "slices-v2-bf16-causal.log",
+      "sha256": "d6b68568bedf901ca7f9c130183b2fd59818894c7edabe49b563cb86ca2c6f12",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.7543903827667237,
+          "forward_backward_ms": 2.9582000732421876,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.7535039901733398,
+          "forward_backward_ms": 2.9863616943359377,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5543871879577636,
+          "forward_backward_ms": 2.109012794494629,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.754307222366333,
+          "forward_backward_ms": 2.9860511779785157,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5537631988525391,
+          "forward_backward_ms": 2.10742073059082,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.7537312030792236,
+          "forward_backward_ms": 2.9600095748901367,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5572000026702881,
+          "forward_backward_ms": 2.111556816101074,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.7559167861938476,
+          "forward_backward_ms": 2.9584495544433596,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.7548448085784912,
+          "forward_backward_ms": 2.9883440017700194,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.7547423839569092,
+          "forward_backward_ms": 2.9616367340087892,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.7544415950775146,
+          "forward_backward_ms": 2.988582420349121,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5554160118103028,
+          "forward_backward_ms": 2.112126350402832,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 3.9920047760009765,
+          "forward_backward_ms": 19.739295959472656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 3.981903839111328,
+          "forward_backward_ms": 18.8531982421875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.00772647857666,
+          "forward_backward_ms": 13.653153991699218,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 3.9804241180419924,
+          "forward_backward_ms": 18.901492309570312,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.007529640197754,
+          "forward_backward_ms": 13.689532470703124,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 3.9824657440185547,
+          "forward_backward_ms": 19.747421264648438,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.009003257751465,
+          "forward_backward_ms": 13.649012756347656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 3.98504638671875,
+          "forward_backward_ms": 19.760604858398438,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 3.979305648803711,
+          "forward_backward_ms": 19.010285949707033,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 3.9814144134521485,
+          "forward_backward_ms": 19.873854064941405,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 3.9796737670898437,
+          "forward_backward_ms": 18.96924591064453,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.003424072265625,
+          "forward_backward_ms": 13.690605163574219,
+          "graph_verified": true
+        }
+      ],
+      "report": "slices-v2-bf16-causal.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.7545663833618164,
+              "forward_backward_ms": 2.959229564666748
+            },
+            "candidate": {
+              "forward_ms": 0.7543744087219237,
+              "forward_backward_ms": 2.9873528480529785
+            },
+            "gluon": {
+              "forward_ms": 0.5549015998840332,
+              "forward_backward_ms": 2.1102848052978516
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.9837560653686523,
+              "forward_backward_ms": 19.754013061523438
+            },
+            "candidate": {
+              "forward_ms": 3.980048942565918,
+              "forward_backward_ms": 18.935369110107423
+            },
+            "gluon": {
+              "forward_ms": 3.0076280593872067,
+              "forward_backward_ms": 13.67134323120117
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "slices-v2-bf16.log",
+      "sha256": "56944eff221ec82f00d322a33c65010cad50a4defff957b42ca923595fe0ee40",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.09640960097312927,
+          "forward_backward_ms": 0.3300928115844727,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.09652799963951111,
+          "forward_backward_ms": 0.3285984039306641,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.05350080132484436,
+          "forward_backward_ms": 0.17868800163269044,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.09649440050125122,
+          "forward_backward_ms": 0.3288655996322632,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.05347040295600891,
+          "forward_backward_ms": 0.17870880365371705,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.09642879962921143,
+          "forward_backward_ms": 0.3296272039413452,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.053529602289199826,
+          "forward_backward_ms": 0.18205440044403076,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.09646239876747131,
+          "forward_backward_ms": 0.32971038818359377,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.09648000001907349,
+          "forward_backward_ms": 0.3298127889633179,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.09650880098342896,
+          "forward_backward_ms": 0.3304703950881958,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.0964896023273468,
+          "forward_backward_ms": 0.33029119968414306,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.05347679853439331,
+          "forward_backward_ms": 0.18204159736633302,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.1108016014099121,
+          "forward_backward_ms": 0.4586639881134033,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.11079039573669433,
+          "forward_backward_ms": 0.46637282371520994,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.0624671995639801,
+          "forward_backward_ms": 0.2958992004394531,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.11071840524673462,
+          "forward_backward_ms": 0.46652960777282715,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.061371201276779176,
+          "forward_backward_ms": 0.29259040355682375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.11017600297927857,
+          "forward_backward_ms": 0.4562960147857666,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.06122080087661743,
+          "forward_backward_ms": 0.29369440078735354,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.11002720594406128,
+          "forward_backward_ms": 0.4564815998077393,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.11009119749069214,
+          "forward_backward_ms": 0.4649199962615967,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.11038559675216675,
+          "forward_backward_ms": 0.4565760135650635,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.11068960428237914,
+          "forward_backward_ms": 0.4650288105010986,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.061260801553726194,
+          "forward_backward_ms": 0.29309759140014646,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14773759841918946,
+          "forward_backward_ms": 0.932256031036377,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14776320457458497,
+          "forward_backward_ms": 0.930684757232666,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10139520168304443,
+          "forward_backward_ms": 0.6412528038024903,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14761279821395873,
+          "forward_backward_ms": 0.9306271553039551,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10164639949798585,
+          "forward_backward_ms": 0.6404751777648926,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14770400524139404,
+          "forward_backward_ms": 0.9320079803466796,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10136640071868896,
+          "forward_backward_ms": 0.6395599842071533,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14772000312805175,
+          "forward_backward_ms": 0.9314160346984863,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14779679775238036,
+          "forward_backward_ms": 0.9310064315795898,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14776480197906494,
+          "forward_backward_ms": 0.9313216209411621,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14750560522079467,
+          "forward_backward_ms": 0.9298543930053711,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.1004032015800476,
+          "forward_backward_ms": 0.6385216236114502,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.4188943862915039,
+          "forward_backward_ms": 2.725049591064453,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.42000160217285154,
+          "forward_backward_ms": 2.402176094055176,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.2696784019470215,
+          "forward_backward_ms": 1.6267887115478517,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.42168641090393066,
+          "forward_backward_ms": 2.4060800552368162,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.26939680576324465,
+          "forward_backward_ms": 1.6280303955078126,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.41908798217773435,
+          "forward_backward_ms": 2.730571174621582,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.2691263914108276,
+          "forward_backward_ms": 1.6250608444213868,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.4189455986022949,
+          "forward_backward_ms": 2.729080009460449,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.42050881385803224,
+          "forward_backward_ms": 2.405356788635254,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.42031040191650393,
+          "forward_backward_ms": 2.7341535568237303,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.42063198089599607,
+          "forward_backward_ms": 2.407076835632324,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.26960799694061277,
+          "forward_backward_ms": 1.626900863647461,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1250816345214845,
+          "forward_backward_ms": 3.767670440673828,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1249391555786132,
+          "forward_backward_ms": 3.769307327270508,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5409599781036377,
+          "forward_backward_ms": 1.9758352279663085,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1244383811950684,
+          "forward_backward_ms": 3.769270324707031,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5409808158874512,
+          "forward_backward_ms": 1.9790752410888672,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1249152183532716,
+          "forward_backward_ms": 3.769801712036133,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5414927959442138,
+          "forward_backward_ms": 1.9767343521118164,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1250032424926757,
+          "forward_backward_ms": 3.767764663696289,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1248463630676269,
+          "forward_backward_ms": 3.768667221069336,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1248160362243653,
+          "forward_backward_ms": 3.7697200775146484,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1250320434570313,
+          "forward_backward_ms": 3.769174575805664,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5410639762878418,
+          "forward_backward_ms": 1.9806976318359375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1784175872802733,
+          "forward_backward_ms": 4.7157440185546875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.178544044494629,
+          "forward_backward_ms": 4.7734222412109375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7173232078552246,
+          "forward_backward_ms": 3.36824951171875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1788127899169922,
+          "forward_backward_ms": 4.772000122070312,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7178463935852051,
+          "forward_backward_ms": 3.3703536987304688,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1782784461975098,
+          "forward_backward_ms": 4.716508865356445,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7179376125335694,
+          "forward_backward_ms": 3.3699390411376955,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.183788776397705,
+          "forward_backward_ms": 4.714870452880859,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1781968116760253,
+          "forward_backward_ms": 4.774953460693359,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.178384017944336,
+          "forward_backward_ms": 4.715024185180664,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1784640312194825,
+          "forward_backward_ms": 4.773430252075196,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7144735813140869,
+          "forward_backward_ms": 3.370374298095703,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.4275568008422852,
+          "forward_backward_ms": 10.237931060791016,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.4451536178588866,
+          "forward_backward_ms": 10.295228576660156,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1225024223327638,
+          "forward_backward_ms": 7.789494323730469,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.4442784309387207,
+          "forward_backward_ms": 10.290007781982421,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1559776306152343,
+          "forward_backward_ms": 7.778193664550781,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.42576322555542,
+          "forward_backward_ms": 10.23505096435547,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1686592102050781,
+          "forward_backward_ms": 7.750774383544922,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.4556544303894043,
+          "forward_backward_ms": 10.239972686767578,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.4301183700561524,
+          "forward_backward_ms": 10.290779113769531,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.457577610015869,
+          "forward_backward_ms": 10.240564727783203,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.426649570465088,
+          "forward_backward_ms": 10.292314910888672,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1460736274719239,
+          "forward_backward_ms": 7.747099304199219,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.885369491577149,
+          "forward_backward_ms": 33.65323486328125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.881931304931641,
+          "forward_backward_ms": 31.041928100585938,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.898660659790039,
+          "forward_backward_ms": 24.806658935546874,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.882233428955078,
+          "forward_backward_ms": 31.056134033203126,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.887799835205078,
+          "forward_backward_ms": 24.807705688476563,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.882640075683594,
+          "forward_backward_ms": 33.65895080566406,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8848800659179688,
+          "forward_backward_ms": 24.81123504638672,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.885185623168946,
+          "forward_backward_ms": 33.64742431640625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.885137557983398,
+          "forward_backward_ms": 31.055938720703125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.912395095825195,
+          "forward_backward_ms": 33.658145141601565,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.940423965454102,
+          "forward_backward_ms": 31.0352783203125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.886814498901367,
+          "forward_backward_ms": 24.80663146972656,
+          "graph_verified": true
+        }
+      ],
+      "report": "slices-v2-bf16.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.09644559919834136,
+              "forward_backward_ms": 0.3299015998840332
+            },
+            "candidate": {
+              "forward_ms": 0.096492001414299,
+              "forward_backward_ms": 0.32933919429779057
+            },
+            "gluon": {
+              "forward_ms": 0.05348879992961884,
+              "forward_backward_ms": 0.18037520051002504
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.11028079986572266,
+              "forward_backward_ms": 0.4565288066864014
+            },
+            "candidate": {
+              "forward_ms": 0.11070400476455688,
+              "forward_backward_ms": 0.46570081710815425
+            },
+            "gluon": {
+              "forward_ms": 0.06131600141525269,
+              "forward_backward_ms": 0.29339599609375
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.1477288007736206,
+              "forward_backward_ms": 0.931712007522583
+            },
+            "candidate": {
+              "forward_ms": 0.14768800139427185,
+              "forward_backward_ms": 0.9306559562683105
+            },
+            "gluon": {
+              "forward_ms": 0.1013808012008667,
+              "forward_backward_ms": 0.6400175809860229
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.4190167903900146,
+              "forward_backward_ms": 2.7298255920410153
+            },
+            "candidate": {
+              "forward_ms": 0.4205703973770142,
+              "forward_backward_ms": 2.405718421936035
+            },
+            "gluon": {
+              "forward_ms": 0.2695024013519287,
+              "forward_backward_ms": 1.6268447875976562
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 1.1249592304229736,
+              "forward_backward_ms": 3.7687423706054686
+            },
+            "candidate": {
+              "forward_ms": 1.12489275932312,
+              "forward_backward_ms": 3.769222450256348
+            },
+            "gluon": {
+              "forward_ms": 0.5410223960876465,
+              "forward_backward_ms": 1.9779047966003418
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 1.1784008026123045,
+              "forward_backward_ms": 4.715384101867675
+            },
+            "candidate": {
+              "forward_ms": 1.1785040378570557,
+              "forward_backward_ms": 4.773426246643067
+            },
+            "gluon": {
+              "forward_ms": 0.7175848007202148,
+              "forward_backward_ms": 3.370146369934082
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 1.4416056156158448,
+              "forward_backward_ms": 10.238951873779296
+            },
+            "candidate": {
+              "forward_ms": 1.4371984004974365,
+              "forward_backward_ms": 10.2915470123291
+            },
+            "gluon": {
+              "forward_ms": 1.1510256290435792,
+              "forward_backward_ms": 7.764484024047851
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.885277557373048,
+              "forward_backward_ms": 33.6556900024414
+            },
+            "candidate": {
+              "forward_ms": 4.883685493469239,
+              "forward_backward_ms": 31.04893341064453
+            },
+            "gluon": {
+              "forward_ms": 3.8873071670532227,
+              "forward_backward_ms": 24.80718231201172
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "slices-v2-fp16.log",
+      "sha256": "0103ad3c32f3f709c32a68a207cc15b35ee9ce6827d1a55f096e89d5331f2fb3",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.09652000069618225,
+          "forward_backward_ms": 0.34059360027313235,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.09653599858283997,
+          "forward_backward_ms": 0.34031200408935547,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.05338720083236694,
+          "forward_backward_ms": 0.17945120334625245,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.09651200175285339,
+          "forward_backward_ms": 0.34076800346374514,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.05347040295600891,
+          "forward_backward_ms": 0.17984479665756226,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.09642080068588257,
+          "forward_backward_ms": 0.34117279052734373,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.053497600555419925,
+          "forward_backward_ms": 0.18343839645385743,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.0964784026145935,
+          "forward_backward_ms": 0.34161601066589353,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.09651200175285339,
+          "forward_backward_ms": 0.34150400161743166,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.09646880030632018,
+          "forward_backward_ms": 0.34246718883514404,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.0964959979057312,
+          "forward_backward_ms": 0.3421152114868164,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.053478401899337766,
+          "forward_backward_ms": 0.18332959413528443,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.1107759952545166,
+          "forward_backward_ms": 0.45786237716674805,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.11070560216903687,
+          "forward_backward_ms": 0.46346240043640136,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.0626911997795105,
+          "forward_backward_ms": 0.29478719234466555,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.11079360246658325,
+          "forward_backward_ms": 0.4635551929473877,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.06141120195388794,
+          "forward_backward_ms": 0.2917007923126221,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.11033600568771362,
+          "forward_backward_ms": 0.45690240859985354,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.061607998609542844,
+          "forward_backward_ms": 0.29273760318756104,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.11039520502090454,
+          "forward_backward_ms": 0.4561647891998291,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.1103551983833313,
+          "forward_backward_ms": 0.46156158447265627,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.11054719686508178,
+          "forward_backward_ms": 0.4565264225006104,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.11066720485687256,
+          "forward_backward_ms": 0.4619840145111084,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.06123039722442627,
+          "forward_backward_ms": 0.2923327922821045,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14785439968109132,
+          "forward_backward_ms": 0.9452704429626465,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14788479804992677,
+          "forward_backward_ms": 0.950436782836914,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10157599449157714,
+          "forward_backward_ms": 0.6297120094299317,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.1478608012199402,
+          "forward_backward_ms": 0.9483743667602539,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10195839405059814,
+          "forward_backward_ms": 0.6301551818847656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14778879880905152,
+          "forward_backward_ms": 0.9460672378540039,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10202239751815796,
+          "forward_backward_ms": 0.6280943870544433,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14777439832687378,
+          "forward_backward_ms": 0.9447808265686035,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14773759841918946,
+          "forward_backward_ms": 0.9495696067810059,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.14775359630584717,
+          "forward_backward_ms": 0.9445903778076172,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.14744640588760377,
+          "forward_backward_ms": 0.9485903739929199,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.10076960325241088,
+          "forward_backward_ms": 0.6269663810729981,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.42038559913635254,
+          "forward_backward_ms": 2.7548303604125977,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.41995677947998045,
+          "forward_backward_ms": 2.4568304061889648,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.26939680576324465,
+          "forward_backward_ms": 1.6254688262939454,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.42106080055236816,
+          "forward_backward_ms": 2.456643295288086,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.2695552110671997,
+          "forward_backward_ms": 1.6268512725830078,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.42150239944458007,
+          "forward_backward_ms": 2.7490720748901367,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.26923360824584963,
+          "forward_backward_ms": 1.6280767440795898,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.4202271938323975,
+          "forward_backward_ms": 2.751486396789551,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.42219839096069334,
+          "forward_backward_ms": 2.4553327560424805,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 0.4213871955871582,
+          "forward_backward_ms": 2.7547887802124023,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 0.4206111907958984,
+          "forward_backward_ms": 2.4588064193725585,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.26965761184692383,
+          "forward_backward_ms": 1.627065658569336,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1266655921936035,
+          "forward_backward_ms": 3.920817565917969,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1251999855041503,
+          "forward_backward_ms": 3.9214336395263674,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5418352127075196,
+          "forward_backward_ms": 2.0225664138793946,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1250271797180176,
+          "forward_backward_ms": 3.9218208312988283,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5413119792938232,
+          "forward_backward_ms": 2.0207183837890623,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1254336357116699,
+          "forward_backward_ms": 3.923187255859375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.5412303924560546,
+          "forward_backward_ms": 2.019193649291992,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.125102424621582,
+          "forward_backward_ms": 3.9242462158203124,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1250368118286134,
+          "forward_backward_ms": 3.9224479675292967,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1250384330749512,
+          "forward_backward_ms": 3.9218639373779296,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1245792388916016,
+          "forward_backward_ms": 3.921916961669922,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.54126877784729,
+          "forward_backward_ms": 2.0217103958129883,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1788800239562989,
+          "forward_backward_ms": 4.674964904785156,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1824527740478517,
+          "forward_backward_ms": 4.695328140258789,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7173344135284424,
+          "forward_backward_ms": 3.373855972290039,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1810671806335449,
+          "forward_backward_ms": 4.697004699707032,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7164576053619385,
+          "forward_backward_ms": 3.3722816467285157,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1788623809814454,
+          "forward_backward_ms": 4.672601699829102,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7148176193237304,
+          "forward_backward_ms": 3.372983932495117,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.1786928176879883,
+          "forward_backward_ms": 4.669577789306641,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.178673553466797,
+          "forward_backward_ms": 4.694641494750977,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.178332805633545,
+          "forward_backward_ms": 4.677096176147461,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.1788864135742188,
+          "forward_backward_ms": 4.695057678222656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "backend": "gluon",
+          "forward_ms": 0.7189824104309082,
+          "forward_backward_ms": 3.3711166381835938,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.4454079627990724,
+          "forward_backward_ms": 10.630577850341798,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.462451171875,
+          "forward_backward_ms": 10.701119995117187,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1540143966674805,
+          "forward_backward_ms": 7.650804901123047,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.467795181274414,
+          "forward_backward_ms": 10.705095672607422,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.126260757446289,
+          "forward_backward_ms": 7.642295837402344,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.4300080299377442,
+          "forward_backward_ms": 10.64017105102539,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1428912162780762,
+          "forward_backward_ms": 7.674081420898437,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.441155242919922,
+          "forward_backward_ms": 10.641149139404297,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.4431967735290527,
+          "forward_backward_ms": 10.706979370117187,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "baseline",
+          "forward_ms": 1.455907154083252,
+          "forward_backward_ms": 10.650344085693359,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "candidate",
+          "forward_ms": 1.4644448280334472,
+          "forward_backward_ms": 10.714344024658203,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "backend": "gluon",
+          "forward_ms": 1.1259087562561034,
+          "forward_backward_ms": 7.65323486328125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.971480178833008,
+          "forward_backward_ms": 34.317684936523435,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.954710388183594,
+          "forward_backward_ms": 32.02580871582031,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.900843048095703,
+          "forward_backward_ms": 25.142816162109376,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.925116729736328,
+          "forward_backward_ms": 32.0128173828125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.898883056640625,
+          "forward_backward_ms": 25.09857635498047,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.960507202148437,
+          "forward_backward_ms": 34.32111511230469,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.902425765991211,
+          "forward_backward_ms": 25.14391632080078,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.957833480834961,
+          "forward_backward_ms": 34.3229736328125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.953652954101562,
+          "forward_backward_ms": 32.02271423339844,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.959073638916015,
+          "forward_backward_ms": 34.310760498046875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.964257431030274,
+          "forward_backward_ms": 32.006927490234375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9026126861572266,
+          "forward_backward_ms": 25.235142517089844,
+          "graph_verified": true
+        }
+      ],
+      "report": "slices-v2-fp16.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            64
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.09647360146045685,
+              "forward_backward_ms": 0.34139440059661863
+            },
+            "candidate": {
+              "forward_ms": 0.09651200175285339,
+              "forward_backward_ms": 0.3411360025405884
+            },
+            "gluon": {
+              "forward_ms": 0.05347440242767334,
+              "forward_backward_ms": 0.18158719539642335
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            128
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.11047120094299316,
+              "forward_backward_ms": 0.45671441555023196
+            },
+            "candidate": {
+              "forward_ms": 0.11068640351295472,
+              "forward_backward_ms": 0.46272320747375484
+            },
+            "gluon": {
+              "forward_ms": 0.06150960028171539,
+              "forward_backward_ms": 0.2925351977348328
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            256
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.14778159856796264,
+              "forward_backward_ms": 0.945025634765625
+            },
+            "candidate": {
+              "forward_ms": 0.14779919981956482,
+              "forward_backward_ms": 0.9490799903869629
+            },
+            "gluon": {
+              "forward_ms": 0.10176719427108764,
+              "forward_backward_ms": 0.6289031982421875
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.42088639736175537,
+              "forward_backward_ms": 2.7531375885009766
+            },
+            "candidate": {
+              "forward_ms": 0.4208359956741333,
+              "forward_backward_ms": 2.456736850738525
+            },
+            "gluon": {
+              "forward_ms": 0.2694760084152222,
+              "forward_backward_ms": 1.626958465576172
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            64
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 1.1252680301666258,
+              "forward_backward_ms": 3.9225255966186525
+            },
+            "candidate": {
+              "forward_ms": 1.1250319957733155,
+              "forward_backward_ms": 3.921868896484375
+            },
+            "gluon": {
+              "forward_ms": 0.5412903785705566,
+              "forward_backward_ms": 2.0212143898010253
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            128
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 1.1787775993347167,
+              "forward_backward_ms": 4.673783302307129
+            },
+            "candidate": {
+              "forward_ms": 1.179976797103882,
+              "forward_backward_ms": 4.695192909240722
+            },
+            "gluon": {
+              "forward_ms": 0.7168960094451904,
+              "forward_backward_ms": 3.3726327896118162
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            256
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 1.4432816028594972,
+              "forward_backward_ms": 10.640660095214844
+            },
+            "candidate": {
+              "forward_ms": 1.4634479999542236,
+              "forward_backward_ms": 10.706037521362305
+            },
+            "gluon": {
+              "forward_ms": 1.1345759868621825,
+              "forward_backward_ms": 7.652019882202149
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.959790420532226,
+              "forward_backward_ms": 34.319400024414065
+            },
+            "candidate": {
+              "forward_ms": 4.954181671142578,
+              "forward_backward_ms": 32.017765808105466
+            },
+            "gluon": {
+              "forward_ms": 3.901634407043457,
+              "forward_backward_ms": 25.143366241455077
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "stats-v1.log",
+      "sha256": "4c7debb9ad163121966d15e280808c5a655ee7b9ddde7a93be78eb6108dcf930",
+      "json_records": []
+    },
+    {
+      "log": "stats-v2.log",
+      "sha256": "3d2d5f79c8615634213fe5449b258c7b106a193680f058879ff96406be60bab7",
+      "json_records": []
+    },
+    {
+      "log": "stats-v3.log",
+      "sha256": "3fa29c8bc65337eef3c34668b0d1c38eae5c4a540d221bfcf2087cfc87d7ac57",
+      "json_records": []
+    },
+    {
+      "log": "trace-v6.log",
+      "sha256": "fc4397c5c2a6ec05b2c0668b95d8040ab592ca41447dcecd7ee32ab051ef72ab",
+      "json_records": []
+    }
+  ]
+}

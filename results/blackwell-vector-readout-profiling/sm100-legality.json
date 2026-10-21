@@ -1,0 +1,17 @@
+{
+  "scope": "Offline assembly only; no physical B200 execution or performance claim, and SM100 dispatch is unchanged.",
+  "checks": [
+    {
+      "mask": "dense",
+      "passed": true,
+      "source_ptx_sha256": "327b1d0a0bc577768c2a3b51ef261dcb8971efc63107ef5a855cb6bae3dbec03",
+      "assembler_log_sha256": "d58f4fcb44792618117584469710576270da3de4ed5d755f96d48a7967b6fd66"
+    },
+    {
+      "mask": "causal",
+      "passed": true,
+      "source_ptx_sha256": "af63e18b15a43997f918c322c04ed29a67e721a19c735a8255ddeed1c8dc1b3d",
+      "assembler_log_sha256": "1f1fa54eeab1b7bb5de7b2532db4de92d1c1f9c500d1e565275dbfb6741ddb45"
+    }
+  ]
+}

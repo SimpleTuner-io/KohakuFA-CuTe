@@ -1,0 +1,129 @@
+{
+  "scope": "Matrix-warp clock32 deltas include instrumentation overhead; these are not hardware stall counters or whole-kernel utilization.",
+  "backends": {
+    "baseline": {
+      "raw_report": "baseline-barriers.json",
+      "raw_sha256": "cfdfd9f01fca2ececc4ccb584507dcbc2db5b0cfa5c2fb9623624fd8caff5682",
+      "instrumented_source_sha256": "9f61c2666b662e588d4bdcf30b94aa8e057c22cd4d99a7b19ff3bb541ef2c582",
+      "rows": [
+        {
+          "dimension": 512,
+          "seq": 4096,
+          "passed": true,
+          "summary": {
+            "q": {
+              "median_cycles": {
+                "TMA right_ready": 71805.0,
+                "pointwise p_ready": 1669.0,
+                "PV completion p_free": 1889.0,
+                "score read s_free": 0.0,
+                "dP read dp_free": 1939.0,
+                "pointwise ds_ready": 1415.0,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0,
+                "total MMA role": 267454.0
+              },
+              "median_fraction_of_MMA_role": {
+                "TMA right_ready": 0.26845976564253754,
+                "pointwise p_ready": 0.006241809263488973,
+                "PV completion p_free": 0.007062563191845781,
+                "score read s_free": 0.0,
+                "dP read dp_free": 0.007251480293189347,
+                "pointwise ds_ready": 0.005301399959508402,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0
+              },
+              "ctas_per_sample": 2048
+            },
+            "kv": {
+              "median_cycles": {
+                "TMA right_ready": 113018.0,
+                "pointwise p_ready": 1683.0,
+                "PV completion p_free": 4764.0,
+                "score read s_free": 0.0,
+                "dP read dp_free": 4172.0,
+                "pointwise ds_ready": 2014.0,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0,
+                "total MMA role": 209820.0
+              },
+              "median_fraction_of_MMA_role": {
+                "TMA right_ready": 0.5386084035543561,
+                "pointwise p_ready": 0.008020156171865984,
+                "PV completion p_free": 0.022722942073170733,
+                "score read s_free": 0.0,
+                "dP read dp_free": 0.01987629104362571,
+                "pointwise ds_ready": 0.009599579196528372,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0
+              },
+              "ctas_per_sample": 2048
+            }
+          }
+        }
+      ]
+    },
+    "candidate": {
+      "raw_report": "selected/selected-barriers.json",
+      "raw_sha256": "1e8cb9dd12b16e8fc15d66b66c592eb0f71a227f4548337a9ccd9ed4f5fef0fe",
+      "instrumented_source_sha256": "3f77611b281b53e2c236faf8a348ed8a05dcd87ff920c3397c898bbefe34df24",
+      "rows": [
+        {
+          "dimension": 512,
+          "seq": 4096,
+          "passed": true,
+          "summary": {
+            "q": {
+              "median_cycles": {
+                "TMA right_ready": 68531.0,
+                "pointwise p_ready": 1673.0,
+                "PV completion p_free": 2328.0,
+                "score read s_free": 0.0,
+                "dP read dp_free": 2183.0,
+                "pointwise ds_ready": 1408.0,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0,
+                "total MMA role": 264873.0
+              },
+              "median_fraction_of_MMA_role": {
+                "TMA right_ready": 0.2586747692830317,
+                "pointwise p_ready": 0.0063140594313199966,
+                "PV completion p_free": 0.008786090454389075,
+                "score read s_free": 0.0,
+                "dP read dp_free": 0.008242693975794182,
+                "pointwise ds_ready": 0.0053109918361824,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0
+              },
+              "ctas_per_sample": 2048
+            },
+            "kv": {
+              "median_cycles": {
+                "TMA right_ready": 70668.0,
+                "pointwise p_ready": 1664.0,
+                "PV completion p_free": 2110.0,
+                "score read s_free": 0.0,
+                "dP read dp_free": 1889.0,
+                "pointwise ds_ready": 1504.0,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0,
+                "total MMA role": 266469.0
+              },
+              "median_fraction_of_MMA_role": {
+                "TMA right_ready": 0.2651220661702328,
+                "pointwise p_ready": 0.006245331952154151,
+                "PV completion p_free": 0.00791268758526603,
+                "score read s_free": 0.0,
+                "dP read dp_free": 0.00708529314838671,
+                "pointwise ds_ready": 0.005644869942196532,
+                "dO TMA other_ready": 0.0,
+                "stationary TMA left_ready": 0.0
+              },
+              "ctas_per_sample": 2048
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,521 @@
+{
+  "protocol": "Separate Python compile LRUs and native-cache reset per variant; rotated variant order, CUDA event timing of captured graphs, graph/eager equality checks. Forward and KV kernels unchanged.",
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "samples": {
+        "five-slots": [
+          {
+            "forward_ms": 0.03088000019391378,
+            "forward_backward_ms": 0.2260800043741862,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03090133269627889,
+            "forward_backward_ms": 0.2290112018585205,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03086506724357605,
+            "forward_backward_ms": 0.22716693878173827,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03095360000928243,
+            "forward_backward_ms": 0.2275167942047119,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.0309279998143514,
+            "forward_backward_ms": 0.22698133786519367,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.030916267633438112,
+            "forward_backward_ms": 0.22815465927124023,
+            "graph_verified": true
+          }
+        ],
+        "six-slots": [
+          {
+            "forward_ms": 0.030885332822799684,
+            "forward_backward_ms": 0.22240106264750162,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03086079955101013,
+            "forward_backward_ms": 0.22232853571573893,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.03086506724357605,
+            "forward_backward_ms": 0.22235946655273436,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.030883200963338218,
+            "forward_backward_ms": 0.22226346333821614,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.030907734235127767,
+            "forward_backward_ms": 0.2213845411936442,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.030916267633438112,
+            "forward_backward_ms": 0.2231114705403646,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "five-slots": {
+          "forward_ms": 0.030908800164858502,
+          "forward_backward_ms": 0.22734186649322508
+        },
+        "six-slots": {
+          "forward_ms": 0.030884266893068953,
+          "forward_backward_ms": 0.22234400113423664
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "samples": {
+        "five-slots": [
+          {
+            "forward_ms": 0.09487679799397787,
+            "forward_backward_ms": 0.6302485148111979,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09556266466776529,
+            "forward_backward_ms": 0.6280053456624349,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09508480230967203,
+            "forward_backward_ms": 0.6283775965372721,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09530026912689209,
+            "forward_backward_ms": 0.627897580464681,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09495999813079833,
+            "forward_backward_ms": 0.6284810384114583,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09500266710917155,
+            "forward_backward_ms": 0.6280288060506185,
+            "graph_verified": true
+          }
+        ],
+        "six-slots": [
+          {
+            "forward_ms": 0.09501333236694336,
+            "forward_backward_ms": 0.625918960571289,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09554346402486165,
+            "forward_backward_ms": 0.6262261072794596,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09563626448313395,
+            "forward_backward_ms": 0.6268981297810873,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09520746866861979,
+            "forward_backward_ms": 0.6281973520914713,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09529600143432618,
+            "forward_backward_ms": 0.6255349477132162,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.09521599610646565,
+            "forward_backward_ms": 0.6256981531778971,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "five-slots": {
+          "forward_ms": 0.09504373470942179,
+          "forward_backward_ms": 0.6282032012939454
+        },
+        "six-slots": {
+          "forward_ms": 0.09525599877039592,
+          "forward_backward_ms": 0.6260725339253743
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "samples": {
+        "five-slots": [
+          {
+            "forward_ms": 0.296777598063151,
+            "forward_backward_ms": 2.3630111694335936,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.29691200256347655,
+            "forward_backward_ms": 2.3779881795247397,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2979999860127767,
+            "forward_backward_ms": 2.3658602396647135,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.30108054478963214,
+            "forward_backward_ms": 2.4165471394856772,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3020288149515788,
+            "forward_backward_ms": 2.42805658976237,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3024832089742025,
+            "forward_backward_ms": 2.4389183044433596,
+            "graph_verified": true
+          }
+        ],
+        "six-slots": [
+          {
+            "forward_ms": 0.29801705678304036,
+            "forward_backward_ms": 2.3894912719726564,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2965738614400228,
+            "forward_backward_ms": 2.3786229451497394,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.29877653121948244,
+            "forward_backward_ms": 2.389252217610677,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.29567785263061525,
+            "forward_backward_ms": 2.4042592366536457,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2979765256245931,
+            "forward_backward_ms": 2.391632080078125,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.29778347015380857,
+            "forward_backward_ms": 2.4088768005371093,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "five-slots": {
+          "forward_ms": 0.29954026540120443,
+          "forward_backward_ms": 2.3972676595052085
+        },
+        "six-slots": {
+          "forward_ms": 0.29787999788920083,
+          "forward_backward_ms": 2.3905616760253907
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "samples": {
+        "five-slots": [
+          {
+            "forward_ms": 1.0144575754801433,
+            "forward_backward_ms": 7.485410054524739,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0283135732014974,
+            "forward_backward_ms": 7.482756042480469,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.030362637837728,
+            "forward_backward_ms": 7.487588500976562,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0252554575602213,
+            "forward_backward_ms": 7.486305236816406,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0187893549601237,
+            "forward_backward_ms": 7.504303995768229,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.017311986287435,
+            "forward_backward_ms": 7.500136311848959,
+            "graph_verified": true
+          }
+        ],
+        "six-slots": [
+          {
+            "forward_ms": 1.0238229115804036,
+            "forward_backward_ms": 7.468793741861979,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.015454928080241,
+            "forward_backward_ms": 7.445458984375,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0153706868489583,
+            "forward_backward_ms": 7.463047281901042,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.0244010925292968,
+            "forward_backward_ms": 7.411471048990886,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.016481081644694,
+            "forward_backward_ms": 7.449532572428385,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 1.028664525349935,
+            "forward_backward_ms": 7.486739095052084,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "five-slots": {
+          "forward_ms": 1.0220224062601724,
+          "forward_backward_ms": 7.486946868896484
+        },
+        "six-slots": {
+          "forward_ms": 1.0201519966125487,
+          "forward_backward_ms": 7.456289927164713
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": true,
+      "samples": {
+        "five-slots": [
+          {
+            "forward_ms": 0.23062079747517902,
+            "forward_backward_ms": 1.7231797536214193,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2307861328125,
+            "forward_backward_ms": 1.7269877115885417,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.22914986610412597,
+            "forward_backward_ms": 1.726141866048177,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.23025387128194172,
+            "forward_backward_ms": 1.727460225423177,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2292202631632487,
+            "forward_backward_ms": 1.7250570933024088,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2285941282908122,
+            "forward_backward_ms": 1.7272533416748046,
+            "graph_verified": true
+          }
+        ],
+        "six-slots": [
+          {
+            "forward_ms": 0.23103680610656738,
+            "forward_backward_ms": 1.7342496236165366,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.23064427375793456,
+            "forward_backward_ms": 1.7268693288167318,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.22940053939819335,
+            "forward_backward_ms": 1.7248063405354819,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2299392064412435,
+            "forward_backward_ms": 1.7265727996826172,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2302549362182617,
+            "forward_backward_ms": 1.7240362803141276,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2296511967976888,
+            "forward_backward_ms": 1.7296170552571615,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "five-slots": {
+          "forward_ms": 0.2297370672225952,
+          "forward_backward_ms": 1.7265647888183593
+        },
+        "six-slots": {
+          "forward_ms": 0.2300970713297526,
+          "forward_backward_ms": 1.7267210642496744
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "torch.float16",
+      "causal": true,
+      "samples": {
+        "five-slots": [
+          {
+            "forward_ms": 0.22936639785766602,
+            "forward_backward_ms": 1.764307149251302,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.22978879610697428,
+            "forward_backward_ms": 1.776730728149414,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2298378626505534,
+            "forward_backward_ms": 1.7685354868570964,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.23001707394917806,
+            "forward_backward_ms": 1.7676437377929688,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.23103359540303547,
+            "forward_backward_ms": 1.768872578938802,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.23066879908243815,
+            "forward_backward_ms": 1.7690741221110027,
+            "graph_verified": true
+          }
+        ],
+        "six-slots": [
+          {
+            "forward_ms": 0.2280469258626302,
+            "forward_backward_ms": 1.7671892801920572,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2307370662689209,
+            "forward_backward_ms": 1.7697770436604818,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2304405371348063,
+            "forward_backward_ms": 1.7662420908610026,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2283936023712158,
+            "forward_backward_ms": 1.7717088063557942,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.23018879890441896,
+            "forward_backward_ms": 1.7690719604492187,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.22940053939819335,
+            "forward_backward_ms": 1.7682559967041016,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "five-slots": {
+          "forward_ms": 0.2299274682998657,
+          "forward_backward_ms": 1.7687040328979493
+        },
+        "six-slots": {
+          "forward_ms": 0.22979466915130614,
+          "forward_backward_ms": 1.7686639785766602
+        }
+      }
+    }
+  ]
+}

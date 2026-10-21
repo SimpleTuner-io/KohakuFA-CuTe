@@ -1,0 +1,18 @@
+{
+  "scope": "Diagnostic only: 2048 CTAs, 384 threads, 512 TMEM columns, 201728 shared bytes, same 32-step 8+8+2+2 SS/TS MMA counts as one production backward pass. All operands are resident zeroes; no TMA, pointwise, or attention correctness claim. Serialized variant commits/waits every 64-wide score or 128-wide product chunk.",
+  "rows": [
+    {
+      "serialized_each_64K_chunk": false,
+      "ms": [
+        10.69442367553711,
+        10.693972778320312,
+        10.693981170654297,
+        10.693862152099609,
+        10.693817901611329
+      ],
+      "median_ms": 10.693972778320312,
+      "product_flops": 2748779069440,
+      "zero_output_checked": true
+    }
+  ]
+}

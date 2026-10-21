@@ -1,0 +1,146 @@
+{
+  "scope": "Separate Nsight Systems short-length observer passes. All graph kernels retained. Sequence labels follow the frozen compare driver order [512,1024] per backend; CuTe query grid independently verifies the length. Medians are kernel observer timings, not paired end-to-end performance samples.",
+  "timelines": [
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.356035
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_kernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i_3",
+          "start_ms": 0.355907,
+          "end_ms": 0.410979
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_4",
+          "start_ms": 0.410851,
+          "end_ms": 1.255466
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_5",
+          "start_ms": 1.255338,
+          "end_ms": 2.169521
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.356994
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 0.357154,
+          "end_ms": 0.411587
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 0.411715,
+          "end_ms": 1.103656
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 1.103816,
+          "end_ms": 1.857518
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.00096
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001472,
+          "end_ms": 0.002208
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.002528,
+          "end_ms": 0.003264
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.003552,
+          "end_ms": 0.27245
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.27261,
+          "end_ms": 0.273474
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 0.273794,
+          "end_ms": 0.384643
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.384803,
+          "end_ms": 0.385539
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.385859,
+          "end_ms": 0.386595
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.386979,
+          "end_ms": 0.387747
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 0.388035,
+          "end_ms": 1.564044
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 1.56446,
+          "end_ms": 1.628428
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+test_blackwell_fused_probability_and_ds_pipeline (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_probability_and_ds_pipeline) ... torch/autograd/graph.py:882: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:370.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+src/kohakufa_cute/blackwell_pipeline.py:184: DSLOptimizationWarning: This static loop has 64 iterations, which may be very slow to compile, consider using `cutlass.range(..., unroll_full=True)` instead.
+  for i in cutlass.range_constexpr(64):
+src/kohakufa_cute/blackwell_pipeline.py:162: DSLOptimizationWarning: This static loop has 128 iterations, which may be very slow to compile, consider using `cutlass.range(..., unroll_full=True)` instead.
+  for i in cutlass.range_constexpr(128):
+src/kohakufa_cute/blackwell_pipeline.py:1297: DSLOptimizationWarning: This static loop has 64 iterations, which may be very slow to compile, consider using `cutlass.range(..., unroll_full=True)` instead.
+  for i in cutlass.range_constexpr(64):
+src/kohakufa_cute/blackwell_pipeline.py:1307: DSLOptimizationWarning: This static loop has 64 iterations, which may be very slow to compile, consider using `cutlass.range(..., unroll_full=True)` instead.
+  for i in cutlass.range_constexpr(64):
+ok
+test_blackwell_fused_pipeline_retains_saturated_gradients (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_pipeline_retains_saturated_gradients) ... ok
+test_blackwell_fused_pipeline_reads_changed_graph_inputs (tests.test_kernels.CuTeAttentionTests.test_blackwell_fused_pipeline_reads_changed_graph_inputs) ... ok
+test_blackwell_probability_tiles_match_checked_reconstruction (tests.test_kernels.CuTeAttentionTests.test_blackwell_probability_tiles_match_checked_reconstruction) ... src/kohakufa_cute/blackwell_pipeline.py:1363: DSLOptimizationWarning: This static loop has 64 iterations, which may be very slow to compile, consider using `cutlass.range(..., unroll_full=True)` instead.
+  for i in cutlass.range_constexpr(self.columns):
+src/kohakufa_cute/blackwell_pipeline.py:1390: DSLOptimizationWarning: This static loop has 64 iterations, which may be very slow to compile, consider using `cutlass.range(..., unroll_full=True)` instead.
+  for i in cutlass.range_constexpr(64):
+src/kohakufa_cute/blackwell_pipeline.py:1400: DSLOptimizationWarning: This static loop has 64 iterations, which may be very slow to compile, consider using `cutlass.range(..., unroll_full=True)` instead.
+  for i in cutlass.range_constexpr(64):
+ok
+test_blackwell_wide_query_keeps_zero_covariance (tests.test_kernels.CuTeAttentionTests.test_blackwell_wide_query_keeps_zero_covariance) ... ok
+test_wide_head_gradient_cancellation (tests.test_kernels.CuTeAttentionTests.test_wide_head_gradient_cancellation) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 459.571s
+
+OK

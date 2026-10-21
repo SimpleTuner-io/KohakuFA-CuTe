@@ -1,0 +1,16 @@
+{
+  "scope": "Separate Nsight Systems profile of the experimental query-owned joint path, backward only, not production or a precision-qualified candidate.",
+  "profiles": [
+    {
+      "graph_id": 2,
+      "observed_replays": 31,
+      "median_kernel_ms": {
+        "prepare": 0.204897,
+        "row-statistics": 3.970658,
+        "joint-gradients": 34.414055,
+        "finish": 1.11569
+      }
+    }
+  ],
+  "source_sqlite_sha256": "db80932364993c9ce56cf5ba8538db1faa4f9509ed51245094187da811de642b"
+}

@@ -1,0 +1,459 @@
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77
+  - wheel
+* Getting build dependencies for sdist...
+running egg_info
+writing src/kohakufa_cute.egg-info/PKG-INFO
+writing dependency_links to src/kohakufa_cute.egg-info/dependency_links.txt
+writing requirements to src/kohakufa_cute.egg-info/requires.txt
+writing top-level names to src/kohakufa_cute.egg-info/top_level.txt
+reading manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'LICENSES/Apache-2.0.txt'
+adding license file 'LICENSES/BSD-3-Clause.txt'
+writing manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+* Installed build dependency versions:
+  - setuptools==84.2.1
+  - wheel==0.48.0
+* Building sdist...
+running sdist
+running egg_info
+writing src/kohakufa_cute.egg-info/PKG-INFO
+writing dependency_links to src/kohakufa_cute.egg-info/dependency_links.txt
+writing requirements to src/kohakufa_cute.egg-info/requires.txt
+writing top-level names to src/kohakufa_cute.egg-info/top_level.txt
+reading manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'LICENSES/Apache-2.0.txt'
+adding license file 'LICENSES/BSD-3-Clause.txt'
+writing manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+running check
+creating kohakufa_cute-0.2.0
+creating kohakufa_cute-0.2.0/LICENSES
+creating kohakufa_cute-0.2.0/benchmarks
+creating kohakufa_cute-0.2.0/results
+creating kohakufa_cute-0.2.0/results/attention-diagnostics
+creating kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+creating kohakufa_cute-0.2.0/results/blackwell-codegen
+creating kohakufa_cute-0.2.0/results/blackwell-codegen/tuning
+creating kohakufa_cute-0.2.0/results/blackwell-fused-backward
+creating kohakufa_cute-0.2.0/results/blackwell-pipeline
+creating kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+creating kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+creating kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+creating kohakufa_cute-0.2.0/results/sm103-wide-backward
+creating kohakufa_cute-0.2.0/src/kohakufa_cute
+creating kohakufa_cute-0.2.0/src/kohakufa_cute.egg-info
+creating kohakufa_cute-0.2.0/tests
+copying files to kohakufa_cute-0.2.0...
+copying LICENSE -> kohakufa_cute-0.2.0
+copying MANIFEST.in -> kohakufa_cute-0.2.0
+copying NOTICE -> kohakufa_cute-0.2.0
+copying README.md -> kohakufa_cute-0.2.0
+copying pyproject.toml -> kohakufa_cute-0.2.0
+copying LICENSES/Apache-2.0.txt -> kohakufa_cute-0.2.0/LICENSES
+copying LICENSES/BSD-3-Clause.txt -> kohakufa_cute-0.2.0/LICENSES
+copying benchmarks/__init__.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/compare_blackwell_codegen.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/compare_blackwell_probabilities.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/dump_blackwell_assembly.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/instrument_blackwell_barriers.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/length_precision.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/measure_blackwell_barriers.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/plot.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/plot_blackwell_codegen.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/plot_blackwell_probabilities.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/plot_comparison.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/plot_profile.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/plot_rows.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/precision.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/profile_attention.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/reference.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/speed.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/tune_kohakufa.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/tune_sm100.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/tune_sm103.py -> kohakufa_cute-0.2.0/benchmarks
+copying benchmarks/tune_sm120.py -> kohakufa_cute-0.2.0/benchmarks
+copying results/README.md -> kohakufa_cute-0.2.0/results
+copying results/b200-baseline-precision-bf16.json -> kohakufa_cute-0.2.0/results
+copying results/b200-baseline-precision-fp16.json -> kohakufa_cute-0.2.0/results
+copying results/b200-baseline-speed.json -> kohakufa_cute-0.2.0/results
+copying results/b200-environment.json -> kohakufa_cute-0.2.0/results
+copying results/b200-gluon-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b200-gluon-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b200-gluon-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b200-gluon-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b200-gluon-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-bf16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-fp16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-fp16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-fp16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b200-initial-precision-fp16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-bf16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-fp16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-fp16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-fp16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision-fp16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b200-precision.svg -> kohakufa_cute-0.2.0/results
+copying results/b200-speed-bf16-causal.json -> kohakufa_cute-0.2.0/results
+copying results/b200-speed-bf16.json -> kohakufa_cute-0.2.0/results
+copying results/b200-speed-fp16-causal.json -> kohakufa_cute-0.2.0/results
+copying results/b200-speed-fp16.json -> kohakufa_cute-0.2.0/results
+copying results/b200-speed.svg -> kohakufa_cute-0.2.0/results
+copying results/b200-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/b200-upstream-sm100.patch -> kohakufa_cute-0.2.0/results
+copying results/b200-validation.json -> kohakufa_cute-0.2.0/results
+copying results/b200-wide-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/b300-baseline-speed.json -> kohakufa_cute-0.2.0/results
+copying results/b300-environment.json -> kohakufa_cute-0.2.0/results
+copying results/b300-gluon-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b300-gluon-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b300-gluon-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b300-gluon-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b300-gluon-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-bf16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-fp16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-fp16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-fp16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b300-initial-precision-fp16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b300-native-aux-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-bf16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-fp16-d128.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-fp16-d256.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-fp16-d512.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision-fp16-d64.json -> kohakufa_cute-0.2.0/results
+copying results/b300-precision.svg -> kohakufa_cute-0.2.0/results
+copying results/b300-speed-bf16-causal.json -> kohakufa_cute-0.2.0/results
+copying results/b300-speed-bf16.json -> kohakufa_cute-0.2.0/results
+copying results/b300-speed-fp16-causal.json -> kohakufa_cute-0.2.0/results
+copying results/b300-speed-fp16.json -> kohakufa_cute-0.2.0/results
+copying results/b300-speed.svg -> kohakufa_cute-0.2.0/results
+copying results/b300-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/b300-validation.json -> kohakufa_cute-0.2.0/results
+copying results/b300-wide-copy-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/h100-precision.json -> kohakufa_cute-0.2.0/results
+copying results/h100-speed.json -> kohakufa_cute-0.2.0/results
+copying results/l40s-precision.json -> kohakufa_cute-0.2.0/results
+copying results/l40s-speed.json -> kohakufa_cute-0.2.0/results
+copying results/precision.svg -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-baseline-precision.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-baseline-speed.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-causal-speed.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-environment.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-precision-bf16.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-precision-fp16.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-speed.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-tuning.json -> kohakufa_cute-0.2.0/results
+copying results/rtx5090-validation.json -> kohakufa_cute-0.2.0/results
+copying results/simpletuner-training-blocks.json -> kohakufa_cute-0.2.0/results
+copying results/validation.json -> kohakufa_cute-0.2.0/results
+copying results/attention-diagnostics/README.md -> kohakufa_cute-0.2.0/results/attention-diagnostics
+copying results/attention-diagnostics/phase1-launches.json -> kohakufa_cute-0.2.0/results/attention-diagnostics
+copying results/attention-diagnostics/phase1-launches.svg -> kohakufa_cute-0.2.0/results/attention-diagnostics
+copying results/attention-diagnostics/rental-availability.json -> kohakufa_cute-0.2.0/results/attention-diagnostics
+copying results/attention-diagnostics/b300-mig/README.md -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/candidate-launch-resources.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/d128-eager.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/d128-graph.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/d512-eager.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/d512-graph.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/environment-final.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/environment.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/external-status.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/fused-launches.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/fused-launches.svg -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/fused-sm103-d512-graph.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/fused-sm103-initial-configurations.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/fused-sm103-paired-speed.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/fused-sm103-precision-preflight.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/launches.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/launches.svg -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/ncu-kernel-selection-status.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/nsys-launch-resources.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/paired-speed.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/provenance.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/ten-warps-initial-configurations.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/ten-warps-paired-speed.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/ten-warps-precision-preflight.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/attention-diagnostics/b300-mig/validation.json -> kohakufa_cute-0.2.0/results/attention-diagnostics/b300-mig
+copying results/blackwell-codegen/README.md -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/assembly-summary.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/bitwise-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/bitwise-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/comparison-summary.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/exploratory-trials.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/gluon-saturation.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/kernel-timeline.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/kernel-timeline.svg -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/paired-bf16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/paired-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/paired-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/paired-gains.svg -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/provenance.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/sm100-legality.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/validation.json -> kohakufa_cute-0.2.0/results/blackwell-codegen
+copying results/blackwell-codegen/tuning/b300-gluon-d128.json -> kohakufa_cute-0.2.0/results/blackwell-codegen/tuning
+copying results/blackwell-codegen/tuning/b300-gluon-d256.json -> kohakufa_cute-0.2.0/results/blackwell-codegen/tuning
+copying results/blackwell-codegen/tuning/b300-gluon-d512.json -> kohakufa_cute-0.2.0/results/blackwell-codegen/tuning
+copying results/blackwell-codegen/tuning/b300-gluon-d64.json -> kohakufa_cute-0.2.0/results/blackwell-codegen/tuning
+copying results/blackwell-fused-backward/README.md -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/b200-fused-speed.svg -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/fwd-stream-speed.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/n128-fused-crossover.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-chunked-dp-initial-configurations.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-chunked-dp-speed.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-deeper-query-speed.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-frozen-source.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-package-source.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-bf16-d64.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-fp16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-fp16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-fp16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-precision-fp16-d64.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-queue-status.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-speed-bf16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-speed-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-speed-fp16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-final-speed-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-frozen-source.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/phase2-initial-configurations.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/precision-comparison.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/provenance.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-fused-backward/validation.json -> kohakufa_cute-0.2.0/results/blackwell-fused-backward
+copying results/blackwell-pipeline/README.md -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-baseline-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-baseline-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-baseline-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-crossover.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-environment.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-initial-configurations.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-bf16-d64.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-fp16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-fp16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-fp16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision-fp16-d64.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-precision.svg -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-profile-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-profile-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-source-sha256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-speed-bf16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-speed-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-speed-fp16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-speed-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-speed.svg -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b200-validation.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-baseline-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-baseline-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-baseline-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-crossover.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-environment.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-initial-configurations.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-bf16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-bf16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-bf16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-bf16-d64.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-fp16-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-fp16-d256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-fp16-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision-fp16-d64.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-precision.svg -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-profile-d128.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-profile-d512.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-source-sha256.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-speed-bf16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-speed-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-speed-fp16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-speed-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-speed.svg -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/b300-validation.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-pipeline/provenance.json -> kohakufa_cute-0.2.0/results/blackwell-pipeline
+copying results/blackwell-probability-tiles/README.md -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/barrier-intervals.svg -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/barrier-summary.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/exploratory-trials.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/nsys-launch-resources.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/paired-bf16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/paired-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/paired-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/paired-speed.svg -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/plot-data.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/provenance.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-probability-tiles/validation.json -> kohakufa_cute-0.2.0/results/blackwell-probability-tiles
+copying results/blackwell-slice-scheduling/README.md -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/anchor-negative-control.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/artifact-receipt.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/assembly-summary.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/cancellation-control.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/cancellation-range.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/comparison-summary.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/exploratory-trials.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/kernel-timeline.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/kernel-timeline.svg -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/paired-bf16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/paired-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/paired-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/paired-gains.svg -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/sm100-legality.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/source.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-slice-scheduling/validation.json -> kohakufa_cute-0.2.0/results/blackwell-slice-scheduling
+copying results/blackwell-transfer-scheduling/README.md -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/assembly-summary.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/baseline-assembly-provenance.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/comparison-summary.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/kernel-timeline.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/kernel-timeline.svg -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/package-validation.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/paired-bf16-causal.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/paired-bf16.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/paired-fp16.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/paired-gains.svg -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/profile-causal-d512.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/profile-dense-d512.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/sm100-legality.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/software-reduction-probe.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/source.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/tails-gqa-signed-probe.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/blackwell-transfer-scheduling/validation.json -> kohakufa_cute-0.2.0/results/blackwell-transfer-scheduling
+copying results/sm103-wide-backward/README.md -> kohakufa_cute-0.2.0/results/sm103-wide-backward
+copying results/sm103-wide-backward/configuration-comparison.json -> kohakufa_cute-0.2.0/results/sm103-wide-backward
+copying results/sm103-wide-backward/production-speed.json -> kohakufa_cute-0.2.0/results/sm103-wide-backward
+copying results/sm103-wide-backward/provenance.json -> kohakufa_cute-0.2.0/results/sm103-wide-backward
+copying results/sm103-wide-backward/validation.json -> kohakufa_cute-0.2.0/results/sm103-wide-backward
+copying src/kohakufa_cute/__init__.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/_ops.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/api.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/blackwell.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/blackwell_pipeline.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/kernels.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/native.cpp -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/native.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/py.typed -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute/sm103.py -> kohakufa_cute-0.2.0/src/kohakufa_cute
+copying src/kohakufa_cute.egg-info/PKG-INFO -> kohakufa_cute-0.2.0/src/kohakufa_cute.egg-info
+copying src/kohakufa_cute.egg-info/SOURCES.txt -> kohakufa_cute-0.2.0/src/kohakufa_cute.egg-info
+copying src/kohakufa_cute.egg-info/dependency_links.txt -> kohakufa_cute-0.2.0/src/kohakufa_cute.egg-info
+copying src/kohakufa_cute.egg-info/requires.txt -> kohakufa_cute-0.2.0/src/kohakufa_cute.egg-info
+copying src/kohakufa_cute.egg-info/top_level.txt -> kohakufa_cute-0.2.0/src/kohakufa_cute.egg-info
+copying tests/__init__.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_api.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_center_keys.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_kernels.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_length_precision.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_profile_attention.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_reference.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_row_metrics.py -> kohakufa_cute-0.2.0/tests
+copying tests/test_training.py -> kohakufa_cute-0.2.0/tests
+Writing kohakufa_cute-0.2.0/setup.cfg
+Creating tar archive
+removing 'kohakufa_cute-0.2.0' (and everything under it)
+* Building wheel from sdist
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77
+  - wheel
+* Getting build dependencies for wheel...
+running egg_info
+writing src/kohakufa_cute.egg-info/PKG-INFO
+writing dependency_links to src/kohakufa_cute.egg-info/dependency_links.txt
+writing requirements to src/kohakufa_cute.egg-info/requires.txt
+writing top-level names to src/kohakufa_cute.egg-info/top_level.txt
+reading manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'LICENSES/Apache-2.0.txt'
+adding license file 'LICENSES/BSD-3-Clause.txt'
+writing manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+* Installed build dependency versions:
+  - setuptools==84.2.1
+  - wheel==0.48.0
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/kohakufa_cute
+copying src/kohakufa_cute/blackwell.py -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/_ops.py -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/__init__.py -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/native.py -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/api.py -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/sm103.py -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/kernels.py -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/blackwell_pipeline.py -> build/lib/kohakufa_cute
+running egg_info
+writing src/kohakufa_cute.egg-info/PKG-INFO
+writing dependency_links to src/kohakufa_cute.egg-info/dependency_links.txt
+writing requirements to src/kohakufa_cute.egg-info/requires.txt
+writing top-level names to src/kohakufa_cute.egg-info/top_level.txt
+reading manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'LICENSES/Apache-2.0.txt'
+adding license file 'LICENSES/BSD-3-Clause.txt'
+writing manifest file 'src/kohakufa_cute.egg-info/SOURCES.txt'
+copying src/kohakufa_cute/native.cpp -> build/lib/kohakufa_cute
+copying src/kohakufa_cute/py.typed -> build/lib/kohakufa_cute
+installing to build/bdist.macosx-15.0-arm64/wheel
+running install
+running install_lib
+creating build/bdist.macosx-15.0-arm64/wheel
+creating build/bdist.macosx-15.0-arm64/wheel/kohakufa_cute
+copying build/lib/kohakufa_cute/blackwell.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/_ops.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/native.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/native.cpp -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/api.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/sm103.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/kernels.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/py.typed -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+copying build/lib/kohakufa_cute/blackwell_pipeline.py -> build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute
+running install_egg_info
+Copying src/kohakufa_cute.egg-info to build/bdist.macosx-15.0-arm64/wheel/./kohakufa_cute-0.2.0-py3.14.egg-info
+running install_scripts
+creating build/bdist.macosx-15.0-arm64/wheel/kohakufa_cute-0.2.0.dist-info/WHEEL
+creating 'artifacts/kohakufa_cute-0.2.0-py3-none-any.whl' and adding 'build/bdist.macosx-15.0-arm64/wheel' to it
+adding 'kohakufa_cute/__init__.py'
+adding 'kohakufa_cute/_ops.py'
+adding 'kohakufa_cute/api.py'
+adding 'kohakufa_cute/blackwell.py'
+adding 'kohakufa_cute/blackwell_pipeline.py'
+adding 'kohakufa_cute/kernels.py'
+adding 'kohakufa_cute/native.cpp'
+adding 'kohakufa_cute/native.py'
+adding 'kohakufa_cute/py.typed'
+adding 'kohakufa_cute/sm103.py'
+adding 'kohakufa_cute-0.2.0.dist-info/licenses/LICENSE'
+adding 'kohakufa_cute-0.2.0.dist-info/licenses/NOTICE'
+adding 'kohakufa_cute-0.2.0.dist-info/licenses/LICENSES/Apache-2.0.txt'
+adding 'kohakufa_cute-0.2.0.dist-info/licenses/LICENSES/BSD-3-Clause.txt'
+adding 'kohakufa_cute-0.2.0.dist-info/METADATA'
+adding 'kohakufa_cute-0.2.0.dist-info/WHEEL'
+adding 'kohakufa_cute-0.2.0.dist-info/top_level.txt'
+adding 'kohakufa_cute-0.2.0.dist-info/RECORD'
+removing build/bdist.macosx-15.0-arm64/wheel
+Successfully built kohakufa_cute-0.2.0.tar.gz and kohakufa_cute-0.2.0-py3-none-any.whl

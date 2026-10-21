@@ -1,0 +1,41 @@
+{
+  "original": {
+    "ptx_files": [
+      "dumps/cutlass___call___kohakufa_cuteblackwell_pipelineForward_object_at__FakeTensorBFloat16_1_16_div1_512_i64_div8_i64_div8_i64_div8_1_FakeTensorBFloat16_1_16_div1_512_i64_div8_i64_div8_.sm_103a.ptx",
+      "dumps/cutlass___call___kohakufa_cutekernelsJointBackward_object_at__FakeTensorBFloat16116div1512i64div8i64div8i64div81_FakeTensorBFloat16116div1512i64div8i64div8i64div81_FakeTensorBFloat.sm_103a.ptx",
+      "dumps/cutlass___call___kohakufa_cute_readout_probe_0JointBackward_object_at__Tensorgmem_o_11640965123355443220971525121_Tensorgmem_o_11640965123355443220971525121_Tensorgmem_o_1164096512.sm_103a.ptx"
+    ],
+    "ptx_request_sites": 10,
+    "sass_instruction_sites": 0,
+    "assembler_log_sha256": "b29049dfac2d402415c6614dcaeeb8b537ca90cd476c9eb5a7fe06b790dc8c77",
+    "diagnostic": "ptxas-blackwell info    : (C7508) Potential Performance Loss: 'setmaxnreg' ignored; unable to determine register count at entry."
+  },
+  "selected": [
+    {
+      "cubin": "backward/kernel.cubin",
+      "ptx_request_sites": 10,
+      "sass_instruction_sites": 10,
+      "requests_without_sass_instruction": false
+    },
+    {
+      "cubin": "forward/kernel.cubin",
+      "ptx_request_sites": 0,
+      "sass_instruction_sites": 0,
+      "requests_without_sass_instruction": false
+    }
+  ],
+  "source_override": [
+    {
+      "cubin": "backward/kernel.cubin",
+      "ptx_request_sites": 0,
+      "sass_instruction_sites": 0,
+      "requests_without_sass_instruction": false
+    },
+    {
+      "cubin": "forward/kernel.cubin",
+      "ptx_request_sites": 0,
+      "sass_instruction_sites": 0,
+      "requests_without_sass_instruction": false
+    }
+  ]
+}

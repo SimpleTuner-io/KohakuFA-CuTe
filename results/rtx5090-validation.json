@@ -1,0 +1,72 @@
+{
+  "device": "NVIDIA GeForce RTX 5090",
+  "capability": [
+    12,
+    0
+  ],
+  "baseline_revision": "8dfecf2",
+  "tuning_reference_revision": "2566fbcc61d501418628d5bd1333354f82bc8051",
+  "gpu_suite": {
+    "total": 54,
+    "passed": 53,
+    "skipped": 1,
+    "skip_reason": "MPS is unavailable on the Linux GPU host"
+  },
+  "local_cpu_mps_suite": {
+    "total": 54,
+    "passed": 21,
+    "skipped": 33,
+    "skip_reason": "CUDA-only tests on Apple host"
+  },
+  "baseline_suite": {
+    "total": 53,
+    "failure_reports": 4,
+    "skipped": 9
+  },
+  "tuning": {
+    "trials": 218,
+    "precision_rejections": 0,
+    "dtype": "bf16",
+    "sequences": [
+      1024,
+      4096
+    ],
+    "heads": 16
+  },
+  "custom_operator_version": 2,
+  "persistent_torch_cache_manually_deleted": false,
+  "phases": [
+    {
+      "phase": "tuned-tests",
+      "returncode": 0,
+      "seconds": 356.30355405807495
+    },
+    {
+      "phase": "tuned-speed",
+      "returncode": 0,
+      "seconds": 72.6269760131836
+    },
+    {
+      "phase": "tuned-causal-speed",
+      "returncode": 0,
+      "seconds": 20.10017490386963
+    },
+    {
+      "phase": "tuned-precision-bf16",
+      "returncode": 0,
+      "seconds": 6.076726913452148
+    },
+    {
+      "phase": "tuned-precision-fp16",
+      "returncode": 0,
+      "seconds": 6.378183841705322
+    }
+  ],
+  "source_sha256": {
+    "src/kohakufa_cute/kernels.py": "a20da674d30d7ee0d62bb945e4fa5d5bb0fc5daaae2bffea76629565b5995ccc",
+    "src/kohakufa_cute/native.cpp": "ba5a4aa11e46ab5da35752ca392d307c072f30eb55782b3c3ddcc4c9aca04813",
+    "src/kohakufa_cute/api.py": "b8be88241f2c42c8a19d57dd5237626c9aacdc4bb3b1c8b73cfc60b07c886145",
+    "src/kohakufa_cute/_ops.py": "6b466653785cf2556ae984da73f5606428ab84706136494ee3b43c871e9078ee"
+  },
+  "rebased_tuning_reference_revision": "d809e2aafae29d64cf19966df4d78275895a0d68"
+}

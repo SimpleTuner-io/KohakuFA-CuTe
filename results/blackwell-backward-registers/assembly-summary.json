@@ -1,0 +1,869 @@
+{
+  "scope": "Static instruction sites and cubin resources, not dynamic execution counts or memory traffic.",
+  "kernels": [
+    {
+      "backend": "baseline",
+      "dimension": 64,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_te_0",
+      "ptx_path": "selected/baseline-assembly-d64/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 44,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "ba70744cace33273cbfeb3a80b1d934a5b66b0c2bb836b85819b06b3ca97dabf"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 64,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineQuery_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div8_1",
+      "ptx_path": "selected/baseline-assembly-d64/backward/kernel.ptx",
+      "ptx_entry_line": 267,
+      "ptx_counts": {
+        "mma": 32,
+        "tma_load": 12,
+        "barrier_wait": 24,
+        "tmem_load": 5,
+        "tmem_store": 1
+      },
+      "sass_ldl_sites": 19,
+      "sass_stl_sites": 19,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 80,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "ba70744cace33273cbfeb3a80b1d934a5b66b0c2bb836b85819b06b3ca97dabf"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 64,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineKeyValue_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_d_2",
+      "ptx_path": "selected/baseline-assembly-d64/backward/kernel.ptx",
+      "ptx_entry_line": 4600,
+      "ptx_counts": {
+        "mma": 32,
+        "tma_load": 4,
+        "barrier_wait": 16,
+        "tmem_load": 5,
+        "tmem_store": 1
+      },
+      "sass_ldl_sites": 32,
+      "sass_stl_sites": 32,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 128,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "ba70744cace33273cbfeb3a80b1d934a5b66b0c2bb836b85819b06b3ca97dabf"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 64,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineForward_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_di_0",
+      "ptx_path": "selected/baseline-assembly-d64/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 16,
+        "tma_load": 8,
+        "barrier_wait": 20,
+        "tmem_load": 5,
+        "tmem_store": 3
+      },
+      "sass_ldl_sites": 6,
+      "sass_stl_sites": 6,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 24,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "0820b6955e35904331407a48c767f2de7a1ea4b3425fe3548b10b642ba651487"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 128,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81__0",
+      "ptx_path": "selected/baseline-assembly-d128/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 60,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "8e41ab6d8c80ceb413f4f3a9da513a8858509c16745495f96c2fbda65524da33"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 128,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineQuery_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_di_1",
+      "ptx_path": "selected/baseline-assembly-d128/backward/kernel.ptx",
+      "ptx_entry_line": 367,
+      "ptx_counts": {
+        "mma": 48,
+        "tma_load": 24,
+        "barrier_wait": 24,
+        "tmem_load": 7,
+        "tmem_store": 1
+      },
+      "sass_ldl_sites": 87,
+      "sass_stl_sites": 52,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 208,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "8e41ab6d8c80ceb413f4f3a9da513a8858509c16745495f96c2fbda65524da33"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 128,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_2",
+      "ptx_path": "selected/baseline-assembly-d128/backward/kernel.ptx",
+      "ptx_entry_line": 5181,
+      "ptx_counts": {
+        "mma": 48,
+        "tma_load": 8,
+        "barrier_wait": 16,
+        "tmem_load": 7,
+        "tmem_store": 1
+      },
+      "sass_ldl_sites": 81,
+      "sass_stl_sites": 70,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 328,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "8e41ab6d8c80ceb413f4f3a9da513a8858509c16745495f96c2fbda65524da33"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 128,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineForward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64__0",
+      "ptx_path": "selected/baseline-assembly-d128/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 32,
+        "tma_load": 8,
+        "barrier_wait": 22,
+        "tmem_load": 7,
+        "tmem_store": 4
+      },
+      "sass_ldl_sites": 10,
+      "sass_stl_sites": 10,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 40,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "5c59fd2d2ec46385afbbc65aa7f0249a760511c2da19378d450004e1f7f0251b"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 256,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81__0",
+      "ptx_path": "selected/baseline-assembly-d256/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 60,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "094875fd7a2bb6e23a674203d331b719614dc160a6717136749147f62ec123e5"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 256,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineQuery_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_di_1",
+      "ptx_path": "selected/baseline-assembly-d256/backward/kernel.ptx",
+      "ptx_entry_line": 567,
+      "ptx_counts": {
+        "mma": 96,
+        "tma_load": 12,
+        "barrier_wait": 35,
+        "tmem_load": 7,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 64,
+      "sass_stl_sites": 63,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 224,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "094875fd7a2bb6e23a674203d331b719614dc160a6717136749147f62ec123e5"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 256,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_2",
+      "ptx_path": "selected/baseline-assembly-d256/backward/kernel.ptx",
+      "ptx_entry_line": 6575,
+      "ptx_counts": {
+        "mma": 96,
+        "tma_load": 12,
+        "barrier_wait": 37,
+        "tmem_load": 7,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 100,
+      "sass_stl_sites": 48,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 192,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "094875fd7a2bb6e23a674203d331b719614dc160a6717136749147f62ec123e5"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 256,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineForward_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64__0",
+      "ptx_path": "selected/baseline-assembly-d256/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 64,
+        "tma_load": 16,
+        "barrier_wait": 34,
+        "tmem_load": 11,
+        "tmem_store": 6
+      },
+      "sass_ldl_sites": 12,
+      "sass_stl_sites": 12,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 48,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "773a2efd41c1dd82cd398df2e02f61c39f5e5b349b347d4b64fe838226445001"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 512,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+      "ptx_path": "selected/baseline-assembly-d512/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 60,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "b24a4e7ab4f8c219ae59e2180e3e6675d262202ea406fbdfe57d23d71ca258d4"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 512,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_di_1",
+      "ptx_path": "selected/baseline-assembly-d512/backward/kernel.ptx",
+      "ptx_entry_line": 967,
+      "ptx_counts": {
+        "mma": 160,
+        "tma_load": 12,
+        "barrier_wait": 51,
+        "tmem_load": 7,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 64,
+      "sass_stl_sites": 64,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 240,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "b24a4e7ab4f8c219ae59e2180e3e6675d262202ea406fbdfe57d23d71ca258d4"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 512,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_2",
+      "ptx_path": "selected/baseline-assembly-d512/backward/kernel.ptx",
+      "ptx_entry_line": 8197,
+      "ptx_counts": {
+        "mma": 160,
+        "tma_load": 12,
+        "barrier_wait": 53,
+        "tmem_load": 7,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 131,
+      "sass_stl_sites": 66,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 264,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "b24a4e7ab4f8c219ae59e2180e3e6675d262202ea406fbdfe57d23d71ca258d4"
+    },
+    {
+      "backend": "baseline",
+      "dimension": 512,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64__0",
+      "ptx_path": "selected/baseline-assembly-d512/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 80,
+        "tma_load": 28,
+        "barrier_wait": 30,
+        "tmem_load": 11,
+        "tmem_store": 6
+      },
+      "sass_ldl_sites": 16,
+      "sass_stl_sites": 16,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 64,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "8e6b0a53dfdfca412c8033890d651cfd16dc7c3b931e19ab5471efe03f984d24"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 64,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_te_0",
+      "ptx_path": "selected/assembly-d64/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 44,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "653dad837987c2b25984e1378ea1ae582dacd1eaa42051b0349cacd4f577e750"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 64,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div_1",
+      "ptx_path": "selected/assembly-d64/backward/kernel.ptx",
+      "ptx_entry_line": 267,
+      "ptx_counts": {
+        "mma": 32,
+        "tma_load": 12,
+        "barrier_wait": 24,
+        "tmem_load": 7,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 156,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "653dad837987c2b25984e1378ea1ae582dacd1eaa42051b0349cacd4f577e750"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 64,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64__2",
+      "ptx_path": "selected/assembly-d64/backward/kernel.ptx",
+      "ptx_entry_line": 4404,
+      "ptx_counts": {
+        "mma": 32,
+        "tma_load": 4,
+        "barrier_wait": 16,
+        "tmem_load": 7,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 136,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "653dad837987c2b25984e1378ea1ae582dacd1eaa42051b0349cacd4f577e750"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 64,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_d_0",
+      "ptx_path": "selected/assembly-d64/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 16,
+        "tma_load": 8,
+        "barrier_wait": 20,
+        "tmem_load": 5,
+        "tmem_store": 3
+      },
+      "sass_ldl_sites": 6,
+      "sass_stl_sites": 6,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 24,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "2b6c31ab2401c10ea3a89cb6e5c54134995d0dcbdbbfe1c959c1969743152c57"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 128,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81__0",
+      "ptx_path": "selected/assembly-d128/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 60,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "d89e12e249c6fd7781bf9c9c08b19883bdc840b02c51c2ab9a00f424264960a1"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 128,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_d_1",
+      "ptx_path": "selected/assembly-d128/backward/kernel.ptx",
+      "ptx_entry_line": 367,
+      "ptx_counts": {
+        "mma": 48,
+        "tma_load": 24,
+        "barrier_wait": 24,
+        "tmem_load": 11,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 160,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "d89e12e249c6fd7781bf9c9c08b19883bdc840b02c51c2ab9a00f424264960a1"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 128,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i6_2",
+      "ptx_path": "selected/assembly-d128/backward/kernel.ptx",
+      "ptx_entry_line": 5259,
+      "ptx_counts": {
+        "mma": 48,
+        "tma_load": 8,
+        "barrier_wait": 16,
+        "tmem_load": 11,
+        "tmem_store": 2
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 160,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "d89e12e249c6fd7781bf9c9c08b19883bdc840b02c51c2ab9a00f424264960a1"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 128,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_0",
+      "ptx_path": "selected/assembly-d128/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 32,
+        "tma_load": 8,
+        "barrier_wait": 22,
+        "tmem_load": 7,
+        "tmem_store": 4
+      },
+      "sass_ldl_sites": 10,
+      "sass_stl_sites": 10,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 40,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "4837f38f5b9bddde9dcfabc823d5e2e22ef449b15efc886544d3b4c93afa5780"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 256,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81__0",
+      "ptx_path": "selected/assembly-d256/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 60,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "dc0ec781c60ef982b08db3cfabf2c56c5e5ea32864cb71096369f4d78f55e68c"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 256,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_d_1",
+      "ptx_path": "selected/assembly-d256/backward/kernel.ptx",
+      "ptx_entry_line": 567,
+      "ptx_counts": {
+        "mma": 96,
+        "tma_load": 12,
+        "barrier_wait": 35,
+        "tmem_load": 11,
+        "tmem_store": 3
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "dc0ec781c60ef982b08db3cfabf2c56c5e5ea32864cb71096369f4d78f55e68c"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 256,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i6_2",
+      "ptx_path": "selected/assembly-d256/backward/kernel.ptx",
+      "ptx_entry_line": 6949,
+      "ptx_counts": {
+        "mma": 96,
+        "tma_load": 12,
+        "barrier_wait": 37,
+        "tmem_load": 11,
+        "tmem_store": 3
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 148,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "dc0ec781c60ef982b08db3cfabf2c56c5e5ea32864cb71096369f4d78f55e68c"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 256,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_0",
+      "ptx_path": "selected/assembly-d256/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 64,
+        "tma_load": 16,
+        "barrier_wait": 34,
+        "tmem_load": 11,
+        "tmem_store": 6
+      },
+      "sass_ldl_sites": 12,
+      "sass_stl_sites": 12,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 48,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "dda08cd51b446bf67690cb6a463ffa63bc8a4de6c1dcd151372a5f16c73aa68d"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 512,
+      "role": "prepare",
+      "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+      "ptx_path": "selected/assembly-d512/backward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 60,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "19f49e1961c08284ae75bea0e618e0ef5393ad5560535c3740b5e9a519a4668f"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 512,
+      "role": "query",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+      "ptx_path": "selected/assembly-d512/backward/kernel.ptx",
+      "ptx_entry_line": 967,
+      "ptx_counts": {
+        "mma": 160,
+        "tma_load": 12,
+        "barrier_wait": 51,
+        "tmem_load": 11,
+        "tmem_store": 3
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 162,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "19f49e1961c08284ae75bea0e618e0ef5393ad5560535c3740b5e9a519a4668f"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 512,
+      "role": "keyvalue",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+      "ptx_path": "selected/assembly-d512/backward/kernel.ptx",
+      "ptx_entry_line": 8633,
+      "ptx_counts": {
+        "mma": 160,
+        "tma_load": 12,
+        "barrier_wait": 53,
+        "tmem_load": 11,
+        "tmem_store": 3
+      },
+      "sass_ldl_sites": 0,
+      "sass_stl_sites": 0,
+      "resources": {
+        "registers_per_thread": 150,
+        "stack_bytes": 0,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "19f49e1961c08284ae75bea0e618e0ef5393ad5560535c3740b5e9a519a4668f"
+    },
+    {
+      "backend": "candidate",
+      "dimension": 512,
+      "role": "forward",
+      "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+      "ptx_path": "selected/assembly-d512/forward/kernel.ptx",
+      "ptx_entry_line": 16,
+      "ptx_counts": {
+        "mma": 80,
+        "tma_load": 28,
+        "barrier_wait": 30,
+        "tmem_load": 11,
+        "tmem_store": 6
+      },
+      "sass_ldl_sites": 16,
+      "sass_stl_sites": 16,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 64,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "4fb61198de8130d5f763f8459ef3f96315198daacf4785591bee7621f789c818"
+    },
+    {
+      "backend": "gluon",
+      "dimension": 512,
+      "role": "forward",
+      "name": "attention_fwd_kernel",
+      "ptx_path": "selected/gluon-assembly-d512/00-attention_fwd_kernel/kernel.ptx",
+      "ptx_entry_line": 13,
+      "ptx_counts": {
+        "mma": 160,
+        "tma_load": 104,
+        "barrier_wait": 73,
+        "tmem_load": 24,
+        "tmem_store": 10
+      },
+      "sass_ldl_sites": 120,
+      "sass_stl_sites": 72,
+      "resources": {
+        "registers_per_thread": 168,
+        "stack_bytes": 192,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "ee4db99862d88b6b9856963612b5309290429403b291192cbb5cbfd1b0aeacdb"
+    },
+    {
+      "backend": "gluon",
+      "dimension": 512,
+      "role": "prepare",
+      "name": "_prepare_kernel",
+      "ptx_path": "selected/gluon-assembly-d512/01-_prepare_kernel/kernel.ptx",
+      "ptx_entry_line": 12,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 101,
+      "sass_stl_sites": 75,
+      "resources": {
+        "registers_per_thread": 255,
+        "stack_bytes": 480,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "03df420c5b6dc484625d87031acc76c1fda1f0fa970dbdeb1232cc2efd9de828"
+    },
+    {
+      "backend": "gluon",
+      "dimension": 512,
+      "role": "backward",
+      "name": "attention_bwd_kernel",
+      "ptx_path": "selected/gluon-assembly-d512/02-attention_bwd_kernel/kernel.ptx",
+      "ptx_entry_line": 13,
+      "ptx_counts": {
+        "mma": 144,
+        "tma_load": 76,
+        "barrier_wait": 150,
+        "tmem_load": 24,
+        "tmem_store": 4
+      },
+      "sass_ldl_sites": 47,
+      "sass_stl_sites": 31,
+      "resources": {
+        "registers_per_thread": 128,
+        "stack_bytes": 72,
+        "cuobjdump_shared": 1024,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "d7f7e859302dbf4e687189b105f4107dd96ee9408c1643b5c6e858dea71c60db"
+    },
+    {
+      "backend": "gluon",
+      "dimension": 512,
+      "role": "convert",
+      "name": "_dq_convert_kernel",
+      "ptx_path": "selected/gluon-assembly-d512/03-_dq_convert_kernel/kernel.ptx",
+      "ptx_entry_line": 11,
+      "ptx_counts": {
+        "mma": 0,
+        "tma_load": 0,
+        "barrier_wait": 0,
+        "tmem_load": 0,
+        "tmem_store": 0
+      },
+      "sass_ldl_sites": 4,
+      "sass_stl_sites": 4,
+      "resources": {
+        "registers_per_thread": 255,
+        "stack_bytes": 32,
+        "cuobjdump_shared": 0,
+        "cuobjdump_local": 0
+      },
+      "ptx_sha256": "8bcbe961b24b8b497ab2694fdeea6d860efe2905e9fd783cdddabdd0b559b8d4"
+    }
+  ]
+}

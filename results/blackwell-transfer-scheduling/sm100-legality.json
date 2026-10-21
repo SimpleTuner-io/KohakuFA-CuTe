@@ -1,0 +1,24 @@
+{
+  "checks": [
+    {
+      "mode": "forward",
+      "passed": true,
+      "forward_hardware_reductions": false,
+      "scope": "B200 software-reduction forward / common backward instructions, executed on B300 MIG for validation, then assembled offline for sm_100a; no B200 execution or performance claim.",
+      "log": "selected-v3/assembly-software/forward/sm100-legality.log"
+    },
+    {
+      "mode": "backward",
+      "passed": true,
+      "forward_hardware_reductions": null,
+      "scope": "B200 software-reduction forward / common backward instructions, executed on B300 MIG for validation, then assembled offline for sm_100a; no B200 execution or performance claim.",
+      "log": "selected-v3/assembly/backward/sm100-legality.log"
+    }
+  ],
+  "negative_control": {
+    "mode": "B300 forward hardware reductions",
+    "expected_failure": true,
+    "reason": "tcgen05.ld.red is a B300-capable instruction, unsupported by sm_100a. B200 dispatch already selects hardware_reductions=False.",
+    "log": "selected-v3/assembly/forward/sm100-hardware-red-negative.log"
+  }
+}

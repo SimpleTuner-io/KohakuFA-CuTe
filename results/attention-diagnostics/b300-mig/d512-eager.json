@@ -1,0 +1,735 @@
+{
+  "device": "NVIDIA B300 SXM6 AC MIG 1g.34gb",
+  "capability": [
+    10,
+    3
+  ],
+  "torch": "2.12.0+cu130",
+  "cuda": "13.0",
+  "shape": [
+    1,
+    16,
+    4096,
+    512
+  ],
+  "dtype": "bf16",
+  "causal": false,
+  "iterations": 5,
+  "warmup": 3,
+  "profiler": "torch",
+  "execution": "eager",
+  "cute_source_sha256": {
+    "src/kohakufa_cute/__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "src/kohakufa_cute/_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+    "src/kohakufa_cute/api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+    "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "src/kohakufa_cute/blackwell_pipeline.py": "58a2d1173e8954f76444685d9b34ba939084c5c1aa355fe76926cdb315594ee2",
+    "src/kohakufa_cute/kernels.py": "b8f3486f63a92dc77e0a097a868d4e4a152fe176ca5cc2ade1ed674e2ef702fd",
+    "src/kohakufa_cute/native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+    "src/kohakufa_cute/native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+    "src/kohakufa_cute/sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+  },
+  "protocol": "Eager launch attribution with profiling overhead; use benchmarks.speed for comparative timings.",
+  "backward_protocol": "One retained forward graph; each backward computes all Q/K/V gradients without accumulation.",
+  "upstream_tuning": [
+    {
+      "name": "b300-gluon-d512.json",
+      "sha256": "7dc303334a64508a7cd8ce802efaf8f8edb968d1e85d368986ead7f2814e7b42"
+    }
+  ],
+  "upstream_source": {
+    "source_sha256": {
+      "kohakufa/__init__.py": "424554334e33018f28f3f9d62d998103c5844f2108dc07b26f2f8ffbfeb54b76",
+      "kohakufa/api.py": "c48d84d2f87b625840704008eeeb12abcdaae03bb88b0ce1b01af6d1a8f7f4c9",
+      "kohakufa/device.py": "45ffc0ac3245fa5e6e0dedeee62199528997712edff118651bbf8b2a0a1d0313",
+      "kohakufa/mask.py": "d9d89fb750dc9867bef3f0486a54412443edc35f1037daed8f10688c93c25961",
+      "kohakufa/sm100/__init__.py": "5b2faec4d91958090fcb9bc0de44d80038f10092a8396e2a74e8dd5d53a86593",
+      "kohakufa/sm100/bwd.py": "fbe1759bfc2507fb47baf021acc23b1e4c45b9cdf351cfed1874c4c654988c3e",
+      "kohakufa/sm100/config.py": "8963b01de0e0d404e81625633aab41ae4551d6bfae7fadfb6f66c8b2488b897d",
+      "kohakufa/sm100/fwd.py": "4f0f623cc0ff98250a3af310dac16f5cbe19e79e19a72e0242ec75a32446cf28",
+      "kohakufa/sm100/op.py": "ce28b1fd236a3807f8c23bfbffd2f2f4253f863928155e6de5735cbd145662e4",
+      "kohakufa/sm100/plan.py": "d306eb9463e9f002080bc897b2e4486355fbf2dd696a09c87eb0c2a3ca63bbba",
+      "kohakufa/sm100/tune.py": "7ff68bf869460bbd02e136a20fd21c3b28bbb62c5aaf0890c9388ada26a4deae"
+    },
+    "revision": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+    "modified": false,
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "backends": {
+    "cute": {
+      "validated": true,
+      "configurations": {
+        "forward": [
+          128,
+          256,
+          12,
+          false,
+          false,
+          true,
+          true,
+          false,
+          128
+        ],
+        "q": [
+          64,
+          128,
+          12,
+          false,
+          true,
+          true,
+          true,
+          false,
+          128
+        ],
+        "kv": [
+          64,
+          128,
+          12,
+          false,
+          true,
+          true,
+          true,
+          false,
+          128
+        ]
+      },
+      "forward": {
+        "phase": "forward",
+        "nvtx_range": "cute_forward",
+        "execution": "eager",
+        "gpu_ms_per_iteration": 6.7051222,
+        "uniform_launch_pattern": true,
+        "launch_slots": [
+          {
+            "slot": 0,
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+            "median_us": 6705.850999999999,
+            "samples_us": [
+              6701.0509999999995,
+              6720.7959999999985,
+              6712.1889999999985,
+              6705.850999999999,
+              6685.724000000002
+            ]
+          }
+        ],
+        "launches": [
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+            "duration_us": 6701.0509999999995,
+            "start_us": 3027.392
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+            "duration_us": 6720.7959999999985,
+            "start_us": 9728.859
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+            "duration_us": 6712.1889999999985,
+            "start_us": 16450.039
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+            "duration_us": 6705.850999999999,
+            "start_us": 23162.644
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+            "duration_us": 6685.724000000002,
+            "start_us": 29868.879
+          }
+        ],
+        "trace": "artifacts/cute_forward.json"
+      },
+      "backward": {
+        "phase": "backward",
+        "nvtx_range": "cute_backward",
+        "execution": "eager",
+        "gpu_ms_per_iteration": 67.6954788,
+        "uniform_launch_pattern": true,
+        "launch_slots": [
+          {
+            "slot": 0,
+            "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+            "median_us": 189.66499999997905,
+            "samples_us": [
+              189.92100000000005,
+              190.3060000000114,
+              188.51399999999558,
+              189.66499999997905,
+              188.99400000000605
+            ]
+          },
+          {
+            "slot": 1,
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+            "median_us": 33192.06599999999,
+            "samples_us": [
+              33193.251000000004,
+              33191.106,
+              33189.41,
+              33198.62700000001,
+              33192.06599999999
+            ]
+          },
+          {
+            "slot": 2,
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+            "median_us": 34307.852,
+            "samples_us": [
+              34313.388000000006,
+              34307.852,
+              34333.549,
+              34305.516,
+              34305.22899999999
+            ]
+          }
+        ],
+        "launches": [
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+            "duration_us": 189.92100000000005,
+            "start_us": 1398.442
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+            "duration_us": 33193.251000000004,
+            "start_us": 1588.587
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+            "duration_us": 34313.388000000006,
+            "start_us": 34782.094
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+            "duration_us": 190.3060000000114,
+            "start_us": 69096.154
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+            "duration_us": 33191.106,
+            "start_us": 69286.716
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+            "duration_us": 34307.852,
+            "start_us": 102478.078
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+            "duration_us": 188.51399999999558,
+            "start_us": 136786.602
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+            "duration_us": 33189.41,
+            "start_us": 136975.34
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+            "duration_us": 34333.549,
+            "start_us": 170165.006
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+            "duration_us": 189.66499999997905,
+            "start_us": 204499.195
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+            "duration_us": 33198.62700000001,
+            "start_us": 204689.084
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+            "duration_us": 34305.516,
+            "start_us": 237887.967
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+            "duration_us": 188.99400000000605,
+            "start_us": 272194.123
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+            "duration_us": 33192.06599999999,
+            "start_us": 272383.373
+          },
+          {
+            "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+            "duration_us": 34305.22899999999,
+            "start_us": 305575.695
+          }
+        ],
+        "trace": "artifacts/cute_backward.json"
+      }
+    },
+    "kohakufa": {
+      "validated": true,
+      "configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "forward": {
+        "phase": "forward",
+        "nvtx_range": "kohakufa_forward",
+        "execution": "eager",
+        "gpu_ms_per_iteration": 3.8251255999999993,
+        "uniform_launch_pattern": true,
+        "launch_slots": [
+          {
+            "slot": 0,
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "median_us": 1.2160000000003492,
+            "samples_us": [
+              0.8640000000000327,
+              1.4080000000003565,
+              1.3119999999998981,
+              1.2160000000003492,
+              1.2159999999967113
+            ]
+          },
+          {
+            "slot": 1,
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "median_us": 1.2479999999995925,
+            "samples_us": [
+              0.8960000000001855,
+              1.248000000000502,
+              1.2160000000003492,
+              1.4400000000005093,
+              1.2479999999995925
+            ]
+          },
+          {
+            "slot": 2,
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "median_us": 1.2160000000003492,
+            "samples_us": [
+              0.8959999999997308,
+              1.2160000000003492,
+              1.3760000000002037,
+              1.2160000000003492,
+              1.2479999999995925
+            ]
+          },
+          {
+            "slot": 3,
+            "name": "attention_fwd_kernel",
+            "median_us": 3823.493999999999,
+            "samples_us": [
+              3826.95,
+              3813.092999999999,
+              3820.134,
+              3823.9410000000007,
+              3823.493999999999
+            ]
+          }
+        ],
+        "launches": [
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 0.8640000000000327,
+            "start_us": 2637.936
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 0.8960000000001855,
+            "start_us": 2696.497
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 0.8959999999997308,
+            "start_us": 2719.409
+          },
+          {
+            "name": "attention_fwd_kernel",
+            "duration_us": 3826.95,
+            "start_us": 2881.714
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.4080000000003565,
+            "start_us": 6708.92
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.248000000000502,
+            "start_us": 6710.552
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 6712.056
+          },
+          {
+            "name": "attention_fwd_kernel",
+            "duration_us": 3813.092999999999,
+            "start_us": 6713.528
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.3119999999998981,
+            "start_us": 10526.877
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 10528.445
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.3760000000002037,
+            "start_us": 10529.917
+          },
+          {
+            "name": "attention_fwd_kernel",
+            "duration_us": 3820.134,
+            "start_us": 10531.549
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 14351.939
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.4400000000005093,
+            "start_us": 14353.411
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 14355.107
+          },
+          {
+            "name": "attention_fwd_kernel",
+            "duration_us": 3823.9410000000007,
+            "start_us": 14356.579
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2159999999967113,
+            "start_us": 18180.776
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2479999999995925,
+            "start_us": 18182.248
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2479999999995925,
+            "start_us": 18183.752
+          },
+          {
+            "name": "attention_fwd_kernel",
+            "duration_us": 3823.493999999999,
+            "start_us": 18185.256
+          }
+        ],
+        "trace": "artifacts/kohakufa_forward.json"
+      },
+      "backward": {
+        "phase": "backward",
+        "nvtx_range": "kohakufa_backward",
+        "execution": "eager",
+        "gpu_ms_per_iteration": 20.987126999999994,
+        "uniform_launch_pattern": true,
+        "launch_slots": [
+          {
+            "slot": 0,
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+            "median_us": 1.4720000000015716,
+            "samples_us": [
+              1.24799999999982,
+              1.631999999997788,
+              1.4720000000015716,
+              1.4069999999992433,
+              1.631999999997788
+            ]
+          },
+          {
+            "slot": 1,
+            "name": "_prepare_kernel",
+            "median_us": 424.73899999999776,
+            "samples_us": [
+              424.932,
+              424.73899999999776,
+              423.5239999999976,
+              423.8439999999973,
+              427.17099999998754
+            ]
+          },
+          {
+            "slot": 2,
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "median_us": 1.2160000000003492,
+            "samples_us": [
+              1.2159999999998945,
+              1.2489999999997963,
+              1.3439999999973224,
+              1.2160000000003492,
+              1.2160000000003492
+            ]
+          },
+          {
+            "slot": 3,
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "median_us": 1.2160000000003492,
+            "samples_us": [
+              1.183999999999969,
+              1.2160000000003492,
+              1.2160000000003492,
+              1.2160000000003492,
+              1.312000000005355
+            ]
+          },
+          {
+            "slot": 4,
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "median_us": 1.2159999999998945,
+            "samples_us": [
+              1.2159999999998945,
+              1.184000000001106,
+              1.2160000000003492,
+              1.18399999999383,
+              1.2479999999923166
+            ]
+          },
+          {
+            "slot": 5,
+            "name": "attention_bwd_kernel",
+            "median_us": 20301.585,
+            "samples_us": [
+              20301.585,
+              20299.567999999996,
+              20293.776999999995,
+              20310.609000000004,
+              20343.472999999998
+            ]
+          },
+          {
+            "slot": 6,
+            "name": "_dq_convert_kernel",
+            "median_us": 247.1070000000036,
+            "samples_us": [
+              247.74599999999919,
+              248.67399999999907,
+              246.40299999999843,
+              247.1070000000036,
+              246.65899999999965
+            ]
+          }
+        ],
+        "launches": [
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+            "duration_us": 1.24799999999982,
+            "start_us": 1295.582
+          },
+          {
+            "name": "_prepare_kernel",
+            "duration_us": 424.932,
+            "start_us": 1525.12
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2159999999998945,
+            "start_us": 1950.308
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.183999999999969,
+            "start_us": 1951.748
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2159999999998945,
+            "start_us": 1953.188
+          },
+          {
+            "name": "attention_bwd_kernel",
+            "duration_us": 20301.585,
+            "start_us": 1954.66
+          },
+          {
+            "name": "_dq_convert_kernel",
+            "duration_us": 247.74599999999919,
+            "start_us": 22256.949
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+            "duration_us": 1.631999999997788,
+            "start_us": 22504.919
+          },
+          {
+            "name": "_prepare_kernel",
+            "duration_us": 424.73899999999776,
+            "start_us": 22506.807
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2489999999997963,
+            "start_us": 22931.802
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 22933.307
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.184000000001106,
+            "start_us": 22934.779
+          },
+          {
+            "name": "attention_bwd_kernel",
+            "duration_us": 20299.567999999996,
+            "start_us": 22936.219
+          },
+          {
+            "name": "_dq_convert_kernel",
+            "duration_us": 248.67399999999907,
+            "start_us": 43236.363
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+            "duration_us": 1.4720000000015716,
+            "start_us": 43485.293
+          },
+          {
+            "name": "_prepare_kernel",
+            "duration_us": 423.5239999999976,
+            "start_us": 43487.021
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.3439999999973224,
+            "start_us": 43910.801
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 43912.369
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 43913.841
+          },
+          {
+            "name": "attention_bwd_kernel",
+            "duration_us": 20293.776999999995,
+            "start_us": 43915.281
+          },
+          {
+            "name": "_dq_convert_kernel",
+            "duration_us": 246.40299999999843,
+            "start_us": 64209.826
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+            "duration_us": 1.4069999999992433,
+            "start_us": 64456.485
+          },
+          {
+            "name": "_prepare_kernel",
+            "duration_us": 423.8439999999973,
+            "start_us": 64458.148
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 64882.216
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 64883.688
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.18399999999383,
+            "start_us": 64885.16
+          },
+          {
+            "name": "attention_bwd_kernel",
+            "duration_us": 20310.609000000004,
+            "start_us": 64886.6
+          },
+          {
+            "name": "_dq_convert_kernel",
+            "duration_us": 247.1070000000036,
+            "start_us": 85197.849
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+            "duration_us": 1.631999999997788,
+            "start_us": 85445.212
+          },
+          {
+            "name": "_prepare_kernel",
+            "duration_us": 427.17099999998754,
+            "start_us": 85447.1
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2160000000003492,
+            "start_us": 85874.527
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.312000000005355,
+            "start_us": 85875.999
+          },
+          {
+            "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+            "duration_us": 1.2479999999923166,
+            "start_us": 85877.535
+          },
+          {
+            "name": "attention_bwd_kernel",
+            "duration_us": 20343.472999999998,
+            "start_us": 85879.007
+          },
+          {
+            "name": "_dq_convert_kernel",
+            "duration_us": 246.65899999999965,
+            "start_us": 106222.992
+          }
+        ],
+        "trace": "artifacts/kohakufa_backward.json"
+      }
+    }
+  }
+}

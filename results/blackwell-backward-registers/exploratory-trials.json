@@ -1,0 +1,1094 @@
+{
+  "scope": "Pilot evidence, including rejected or failed experiments. Only selected-source/selected is accepted. Direct joint pilots check random BF16 dense S4096 D512 against SDPA and graph replay; they have not passed the precision regression suite.",
+  "runs": [
+    {
+      "log": "baseline-barriers.log",
+      "log_sha256": "1302b7be37f52fafb9da24d0bd5966c9c8a29b9083de65b5a1db6d5e8e7e02c1",
+      "exit_code": 0,
+      "report": "baseline-barriers.json",
+      "passed": false,
+      "rows": [
+        {}
+      ]
+    },
+    {
+      "log": "chunk128-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "chunk128-query-cache-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "chunk128-query-cache.log",
+      "log_sha256": "7e3d3471dda389d976fe557040316f1cb4bf030ac529c54507c5edf581348a5d",
+      "exit_code": 0,
+      "report": "chunk128-query-cache.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.836700820922852,
+              "forward_backward_ms": 29.610272216796872
+            },
+            "candidate": {
+              "forward_ms": 3.7987598419189452,
+              "forward_backward_ms": 29.51151885986328
+            },
+            "gluon": {
+              "forward_ms": 3.8797073364257812,
+              "forward_backward_ms": 24.812670135498045
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "aa368b31b588092acd782f31510ab4ea0649bc93cc9e5b23caee6bc03866f8e9",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "chunk128.log",
+      "log_sha256": "a62c5d254dbef7a2a1cd93fef51d2e7500bd40a66aade43ee11cfd907de52e99",
+      "exit_code": 0,
+      "report": "chunk128.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8365407943725582,
+              "forward_backward_ms": 29.59828338623047
+            },
+            "candidate": {
+              "forward_ms": 3.813932800292969,
+              "forward_backward_ms": 29.540631103515626
+            },
+            "gluon": {
+              "forward_ms": 3.8678159713745117,
+              "forward_backward_ms": 24.811678314208983
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "ba594e5c155359e990dea559826a21d311a4bb0bd9561b7b6c802bf7fd0b3884",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "epilogue32-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "epilogue32-packlate-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "epilogue32-packlate-shared-ds-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "epilogue32-packlate-shared-ds.log",
+      "log_sha256": "ba0bd452763fcaeb9fbb74090a984785d786457203723cdc6fd88f08468cc372",
+      "exit_code": 0,
+      "report": "epilogue32-packlate-shared-ds.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.837995147705078,
+              "forward_backward_ms": 29.628344726562503
+            },
+            "candidate": {
+              "forward_ms": 3.8395601272583004,
+              "forward_backward_ms": 30.05115509033203
+            },
+            "gluon": {
+              "forward_ms": 3.875168037414551,
+              "forward_backward_ms": 24.804777526855467
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "c398e048609661856df287a9323dabeb5e75d6c867656c4dc3ccc9b617233870",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "epilogue32-packlate.log",
+      "log_sha256": "e9e0815e743e31c549f5f7050a4e01ce3880087a520ef8d64e202a603fa2f406",
+      "exit_code": 0,
+      "report": "epilogue32-packlate.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8518064498901365,
+              "forward_backward_ms": 29.605636596679688
+            },
+            "candidate": {
+              "forward_ms": 3.8471569061279296,
+              "forward_backward_ms": 28.732165527343753
+            },
+            "gluon": {
+              "forward_ms": 3.876710319519043,
+              "forward_backward_ms": 24.83518753051758
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "e17492032cc2078f835c3948e83663ed75675208471b02be869ff5016dd76b78",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "epilogue32-shared-ds-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "epilogue32-shared-ds.log",
+      "log_sha256": "6f716129e5c196bb322e93c013d4f69ec821a8d044e5a66f214df02db51a0e35",
+      "exit_code": 0,
+      "report": "epilogue32-shared-ds.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8481937408447267,
+              "forward_backward_ms": 29.609524536132813
+            },
+            "candidate": {
+              "forward_ms": 3.8056447982788084,
+              "forward_backward_ms": 30.069531249999997
+            },
+            "gluon": {
+              "forward_ms": 3.859115219116211,
+              "forward_backward_ms": 24.81668167114258
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "069fcbe43f5a7124a008bdacf4e8feab7609300d7e42784490314f2f132ee5e1",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "epilogue32.log",
+      "log_sha256": "f2058c1d7b692975acc2900e49f5c19fbac9c5cd7f19693b7f4573953be496ce",
+      "exit_code": 0,
+      "report": "epilogue32.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8604721069335937,
+              "forward_backward_ms": 29.608493041992187
+            },
+            "candidate": {
+              "forward_ms": 3.84517765045166,
+              "forward_backward_ms": 28.853440856933595
+            },
+            "gluon": {
+              "forward_ms": 3.8696319580078127,
+              "forward_backward_ms": 24.811335754394534
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-control.log",
+      "log_sha256": "7438f2be6badb928da6288d93d24691188a7ea2627aad1b93c68f80d334daca8",
+      "exit_code": 0,
+      "report": "joint-control.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 59.24613037109375,
+          "backward_ms": [
+            59.24613037109375,
+            59.243621826171875,
+            59.2484619140625
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 24.987702941894533,
+          "backward_ms": [
+            24.910671997070313,
+            24.987702941894533,
+            24.989013671875
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "3551d03b972a5806769fa5e0129f85a2ab2081ca38db2db73dd69ad33974d6ad",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-double.log",
+      "log_sha256": "ab338422e7c3a0c3286108c15b071511e354234fb5cee7cb1a2ffa0bb0d0f175",
+      "exit_code": 0,
+      "report": "joint-double.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 54.95115966796875,
+          "backward_ms": [
+            54.95115966796875,
+            54.948663330078126,
+            54.954522705078126
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 24.996488952636717,
+          "backward_ms": [
+            24.863165283203124,
+            24.996488952636717,
+            24.999740600585938
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "f533a66708f075fc3c2d36490c8d4074c89be005ce4ccd835e18777cba83eccb",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-double14.log",
+      "log_sha256": "27a9c11b0c6f26fedee12f912f8ed3356d432c25d6bd4e6a44655e7c037605b5",
+      "exit_code": 0,
+      "report": "joint-double14.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 55.43935546875,
+          "backward_ms": [
+            55.428131103515625,
+            55.43935546875,
+            55.444219970703124
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 24.996742248535156,
+          "backward_ms": [
+            24.908367919921876,
+            25.0016357421875,
+            24.996742248535156
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "fc3da6e21f57204c952ba7b195f2efe38fcc40baa31e99d766e5003140b33a09",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-pilots.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "joint-reduce64.log",
+      "log_sha256": "b9742279d7772e3b25ddaaa1fd89816eb95a23f32c7cf4d509decd2b094a6b40",
+      "exit_code": 0,
+      "report": "joint-reduce64.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 58.79734497070312,
+          "backward_ms": [
+            58.795849609375,
+            58.801666259765625,
+            58.79734497070312
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 24.989642333984374,
+          "backward_ms": [
+            24.901596069335938,
+            24.989642333984374,
+            24.997769165039063
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "f5bf4f309d9828a433c323aecd09a2b1c7aabe5ee86d4d69caf6c247487b8a4c",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-streamed3-double64.log",
+      "log_sha256": "5503d2b190552ed327e9c58c75adcc96f8eefbc63b74debebcf725ba0ae99620",
+      "exit_code": 0,
+      "report": "joint-streamed3-double64.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 46.07320861816406,
+          "backward_ms": [
+            46.0791015625,
+            46.06990051269531,
+            46.07320861816406
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 24.987930297851562,
+          "backward_ms": [
+            24.860394287109376,
+            24.987930297851562,
+            24.992970275878907
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "a198a6991f13a30853e625534b0f92ad535bef0d911e614c04f871d9299b831d",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-streamed3-reduce128.log",
+      "log_sha256": "9e094dccc1aace27b74203a69cb847236d93895e107191bfc34389b422ed0696",
+      "exit_code": 1,
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "2e05b9b3579bae332e22d1133e6c08307860e67aee21fe85e080b02a5264fba7",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-streamed4-codegen.log",
+      "log_sha256": "cc28b55dc1ee673d5dba4ba268ea2469be107a61e649657f92f6dc672ffe51e4",
+      "exit_code": null,
+      "report": "joint-streamed4-codegen.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 39.916159057617186,
+          "backward_ms": [
+            39.92165832519531,
+            39.916159057617186,
+            39.9121337890625
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 25.033590698242186,
+          "backward_ms": [
+            25.01240692138672,
+            25.034707641601564,
+            25.033590698242186
+          ]
+        }
+      ]
+    },
+    {
+      "log": "joint-streamed4-reduce64.log",
+      "log_sha256": "33875eeded1d49318124d672197119c08a69e21ea8e7b6076dc9d5801acb1996",
+      "exit_code": 0,
+      "report": "joint-streamed4-reduce64.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 43.63783569335938,
+          "backward_ms": [
+            43.638299560546876,
+            43.63783569335938,
+            43.62959289550781
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 24.978250122070314,
+          "backward_ms": [
+            24.885842895507814,
+            24.978250122070314,
+            24.997039794921875
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "d52b069a7e5190feaebee55ab54fb7c0b0a4760d4d715c9f01e768b2aec5a158",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-streamed4-timers.log",
+      "log_sha256": "0d7b07870e183a99ec7e887dfdc60e4cf3ec0d0633780942a39ad689c6afbe1a",
+      "exit_code": 0,
+      "report": "joint-streamed4-timers.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 41.2288330078125,
+          "backward_ms": [
+            41.23072509765625,
+            41.2288330078125,
+            41.224038696289064
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 25.0103271484375,
+          "backward_ms": [
+            24.955999755859374,
+            25.019088745117188,
+            25.0103271484375
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "4b89264b0938308e7f25b3535ae6e1ad01adf78c30abda451e6576073468d3ca",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "joint-streamed4.log",
+      "log_sha256": "17a9e0dcdf002e02be4d054dbcd44509eb8420fbde1cbfd8c743d685983d911c",
+      "exit_code": 0,
+      "report": "joint-streamed4.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 39.9031005859375,
+          "backward_ms": [
+            39.9031005859375,
+            39.903759765625,
+            39.89883728027344
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 24.976400756835936,
+          "backward_ms": [
+            24.838365173339845,
+            24.983343505859374,
+            24.976400756835936
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_joint.py": "dbae65dc589c9da35ab47969946ca30054a662063b2ebd47fa45818526c71603",
+        "blackwell_pipeline.py": "7d2db215dcb0762b9ec87608c2ceaca5f9a387aaa21d3ab28eba61532425cb4a",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "next.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "packlate-isolation-causal.log",
+      "log_sha256": "b8085bcb321dca3945d1eced7891b88db4dca778be506091377c2ee543bf2943",
+      "exit_code": 0,
+      "report": "packlate-isolation-causal.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.3347648024559021,
+              "forward_backward_ms": 1.6246496200561524
+            },
+            "candidate": {
+              "forward_ms": 0.3361119985580444,
+              "forward_backward_ms": 1.616086483001709
+            },
+            "gluon": {
+              "forward_ms": 0.24277439117431643,
+              "forward_backward_ms": 1.1449559688568116
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 2.6312527656555176,
+              "forward_backward_ms": 16.506410217285158
+            },
+            "candidate": {
+              "forward_ms": 2.634129524230957,
+              "forward_backward_ms": 16.44345397949219
+            },
+            "gluon": {
+              "forward_ms": 3.0054832458496095,
+              "forward_backward_ms": 13.665225219726562
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "packlate-isolation-dense.log",
+      "log_sha256": "aa4237734b95e5aaf037d8263627e891c63b27765b48dcc5978e69a2e559fae3",
+      "exit_code": 0,
+      "report": "packlate-isolation-dense.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            1024,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 0.3465456008911133,
+              "forward_backward_ms": 2.205823230743408
+            },
+            "candidate": {
+              "forward_ms": 0.3463760018348694,
+              "forward_backward_ms": 2.202548027038574
+            },
+            "gluon": {
+              "forward_ms": 0.27001839876174927,
+              "forward_backward_ms": 1.6279527664184572
+            }
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.864790344238281,
+              "forward_backward_ms": 28.906845092773438
+            },
+            "candidate": {
+              "forward_ms": 3.8652927398681642,
+              "forward_backward_ms": 28.787904357910158
+            },
+            "gluon": {
+              "forward_ms": 3.88554801940918,
+              "forward_backward_ms": 24.805855560302735
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "pilot.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "pilot2.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "pilot3.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "pilot4.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "pilot5.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "profile-chunk128.log",
+      "log_sha256": "3b3c4176201f0f03cb6b942e9e29e11ff2b87eca1d38d0c275fc09b7de691830",
+      "exit_code": 0,
+      "report": "profile-chunk128.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8134613037109375,
+              "forward_backward_ms": 29.67657725016276
+            },
+            "candidate": {
+              "forward_ms": 3.8121493657430015,
+              "forward_backward_ms": 29.779327392578125
+            },
+            "gluon": {
+              "forward_ms": 3.832223892211914,
+              "forward_backward_ms": 24.835487365722656
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "profile-epilogue32.log",
+      "log_sha256": "e36ad30f5dd11fb179e8a699f04c12e2819e6745c976dfc7b029afa4e2ad0a77",
+      "exit_code": 0,
+      "report": "profile-epilogue32.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.80947208404541,
+              "forward_backward_ms": 29.749173482259113
+            },
+            "candidate": {
+              "forward_ms": 3.8141759236653647,
+              "forward_backward_ms": 28.835968017578125
+            },
+            "gluon": {
+              "forward_ms": 3.8325332005818686,
+              "forward_backward_ms": 24.82372283935547
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "profile-joint-streamed4.log",
+      "log_sha256": "d6925b06e476c228e794fc89a6130bf7e2735cd1994c479963ed843240a4cdb6",
+      "exit_code": 0,
+      "report": "profile-joint-streamed4.json",
+      "passed": true,
+      "rows": [
+        {
+          "backend": "candidate",
+          "median_ms": 40.01666259765625,
+          "backward_ms": [
+            40.00914306640625,
+            40.01666259765625,
+            40.0171630859375
+          ]
+        },
+        {
+          "backend": "baseline",
+          "median_ms": 25.004147338867188,
+          "backward_ms": [
+            24.914178466796876,
+            25.007005310058595,
+            25.004147338867188
+          ]
+        }
+      ]
+    },
+    {
+      "log": "profile-pilots.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": null
+    },
+    {
+      "log": "query-key-cache.log",
+      "log_sha256": "69d8278db83b449d6de43f454ef6e52169a4224bde5cceaea788ea57ae16738d",
+      "exit_code": 0,
+      "report": "query-key-cache.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8369903564453125,
+              "forward_backward_ms": 29.612039184570314
+            },
+            "candidate": {
+              "forward_ms": 3.8409791946411134,
+              "forward_backward_ms": 28.77220916748047
+            },
+            "gluon": {
+              "forward_ms": 3.8617664337158204,
+              "forward_backward_ms": 24.81114883422852
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "c666485b850688c17b3eb89ae0a4c5859c3f9d752e4ed2829d0ef92fcb711872",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "ring32-v2.log",
+      "log_sha256": "846455a63ea91c8f4a12bbb4497018a3af5f85b5701053f4dc7fd853df828ad5",
+      "exit_code": 0,
+      "report": "ring32-v2.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.808625411987305,
+              "forward_backward_ms": 29.673936462402345
+            },
+            "candidate": {
+              "forward_ms": 3.807779312133789,
+              "forward_backward_ms": 40.89516754150391
+            },
+            "gluon": {
+              "forward_ms": 3.8840465545654297,
+              "forward_backward_ms": 24.82255630493164
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "4bb66213345b7b6118a9b0e8f87f9e73c0747047476bb3e38bbafcd62f40f804",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "ring32.log",
+      "log_sha256": "78ff56cc33801f96ae2797cd534f82e0c4da580310ab4dd89ae13ce858abdf49",
+      "exit_code": 1,
+      "report": "ring32.json",
+      "passed": false,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ]
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "b2fd8563c9dc9da6d2af16a321c54b9612a15ddc3dc316eaed246d98c21b0abc",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "ten-warps-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "ten-warps-control-assembly.log",
+      "log_sha256": "3f15b762d6ac2b881fa363db88277cc352cf7856fd1a52630416e8cf05290d6a",
+      "exit_code": 0
+    },
+    {
+      "log": "ten-warps-control.log",
+      "log_sha256": "07ed8371c210f95f1aecc53ba0cc891218c112ce3918e4e529c1da541d28707e",
+      "exit_code": 0,
+      "report": "ten-warps-control.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8263151168823244,
+              "forward_backward_ms": 29.601007080078126
+            },
+            "candidate": {
+              "forward_ms": 3.806439971923828,
+              "forward_backward_ms": 29.582696533203126
+            },
+            "gluon": {
+              "forward_ms": 3.8505311965942384,
+              "forward_backward_ms": 24.81226348876953
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "608e8c4a5ee8eb2dbd5238b8ba8dcf4b3363f12c9cf56e0631ca1204a2d03094",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    },
+    {
+      "log": "ten-warps.log",
+      "log_sha256": "e1521b8c2620cbebff52266ec49c747cb78db62948f5e421207460bcfc5efb41",
+      "exit_code": 0,
+      "report": "ten-warps.json",
+      "passed": true,
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.8025297164916996,
+              "forward_backward_ms": 29.589639282226564
+            },
+            "candidate": {
+              "forward_ms": 3.8063039779663086,
+              "forward_backward_ms": 28.87361602783203
+            },
+            "gluon": {
+              "forward_ms": 3.8633024215698244,
+              "forward_backward_ms": 24.81461410522461
+            }
+          }
+        }
+      ],
+      "runtime_sha256": {
+        "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+        "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+        "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+        "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+        "blackwell_pipeline.py": "41fe59c60178c7258dd81c69f044c29042c13d71bc036be3d5febe62601b48d5",
+        "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+        "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+        "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+        "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+      }
+    }
+  ]
+}

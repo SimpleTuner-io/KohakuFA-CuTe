@@ -1,0 +1,7 @@
+test_wide_head_gradient_cancellation (tests.test_kernels.CuTeAttentionTests.test_wide_head_gradient_cancellation) ... ok
+test_blackwell_wide_query_keeps_zero_covariance (tests.test_kernels.CuTeAttentionTests.test_blackwell_wide_query_keeps_zero_covariance) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 57.434s
+
+OK

@@ -1,0 +1,9 @@
+{
+  "archive": "kohakufa-vector-evidence-20261021.tar.gz",
+  "bytes": 47084640,
+  "sha256": "7c610b5171b2eb6fd2ce7d8bb437590aaae362e0645e03c717ac9f9121facfc7",
+  "manifest": "kohakufa-vector-evidence-20261021.manifest.json",
+  "manifest_sha256": "385e7e561ca8adf732999e04fbbd58becc25f5ec642891704063e428c338f857",
+  "manifest_files_verified": 808,
+  "status": "Downloaded; archive hash and every manifest entry verified locally. All ten final runtime files, tests and benchmark sources byte-match the worktree."
+}

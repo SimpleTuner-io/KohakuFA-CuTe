@@ -1,0 +1,58 @@
+[
+  {
+    "label": "d128-cute-kernel-selected",
+    "returncode": 1,
+    "seconds": 13.003043174743652,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  },
+  {
+    "label": "d128-cute-kernel-selected-metadata",
+    "returncode": 1,
+    "seconds": 12.497745037078857,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  },
+  {
+    "label": "d128-kohakufa-kernel-selected",
+    "returncode": 1,
+    "seconds": 6.096322536468506,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  },
+  {
+    "label": "d128-kohakufa-kernel-selected-metadata",
+    "returncode": 1,
+    "seconds": 6.428393363952637,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  },
+  {
+    "label": "d512-cute-kernel-selected",
+    "returncode": 1,
+    "seconds": 17.14389419555664,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  },
+  {
+    "label": "d512-cute-kernel-selected-metadata",
+    "returncode": 1,
+    "seconds": 16.09829020500183,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  },
+  {
+    "label": "d512-kohakufa-kernel-selected",
+    "returncode": 1,
+    "seconds": 7.210246562957764,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  },
+  {
+    "label": "d512-kohakufa-kernel-selected-metadata",
+    "returncode": 1,
+    "seconds": 8.781761407852173,
+    "counter_permission_denied": true,
+    "no_kernels_profiled": false
+  }
+]

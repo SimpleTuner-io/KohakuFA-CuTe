@@ -1,0 +1,1707 @@
+{
+  "device": "NVIDIA B300 SXM6 AC",
+  "torch": "2.12.0+cu130",
+  "dtype": "fp16",
+  "causal": false,
+  "iterations": 20,
+  "repeats": 4,
+  "ordering": "rotate backend order by one each repetition",
+  "timing": "CUDA event milliseconds per graph replay; forward_backward includes forward",
+  "upstream_tuning": [
+    {
+      "name": "b300-gluon-d64.json",
+      "sha256": "7e7ba6b0a6bb4c2e6b9bbac6c3f930600bd617a12265a7255289d01a15e14f46"
+    },
+    {
+      "name": "b300-gluon-d128.json",
+      "sha256": "6ef5c4ac8ed44bf5047fea7af73a0fca21498cec71268d43d0c881f9fed24990"
+    },
+    {
+      "name": "b300-gluon-d256.json",
+      "sha256": "7efec5dabd159f25ca232bf4813a40e13cf0ecc9856b0f07920e7c7bdf876852"
+    },
+    {
+      "name": "b300-gluon-d512.json",
+      "sha256": "7dc303334a64508a7cd8ce802efaf8f8edb968d1e85d368986ead7f2814e7b42"
+    }
+  ],
+  "upstream_source": {
+    "source_sha256": {
+      "kohakufa/__init__.py": "424554334e33018f28f3f9d62d998103c5844f2108dc07b26f2f8ffbfeb54b76",
+      "kohakufa/api.py": "c48d84d2f87b625840704008eeeb12abcdaae03bb88b0ce1b01af6d1a8f7f4c9",
+      "kohakufa/device.py": "45ffc0ac3245fa5e6e0dedeee62199528997712edff118651bbf8b2a0a1d0313",
+      "kohakufa/mask.py": "d9d89fb750dc9867bef3f0486a54412443edc35f1037daed8f10688c93c25961",
+      "kohakufa/sm100/__init__.py": "5b2faec4d91958090fcb9bc0de44d80038f10092a8396e2a74e8dd5d53a86593",
+      "kohakufa/sm100/bwd.py": "fbe1759bfc2507fb47baf021acc23b1e4c45b9cdf351cfed1874c4c654988c3e",
+      "kohakufa/sm100/config.py": "8963b01de0e0d404e81625633aab41ae4551d6bfae7fadfb6f66c8b2488b897d",
+      "kohakufa/sm100/fwd.py": "4f0f623cc0ff98250a3af310dac16f5cbe19e79e19a72e0242ec75a32446cf28",
+      "kohakufa/sm100/op.py": "ce28b1fd236a3807f8c23bfbffd2f2f4253f863928155e6de5735cbd145662e4",
+      "kohakufa/sm100/plan.py": "d306eb9463e9f002080bc897b2e4486355fbf2dd696a09c87eb0c2a3ca63bbba",
+      "kohakufa/sm100/tune.py": "7ff68bf869460bbd02e136a20fd21c3b28bbb62c5aaf0890c9388ada26a4deae"
+    },
+    "revision": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+    "modified": false,
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "initial_cute_configurations": {
+    "64:forward": [
+      64,
+      64,
+      2,
+      false,
+      false,
+      true,
+      true
+    ],
+    "64:q": [
+      64,
+      64,
+      1,
+      false,
+      true,
+      true,
+      false
+    ],
+    "64:kv": [
+      64,
+      64,
+      2,
+      false,
+      true,
+      true,
+      true
+    ],
+    "128:forward": [
+      64,
+      128,
+      4,
+      false,
+      false,
+      true,
+      true,
+      false,
+      64
+    ],
+    "128:q": [
+      64,
+      128,
+      4,
+      false,
+      true,
+      true,
+      false,
+      false,
+      64,
+      true
+    ],
+    "128:kv": [
+      64,
+      128,
+      4,
+      false,
+      true,
+      true,
+      false,
+      false,
+      64,
+      true
+    ],
+    "256:forward": [
+      32,
+      256,
+      4,
+      false,
+      false,
+      true,
+      true
+    ],
+    "256:q": [
+      64,
+      256,
+      4,
+      false,
+      true,
+      true,
+      false,
+      false,
+      64,
+      true
+    ],
+    "256:kv": [
+      64,
+      256,
+      4,
+      false,
+      true,
+      true,
+      false
+    ],
+    "512:forward": [
+      32,
+      256,
+      4,
+      false,
+      false,
+      true,
+      true,
+      true
+    ],
+    "512:q": [
+      32,
+      256,
+      4,
+      false,
+      true,
+      true,
+      false,
+      false,
+      64,
+      true
+    ],
+    "512:kv": [
+      32,
+      256,
+      4,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.024823999404907225,
+            "forward_backward_ms": 0.10081280469894409,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.025339201092720032,
+            "forward_backward_ms": 0.10309120416641235,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.025147199630737305,
+            "forward_backward_ms": 0.10298559665679932,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.025116801261901855,
+            "forward_backward_ms": 0.10285120010375977,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.017505599558353423,
+            "forward_backward_ms": 0.07273600101470948,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.017569600045681,
+            "forward_backward_ms": 0.07335360050201416,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.016840000450611115,
+            "forward_backward_ms": 0.07411999702453613,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.01690080016851425,
+            "forward_backward_ms": 0.07277119755744935,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.015473599731922149,
+            "forward_backward_ms": 0.042124798893928526,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.015164799988269806,
+            "forward_backward_ms": 0.0459087997674942,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.014998400211334228,
+            "forward_backward_ms": 0.045311999320983884,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.0147599995136261,
+            "forward_backward_ms": 0.04345279932022095,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.02513200044631958,
+          "forward_backward_ms": 0.10291839838027955
+        },
+        "cute": {
+          "forward_ms": 0.017203199863433837,
+          "forward_backward_ms": 0.07306239902973174
+        },
+        "kohakufa": {
+          "forward_ms": 0.015081600099802018,
+          "forward_backward_ms": 0.044382399320602416
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            64,
+            64,
+            2,
+            false,
+            false,
+            true,
+            true
+          ],
+          "q": [
+            64,
+            64,
+            1,
+            false,
+            true,
+            true,
+            false
+          ],
+          "kv": [
+            64,
+            64,
+            2,
+            false,
+            true,
+            true,
+            true
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            64,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 1,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 6,
+            "kv_group": 1,
+            "halves": 1,
+            "vsplit": 1,
+            "out_bufs": 2
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 1,
+            "alias": false,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 2,
+            "p_regs": 152,
+            "ds_regs": 200,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": false,
+            "nsl": 1,
+            "nw": 1,
+            "k_res": true
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.03734720051288605,
+            "forward_backward_ms": 0.15436480045318604,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.036078399419784545,
+            "forward_backward_ms": 0.15353280305862427,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.036483201384544375,
+            "forward_backward_ms": 0.15327999591827393,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.036057600378990175,
+            "forward_backward_ms": 0.15286400318145751,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.02151840031147003,
+            "forward_backward_ms": 0.0850383996963501,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.021400000154972076,
+            "forward_backward_ms": 0.08518080115318298,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.021044799685478212,
+            "forward_backward_ms": 0.08446239829063415,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.020919999480247496,
+            "forward_backward_ms": 0.0844319999217987,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.017574399709701538,
+            "forward_backward_ms": 0.05899839997291565,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.017246399819850922,
+            "forward_backward_ms": 0.05778239965438843,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.0169295996427536,
+            "forward_backward_ms": 0.0568943977355957,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.01695519983768463,
+            "forward_backward_ms": 0.057815998792648315,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.036280800402164456,
+          "forward_backward_ms": 0.15340639948844909
+        },
+        "cute": {
+          "forward_ms": 0.021222399920225142,
+          "forward_backward_ms": 0.08475039899349213
+        },
+        "kohakufa": {
+          "forward_ms": 0.017100799828767776,
+          "forward_backward_ms": 0.05779919922351837
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            64,
+            128,
+            4,
+            false,
+            false,
+            true,
+            true,
+            false,
+            64
+          ],
+          "q": [
+            64,
+            128,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ],
+          "kv": [
+            64,
+            128,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 2,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 9,
+            "kv_group": 1,
+            "halves": 1,
+            "vsplit": 1,
+            "out_bufs": 2
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 2,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 1,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": false,
+            "nsl": 1,
+            "nw": 2,
+            "k_res": true
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.07091040015220643,
+            "forward_backward_ms": 0.3532864093780518,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.07047039866447449,
+            "forward_backward_ms": 0.35139200687408445,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.07033759951591492,
+            "forward_backward_ms": 0.35530719757080076,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.07011200189590454,
+            "forward_backward_ms": 0.3502288103103638,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.02967039942741394,
+            "forward_backward_ms": 0.22597920894622803,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.029582399129867553,
+            "forward_backward_ms": 0.21591520309448242,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.02778240144252777,
+            "forward_backward_ms": 0.22495520114898682,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.02817600071430206,
+            "forward_backward_ms": 0.21401441097259521,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.02354400008916855,
+            "forward_backward_ms": 0.11289119720458984,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.023708799481391908,
+            "forward_backward_ms": 0.11409440040588378,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.02285760045051575,
+            "forward_backward_ms": 0.11351360082626342,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.02184319943189621,
+            "forward_backward_ms": 0.10891679525375367,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.07040399909019471,
+          "forward_backward_ms": 0.3523392081260681
+        },
+        "cute": {
+          "forward_ms": 0.028879199922084806,
+          "forward_backward_ms": 0.22043520212173462
+        },
+        "kohakufa": {
+          "forward_ms": 0.02320080026984215,
+          "forward_backward_ms": 0.11320239901542664
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            32,
+            256,
+            4,
+            false,
+            false,
+            true,
+            true
+          ],
+          "q": [
+            64,
+            256,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ],
+          "kv": [
+            64,
+            256,
+            4,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 4,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 3,
+            "kv_group": 2,
+            "halves": 1,
+            "vsplit": 1,
+            "out_bufs": 2
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 4,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 3,
+            "do_slots": 8,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": true,
+            "nsl": 2,
+            "nw": 2,
+            "k_res": false
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.4391776084899902,
+            "forward_backward_ms": 1.844228744506836,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.43859038352966306,
+            "forward_backward_ms": 1.840817642211914,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.43842401504516604,
+            "forward_backward_ms": 1.8379344940185547,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.4383120059967041,
+            "forward_backward_ms": 1.838572883605957,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.09225919842720032,
+            "forward_backward_ms": 0.7898943901062012,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.08653119802474976,
+            "forward_backward_ms": 0.7874879837036133,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.0865440011024475,
+            "forward_backward_ms": 0.7848671913146973,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.08619199991226197,
+            "forward_backward_ms": 0.7866991996765137,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.05070080161094666,
+            "forward_backward_ms": 0.28167679309844973,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.049641600251197814,
+            "forward_backward_ms": 0.27929439544677737,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.05116479992866516,
+            "forward_backward_ms": 0.27860000133514407,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.04973919987678528,
+            "forward_backward_ms": 0.2783744096755981,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.43850719928741455,
+          "forward_backward_ms": 1.8396952629089354
+        },
+        "cute": {
+          "forward_ms": 0.08653759956359863,
+          "forward_backward_ms": 0.7870935916900634
+        },
+        "kohakufa": {
+          "forward_ms": 0.05022000074386597,
+          "forward_backward_ms": 0.2789471983909607
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            32,
+            256,
+            4,
+            false,
+            false,
+            true,
+            true,
+            true
+          ],
+          "q": [
+            32,
+            256,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ],
+          "kv": [
+            32,
+            256,
+            4,
+            false,
+            true,
+            false,
+            false
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 8,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 4,
+            "kv_group": 1,
+            "halves": 1,
+            "vsplit": 2,
+            "out_bufs": 1
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 8,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 3,
+            "do_slots": 8,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": true,
+            "nsl": 4,
+            "nw": 2,
+            "k_res": false
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.25704801082611084,
+            "forward_backward_ms": 1.2946816444396974,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2563744068145752,
+            "forward_backward_ms": 1.292743968963623,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2561072111129761,
+            "forward_backward_ms": 1.2929679870605468,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.25611679553985595,
+            "forward_backward_ms": 1.292198371887207,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.16391199827194214,
+            "forward_backward_ms": 0.880675220489502,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.16322239637374877,
+            "forward_backward_ms": 0.8804191589355469,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.16277920007705687,
+            "forward_backward_ms": 0.8809040069580079,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.16287200450897216,
+            "forward_backward_ms": 0.8805631637573242,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.08355839848518372,
+            "forward_backward_ms": 0.3016319990158081,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.08308799862861634,
+            "forward_backward_ms": 0.30110878944396974,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.08242080211639405,
+            "forward_backward_ms": 0.3013040065765381,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.08294720053672791,
+            "forward_backward_ms": 0.30088961124420166,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.25624560117721557,
+          "forward_backward_ms": 1.292855978012085
+        },
+        "cute": {
+          "forward_ms": 0.16304720044136045,
+          "forward_backward_ms": 0.8806191921234131
+        },
+        "kohakufa": {
+          "forward_ms": 0.08301759958267213,
+          "forward_backward_ms": 0.30120639801025395
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            64,
+            64,
+            2,
+            false,
+            false,
+            true,
+            true
+          ],
+          "q": [
+            64,
+            64,
+            1,
+            false,
+            true,
+            true,
+            false
+          ],
+          "kv": [
+            64,
+            64,
+            2,
+            false,
+            true,
+            true,
+            true
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            64,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            64,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 1,
+            "block_n": 128,
+            "s_slots": 3,
+            "q_bufs": 2,
+            "kv_slots": 6,
+            "kv_group": 1,
+            "halves": 2,
+            "vsplit": 1,
+            "out_bufs": 1
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 1,
+            "alias": false,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 2,
+            "p_regs": 152,
+            "ds_regs": 200,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": false,
+            "nsl": 1,
+            "nw": 1,
+            "k_res": true
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.3942784070968628,
+            "forward_backward_ms": 2.082655906677246,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3902895927429199,
+            "forward_backward_ms": 2.085526466369629,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.3923327922821045,
+            "forward_backward_ms": 2.0847055435180666,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.39025120735168456,
+            "forward_backward_ms": 2.0836719512939452,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.18095680475234985,
+            "forward_backward_ms": 1.0963472366333007,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18134560585021972,
+            "forward_backward_ms": 1.0975888252258301,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18118720054626464,
+            "forward_backward_ms": 1.0932319641113282,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.1809440016746521,
+            "forward_backward_ms": 1.09835844039917,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.11445440053939819,
+            "forward_backward_ms": 0.49704642295837403,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.11291520595550537,
+            "forward_backward_ms": 0.496017599105835,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.11284159421920777,
+            "forward_backward_ms": 0.4964640140533447,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.11200799942016601,
+            "forward_backward_ms": 0.4962736129760742,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.39131119251251223,
+          "forward_backward_ms": 2.0841887474060057
+        },
+        "cute": {
+          "forward_ms": 0.18107200264930723,
+          "forward_backward_ms": 1.0969680309295655
+        },
+        "kohakufa": {
+          "forward_ms": 0.11287840008735657,
+          "forward_backward_ms": 0.49636881351470946
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            64,
+            128,
+            4,
+            false,
+            false,
+            true,
+            true,
+            false,
+            64
+          ],
+          "q": [
+            64,
+            128,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ],
+          "kv": [
+            64,
+            128,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            128,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 2,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 4,
+            "kv_group": 2,
+            "halves": 1,
+            "vsplit": 1,
+            "out_bufs": 2
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 2,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 1,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": false,
+            "nsl": 1,
+            "nw": 2,
+            "k_res": true
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 0.8574543952941894,
+            "forward_backward_ms": 4.6170398712158205,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.939844799041748,
+            "forward_backward_ms": 4.622027206420898,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.9239472389221192,
+            "forward_backward_ms": 4.619392013549804,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.8604576110839843,
+            "forward_backward_ms": 4.62200813293457,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.291809606552124,
+            "forward_backward_ms": 2.5676591873168944,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.312775993347168,
+            "forward_backward_ms": 2.533456039428711,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.28949599266052245,
+            "forward_backward_ms": 2.5725936889648438,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.2916368007659912,
+            "forward_backward_ms": 2.578868865966797,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.190937602519989,
+            "forward_backward_ms": 1.1089167594909668,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.1884943962097168,
+            "forward_backward_ms": 1.0852160453796387,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.188646399974823,
+            "forward_backward_ms": 1.0734111785888671,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.18819359540939332,
+            "forward_backward_ms": 1.0678463935852052,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 0.8922024250030518,
+          "forward_backward_ms": 4.620700073242187
+        },
+        "cute": {
+          "forward_ms": 0.2917232036590576,
+          "forward_backward_ms": 2.570126438140869
+        },
+        "kohakufa": {
+          "forward_ms": 0.1885703980922699,
+          "forward_backward_ms": 1.079313611984253
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            32,
+            256,
+            4,
+            false,
+            false,
+            true,
+            true
+          ],
+          "q": [
+            64,
+            256,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ],
+          "kv": [
+            64,
+            256,
+            4,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 64,
+            "nch": 4,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 8,
+            "kv_group": 1,
+            "halves": 1,
+            "vsplit": 1,
+            "out_bufs": 1
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 4,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 8,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": true,
+            "nsl": 2,
+            "nw": 2,
+            "k_res": false
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "samples": {
+        "cute-initial": [
+          {
+            "forward_ms": 5.811372756958008,
+            "forward_backward_ms": 24.83105926513672,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 5.8112529754638675,
+            "forward_backward_ms": 24.856781005859375,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 5.811220932006836,
+            "forward_backward_ms": 24.882815551757812,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 5.811174392700195,
+            "forward_backward_ms": 24.828269958496094,
+            "graph_verified": true
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.8584367752075195,
+            "forward_backward_ms": 9.672342681884766,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.930777645111084,
+            "forward_backward_ms": 9.673785400390624,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.8584719657897949,
+            "forward_backward_ms": 9.671217346191407,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.859280014038086,
+            "forward_backward_ms": 9.672694396972656,
+            "graph_verified": true
+          }
+        ],
+        "kohakufa": [
+          {
+            "forward_ms": 0.5717135906219483,
+            "forward_backward_ms": 3.5537086486816407,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.5712368011474609,
+            "forward_backward_ms": 3.6992431640625,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.5718368053436279,
+            "forward_backward_ms": 3.613163375854492,
+            "graph_verified": true
+          },
+          {
+            "forward_ms": 0.5719679832458496,
+            "forward_backward_ms": 3.6907920837402344,
+            "graph_verified": true
+          }
+        ]
+      },
+      "medians": {
+        "cute-initial": {
+          "forward_ms": 5.811236953735351,
+          "forward_backward_ms": 24.843920135498045
+        },
+        "cute": {
+          "forward_ms": 0.8588759899139404,
+          "forward_backward_ms": 9.672518539428712
+        },
+        "kohakufa": {
+          "forward_ms": 0.5717751979827881,
+          "forward_backward_ms": 3.6519777297973635
+        }
+      },
+      "unsupported": {},
+      "configurations": {
+        "cute-initial": {
+          "forward": [
+            32,
+            256,
+            4,
+            false,
+            false,
+            true,
+            true,
+            true
+          ],
+          "q": [
+            32,
+            256,
+            4,
+            false,
+            true,
+            true,
+            false,
+            false,
+            64,
+            true
+          ],
+          "kv": [
+            32,
+            256,
+            4,
+            false,
+            true,
+            false,
+            false
+          ]
+        },
+        "cute": {
+          "forward": [
+            128,
+            256,
+            12,
+            false,
+            false,
+            true,
+            true,
+            false,
+            128
+          ],
+          "q": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ],
+          "kv": [
+            64,
+            128,
+            12,
+            false,
+            true,
+            true,
+            true,
+            false,
+            128
+          ]
+        },
+        "kohakufa": {
+          "forward": {
+            "dc": 32,
+            "nch": 16,
+            "block_n": 128,
+            "s_slots": 2,
+            "q_bufs": 1,
+            "kv_slots": 5,
+            "kv_group": 2,
+            "halves": 1,
+            "vsplit": 2,
+            "out_bufs": 1
+          },
+          "backward": {
+            "dc": 64,
+            "nch": 8,
+            "alias": true,
+            "kv_bufs": 1,
+            "q_slots": 2,
+            "do_slots": 8,
+            "p_regs": 144,
+            "ds_regs": 144,
+            "small_regs": 32,
+            "reduce_cols": 32,
+            "reduce_stages": 1,
+            "stream": true,
+            "nsl": 4,
+            "nw": 2,
+            "k_res": false
+          }
+        }
+      }
+    }
+  ]
+}

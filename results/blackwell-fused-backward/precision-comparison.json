@@ -1,0 +1,1607 @@
+{
+  "cases": 40,
+  "tensors": 160,
+  "maximum_relative_error_increase": 9.557260178421657e-08,
+  "comparisons": [
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.0022471834550230017,
+      "relative_error_after": 0.0022471834550230017,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0016894487501912803,
+      "max_absolute_error_after": 0.0016894487501912803
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.002329954358342684,
+      "relative_error_after": 0.002329947205014719,
+      "relative_error_increase": -7.153327965126605e-09,
+      "max_absolute_error_before": 0.0007146177127214381,
+      "max_absolute_error_after": 0.0007146177127214381
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.002380051147289349,
+      "relative_error_after": 0.002380061687290462,
+      "relative_error_increase": 1.0540001113210073e-08,
+      "max_absolute_error_before": 0.006160028216272373,
+      "max_absolute_error_after": 0.006160028216272373
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0023537030386984507,
+      "relative_error_after": 0.0023537030386984507,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0026694637414230726,
+      "max_absolute_error_after": 0.0026694637414230726
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0010462137585587306,
+      "relative_error_after": 0.0010462137585587306,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008460453909169718,
+      "max_absolute_error_after": 0.008460453909169718
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0021141546754087455,
+      "relative_error_after": 0.002114154675302856,
+      "relative_error_increase": -1.0588925569710028e-13,
+      "max_absolute_error_before": 0.034165869799691606,
+      "max_absolute_error_after": 0.034165869799691606
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0024353465758706074,
+      "relative_error_after": 0.0024353465758706074,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.15101678388499806,
+      "max_absolute_error_after": 0.15101678388499806
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0018700724992235763,
+      "relative_error_after": 0.0018700724992235763,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0636148195839965,
+      "max_absolute_error_after": 0.0636148195839965
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00010299932832339964,
+      "relative_error_after": 0.00010299932832339964,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008383435594100153,
+      "max_absolute_error_after": 0.008383435594100153
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.00941975670266424,
+      "relative_error_after": 0.00941975670266424,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.26415418980326777,
+      "max_absolute_error_after": 0.26415418980326777
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.010002823510984226,
+      "relative_error_after": 0.010002823510984226,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.7386173694787814,
+      "max_absolute_error_after": 0.7386173694787814
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016498853826918283,
+      "relative_error_after": 0.0016498853826918283,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.060302734375,
+      "max_absolute_error_after": 0.060302734375
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 8.839951793768808e-06,
+      "relative_error_after": 8.839951793768808e-06,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0010992280027755097,
+      "max_absolute_error_after": 0.0010992280027755097
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.09282726710050576,
+      "relative_error_after": 0.09282726710050576,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.010512357168888473,
+      "max_absolute_error_after": 0.010512357168888473
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.09164715341116149,
+      "relative_error_after": 0.09164715341116149,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.024151843279180407,
+      "max_absolute_error_after": 0.024151843279180407
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.001661716955326373,
+      "relative_error_after": 0.001661716955326373,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0589752197265625,
+      "max_absolute_error_after": 0.0589752197265625
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 2.6947877337281656e-13,
+      "relative_error_after": 2.6947877337281656e-13,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 3.0840885401062224e-11,
+      "max_absolute_error_after": 3.0840885401062224e-11
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.44012288741435324,
+      "relative_error_after": 0.44012288741435324,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 5.836979747355301e-09,
+      "max_absolute_error_after": 5.836979747355301e-09
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.4403555391316968,
+      "relative_error_after": 0.4403555391316968,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.4633451899619311e-08,
+      "max_absolute_error_after": 1.4633451899619311e-08
+    },
+    {
+      "file": "phase2-final-precision-bf16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016531501382301892,
+      "relative_error_after": 0.0016531501382301892,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.06243896484375,
+      "max_absolute_error_after": 0.06243896484375
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.0022580663804584473,
+      "relative_error_after": 0.0022580663804584473,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0022183916452476193,
+      "max_absolute_error_after": 0.0022183916452476193
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.002331498607060169,
+      "relative_error_after": 0.002331514496086426,
+      "relative_error_increase": 1.588902625703631e-08,
+      "max_absolute_error_before": 0.0008748221623851582,
+      "max_absolute_error_after": 0.0008748221623851582
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0023472269433664175,
+      "relative_error_after": 0.0023472269433664175,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.005749489336854818,
+      "max_absolute_error_after": 0.005749489336854818
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.002357345833289111,
+      "relative_error_after": 0.002357345833289111,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0030776052461155556,
+      "max_absolute_error_after": 0.0030776052461155556
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00103878339025228,
+      "relative_error_after": 0.00103878339025228,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.009576837034309893,
+      "max_absolute_error_after": 0.009576837034309893
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.00208608876035422,
+      "relative_error_after": 0.002086111553129621,
+      "relative_error_increase": 2.2792775401011406e-08,
+      "max_absolute_error_before": 0.044673290942377264,
+      "max_absolute_error_after": 0.044673290942377264
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0022978383258799987,
+      "relative_error_after": 0.0022978383258799987,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.12547435917363003,
+      "max_absolute_error_after": 0.12547435917363003
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0018436974940019136,
+      "relative_error_after": 0.0018436974940019136,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.06012168505307258,
+      "max_absolute_error_after": 0.06012168505307258
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00012730333925474422,
+      "relative_error_after": 0.00012730333925474422,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008530509201272629,
+      "max_absolute_error_after": 0.008530509201272629
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0023242495070951224,
+      "relative_error_after": 0.0023242495070951224,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.3102890710606232,
+      "max_absolute_error_after": 0.3102890710606232
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.002557346436461016,
+      "relative_error_after": 0.002557346436461016,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.47763747051774885,
+      "max_absolute_error_after": 0.47763747051774885
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016610416448826974,
+      "relative_error_after": 0.0016610416448826974,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.06319919473463642,
+      "max_absolute_error_after": 0.06319919473463642
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 3.2862125265583955e-05,
+      "relative_error_after": 3.2862125265583955e-05,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0053969104854152405,
+      "max_absolute_error_after": 0.0053969104854152405
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.030214081836464762,
+      "relative_error_after": 0.030214081836464762,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.002929202229409053,
+      "max_absolute_error_after": 0.002929202229409053
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.02970123913734612,
+      "relative_error_after": 0.02970123913734612,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.004718937116380328,
+      "max_absolute_error_after": 0.004718937116380328
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016515893375177546,
+      "relative_error_after": 0.0016515893375177546,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0618896484375,
+      "max_absolute_error_after": 0.0618896484375
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 7.5098154079946055e-19,
+      "relative_error_after": 7.5098154079946055e-19,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 2.220446049250313e-16,
+      "max_absolute_error_after": 2.220446049250313e-16
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 1.0859492434499156,
+      "relative_error_after": 1.0859492434499156,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 5.2678867459701736e-14,
+      "max_absolute_error_after": 5.2678867459701736e-14
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 1.086319977773988,
+      "relative_error_after": 1.086319977773988,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 5.824339462988195e-14,
+      "max_absolute_error_after": 5.824339462988195e-14
+    },
+    {
+      "file": "phase2-final-precision-bf16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016509740556834305,
+      "relative_error_after": 0.0016509740556834305,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0616455078125,
+      "max_absolute_error_after": 0.0616455078125
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.002249168843496648,
+      "relative_error_after": 0.002249168843496648,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.002294504909237549,
+      "max_absolute_error_after": 0.002294504909237549
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.002331507006691329,
+      "relative_error_after": 0.002331507141981229,
+      "relative_error_increase": 1.3528989994265883e-10,
+      "max_absolute_error_before": 0.0013109707017713856,
+      "max_absolute_error_after": 0.0013109707017713856
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.002327849802953506,
+      "relative_error_after": 0.002327868601286465,
+      "relative_error_increase": 1.879833295883454e-08,
+      "max_absolute_error_before": 0.004022406249057031,
+      "max_absolute_error_after": 0.004022406249057031
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.002345833412558738,
+      "relative_error_after": 0.002345833412558738,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.003150039930097548,
+      "max_absolute_error_after": 0.003150039930097548
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0009811737141140029,
+      "relative_error_after": 0.0009811737141140029,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.014909913733251123,
+      "max_absolute_error_after": 0.014909913733251123
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0020376701088450416,
+      "relative_error_after": 0.0020376683658452042,
+      "relative_error_increase": -1.7429998373438838e-09,
+      "max_absolute_error_before": 0.07020876190297543,
+      "max_absolute_error_after": 0.07020876190297543
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0022826455156111374,
+      "relative_error_after": 0.0022826455156111374,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.11841888031488779,
+      "max_absolute_error_after": 0.11841888031488779
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.001809210759921137,
+      "relative_error_after": 0.001809210759921137,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.06218481119308095,
+      "max_absolute_error_after": 0.06218481119308095
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0001791526824527841,
+      "relative_error_after": 0.0001791526824527841,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.012813247562648789,
+      "max_absolute_error_after": 0.012813247562648789
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.006261723610811035,
+      "relative_error_after": 0.006261723610811035,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.28600188462709397,
+      "max_absolute_error_after": 0.28600188462709397
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.006192497968551344,
+      "relative_error_after": 0.006192497968551344,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.3480346767096272,
+      "max_absolute_error_after": 0.3480346767096272
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016268483549618706,
+      "relative_error_after": 0.0016268483549618706,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.062316929096862594,
+      "max_absolute_error_after": 0.062316929096862594
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 4.268391557783721e-05,
+      "relative_error_after": 4.268391557783721e-05,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0084061463364411,
+      "max_absolute_error_after": 0.0084061463364411
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.09019021868084232,
+      "relative_error_after": 0.09019021868084232,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.07612131641652553,
+      "max_absolute_error_after": 0.07612131641652553
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.08978546489847396,
+      "relative_error_after": 0.08978546489847396,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.10627615743160046,
+      "max_absolute_error_after": 0.10627615743160046
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016214934396483521,
+      "relative_error_after": 0.0016214934396483521,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0615234375,
+      "max_absolute_error_after": 0.0615234375
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 5.493297106456751e-07,
+      "relative_error_after": 5.493297106456751e-07,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 7.290186022457235e-05,
+      "max_absolute_error_after": 7.290186022457235e-05
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.6625935932877123,
+      "relative_error_after": 0.6625935932877123,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0017795632507756607,
+      "max_absolute_error_after": 0.0017795632507756607
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.6625623139368055,
+      "relative_error_after": 0.6625623139368055,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0023004999324408833,
+      "max_absolute_error_after": 0.0023004999324408833
+    },
+    {
+      "file": "phase2-final-precision-bf16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.001614273634285931,
+      "relative_error_after": 0.001614273634285931,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0615234375,
+      "max_absolute_error_after": 0.0615234375
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.002240549582681274,
+      "relative_error_after": 0.002240549582681274,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0016054052051516776,
+      "max_absolute_error_after": 0.0016054052051516776
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0023274855904540626,
+      "relative_error_after": 0.0023274958697444494,
+      "relative_error_increase": 1.0279290386765172e-08,
+      "max_absolute_error_before": 0.0005399195484729891,
+      "max_absolute_error_after": 0.0005399195484729891
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0023081129576165214,
+      "relative_error_after": 0.002307994541161641,
+      "relative_error_increase": -1.1841645488046976e-07,
+      "max_absolute_error_before": 0.00552067388690336,
+      "max_absolute_error_after": 0.00552067388690336
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0023485193213526887,
+      "relative_error_after": 0.0023485193213526887,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0029905919520801794,
+      "max_absolute_error_after": 0.0029905919520801794
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.001122612464349298,
+      "relative_error_after": 0.001122612464349298,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.009116478636894687,
+      "max_absolute_error_after": 0.009116478636894687
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0021738236432179417,
+      "relative_error_after": 0.002172248557009224,
+      "relative_error_increase": -1.5750862087178692e-06,
+      "max_absolute_error_before": 0.041248742946411454,
+      "max_absolute_error_after": 0.041248742946411454
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.002537200104378315,
+      "relative_error_after": 0.002537200104378315,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.24421636560782645,
+      "max_absolute_error_after": 0.24421636560782645
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0018785165012214153,
+      "relative_error_after": 0.0018785165012214153,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.06197670118507759,
+      "max_absolute_error_after": 0.06197670118507759
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0001901538758827378,
+      "relative_error_after": 0.0001901538758827378,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.010091764378253543,
+      "max_absolute_error_after": 0.010091764378253543
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0030257581857858155,
+      "relative_error_after": 0.0030257581857858155,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.21992146034448723,
+      "max_absolute_error_after": 0.21992146034448723
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0023032430751682375,
+      "relative_error_after": 0.0023032430751682375,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.4975888220321707,
+      "max_absolute_error_after": 0.4975888220321707
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0016594985259108894,
+      "relative_error_after": 0.0016594985259108894,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.06209798489153329,
+      "max_absolute_error_after": 0.06209798489153329
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.000788562694145551,
+      "relative_error_after": 0.000788562694145551,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.08895900214804325,
+      "max_absolute_error_after": 0.08895900214804325
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.003800958603750005,
+      "relative_error_after": 0.003800958603750005,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.38334055909412257,
+      "max_absolute_error_after": 0.38334055909412257
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0036749231753073594,
+      "relative_error_after": 0.0036749231753073594,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.070372181969276,
+      "max_absolute_error_after": 1.070372181969276
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0018180016509405088,
+      "relative_error_after": 0.0018180016509405088,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.07887586463753493,
+      "max_absolute_error_after": 0.07887586463753493
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00040162900094198165,
+      "relative_error_after": 0.00040162900094198165,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.04798331315094373,
+      "max_absolute_error_after": 0.04798331315094373
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.1984663846568471,
+      "relative_error_after": 0.1984663846568471,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 12.796110801272476,
+      "max_absolute_error_after": 12.796110801272476
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.19895686088138775,
+      "relative_error_after": 0.19895686088138775,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 35.575971669753244,
+      "max_absolute_error_after": 35.575971669753244
+    },
+    {
+      "file": "phase2-final-precision-bf16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.001700069939734953,
+      "relative_error_after": 0.001700069939734953,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.06238842010498047,
+      "max_absolute_error_after": 0.06238842010498047
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.00028206209858526807,
+      "relative_error_after": 0.00028206209858526807,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0002036446576054174,
+      "max_absolute_error_after": 0.0002036446576054174
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.00029041077682068477,
+      "relative_error_after": 0.00029041618400477734,
+      "relative_error_increase": 5.407184092566086e-09,
+      "max_absolute_error_before": 8.68391382853606e-05,
+      "max_absolute_error_after": 8.68391382853606e-05
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0002949361853782858,
+      "relative_error_after": 0.00029492545761211733,
+      "relative_error_increase": -1.072776616845017e-08,
+      "max_absolute_error_before": 0.0005873373020288675,
+      "max_absolute_error_after": 0.0005873373020288675
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.00029430813295794887,
+      "relative_error_after": 0.00029430813295794887,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0003561694968725604,
+      "max_absolute_error_after": 0.0003561694968725604
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00014500177237946883,
+      "relative_error_after": 0.00014500177237946883,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0011161344759837988,
+      "max_absolute_error_after": 0.0011161344759837988
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0002651801208109273,
+      "relative_error_after": 0.00026517941387649524,
+      "relative_error_increase": -7.069344320543604e-10,
+      "max_absolute_error_before": 0.005769750478519242,
+      "max_absolute_error_after": 0.005769750478519242
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.00030512131625465495,
+      "relative_error_after": 0.00030512131625465495,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0216226592607498,
+      "max_absolute_error_after": 0.0216226592607498
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002335039758645538,
+      "relative_error_after": 0.0002335039758645538,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008211821940111719,
+      "max_absolute_error_after": 0.008211821940111719
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 1.901819499475651e-05,
+      "relative_error_after": 1.901819499475651e-05,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.001677742986015529,
+      "max_absolute_error_after": 0.001677742986015529
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0032746345803937697,
+      "relative_error_after": 0.0032746345803937697,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.032352945027475766,
+      "max_absolute_error_after": 0.032352945027475766
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.00330396573280755,
+      "relative_error_after": 0.00330396573280755,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.07256754121949971,
+      "max_absolute_error_after": 0.07256754121949971
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.00020652452503757259,
+      "relative_error_after": 0.00020652452503757259,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0076751708984375,
+      "max_absolute_error_after": 0.0076751708984375
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00028820072991376177,
+      "relative_error_after": 0.00028820072991376177,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.03636182601118876,
+      "max_absolute_error_after": 0.03636182601118876
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.10272648685892284,
+      "relative_error_after": 0.10272648685892284,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.9878728207215879,
+      "max_absolute_error_after": 1.9878728207215879
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.10255039202334879,
+      "relative_error_after": 0.10255039202334879,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 3.198061963784454,
+      "max_absolute_error_after": 3.198061963784454
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0003669518687092464,
+      "relative_error_after": 0.0003669518687092464,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.02596128495167882,
+      "max_absolute_error_after": 0.02596128495167882
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0,
+      "relative_error_after": 0.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0,
+      "max_absolute_error_after": 0.0
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 1.0,
+      "relative_error_after": 1.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 2.8410431846555397e-54,
+      "max_absolute_error_after": 2.8410431846555397e-54
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 1.0,
+      "relative_error_after": 1.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 5.344536684005471e-54,
+      "max_absolute_error_after": 5.344536684005471e-54
+    },
+    {
+      "file": "phase2-final-precision-fp16-d128.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.00020606694213167427,
+      "relative_error_after": 0.00020606694213167427,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0076751708984375,
+      "max_absolute_error_after": 0.0076751708984375
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.0002822643881110144,
+      "relative_error_after": 0.0002822643881110144,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0002854032612319424,
+      "max_absolute_error_after": 0.0002854032612319424
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.00029183209543417375,
+      "relative_error_after": 0.00029182717890362725,
+      "relative_error_increase": -4.916530546507543e-09,
+      "max_absolute_error_before": 0.00011671107648472678,
+      "max_absolute_error_after": 0.00011671107648472678
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.000294175085761694,
+      "relative_error_after": 0.00029415981763191665,
+      "relative_error_increase": -1.5268129777352198e-08,
+      "max_absolute_error_before": 0.0006704437187781132,
+      "max_absolute_error_after": 0.0006704437187781132
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002941034070673385,
+      "relative_error_after": 0.0002941034070673385,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0003740077826221988,
+      "max_absolute_error_after": 0.0003740077826221988
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00014619447237479685,
+      "relative_error_after": 0.00014619447237479685,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0014596602339524978,
+      "max_absolute_error_after": 0.0014596602339524978
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0002829015362861359,
+      "relative_error_after": 0.0002829111754929355,
+      "relative_error_increase": 9.639206799611812e-09,
+      "max_absolute_error_before": 0.006017120108042562,
+      "max_absolute_error_after": 0.006017120108042562
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.00031289106978385527,
+      "relative_error_after": 0.00031289106978385527,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.01890071758046119,
+      "max_absolute_error_after": 0.01890071758046119
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002329654304817121,
+      "relative_error_after": 0.0002329654304817121,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008323830472846794,
+      "max_absolute_error_after": 0.008323830472846794
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0002163842627406285,
+      "relative_error_after": 0.0002163842627406285,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.024725870165360098,
+      "max_absolute_error_after": 0.024725870165360098
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.01492023942076943,
+      "relative_error_after": 0.01492023942076943,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.1249244290538059,
+      "max_absolute_error_after": 1.1249244290538059
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.014935578446984408,
+      "relative_error_after": 0.014935578446984408,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.7041385949127488,
+      "max_absolute_error_after": 1.7041385949127488
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002784833615465329,
+      "relative_error_after": 0.0002784833615465329,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.01759916288149599,
+      "max_absolute_error_after": 0.01759916288149599
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 6.886108671759216e-05,
+      "relative_error_after": 6.886108671759216e-05,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008709789734398066,
+      "max_absolute_error_after": 0.008709789734398066
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.35686949090957515,
+      "relative_error_after": 0.35686949090957515,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.745436034326926,
+      "max_absolute_error_after": 0.745436034326926
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.3576190186699704,
+      "relative_error_after": 0.3576190186699704,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.0273085082295714,
+      "max_absolute_error_after": 1.0273085082295714
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002180628695584056,
+      "relative_error_after": 0.0002180628695584056,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008438384308968594,
+      "max_absolute_error_after": 0.008438384308968594
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0,
+      "relative_error_after": 0.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0,
+      "max_absolute_error_after": 0.0
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 1.0,
+      "relative_error_after": 1.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 3.1454022095779654e-63,
+      "max_absolute_error_after": 3.1454022095779654e-63
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 1.0,
+      "relative_error_after": 1.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 4.1404028349169986e-63,
+      "max_absolute_error_after": 4.1404028349169986e-63
+    },
+    {
+      "file": "phase2-final-precision-fp16-d256.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.00020464961202646908,
+      "relative_error_after": 0.00020464961202646908,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0076503753662109375,
+      "max_absolute_error_after": 0.0076503753662109375
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.00028148695010091223,
+      "relative_error_after": 0.00028148695010091223,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.00028710094125738994,
+      "max_absolute_error_after": 0.00028710094125738994
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0002922496519317922,
+      "relative_error_after": 0.0002922554728956759,
+      "relative_error_increase": 5.82096388370432e-09,
+      "max_absolute_error_before": 0.00014141405650197614,
+      "max_absolute_error_after": 0.00014141405650197614
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0002940943654585997,
+      "relative_error_after": 0.00029406907616457475,
+      "relative_error_increase": -2.5289294024947572e-08,
+      "max_absolute_error_before": 0.0005036974340288936,
+      "max_absolute_error_after": 0.0005036974340288936
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.00029314816264130057,
+      "relative_error_after": 0.00029314816264130057,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0003679768778147574,
+      "max_absolute_error_after": 0.0003679768778147574
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00013916703037410294,
+      "relative_error_after": 0.00013916703037410294,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.001918927079373134,
+      "max_absolute_error_after": 0.001918927079373134
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.00027083220690031734,
+      "relative_error_after": 0.0002708284590679044,
+      "relative_error_increase": -3.747832412958566e-09,
+      "max_absolute_error_before": 0.006837647713304307,
+      "max_absolute_error_after": 0.006837647713304307
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0003204332738775589,
+      "relative_error_after": 0.0003204332738775589,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.013270264551749733,
+      "max_absolute_error_after": 0.013270264551749733
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002316429909402244,
+      "relative_error_after": 0.0002316429909402244,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008032534087185184,
+      "max_absolute_error_after": 0.008032534087185184
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0003250843224851944,
+      "relative_error_after": 0.0003250843224851944,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.029920727293954452,
+      "max_absolute_error_after": 0.029920727293954452
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.011867293013809635,
+      "relative_error_after": 0.011867293013809635,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.7264812474237488,
+      "max_absolute_error_after": 1.7264812474237488
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.01214034951211533,
+      "relative_error_after": 0.01214034951211533,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 1.821942691902791,
+      "max_absolute_error_after": 1.821942691902791
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0003873452826993707,
+      "relative_error_after": 0.0003873452826993707,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.021795140999977036,
+      "max_absolute_error_after": 0.021795140999977036
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0014609979734695826,
+      "relative_error_after": 0.0014609979734695826,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.18273399463290468,
+      "max_absolute_error_after": 0.18273399463290468
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.01768526101613985,
+      "relative_error_after": 0.01768526101613985,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 5.114126783855806,
+      "max_absolute_error_after": 5.114126783855806
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.018591916368874355,
+      "relative_error_after": 0.018591916368874355,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 6.2281196286024,
+      "max_absolute_error_after": 6.2281196286024
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0014429950139791022,
+      "relative_error_after": 0.0014429950139791022,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.1063723408356525,
+      "max_absolute_error_after": 0.1063723408356525
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0,
+      "relative_error_after": 0.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0,
+      "max_absolute_error_after": 0.0
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 1.0,
+      "relative_error_after": 1.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 7.062475463126108e-35,
+      "max_absolute_error_after": 7.062475463126108e-35
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 1.0,
+      "relative_error_after": 1.0,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 7.495353259613672e-35,
+      "max_absolute_error_after": 7.495353259613672e-35
+    },
+    {
+      "file": "phase2-final-precision-fp16-d512.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002034549422786662,
+      "relative_error_after": 0.0002034549422786662,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.007659912109375,
+      "max_absolute_error_after": 0.007659912109375
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10.0,
+      "tensor": "out",
+      "relative_error_before": 0.000279423374762762,
+      "relative_error_after": 0.000279423374762762,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.00020143463352606528,
+      "max_absolute_error_after": 0.00020143463352606528
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10.0,
+      "tensor": "dq",
+      "relative_error_before": 0.00029060148930603116,
+      "relative_error_after": 0.00029061764350096607,
+      "relative_error_increase": 1.6154194934904584e-08,
+      "max_absolute_error_before": 7.301112883845162e-05,
+      "max_absolute_error_after": 7.301112883845162e-05
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10.0,
+      "tensor": "dk",
+      "relative_error_before": 0.00029106848912375383,
+      "relative_error_after": 0.00029116406172553804,
+      "relative_error_increase": 9.557260178421657e-08,
+      "max_absolute_error_before": 0.0007905965321508557,
+      "max_absolute_error_after": 0.0007905965321508557
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002921944928516221,
+      "relative_error_after": 0.0002921944928516221,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.000306594956481554,
+      "max_absolute_error_after": 0.000306594956481554
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000.0,
+      "tensor": "out",
+      "relative_error_before": 0.00015652768106435314,
+      "relative_error_after": 0.00015652768106435314,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0013313079953869433,
+      "max_absolute_error_after": 0.0013313079953869433
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.0002682576128847945,
+      "relative_error_after": 0.0002679987607989064,
+      "relative_error_increase": -2.588520858881182e-07,
+      "max_absolute_error_before": 0.005544895596456101,
+      "max_absolute_error_after": 0.005544895596456101
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.00028651033478525775,
+      "relative_error_after": 0.00028651033478525775,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.03500581588262719,
+      "max_absolute_error_after": 0.03500581588262719
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0002379091930889814,
+      "relative_error_after": 0.0002379091930889814,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.008095353683980733,
+      "max_absolute_error_after": 0.008095353683980733
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 100000.0,
+      "tensor": "out",
+      "relative_error_before": 9.970143929799475e-05,
+      "relative_error_after": 9.970143929799475e-05,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.009344355467963972,
+      "max_absolute_error_after": 0.009344355467963972
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 100000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.002660604486834568,
+      "relative_error_after": 0.002660604486834568,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.08598913871920288,
+      "max_absolute_error_after": 0.08598913871920288
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 100000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.0028318553927135872,
+      "relative_error_after": 0.0028318553927135872,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.2898934847348187,
+      "max_absolute_error_after": 0.2898934847348187
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 100000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.00022969041639329553,
+      "relative_error_after": 0.00022969041639329553,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.00929847278286644,
+      "max_absolute_error_after": 0.00929847278286644
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "out",
+      "relative_error_before": 0.0005214454381420908,
+      "relative_error_after": 0.0005214454381420908,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.060956755623606695,
+      "max_absolute_error_after": 0.060956755623606695
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.034072244395987814,
+      "relative_error_after": 0.034072244395987814,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 4.754258368923985,
+      "max_absolute_error_after": 4.754258368923985
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.034063350469037315,
+      "relative_error_after": 0.034063350469037315,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 17.11050759052125,
+      "max_absolute_error_after": 17.11050759052125
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 1000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.0005748414010348524,
+      "relative_error_after": 0.0005748414010348524,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.03560455990985689,
+      "max_absolute_error_after": 0.03560455990985689
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "out",
+      "relative_error_before": 4.67829729900096e-09,
+      "relative_error_after": 4.67829729900096e-09,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 5.747531144351115e-07,
+      "max_absolute_error_after": 5.747531144351115e-07
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "dq",
+      "relative_error_before": 0.2667358803334891,
+      "relative_error_after": 0.2667358803334891,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 7.280198321700905e-05,
+      "max_absolute_error_after": 7.280198321700905e-05
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "dk",
+      "relative_error_before": 0.2667155995791579,
+      "relative_error_after": 0.2667155995791579,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.0001696377453181485,
+      "max_absolute_error_after": 0.0001696377453181485
+    },
+    {
+      "file": "phase2-final-precision-fp16-d64.json",
+      "scale": 10000000.0,
+      "tensor": "dv",
+      "relative_error_before": 0.00020504522776644186,
+      "relative_error_after": 0.00020504522776644186,
+      "relative_error_increase": 0.0,
+      "max_absolute_error_before": 0.007706642150878906,
+      "max_absolute_error_after": 0.007706642150878906
+    }
+  ]
+}

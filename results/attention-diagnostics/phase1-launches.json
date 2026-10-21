@@ -1,0 +1,490 @@
+{
+  "title": "Historical phase 1 pipeline: CuTe vs Gluon (before PR #9)",
+  "protocol": "Actual representative eager/graph CUDA launch timestamps; not an intra-kernel trace.",
+  "reports": [
+    {
+      "source": "results/blackwell-pipeline/b200-profile-d128.json",
+      "sha256": "5fa54062cebafe1cd96187265b52810c2e143720ec31bd49048aea158b2b668f",
+      "rows": [
+        {
+          "backend": "cute",
+          "phase": "forward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Forward",
+              "start_us": 0.0,
+              "duration_us": 217.30999999999995
+            }
+          ],
+          "span_us": 217.30999999999995,
+          "busy_union_us": 217.30999999999995,
+          "idle_us": 0.0
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "forward",
+          "iteration": 0,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.2799999999997453
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 58.94399999999996,
+              "duration_us": 1.2480000000000473
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 77.02399999999989,
+              "duration_us": 1.2480000000000473
+            },
+            {
+              "stage": "Forward",
+              "start_us": 228.25599999999986,
+              "duration_us": 170.4319999999998
+            }
+          ],
+          "span_us": 398.68799999999965,
+          "busy_union_us": 174.20799999999963,
+          "idle_us": 224.48000000000002
+        },
+        {
+          "backend": "cute",
+          "phase": "backward",
+          "iteration": 2,
+          "events": [
+            {
+              "stage": "Center",
+              "start_us": 0.0,
+              "duration_us": 8.54300000000012
+            },
+            {
+              "stage": "dQ pass",
+              "start_us": 10.079000000000178,
+              "duration_us": 518.0769999999998
+            },
+            {
+              "stage": "dK/dV pass",
+              "start_us": 529.404,
+              "duration_us": 497.7249999999999
+            }
+          ],
+          "span_us": 1027.129,
+          "busy_union_us": 1024.3449999999998,
+          "idle_us": 2.7840000000001055
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "backward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.344000000000051
+            },
+            {
+              "stage": "Prepare",
+              "start_us": 2.1440000000000055,
+              "duration_us": 13.120000000000118
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 85.24800000000005,
+              "duration_us": 1.2480000000000473
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 102.27200000000016,
+              "duration_us": 1.2799999999999727
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 117.50400000000013,
+              "duration_us": 1.6639999999999873
+            },
+            {
+              "stage": "Fused dQ/dK/dV",
+              "start_us": 220.3510000000001,
+              "duration_us": 398.9749999999999
+            },
+            {
+              "stage": "Convert dQ",
+              "start_us": 621.2139999999999,
+              "duration_us": 7.2960000000002765
+            }
+          ],
+          "span_us": 628.5100000000002,
+          "busy_union_us": 424.92700000000036,
+          "idle_us": 203.58299999999986
+        }
+      ]
+    },
+    {
+      "source": "results/blackwell-pipeline/b200-profile-d512.json",
+      "sha256": "c4d601cec4d537e1982995e040313be2ef33e12f80f6af406e4fc1557e39a4b7",
+      "rows": [
+        {
+          "backend": "cute",
+          "phase": "forward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Forward",
+              "start_us": 0.0,
+              "duration_us": 1038.3070000000002
+            }
+          ],
+          "span_us": 1038.3070000000002,
+          "busy_union_us": 1038.3070000000002,
+          "idle_us": 0.0
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "forward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.6960000000003674
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 4.065000000000055,
+              "duration_us": 1.7280000000000655
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 8.193000000000211,
+              "duration_us": 1.6950000000001637
+            },
+            {
+              "stage": "Forward",
+              "start_us": 12.288000000000011,
+              "duration_us": 603.4880000000003
+            }
+          ],
+          "span_us": 615.7760000000003,
+          "busy_union_us": 608.6070000000009,
+          "idle_us": 7.168999999999414
+        },
+        {
+          "backend": "cute",
+          "phase": "backward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Center",
+              "start_us": 0.0,
+              "duration_us": 31.48700000000099
+            },
+            {
+              "stage": "dQ pass",
+              "start_us": 32.70300000000134,
+              "duration_us": 4449.493999999999
+            },
+            {
+              "stage": "dK/dV pass",
+              "start_us": 4485.045,
+              "duration_us": 4605.909
+            }
+          ],
+          "span_us": 9090.954,
+          "busy_union_us": 9086.89,
+          "idle_us": 4.064000000000306
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "backward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.5360000000000582
+            },
+            {
+              "stage": "Prepare",
+              "start_us": 3.8719999999998436,
+              "duration_us": 59.83899999999994
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 65.44000000000005,
+              "duration_us": 1.6309999999998581
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 69.4079999999999,
+              "duration_us": 1.3110000000001492
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 71.71099999999979,
+              "duration_us": 1.6970000000001164
+            },
+            {
+              "stage": "Fused dQ/dK/dV",
+              "start_us": 75.64800000000014,
+              "duration_us": 2516.1749999999997
+            },
+            {
+              "stage": "Convert dQ",
+              "start_us": 2594.287,
+              "duration_us": 34.944000000000415
+            }
+          ],
+          "span_us": 2629.231,
+          "busy_union_us": 2617.1330000000003,
+          "idle_us": 12.097999999999956
+        }
+      ]
+    },
+    {
+      "source": "results/blackwell-pipeline/b300-profile-d128.json",
+      "sha256": "71a04849e1aab042bc2d0963f822a59d467dd9672bdc72cbd7ea4efbd9320f63",
+      "rows": [
+        {
+          "backend": "cute",
+          "phase": "forward",
+          "iteration": 2,
+          "events": [
+            {
+              "stage": "Forward",
+              "start_us": 0.0,
+              "duration_us": 178.87800000000016
+            }
+          ],
+          "span_us": 178.87800000000016,
+          "busy_union_us": 178.87800000000016,
+          "idle_us": 0.0
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "forward",
+          "iteration": 2,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.2479999999995925
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 100.96099999999933,
+              "duration_us": 1.2800000000006548
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 179.20199999999932,
+              "duration_us": 1.2480000000014115
+            },
+            {
+              "stage": "Forward",
+              "start_us": 613.5740000000005,
+              "duration_us": 107.1369999999988
+            }
+          ],
+          "span_us": 720.7109999999993,
+          "busy_union_us": 110.91300000000047,
+          "idle_us": 609.7979999999989
+        },
+        {
+          "backend": "cute",
+          "phase": "backward",
+          "iteration": 2,
+          "events": [
+            {
+              "stage": "Center",
+              "start_us": 0.0,
+              "duration_us": 8.416999999999916
+            },
+            {
+              "stage": "dQ pass",
+              "start_us": 8.67300000000023,
+              "duration_us": 425.828
+            },
+            {
+              "stage": "dK/dV pass",
+              "start_us": 434.75700000000006,
+              "duration_us": 485.2199999999998
+            }
+          ],
+          "span_us": 919.9769999999999,
+          "busy_union_us": 919.4649999999997,
+          "idle_us": 0.512000000000171
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "backward",
+          "iteration": 0,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.4400000000000546
+            },
+            {
+              "stage": "Prepare",
+              "start_us": 685.893,
+              "duration_us": 12.800000000000182
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 1875.8220000000006,
+              "duration_us": 1.2799999999997453
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 1966.9910000000004,
+              "duration_us": 1.66399999999976
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 2046.9590000000003,
+              "duration_us": 1.66399999999976
+            },
+            {
+              "stage": "Fused dQ/dK/dV",
+              "start_us": 2641.4600000000005,
+              "duration_us": 357.5699999999997
+            },
+            {
+              "stage": "Convert dQ",
+              "start_us": 2999.2860000000005,
+              "duration_us": 6.911999999999352
+            }
+          ],
+          "span_us": 3006.198,
+          "busy_union_us": 383.32999999999856,
+          "idle_us": 2622.8680000000013
+        }
+      ]
+    },
+    {
+      "source": "results/blackwell-pipeline/b300-profile-d512.json",
+      "sha256": "1ea527b83cb575c5b8c1d3deb6b8ced04d96501aafe36b60e9e6e5c908abdc85",
+      "rows": [
+        {
+          "backend": "cute",
+          "phase": "forward",
+          "iteration": 2,
+          "events": [
+            {
+              "stage": "Forward",
+              "start_us": 0.0,
+              "duration_us": 861.0520000000006
+            }
+          ],
+          "span_us": 861.0520000000006,
+          "busy_union_us": 861.0520000000006,
+          "idle_us": 0.0
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "forward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.6959999999999127
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 77.79199999999946,
+              "duration_us": 1.728000000000975
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 141.12099999999919,
+              "duration_us": 1.6640000000006694
+            },
+            {
+              "stage": "Forward",
+              "start_us": 569.6039999999994,
+              "duration_us": 534.9799999999996
+            }
+          ],
+          "span_us": 1104.583999999999,
+          "busy_union_us": 540.0680000000011,
+          "idle_us": 564.5159999999978
+        },
+        {
+          "backend": "cute",
+          "phase": "backward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Center",
+              "start_us": 0.0,
+              "duration_us": 31.23199999999997
+            },
+            {
+              "stage": "dQ pass",
+              "start_us": 31.487999999999374,
+              "duration_us": 4310.412
+            },
+            {
+              "stage": "dK/dV pass",
+              "start_us": 4342.155999999999,
+              "duration_us": 4454.060000000001
+            }
+          ],
+          "span_us": 8796.216,
+          "busy_union_us": 8795.704000000002,
+          "idle_us": 0.5119999999988067
+        },
+        {
+          "backend": "kohakufa",
+          "phase": "backward",
+          "iteration": 1,
+          "events": [
+            {
+              "stage": "Initialize",
+              "start_us": 0.0,
+              "duration_us": 1.5360000000000582
+            },
+            {
+              "stage": "Prepare",
+              "start_us": 1.7919999999994616,
+              "duration_us": 59.233000000000175
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 65.79299999999967,
+              "duration_us": 1.2799999999997453
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 156.9290000000001,
+              "duration_us": 1.3119999999998981
+            },
+            {
+              "stage": "Initialize",
+              "start_us": 234.14599999999973,
+              "duration_us": 1.6959999999999127
+            },
+            {
+              "stage": "Fused dQ/dK/dV",
+              "start_us": 807.8130000000001,
+              "duration_us": 2338.030999999999
+            },
+            {
+              "stage": "Convert dQ",
+              "start_us": 3146.547999999999,
+              "duration_us": 35.072000000000116
+            }
+          ],
+          "span_us": 3181.619999999999,
+          "busy_union_us": 2438.159999999999,
+          "idle_us": 743.46
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "device": "NVIDIA B200",
+  "source_revision": "4dedd448e69d8404c06167f22d875fc7cf7bb8b7",
+  "complete": true,
+  "tests": 61,
+  "passed": 57,
+  "skipped": 4,
+  "protocol": "The full suite reached its 900-second supervisor limit during training checks; all four training tests then passed in a separate invocation. Every discovered test is accounted for below.",
+  "excluded_run": "ws-forced-tests.log was invalidated by a module upload during JIT compilation and is excluded. The frozen-source full-suite run includes the successful pipeline tests.",
+  "archive_sha256": "eb1bb8e2f8fe130c41e02d60a36626c5bc8fcd68d3d61d239dcdbf6e3805794a",
+  "results": {
+    "test_api.DispatchTests.test_architecture_and_feature_selection": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_api.DispatchTests.test_cpu_fullgraph_compile_stays_native": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_api.DispatchTests.test_cpu_native_outputs_and_gradients_match": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_api.DispatchTests.test_import_and_cpu_dispatch_do_not_load_cuda_dependencies": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_api.DispatchTests.test_missing_dependency_selects_native": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_api.DispatchTests.test_mps_native_dispatch": {
+      "status": "skipped",
+      "reason": "skipped 'Requires MPS'",
+      "log": "ws-full-tests.log"
+    },
+    "test_api.DispatchTests.test_selected_kernel_errors_are_not_suppressed": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_api.DispatchTests.test_strict_cpu_calls_fail_before_importing_cuda": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_center_keys.CuTeKeyCenteringTests.test_compiled_key_centering": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_center_keys.CuTeKeyCenteringTests.test_cuda_graph_replay_recomputes_mean_for_updated_keys": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_center_keys.CuTeKeyCenteringTests.test_dense_causal_masked_outputs_and_gradients": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_center_keys.KeyCenteringTests.test_centered_strict_cpu_calls_still_reject_unsupported_device": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_center_keys.KeyCenteringTests.test_centering_handles_noncontiguous_keys_without_mutating_them": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_center_keys.KeyCenteringTests.test_outputs_and_original_key_gradients_match_uncentered_attention": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_automatic_unsupported_first_call_does_not_build_extension": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_blackwell_pipeline_reads_changed_graph_inputs": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_blackwell_warp_specialized_pipeline": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_block_masks_and_broadcast_axes": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_causal_keys_beyond_query_length": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_centered_backward_compilation": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_centered_backward_statistics_across_multiple_key_tiles": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_compile_after_backend_selection_in_fresh_process": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_cuda_graph_current_stream_and_gradients": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_cuda_graph_reclassifies_changed_masks": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_dynamic_lengths_cross_blackwell_pipeline_threshold": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_dynamic_lengths_preserve_forward_configuration_thresholds": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_forward_backward_tails_masks_gqa_and_compile": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_head_dimensions": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_large_logits_key_and_value_gradients": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_long_dense_saturated_gradient": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_long_dense_tails_gqa_and_compile": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_long_masked_runs_keep_tma_stages_synchronized": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_native_dispatch_concurrent_streams_and_cache_release": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_native_sdpa_rejects_unsupported_features": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_preserves_projection_layout_with_compiled_backward": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_saturated_softmax_gradient_sign_and_magnitude": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_single_query_and_key_tma_layouts": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_sm100_tcgen_statistics_across_key_tiles": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_sm100_wide_tma_layouts_and_signed_scale": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_sm103_native_products_tails_gqa_and_signed_scale": {
+      "status": "skipped",
+      "reason": "skipped 'Requires B300 TMEM reductions.'",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_sm103_tmem_reductions_read_changed_graph_inputs": {
+      "status": "skipped",
+      "reason": "skipped 'Requires B300 TMEM reductions.'",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_unseen_sequence_lengths_reuse_native_programs": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_warm_dispatch_does_not_reenter_python_kernels": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_wide_head_gradient_cancellation": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_wide_head_tails_masks_gqa_and_strides": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_kernels.CuTeAttentionTests.test_zero_negative_scale_and_offset_views": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_length_precision.FlexLengthPrecisionTests.test_compiled_flex_at_aligned_and_unaligned_lengths": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_length_precision.LengthPrecisionTests.test_cpu_sweep_matches_fp64_for_both_dtypes_and_visibility_modes": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_length_precision.LengthPrecisionTests.test_unavailable_backend_is_reported_without_losing_other_results": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_reference.AttentionPrecisionReferenceTests.test_matches_autograd_for_normal_logits_masks_gqa_and_signed_scale": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_reference.AttentionPrecisionReferenceTests.test_metrics_preserve_tiny_reference_norms_and_cosines": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_reference.AttentionPrecisionReferenceTests.test_saturated_softmax_matches_decimal_finite_difference": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_row_metrics.RowMetricsTests.test_log_relative_error_survives_overflow_in_the_ratio": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_row_metrics.RowMetricsTests.test_matches_individual_row_metrics_in_batch_head_sequence_order": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_row_metrics.RowMetricsTests.test_tiny_zero_and_nonfinite_rows_are_preserved_without_json_nan": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_row_metrics.RowMetricsTests.test_underflowed_ratio_is_not_counted_as_exact_zero_error": {
+      "status": "passed",
+      "log": "ws-full-tests.log"
+    },
+    "test_row_metrics.RowMetricsTests.test_violin_plot_handles_constant_exact_and_undefined_rows": {
+      "status": "skipped",
+      "reason": "skipped 'Requires optional plots dependency'",
+      "log": "ws-full-tests.log"
+    },
+    "test_training.TrainingTests.test_automatic_fullgraph_mixes_kernel_and_native_calls": {
+      "status": "passed",
+      "log": "ws-training-continuation.log"
+    },
+    "test_training.TrainingTests.test_checkpointed_lora_optimizer_steps_match_native": {
+      "status": "passed",
+      "log": "ws-training-continuation.log"
+    },
+    "test_training.TrainingTests.test_combined_causal_mask_in_cold_warm_and_compiled_attention": {
+      "status": "passed",
+      "log": "ws-training-continuation.log"
+    },
+    "test_training.TrainingTests.test_fresh_compiled_automatic_call_selects_cute": {
+      "status": "passed",
+      "log": "ws-training-continuation.log"
+    }
+  }
+}

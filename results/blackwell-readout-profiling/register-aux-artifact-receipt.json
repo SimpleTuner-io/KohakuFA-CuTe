@@ -1,0 +1,9 @@
+{
+  "archive": "kohakufa-register-aux-evidence-20261021.tar.gz",
+  "bytes": 23054307,
+  "sha256": "40c578e0cefd26f4dc0e4572fbf8795ef4cd26c09cef848dbd89fa13582ec148",
+  "manifest": "kohakufa-register-aux-evidence-20261021.manifest.json",
+  "manifest_sha256": "cd8e530232bcf81e1915a5674e01eb5452ef39826f39e8bcc6affb136e8fdf56",
+  "manifest_files_verified": 888,
+  "status": "Downloaded; archive hash and every manifest file verified locally; all ten runtime files and latest cache test byte-match the worktree"
+}

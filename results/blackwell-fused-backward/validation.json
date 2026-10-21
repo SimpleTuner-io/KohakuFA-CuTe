@@ -1,0 +1,111 @@
+{
+  "kernel_test_reference": "01815f859a555bfea0fc9cc42ef8f3a89c279e62",
+  "gpu_full_suite": {
+    "tests": 64,
+    "passed": 60,
+    "skipped": 4,
+    "seconds": 1108.938,
+    "sha256": "c9ff57bee353c8a610d5b498bdb66632aabc3bdf55f52c72b6106e8f23afd766",
+    "skipped_cases": [
+      "test_mps_native_dispatch (test_api.DispatchTests.test_mps_native_dispatch) ... skipped 'Requires MPS'",
+      "test_sm103_native_products_tails_gqa_and_signed_scale (test_kernels.CuTeAttentionTests.test_sm103_native_products_tails_gqa_and_signed_scale) ... skipped 'Requires B300 TMEM reductions.'",
+      "test_sm103_tmem_reductions_read_changed_graph_inputs (test_kernels.CuTeAttentionTests.test_sm103_tmem_reductions_read_changed_graph_inputs) ... skipped 'Requires B300 TMEM reductions.'",
+      "test_violin_plot_handles_constant_exact_and_undefined_rows (test_row_metrics.RowMetricsTests.test_violin_plot_handles_constant_exact_and_undefined_rows) ... skipped 'Requires optional plots dependency'"
+    ]
+  },
+  "gpu_forced_fused_saturation_preflight": {
+    "tests": 1,
+    "passed": 1,
+    "skipped": 0,
+    "seconds": 85.914,
+    "sha256": "9377e987c2c6ea27a960f0f862d6a99af0f16b5835a5b83210e8e883a897e19f",
+    "skipped_cases": []
+  },
+  "cpu_full_suite": {
+    "tests": 64,
+    "passed": 21,
+    "skipped": 43,
+    "seconds": 1.554,
+    "sha256": "283ae98e32f8ffd921972075ce2903c586ee6e8e996aa4edd68101980eae5f0b",
+    "skipped_cases": [
+      "test_compiled_key_centering (test_center_keys.CuTeKeyCenteringTests.test_compiled_key_centering) ... skipped 'Requires centered Ada/Hopper/Blackwell kernels'",
+      "test_cuda_graph_replay_recomputes_mean_for_updated_keys (test_center_keys.CuTeKeyCenteringTests.test_cuda_graph_replay_recomputes_mean_for_updated_keys) ... skipped 'Requires centered Ada/Hopper/Blackwell kernels'",
+      "test_dense_causal_masked_outputs_and_gradients (test_center_keys.CuTeKeyCenteringTests.test_dense_causal_masked_outputs_and_gradients) ... skipped 'Requires centered Ada/Hopper/Blackwell kernels'",
+      "test_automatic_unsupported_first_call_does_not_build_extension (test_kernels.CuTeAttentionTests.test_automatic_unsupported_first_call_does_not_build_extension) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_blackwell_pipeline_reads_changed_graph_inputs (test_kernels.CuTeAttentionTests.test_blackwell_pipeline_reads_changed_graph_inputs) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_blackwell_warp_specialized_pipeline (test_kernels.CuTeAttentionTests.test_blackwell_warp_specialized_pipeline) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_block_masks_and_broadcast_axes (test_kernels.CuTeAttentionTests.test_block_masks_and_broadcast_axes) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_causal_keys_beyond_query_length (test_kernels.CuTeAttentionTests.test_causal_keys_beyond_query_length) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_centered_backward_compilation (test_kernels.CuTeAttentionTests.test_centered_backward_compilation) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_centered_backward_statistics_across_multiple_key_tiles (test_kernels.CuTeAttentionTests.test_centered_backward_statistics_across_multiple_key_tiles) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_compile_after_backend_selection_in_fresh_process (test_kernels.CuTeAttentionTests.test_compile_after_backend_selection_in_fresh_process) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_cuda_graph_current_stream_and_gradients (test_kernels.CuTeAttentionTests.test_cuda_graph_current_stream_and_gradients) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_cuda_graph_reclassifies_changed_masks (test_kernels.CuTeAttentionTests.test_cuda_graph_reclassifies_changed_masks) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_dynamic_lengths_cross_blackwell_pipeline_threshold (test_kernels.CuTeAttentionTests.test_dynamic_lengths_cross_blackwell_pipeline_threshold) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_dynamic_lengths_preserve_forward_configuration_thresholds (test_kernels.CuTeAttentionTests.test_dynamic_lengths_preserve_forward_configuration_thresholds) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_forward_backward_tails_masks_gqa_and_compile (test_kernels.CuTeAttentionTests.test_forward_backward_tails_masks_gqa_and_compile) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_head_dimensions (test_kernels.CuTeAttentionTests.test_head_dimensions) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_large_logits_key_and_value_gradients (test_kernels.CuTeAttentionTests.test_large_logits_key_and_value_gradients) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_long_dense_saturated_gradient (test_kernels.CuTeAttentionTests.test_long_dense_saturated_gradient) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_long_dense_tails_gqa_and_compile (test_kernels.CuTeAttentionTests.test_long_dense_tails_gqa_and_compile) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_long_masked_runs_keep_tma_stages_synchronized (test_kernels.CuTeAttentionTests.test_long_masked_runs_keep_tma_stages_synchronized) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_native_dispatch_concurrent_streams_and_cache_release (test_kernels.CuTeAttentionTests.test_native_dispatch_concurrent_streams_and_cache_release) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_native_sdpa_rejects_unsupported_features (test_kernels.CuTeAttentionTests.test_native_sdpa_rejects_unsupported_features) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_preserves_projection_layout_with_compiled_backward (test_kernels.CuTeAttentionTests.test_preserves_projection_layout_with_compiled_backward) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_saturated_softmax_gradient_sign_and_magnitude (test_kernels.CuTeAttentionTests.test_saturated_softmax_gradient_sign_and_magnitude) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_single_query_and_key_tma_layouts (test_kernels.CuTeAttentionTests.test_single_query_and_key_tma_layouts) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_sm100_fused_pipeline_reads_changed_graph_inputs (test_kernels.CuTeAttentionTests.test_sm100_fused_pipeline_reads_changed_graph_inputs) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_sm100_fused_pipeline_retains_saturated_gradients (test_kernels.CuTeAttentionTests.test_sm100_fused_pipeline_retains_saturated_gradients) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_sm100_fused_probability_and_ds_pipeline (test_kernels.CuTeAttentionTests.test_sm100_fused_probability_and_ds_pipeline) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_sm100_tcgen_statistics_across_key_tiles (test_kernels.CuTeAttentionTests.test_sm100_tcgen_statistics_across_key_tiles) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_sm100_wide_tma_layouts_and_signed_scale (test_kernels.CuTeAttentionTests.test_sm100_wide_tma_layouts_and_signed_scale) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_sm103_native_products_tails_gqa_and_signed_scale (test_kernels.CuTeAttentionTests.test_sm103_native_products_tails_gqa_and_signed_scale) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_sm103_tmem_reductions_read_changed_graph_inputs (test_kernels.CuTeAttentionTests.test_sm103_tmem_reductions_read_changed_graph_inputs) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_unseen_sequence_lengths_reuse_native_programs (test_kernels.CuTeAttentionTests.test_unseen_sequence_lengths_reuse_native_programs) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_warm_dispatch_does_not_reenter_python_kernels (test_kernels.CuTeAttentionTests.test_warm_dispatch_does_not_reenter_python_kernels) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_wide_head_gradient_cancellation (test_kernels.CuTeAttentionTests.test_wide_head_gradient_cancellation) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_wide_head_tails_masks_gqa_and_strides (test_kernels.CuTeAttentionTests.test_wide_head_tails_masks_gqa_and_strides) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_zero_negative_scale_and_offset_views (test_kernels.CuTeAttentionTests.test_zero_negative_scale_and_offset_views) ... skipped 'Requires Ada, Hopper or Blackwell'",
+      "test_compiled_flex_at_aligned_and_unaligned_lengths (test_length_precision.FlexLengthPrecisionTests.test_compiled_flex_at_aligned_and_unaligned_lengths) ... skipped 'Requires CUDA FlexAttention with FP16/BF16 support'",
+      "test_automatic_fullgraph_mixes_kernel_and_native_calls (test_training.TrainingTests.test_automatic_fullgraph_mixes_kernel_and_native_calls) ... skipped 'Requires centered Ada/Hopper/Blackwell kernels'",
+      "test_checkpointed_lora_optimizer_steps_match_native (test_training.TrainingTests.test_checkpointed_lora_optimizer_steps_match_native) ... skipped 'Requires centered Ada/Hopper/Blackwell kernels'",
+      "test_combined_causal_mask_in_cold_warm_and_compiled_attention (test_training.TrainingTests.test_combined_causal_mask_in_cold_warm_and_compiled_attention) ... skipped 'Requires centered Ada/Hopper/Blackwell kernels'",
+      "test_fresh_compiled_automatic_call_selects_cute (test_training.TrainingTests.test_fresh_compiled_automatic_call_selects_cute) ... skipped 'Requires centered Ada/Hopper/Blackwell kernels'"
+    ]
+  },
+  "package_build": {
+    "passed": true,
+    "log_sha256": "dbc0c6173c9012efd066d4eb9e26e630700d1888ad96f7668bb12b74d9bbb9c0"
+  },
+  "precision": {
+    "cases": 40,
+    "tensors": 160,
+    "maximum_relative_error_increase": 9.557260178421657e-08
+  },
+  "timing_grids": {
+    "bf16": {
+      "cases": 8,
+      "repetitions": 4,
+      "graph_replays_per_sample": 20,
+      "sha256": "f717836354129c455b3b3ed972d2e911eb9cef2c1479362f91488fa938c43c04"
+    },
+    "bf16-causal": {
+      "cases": 8,
+      "repetitions": 4,
+      "graph_replays_per_sample": 20,
+      "sha256": "c13bf45a736b36df1b3170eb4be26f53887d517c4b9f45ad68636b239be4fc26"
+    },
+    "fp16": {
+      "cases": 8,
+      "repetitions": 4,
+      "graph_replays_per_sample": 20,
+      "sha256": "0aa9231b5cd55231455d1323bc256b54919fe588eab172511c6d0cc60cc450f4"
+    },
+    "fp16-causal": {
+      "cases": 8,
+      "repetitions": 4,
+      "graph_replays_per_sample": 20,
+      "sha256": "8f49a9885e55e41017eab6376b24b95e90b08c1ce5e40a82f1d603b5663c8e68"
+    }
+  }
+}

@@ -1,0 +1,879 @@
+{
+  "baseline_revision": "1dcaebe81cbecdfdbc01926d2fd7ab01caa8d333",
+  "cases": 15,
+  "selected_cases": 6,
+  "graph_verified_samples": 180,
+  "bitwise_candidate_evaluations": 32,
+  "rows": [
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.3360152006149292,
+          "forward_backward_ms": 1.5994232177734375
+        },
+        "candidate": {
+          "forward_ms": 0.33515520095825196,
+          "forward_backward_ms": 1.5955944061279297
+        },
+        "gluon": {
+          "forward_ms": 0.24167200326919555,
+          "forward_backward_ms": 1.1446088314056397
+        }
+      },
+      "latency_percent_lower": 0.23938702420726043,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "paired-bf16-causal-h16.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "shape": [
+        1,
+        16,
+        2048,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.9088352203369141,
+          "forward_backward_ms": 4.83514633178711
+        },
+        "candidate": {
+          "forward_ms": 0.9103024005889893,
+          "forward_backward_ms": 4.692065620422364
+        },
+        "gluon": {
+          "forward_ms": 0.8240479946136474,
+          "forward_backward_ms": 3.680855941772461
+        }
+      },
+      "latency_percent_lower": 2.959180582066523,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "paired-bf16-causal-h16.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 2.632813549041748,
+          "forward_backward_ms": 16.325093841552736
+        },
+        "candidate": {
+          "forward_ms": 2.631868076324463,
+          "forward_backward_ms": 15.85963668823242
+        },
+        "gluon": {
+          "forward_ms": 3.008072853088379,
+          "forward_backward_ms": 13.67087173461914
+        }
+      },
+      "latency_percent_lower": 2.851175973859177,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "paired-bf16-causal-h16.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "shape": [
+        1,
+        16,
+        8192,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 8.664839172363282,
+          "forward_backward_ms": 59.411163330078125
+        },
+        "candidate": {
+          "forward_ms": 8.669170379638672,
+          "forward_backward_ms": 57.89662170410156
+        },
+        "gluon": {
+          "forward_ms": 11.274550247192384,
+          "forward_backward_ms": 51.242428588867185
+        }
+      },
+      "latency_percent_lower": 2.5492542833440823,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "paired-bf16-causal-h16.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "shape": [
+        1,
+        8,
+        2048,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.4668399810791016,
+          "forward_backward_ms": 2.4263744354248047
+        },
+        "candidate": {
+          "forward_ms": 0.46708240509033205,
+          "forward_backward_ms": 2.3940264701843263
+        },
+        "gluon": {
+          "forward_ms": 0.39843040704727173,
+          "forward_backward_ms": 1.8497464179992675
+        }
+      },
+      "latency_percent_lower": 1.3331810939070876,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "paired-bf16-causal-h8.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "shape": [
+        1,
+        8,
+        4096,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 1.3329743862152101,
+          "forward_backward_ms": 8.195124053955077
+        },
+        "candidate": {
+          "forward_ms": 1.3361383914947509,
+          "forward_backward_ms": 7.979484176635742
+        },
+        "gluon": {
+          "forward_ms": 1.433958387374878,
+          "forward_backward_ms": 6.756778335571289
+        }
+      },
+      "latency_percent_lower": 2.631319256421316,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "paired-bf16-causal-h8.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": true,
+      "selected": true,
+      "shape": [
+        2,
+        8,
+        2048,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.9154976367950439,
+          "forward_backward_ms": 4.792313575744629
+        },
+        "candidate": {
+          "forward_ms": 0.9179135799407958,
+          "forward_backward_ms": 4.698955917358399
+        },
+        "gluon": {
+          "forward_ms": 0.8257696151733398,
+          "forward_backward_ms": 3.6767583847045895
+        }
+      },
+      "latency_percent_lower": 1.9480707368303651,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "paired-bf16-causal-b2h8.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.14964879751205445,
+          "forward_backward_ms": 0.8491672039031982
+        },
+        "candidate": {
+          "forward_ms": 0.14939680099487307,
+          "forward_backward_ms": 0.8481960296630859
+        },
+        "gluon": {
+          "forward_ms": 0.10098320245742798,
+          "forward_backward_ms": 0.6399431943893432
+        }
+      },
+      "latency_percent_lower": 0.11436784600821204,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 3,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-bf16-dense.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.34638320207595824,
+          "forward_backward_ms": 2.1675031661987303
+        },
+        "candidate": {
+          "forward_ms": 0.34688559770584104,
+          "forward_backward_ms": 2.165717601776123
+        },
+        "gluon": {
+          "forward_ms": 0.27029759883880616,
+          "forward_backward_ms": 1.6302359580993653
+        }
+      },
+      "latency_percent_lower": 0.08237886109936365,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 8,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 4,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-bf16-dense.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 1.472762393951416,
+          "forward_backward_ms": 9.695089721679688
+        },
+        "candidate": {
+          "forward_ms": 1.4709951877593994,
+          "forward_backward_ms": 9.695366668701173
+        },
+        "gluon": {
+          "forward_ms": 1.1504415988922119,
+          "forward_backward_ms": 7.897910308837891
+        }
+      },
+      "latency_percent_lower": -0.0028565699692784108,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 8,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-bf16-dense.json"
+    },
+    {
+      "dtype": "bf16",
+      "causal": false,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 3.9137199401855467,
+          "forward_backward_ms": 28.48363037109375
+        },
+        "candidate": {
+          "forward_ms": 3.9139177322387697,
+          "forward_backward_ms": 28.48953857421875
+        },
+        "gluon": {
+          "forward_ms": 3.908899116516113,
+          "forward_backward_ms": 24.89542083740234
+        }
+      },
+      "latency_percent_lower": -0.02074245118344198,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-bf16-dense.json"
+    },
+    {
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.14125840067863465,
+          "forward_backward_ms": 0.6598999977111817
+        },
+        "candidate": {
+          "forward_ms": 0.14138879776000976,
+          "forward_backward_ms": 0.6604016065597534
+        },
+        "gluon": {
+          "forward_ms": 0.08683600127696992,
+          "forward_backward_ms": 0.4682591915130615
+        }
+      },
+      "latency_percent_lower": -0.0760128580560071,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 7,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-fp16-causal.json"
+    },
+    {
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.33496559858322145,
+          "forward_backward_ms": 1.5941864013671876
+        },
+        "candidate": {
+          "forward_ms": 0.3354184031486511,
+          "forward_backward_ms": 1.5935087680816649
+        },
+        "gluon": {
+          "forward_ms": 0.24258959293365479,
+          "forward_backward_ms": 1.141812801361084
+        }
+      },
+      "latency_percent_lower": 0.0425065277775305,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-fp16-causal.json"
+    },
+    {
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 0.9834639549255371,
+          "forward_backward_ms": 5.8537033081054695
+        },
+        "candidate": {
+          "forward_ms": 0.982692813873291,
+          "forward_backward_ms": 5.85261287689209
+        },
+        "gluon": {
+          "forward_ms": 1.1832159996032714,
+          "forward_backward_ms": 4.75801830291748
+        }
+      },
+      "latency_percent_lower": 0.018628057419123323,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 64,
+          "nch": 4,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 7,
+          "kv_group": 1,
+          "halves": 1,
+          "vsplit": 1,
+          "out_bufs": 2
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 4,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 3,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 2,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-fp16-causal.json"
+    },
+    {
+      "dtype": "fp16",
+      "causal": true,
+      "selected": false,
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "medians": {
+        "baseline": {
+          "forward_ms": 2.6563976287841795,
+          "forward_backward_ms": 16.432787322998045
+        },
+        "candidate": {
+          "forward_ms": 2.6767599105834963,
+          "forward_backward_ms": 16.435347747802737
+        },
+        "gluon": {
+          "forward_ms": 3.0086215972900394,
+          "forward_backward_ms": 13.741360473632813
+        }
+      },
+      "latency_percent_lower": -0.0155811960220964,
+      "upstream_configurations": {
+        "forward": {
+          "dc": 32,
+          "nch": 16,
+          "block_n": 128,
+          "s_slots": 2,
+          "q_bufs": 1,
+          "kv_slots": 5,
+          "kv_group": 2,
+          "halves": 1,
+          "vsplit": 2,
+          "out_bufs": 1
+        },
+        "backward": {
+          "dc": 64,
+          "nch": 8,
+          "alias": true,
+          "kv_bufs": 1,
+          "q_slots": 2,
+          "do_slots": 8,
+          "p_regs": 144,
+          "ds_regs": 144,
+          "small_regs": 32,
+          "reduce_cols": 32,
+          "reduce_stages": 1,
+          "stream": true,
+          "nsl": 4,
+          "nw": 2,
+          "k_res": false
+        }
+      },
+      "source_report": "controls-fp16-causal.json"
+    }
+  ]
+}

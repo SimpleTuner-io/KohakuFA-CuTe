@@ -1,0 +1,71 @@
+{
+  "created_utc": "2026-10-21T00:16:52.458902+00:00",
+  "archive": "kohakufa-backward-reuse-20261020.tar.gz",
+  "bytes": 29313402,
+  "sha256": "406284d2ba6f26213519cfc0e685960d027d63e11a649203655ddc428c53010a",
+  "manifest_sha256": "ecafd99571f6e582ad3ea02ad589dd8bf2c3e6aa27ecec103dba9baff4ab6776",
+  "manifest_files": 1292,
+  "selected_source": "selected-source",
+  "selected_measurements": "selected",
+  "baseline_commit": "e44d114bd1db64eabadd3e8ca5fe419d82d58fff",
+  "upstream_commit": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+  "local_archive": "2026-10-20-backward-registers/kohakufa-backward-reuse-20261020.tar.gz",
+  "download_verified": true,
+  "manifest_all_files_verified": true,
+  "selected_runtime_matches_checkout": {
+    "__init__.py": true,
+    "_ops.py": true,
+    "api.py": true,
+    "blackwell.py": true,
+    "blackwell_pipeline.py": true,
+    "kernels.py": true,
+    "native.cpp": true,
+    "native.py": true,
+    "sm103.py": true
+  },
+  "baseline_runtime_matches_e44d114": {
+    "__init__.py": true,
+    "_ops.py": true,
+    "api.py": true,
+    "blackwell.py": true,
+    "blackwell_pipeline.py": true,
+    "kernels.py": true,
+    "native.cpp": true,
+    "native.py": true,
+    "sm103.py": true
+  },
+  "selected_tests_match_checkout": true,
+  "selected_benchmark_matches_checkout": true,
+  "selected_reports_match_archive": {
+    "paired-bf16-dense.json": true,
+    "paired-bf16-causal.json": true,
+    "paired-fp16-dense.json": true,
+    "paired-fp16-causal.json": true,
+    "cpu-tests.log": true,
+    "gpu-tests.log": true,
+    "tails-gqa-signed-probe.json": true,
+    "profile-dense-d512.json": true,
+    "profile-causal-d512.json": true
+  },
+  "metadata_and_plots_match_archive": {
+    "comparison-summary.json": true,
+    "assembly-summary.json": true,
+    "sm100-legality.json": true,
+    "kernel-timeline.json": true,
+    "joint-profile-summary.json": true,
+    "exploratory-trials.json": true,
+    "validation.json": true,
+    "source.json": true,
+    "barrier-summary.json": true,
+    "paired-gains.svg": true,
+    "kernel-timeline.svg": true,
+    "matrix-work.svg": true,
+    "README.md": true
+  },
+  "pilot_reports_match_archive": {
+    "work-counts.json": true,
+    "joint-streamed4-timers.json": true,
+    "packlate-isolation-dense.json": true,
+    "packlate-isolation-causal.json": true
+  }
+}

@@ -1,0 +1,276 @@
+{
+  "before": {
+    "device": "NVIDIA B300 SXM6 AC MIG 1g.34gb",
+    "multiprocessors": 18,
+    "capability": [
+      10,
+      3
+    ],
+    "fields": [
+      "TMA right_ready",
+      "pointwise p_ready",
+      "PV completion p_free",
+      "score read s_free",
+      "dP read dp_free",
+      "pointwise ds_ready",
+      "dO TMA other_ready",
+      "stationary TMA left_ready",
+      "total MMA role"
+    ],
+    "columns": 128,
+    "source_sha256": "6a636c6252959de26164d31553ea5e8f36b21d564890919f5e92b708699f360c",
+    "scope": "Matrix-warp clock32 deltas including measurement overhead; no hardware stall-counter attribution. Per-CTA intervals must be shorter than signed 32-bit clock wrap.",
+    "raw_report_sha256": "dbdaa74ad904fa4ad2a52c5e210b52c5d647c44dd6436be9bf0267579429c415",
+    "rows": [
+      {
+        "dimension": 128,
+        "seq": 4096,
+        "passed": true,
+        "summary": {
+          "q": {
+            "median_cycles": {
+              "TMA right_ready": 2039.0,
+              "pointwise p_ready": 18146.0,
+              "PV completion p_free": 2640.0,
+              "score read s_free": 1829.0,
+              "dP read dp_free": 2635.0,
+              "pointwise ds_ready": 7238.0,
+              "dO TMA other_ready": 2467.0,
+              "stationary TMA left_ready": 2107.0,
+              "total MMA role": 136928.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.014896368325309215,
+              "pointwise p_ready": 0.13262686763641152,
+              "PV completion p_free": 0.019279097630110167,
+              "score read s_free": 0.013357287353299885,
+              "dP read dp_free": 0.019242706393544383,
+              "pointwise ds_ready": 0.05281115128893036,
+              "dO TMA other_ready": 0.018033663816160683,
+              "stationary TMA left_ready": 0.015370678822944975
+            },
+            "ctas_per_sample": 512
+          },
+          "kv": {
+            "median_cycles": {
+              "TMA right_ready": 2341.0,
+              "pointwise p_ready": 105998.0,
+              "PV completion p_free": 8227.0,
+              "score read s_free": 1532.0,
+              "dP read dp_free": 4978.0,
+              "pointwise ds_ready": 2162.0,
+              "dO TMA other_ready": 2248.0,
+              "stationary TMA left_ready": 1899.0,
+              "total MMA role": 202703.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.011546899086920432,
+              "pointwise p_ready": 0.5228251081137247,
+              "PV completion p_free": 0.04059040590405904,
+              "score read s_free": 0.007549627699732062,
+              "dP read dp_free": 0.024514941714274468,
+              "pointwise ds_ready": 0.010658192745520845,
+              "dO TMA other_ready": 0.011097708082026538,
+              "stationary TMA left_ready": 0.00938005974497655
+            },
+            "ctas_per_sample": 512
+          }
+        },
+        "samples_including_warmup": 4
+      },
+      {
+        "dimension": 512,
+        "seq": 4096,
+        "passed": true,
+        "summary": {
+          "q": {
+            "median_cycles": {
+              "TMA right_ready": 142331.0,
+              "pointwise p_ready": 2047.0,
+              "PV completion p_free": 6358.0,
+              "score read s_free": 1678.0,
+              "dP read dp_free": 1392.0,
+              "pointwise ds_ready": 1446.0,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0,
+              "total MMA role": 255220.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.5572522059052786,
+              "pointwise p_ready": 0.008010805634811583,
+              "PV completion p_free": 0.0249755358947822,
+              "score read s_free": 0.0066240606199387975,
+              "dP read dp_free": 0.005462282642561633,
+              "pointwise ds_ready": 0.005690509460180057,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0
+            },
+            "ctas_per_sample": 2048
+          },
+          "kv": {
+            "median_cycles": {
+              "TMA right_ready": 142906.0,
+              "pointwise p_ready": 41882.0,
+              "PV completion p_free": 4300.0,
+              "score read s_free": 1895.0,
+              "dP read dp_free": 1333.0,
+              "pointwise ds_ready": 1457.0,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0,
+              "total MMA role": 296087.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.4814976085114714,
+              "pointwise p_ready": 0.14103479912384345,
+              "PV completion p_free": 0.014554173494882196,
+              "score read s_free": 0.006423615779707963,
+              "dP read dp_free": 0.004502024729051062,
+              "pointwise ds_ready": 0.0049365894912057565,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0
+            },
+            "ctas_per_sample": 2048
+          }
+        },
+        "samples_including_warmup": 4
+      }
+    ]
+  },
+  "after": {
+    "device": "NVIDIA B300 SXM6 AC MIG 1g.34gb",
+    "multiprocessors": 18,
+    "capability": [
+      10,
+      3
+    ],
+    "fields": [
+      "TMA right_ready",
+      "pointwise p_ready",
+      "PV completion p_free",
+      "score read s_free",
+      "dP read dp_free",
+      "pointwise ds_ready",
+      "dO TMA other_ready",
+      "stationary TMA left_ready",
+      "total MMA role"
+    ],
+    "columns": 128,
+    "source_sha256": "476858e0ccb77925a0ff2e468ef2d90232c7fd15a2659df104a162b46381766c",
+    "scope": "Matrix-warp clock32 deltas including measurement overhead; no hardware stall-counter attribution. Per-CTA intervals must be shorter than signed 32-bit clock wrap.",
+    "raw_report_sha256": "36921a887c9992c7c35040242f8ad18ca2f392d72cd844d5d4c8c2b2eadfbb33",
+    "rows": [
+      {
+        "dimension": 128,
+        "seq": 4096,
+        "passed": true,
+        "summary": {
+          "q": {
+            "median_cycles": {
+              "TMA right_ready": 2039.0,
+              "pointwise p_ready": 5350.0,
+              "PV completion p_free": 2638.0,
+              "score read s_free": 1829.0,
+              "dP read dp_free": 2635.0,
+              "pointwise ds_ready": 9644.0,
+              "dO TMA other_ready": 2498.0,
+              "stationary TMA left_ready": 2046.0,
+              "total MMA role": 127793.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.01596486008236897,
+              "pointwise p_ready": 0.04187621721821154,
+              "PV completion p_free": 0.020642165981460348,
+              "score read s_free": 0.014312208023913673,
+              "dP read dp_free": 0.02060767215422516,
+              "pointwise ds_ready": 0.07537406483790524,
+              "dO TMA other_ready": 0.019572047543308446,
+              "stationary TMA left_ready": 0.015979841297168704
+            },
+            "ctas_per_sample": 512
+          },
+          "kv": {
+            "median_cycles": {
+              "TMA right_ready": 16074.0,
+              "pointwise p_ready": 2840.0,
+              "PV completion p_free": 7744.0,
+              "score read s_free": 2012.0,
+              "dP read dp_free": 2047.0,
+              "pointwise ds_ready": 2187.0,
+              "dO TMA other_ready": 1654.0,
+              "stationary TMA left_ready": 1787.0,
+              "total MMA role": 126413.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.1271838486606788,
+              "pointwise p_ready": 0.022353725092016753,
+              "PV completion p_free": 0.06124169003434261,
+              "score read s_free": 0.01578362062117722,
+              "dP read dp_free": 0.016159695817490494,
+              "pointwise ds_ready": 0.017111375866563253,
+              "dO TMA other_ready": 0.013145972754295888,
+              "stationary TMA left_ready": 0.014040993062469382
+            },
+            "ctas_per_sample": 512
+          }
+        },
+        "samples_including_warmup": 4
+      },
+      {
+        "dimension": 512,
+        "seq": 4096,
+        "passed": true,
+        "summary": {
+          "q": {
+            "median_cycles": {
+              "TMA right_ready": 132696.0,
+              "pointwise p_ready": 1699.0,
+              "PV completion p_free": 6329.0,
+              "score read s_free": 1679.0,
+              "dP read dp_free": 1306.0,
+              "pointwise ds_ready": 1435.0,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0,
+              "total MMA role": 248396.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.5147645615212133,
+              "pointwise p_ready": 0.006932182329474855,
+              "PV completion p_free": 0.0262142376818682,
+              "score read s_free": 0.006928397169059332,
+              "dP read dp_free": 0.00526058677949542,
+              "pointwise ds_ready": 0.0059437619213651375,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0
+            },
+            "ctas_per_sample": 2048
+          },
+          "kv": {
+            "median_cycles": {
+              "TMA right_ready": 152531.0,
+              "pointwise p_ready": 1923.0,
+              "PV completion p_free": 4593.0,
+              "score read s_free": 1671.0,
+              "dP read dp_free": 1333.0,
+              "pointwise ds_ready": 1462.0,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0,
+              "total MMA role": 265787.0
+            },
+            "median_fraction_of_MMA_role": {
+              "TMA right_ready": 0.5738900828523098,
+              "pointwise p_ready": 0.007234063213089285,
+              "PV completion p_free": 0.01726479653136917,
+              "score read s_free": 0.006284764592706828,
+              "dP read dp_free": 0.005015275332219664,
+              "pointwise ds_ready": 0.005499483607810386,
+              "dO TMA other_ready": 0.0,
+              "stationary TMA left_ready": 0.0
+            },
+            "ctas_per_sample": 2048
+          }
+        },
+        "samples_including_warmup": 4
+      }
+    ]
+  }
+}

@@ -1,0 +1,787 @@
+{
+  "scope": "Separate Nsight Systems observer passes; all kernels in a selected full graph replay are retained, including initialization. Gaps are not proof of accelerator idle time.",
+  "resources": [
+    {
+      "mask": "dense",
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.9012314999999997,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.193634,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 11.9896475,
+      "launch_resources": [
+        {
+          "registersPerThread": 162,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 12.447491,
+      "launch_resources": [
+        {
+          "registersPerThread": 150,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.8304945000000004,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.1938575,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 10.1557285,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 64,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 11.3077065,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 64,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.826991,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 225936,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.4215075,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 512,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 1024,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 20.329410000000003,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 216888,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.246898,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 1024,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 0,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 2.637925,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.19328099999999998,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 6.104129,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 64,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 6.9585185,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 64,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 2.650948,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.195058,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 5.455387,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 64,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 5.875310000000001,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 64,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.020296,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 225936,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.422099,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 512,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 1024,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 9.9084305,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 216888,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.246722,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 1024,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 0,
+          "localMemoryPerThread": 0
+        }
+      ]
+    }
+  ],
+  "timelines": [
+    {
+      "mask": "dense",
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "70f1f8a371e43d68aefeffd7b75c005ae1e2e2398f37e1fad0a78b125847cccf",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 3.900927
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_kernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i_0",
+          "start_ms": 3.900799,
+          "end_ms": 4.09392
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+          "start_ms": 4.093792,
+          "end_ms": 16.08112
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+          "start_ms": 16.081024,
+          "end_ms": 28.523587
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "70f1f8a371e43d68aefeffd7b75c005ae1e2e2398f37e1fad0a78b125847cccf",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 3.831135
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 3.831263,
+          "end_ms": 4.025216
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 4.025088,
+          "end_ms": 14.186161
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 14.186033,
+          "end_ms": 25.493867
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "70f1f8a371e43d68aefeffd7b75c005ae1e2e2398f37e1fad0a78b125847cccf",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.001216
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001248,
+          "end_ms": 0.001984
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.002016,
+          "end_ms": 0.002752
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.002784,
+          "end_ms": 3.82883
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 3.828734,
+          "end_ms": 3.830238
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 3.830142,
+          "end_ms": 4.252194
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 4.252066,
+          "end_ms": 4.253058
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 4.25293,
+          "end_ms": 4.253665
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 4.253666,
+          "end_ms": 4.254434
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 4.254466,
+          "end_ms": 24.581348
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 24.581476,
+          "end_ms": 24.828966
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "e3646580ebf724bd32c2c79984b0297847d81cb487192b5c46db49b1bab2c85d",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 2.643156
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 2.643157,
+          "end_ms": 2.836918
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_d_1",
+          "start_ms": 2.83679,
+          "end_ms": 8.943047
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_d_2",
+          "start_ms": 8.943143,
+          "end_ms": 15.900445
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "e3646580ebf724bd32c2c79984b0297847d81cb487192b5c46db49b1bab2c85d",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 2.65394
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 2.653941,
+          "end_ms": 2.849111
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 2.848951,
+          "end_ms": 8.300002
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 8.299874,
+          "end_ms": 14.176368
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "e3646580ebf724bd32c2c79984b0297847d81cb487192b5c46db49b1bab2c85d",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.001216
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001248,
+          "end_ms": 0.001984
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.002016,
+          "end_ms": 0.002751
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.002752,
+          "end_ms": 3.02108
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 3.02124,
+          "end_ms": 3.022744
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 3.022616,
+          "end_ms": 3.446139
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 3.446043,
+          "end_ms": 3.446907
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 3.446811,
+          "end_ms": 3.447579
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 3.447611,
+          "end_ms": 3.448347
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 3.448379,
+          "end_ms": 13.372298
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 13.372426,
+          "end_ms": 13.618732
+        }
+      ]
+    }
+  ]
+}

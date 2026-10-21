@@ -1,0 +1,18 @@
+{
+  "created_utc": "2026-10-20T22:01:18.303938+00:00",
+  "archive": "kohakufa-joint-backward-20261020.tar.gz",
+  "bytes": 10672170,
+  "sha256": "23d53dcbc7a818d620f5d4d71888b2b585425fe7d29adcf2f20ca07569dd7caf",
+  "manifest_sha256": "e8a0aad33c847e356be4319309c6c6f8050154587d39719700f3b4bf33b60178",
+  "manifest_files": 2370,
+  "selected_source": "slices-final",
+  "selected_tests": "precision-final",
+  "selected_measurements": "selected",
+  "reference_main": "e0f430a2799552337f732cfcf69257125f1583d0",
+  "upstream": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+  "downloaded_local_path": "2026-10-20-joint-backward/kohakufa-joint-backward-20261020.tar.gz",
+  "verified_files": 2370,
+  "verified_runtime_files": 9,
+  "final_test_source_verified": true,
+  "main_reference_assembly_source_verified": true
+}

@@ -1,0 +1,142 @@
+{
+  "shape": [
+    1,
+    16,
+    4096,
+    512
+  ],
+  "production_base": "1dcaebe81cbecdfdbc01926d2fd7ab01caa8d333",
+  "scope": "Backward only, graph timing includes workspace zeroing, centered row statistics, gradients and finish. Diagnostic variants only validate dQ; their dK/dV results are invalid by design. Every variant uses three workspace planes (extra third plane holds bypass checksums).",
+  "source_sha256": {
+    "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+    "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+    "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "blackwell_joint.py": "dbae65dc589c9da35ab47969946ca30054a662063b2ebd47fa45818526c71603",
+    "blackwell_pipeline.py": "743ca206e93d7ad7256182d6462d35920ee0c1dccb7984fcf261d5aec3970970",
+    "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+    "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+    "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+  },
+  "variants": {
+    "joint-baseline": {
+      "source_sha256": "dbae65dc589c9da35ab47969946ca30054a662063b2ebd47fa45818526c71603",
+      "diagnostic": false,
+      "sdpa_dq_checked": true,
+      "sdpa_dk_dv_checked": true,
+      "graph_checked": true,
+      "max_abs_error_dq": 0.001953125,
+      "median_ms": 40.067568969726565
+    },
+    "joint-five-union": {
+      "source_sha256": "4a024fcf7fa436a001227f1427d45f4108e8c7ce6d11ccaafcc1b2266c37403b",
+      "diagnostic": false,
+      "sdpa_dq_checked": true,
+      "sdpa_dk_dv_checked": true,
+      "graph_checked": true,
+      "max_abs_error_dq": 0.001953125,
+      "median_ms": 38.26808319091796
+    },
+    "joint-five-early-free": {
+      "source_sha256": "8aa6936d2328249b46e097cdf52f880faed3b310fceeee75f8bf0cbe3ded9518",
+      "diagnostic": false,
+      "sdpa_dq_checked": true,
+      "sdpa_dk_dv_checked": true,
+      "graph_checked": true,
+      "max_abs_error_dq": 0.001953125,
+      "median_ms": 37.50364532470703
+    },
+    "joint-five-early-p": {
+      "source_sha256": "5e4d3af1e4fda4b26668a98b0f2697d272fdcd46d0486ed62bf0d113957df1fa",
+      "diagnostic": false,
+      "sdpa_dq_checked": true,
+      "sdpa_dk_dv_checked": true,
+      "graph_checked": true,
+      "max_abs_error_dq": 0.001953125,
+      "median_ms": 42.982421875
+    }
+  },
+  "samples": [
+    {
+      "name": "joint-baseline",
+      "repeat": 0,
+      "backward_ms": 40.06835021972656
+    },
+    {
+      "name": "joint-five-union",
+      "repeat": 0,
+      "backward_ms": 38.264102172851565
+    },
+    {
+      "name": "joint-five-early-free",
+      "repeat": 0,
+      "backward_ms": 37.503353881835935
+    },
+    {
+      "name": "joint-five-early-p",
+      "repeat": 0,
+      "backward_ms": 42.9969482421875
+    },
+    {
+      "name": "joint-five-union",
+      "repeat": 1,
+      "backward_ms": 38.27516174316406
+    },
+    {
+      "name": "joint-five-early-free",
+      "repeat": 1,
+      "backward_ms": 37.507687377929685
+    },
+    {
+      "name": "joint-five-early-p",
+      "repeat": 1,
+      "backward_ms": 42.97886657714844
+    },
+    {
+      "name": "joint-baseline",
+      "repeat": 1,
+      "backward_ms": 40.06678771972656
+    },
+    {
+      "name": "joint-five-early-free",
+      "repeat": 2,
+      "backward_ms": 37.501702880859376
+    },
+    {
+      "name": "joint-five-early-p",
+      "repeat": 2,
+      "backward_ms": 42.98597717285156
+    },
+    {
+      "name": "joint-baseline",
+      "repeat": 2,
+      "backward_ms": 40.06903991699219
+    },
+    {
+      "name": "joint-five-union",
+      "repeat": 2,
+      "backward_ms": 38.26421203613281
+    },
+    {
+      "name": "joint-five-early-p",
+      "repeat": 3,
+      "backward_ms": 42.97132568359375
+    },
+    {
+      "name": "joint-baseline",
+      "repeat": 3,
+      "backward_ms": 40.06150512695312
+    },
+    {
+      "name": "joint-five-union",
+      "repeat": 3,
+      "backward_ms": 38.27195434570312
+    },
+    {
+      "name": "joint-five-early-free",
+      "repeat": 3,
+      "backward_ms": 37.503936767578125
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,6 @@
+recursive-include benchmarks *.py
+recursive-include tests *.py
+recursive-include results *.md *.json *.svg *.patch
+include AGENTS.md
+recursive-include tools *.py
+recursive-include .githooks *

@@ -1,0 +1,11 @@
+{
+  "kernel_test_reference": "49995344361fbc71bf7db20d358d332c66aef2e5",
+  "sha256": {
+    "src/kohakufa_cute/blackwell_pipeline.py": "4cfdce78428b96d677ac7a083ca4b7281163bf50089dbe349629dab9dddbda5e",
+    "src/kohakufa_cute/kernels.py": "b8f3486f63a92dc77e0a097a868d4e4a152fe176ca5cc2ade1ed674e2ef702fd",
+    "src/kohakufa_cute/sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8",
+    "src/kohakufa_cute/native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+    "tests/test_kernels.py": "74a0067d0e0e6268262f1930149bffe329d5405baabde4d3a0c3518823863950",
+    "benchmarks/tune_sm120.py": "c168b12f6ccf086cab590723cae4681465ae8e0e16538579a45d7894cf5dafe7"
+  }
+}

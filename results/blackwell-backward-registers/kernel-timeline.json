@@ -1,0 +1,709 @@
+{
+  "scope": "One observed CUDA-graph replay closest to median replay span. Kernel medians are Nsight Systems measurements, separate from paired timings.",
+  "timelines": [
+    {
+      "causal": false,
+      "backend": "baseline",
+      "graph_id": 5,
+      "observed_replays": 6,
+      "source_sqlite_sha256": "4b3134954036744584d1f0db8839aba53a0d07d1fa2da47992b6d378d7bc25e9",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64__0",
+          "start_ms": 0.0,
+          "end_ms": 3.810208
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 3.810112,
+          "end_ms": 4.001314
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_di_1",
+          "start_ms": 4.001218,
+          "end_ms": 15.842343
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_2",
+          "start_ms": 15.842471,
+          "end_ms": 29.589436
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "graph_id": 11,
+      "observed_replays": 6,
+      "source_sqlite_sha256": "4b3134954036744584d1f0db8839aba53a0d07d1fa2da47992b6d378d7bc25e9",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 3.829473
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 3.829345,
+          "end_ms": 4.022818
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+          "start_ms": 4.02269,
+          "end_ms": 15.686181
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+          "start_ms": 15.685989,
+          "end_ms": 28.586771
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "graph_id": 17,
+      "observed_replays": 6,
+      "source_sqlite_sha256": "4b3134954036744584d1f0db8839aba53a0d07d1fa2da47992b6d378d7bc25e9",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.0,
+          "end_ms": 3.823329
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 3.824577,
+          "end_ms": 4.245796
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 4.24794,
+          "end_ms": 24.566002
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 24.565874,
+          "end_ms": 24.812532
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "graph_id": 5,
+      "observed_replays": 6,
+      "source_sqlite_sha256": "c26a1dc19004e4bb2b3af33e684e13b8ee2ae80b2b9cba83c55ef56cbe1b1834",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64__0",
+          "start_ms": 0.0,
+          "end_ms": 2.632118
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 2.63199,
+          "end_ms": 2.82604
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_di_1",
+          "start_ms": 2.825912,
+          "end_ms": 9.232046
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_codegen_baselineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_2",
+          "start_ms": 9.232174,
+          "end_ms": 16.603021
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "graph_id": 11,
+      "observed_replays": 6,
+      "source_sqlite_sha256": "c26a1dc19004e4bb2b3af33e684e13b8ee2ae80b2b9cba83c55ef56cbe1b1834",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 2.634871
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 2.634743,
+          "end_ms": 2.829881
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+          "start_ms": 2.829753,
+          "end_ms": 9.12411
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+          "start_ms": 9.124238,
+          "end_ms": 16.183626
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "graph_id": 17,
+      "observed_replays": 6,
+      "source_sqlite_sha256": "c26a1dc19004e4bb2b3af33e684e13b8ee2ae80b2b9cba83c55ef56cbe1b1834",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.0,
+          "end_ms": 3.025914
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 3.02745,
+          "end_ms": 3.451518
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 3.453886,
+          "end_ms": 13.365586
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 13.365714,
+          "end_ms": 13.61298
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.8517609999999998,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.193074,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 11.9147415,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 13.426402,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.833873,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.1944015,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 11.6630435,
+      "launch_resources": [
+        {
+          "registersPerThread": 162,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 12.6894205,
+      "launch_resources": [
+        {
+          "registersPerThread": 150,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.8278084999999997,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 225936,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.420995,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 512,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 1024,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 20.3142055,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 216888,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.246754,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 1024,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 0,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 2.6378624999999998,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.19325,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 6.406374,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 7.370927,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 2.6348225000000003,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.19457750000000001,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 6.3000535,
+      "launch_resources": [
+        {
+          "registersPerThread": 162,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 7.058716,
+      "launch_resources": [
+        {
+          "registersPerThread": 152,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.025898,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 225936,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.420996,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 512,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 1024,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 9.9453645,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 216888,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.246546,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 1024,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 0,
+          "localMemoryPerThread": 0
+        }
+      ]
+    }
+  ]
+}

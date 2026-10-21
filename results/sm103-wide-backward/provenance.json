@@ -1,0 +1,14 @@
+{
+  "archive": "KohakuFA-CuTe-artifacts/2026-10-20-sm103-wide-backward/kohakufa-sm103-wide-20261020.tar.gz",
+  "sha256": "d7da666b32491b4da3a77d99d10c50943d754cea20f8f5d7dfac77b3324e68a1",
+  "bytes": 104111,
+  "files_verified": 58,
+  "runtime_reference": "eff98699fe5d582a8f098aaaefd06f656f6fd0a6",
+  "runtime_files_verified": 35,
+  "published_raw_sha256": {
+    "sm103-tests.log": "e978e95bfa8107df9f8fff77e28ba1483e465e1fffb3b78d012c45849bce3025",
+    "production-speed.json": "01174646fd9f19471351b4ad530fe72dd670004160b9511acec6a248ba6cd9d0",
+    "validation.json": "403c6f601be3aa7439742e312e72f4533d112dfc11f6a031c2063de418c45f5f"
+  },
+  "parent_measurement_archive_sha256": "7b2ba197b5c58418859b9b4b95ab6d2bed9bbf3bda42c5d6617524532ca2a341"
+}

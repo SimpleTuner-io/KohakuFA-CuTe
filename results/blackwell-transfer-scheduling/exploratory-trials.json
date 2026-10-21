@@ -1,0 +1,3367 @@
+{
+  "scope": "Executed pilot logs and raw measurements. Only selected-source-v3 and selected-v3 are the accepted final selection. Hardware is the existing B300 MIG, and every GPU process ran serially.",
+  "architecture_control": "An initial sm_100a retarget of B300 hardware-reduction forward was rejected for tcgen05.ld.red. Final SM100 checks use the actual software-reduction forward path; the rejection is retained as a negative control.",
+  "invalid_control": [
+    "chunk128-v1 changed the backward operand policy on both baseline and candidate through the host wrapper; exclude its comparison from performance claims."
+  ],
+  "selection_history": {
+    "selected-source/selected": "First selection widened forward boxes for both D256 and D512; stopped with exit 143 after the matrix exposed a D256 forward regression. Files and partial measurements are retained.",
+    "selected-source-v2/selected-v2": "Validated intermediate widens D512 only; SASS then revealed stack growth from 64 to 624 bytes. Replaced by v3 after a paired pilot showed 64-column correction windows improved latency.",
+    "selected-source-v3/selected-v3": "Final selection keeps 128-wide D512 matrix boxes with 64-column correction/register windows."
+  },
+  "runs": [
+    {
+      "log": "cached-query-v1-probe.log",
+      "sha256": "887dde2707c47c554256b1fcd0dfbda7700e1b396c5e2fdd45a7ad6e1cd2c14b",
+      "json_records": [
+        {
+          "backend": "baseline",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "baseline",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        }
+      ],
+      "report": "cached-query-v1-probe.json",
+      "paired_run_completed": true,
+      "cases": []
+    },
+    {
+      "log": "cached-query-v1.log",
+      "sha256": "decd348dce0ee5c421ea23c7858ff2636c6f08b3eca7cb5bff5aa1a23e4dca44",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.883916854858398,
+          "forward_backward_ms": 31.009378051757814,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.888905715942383,
+          "forward_backward_ms": 36.62661437988281,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8309505462646483,
+          "forward_backward_ms": 24.81465301513672,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.87652816772461,
+          "forward_backward_ms": 36.77577209472656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9005313873291017,
+          "forward_backward_ms": 24.818704223632814,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877814483642578,
+          "forward_backward_ms": 31.002447509765624,
+          "graph_verified": true
+        }
+      ],
+      "report": "cached-query-v1.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.880865669250488,
+              "forward_backward_ms": 31.00591278076172
+            },
+            "candidate": {
+              "forward_ms": 4.882716941833497,
+              "forward_backward_ms": 36.701193237304686
+            },
+            "gluon": {
+              "forward_ms": 3.865740966796875,
+              "forward_backward_ms": 24.816678619384767
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "causal-reverse.log",
+      "sha256": "0b2aaf1f4587f1c12d540c209e4f667d1e43887d55076da2780fc2e5cb7f5dcb",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 3.9882175445556642,
+          "forward_backward_ms": 18.7114501953125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 3.9828094482421874,
+          "forward_backward_ms": 18.30750732421875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.0045568466186525,
+          "forward_backward_ms": 13.6568603515625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.017548751831055,
+          "forward_backward_ms": 18.467532348632812,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.0045888900756834,
+          "forward_backward_ms": 13.566064453125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.008294296264649,
+          "forward_backward_ms": 18.8417724609375,
+          "graph_verified": true
+        }
+      ],
+      "report": "causal-reverse.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 3.9982559204101564,
+              "forward_backward_ms": 18.776611328125
+            },
+            "candidate": {
+              "forward_ms": 4.000179100036621,
+              "forward_backward_ms": 18.38751983642578
+            },
+            "gluon": {
+              "forward_ms": 3.004572868347168,
+              "forward_backward_ms": 13.61146240234375
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "chunk128-v1.log",
+      "sha256": "ecefd33326121d11e8216a0bd76c5499c1999fad418e11847a009563d56512a2",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.884534454345703,
+          "forward_backward_ms": 32.65069580078125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8910785675048825,
+          "forward_backward_ms": 32.67155151367187,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.831574249267578,
+          "forward_backward_ms": 24.81092224121094,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8780670166015625,
+          "forward_backward_ms": 32.65713195800781,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9053024291992187,
+          "forward_backward_ms": 24.806332397460938,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.885987091064453,
+          "forward_backward_ms": 32.65446472167969,
+          "graph_verified": true
+        }
+      ],
+      "report": "chunk128-v1.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.885260772705077,
+              "forward_backward_ms": 32.65258026123047
+            },
+            "candidate": {
+              "forward_ms": 4.8845727920532225,
+              "forward_backward_ms": 32.66434173583984
+            },
+            "gluon": {
+              "forward_ms": 3.868438339233398,
+              "forward_backward_ms": 24.80862731933594
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "consumer184.log",
+      "sha256": "71aa190a7f2667429bafabbf38d046eee41e5d71f5727fbc975d0d9644347b65",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.884815979003906,
+          "forward_backward_ms": 31.040203857421876,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.874272155761719,
+          "forward_backward_ms": 33.344503784179686,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.835663986206055,
+          "forward_backward_ms": 24.816371154785156,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.886076736450195,
+          "forward_backward_ms": 33.351644897460936,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9004447937011717,
+          "forward_backward_ms": 24.807711791992187,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877692794799804,
+          "forward_backward_ms": 31.030593872070312,
+          "graph_verified": true
+        }
+      ],
+      "report": "consumer184.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.881254386901855,
+              "forward_backward_ms": 31.035398864746092
+            },
+            "candidate": {
+              "forward_ms": 4.880174446105957,
+              "forward_backward_ms": 33.34807434082031
+            },
+            "gluon": {
+              "forward_ms": 3.8680543899536133,
+              "forward_backward_ms": 24.81204147338867
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "consumer200.log",
+      "sha256": "86e09d41da4f44f4a07ce101a0e284f270d828595747ba3be747cd2932350946",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.881100845336914,
+          "forward_backward_ms": 31.017181396484375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8761344909667965,
+          "forward_backward_ms": 36.07038269042969,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.832924652099609,
+          "forward_backward_ms": 24.821644592285157,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.880582427978515,
+          "forward_backward_ms": 36.12515563964844,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8913822174072266,
+          "forward_backward_ms": 24.821714782714842,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.887116622924805,
+          "forward_backward_ms": 31.028701782226562,
+          "graph_verified": true
+        }
+      ],
+      "report": "consumer200.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.8841087341308596,
+              "forward_backward_ms": 31.02294158935547
+            },
+            "candidate": {
+              "forward_ms": 4.878358459472656,
+              "forward_backward_ms": 36.09776916503907
+            },
+            "gluon": {
+              "forward_ms": 3.862153434753418,
+              "forward_backward_ms": 24.8216796875
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "consumer216.log",
+      "sha256": "e53a59607f4f6b880882d729ab29147a437f83bdb7d0a29e3c35e1e2e0511a8e",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.89178237915039,
+          "forward_backward_ms": 31.005157470703125,
+          "graph_verified": true
+        }
+      ],
+      "report": "consumer216.json",
+      "paired_run_completed": false,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": null
+        }
+      ],
+      "errors": [
+        "\u001b[91merror:\u001b[0m PTX assembly failed: (C7600) Register allocation failed with register count of '216'. Compile the program with a higher register target",
+        "ptxas fatal   : (C7600) Register allocation failed with register count of '216'. Compile the",
+        "ptxas fatal   : Ptx assembly aborted due to errors"
+      ]
+    },
+    {
+      "log": "control184.log",
+      "sha256": "9cc0cc3349c8807b96684ba5c93aae6395755be2b05e4dad467c8c6ba4a87f9c",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.885551834106446,
+          "forward_backward_ms": 30.98981628417969,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8812416076660154,
+          "forward_backward_ms": 31.443057250976562,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8381889343261717,
+          "forward_backward_ms": 24.823997497558594,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.896006393432617,
+          "forward_backward_ms": 31.431033325195312,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.891788864135742,
+          "forward_backward_ms": 24.804534912109375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.876921463012695,
+          "forward_backward_ms": 30.997024536132812,
+          "graph_verified": true
+        }
+      ],
+      "report": "control184.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.88123664855957,
+              "forward_backward_ms": 30.99342041015625
+            },
+            "candidate": {
+              "forward_ms": 4.888624000549316,
+              "forward_backward_ms": 31.437045288085937
+            },
+            "gluon": {
+              "forward_ms": 3.8649888992309567,
+              "forward_backward_ms": 24.814266204833984
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "control200.log",
+      "sha256": "8d8d8e91fb82203a09b10b3b4b1c1528476ecdbe57553cbcd9c82eb6db8c6098",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.873683166503906,
+          "forward_backward_ms": 30.982687377929686,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.894054412841797,
+          "forward_backward_ms": 31.53917541503906,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8302207946777345,
+          "forward_backward_ms": 24.81199951171875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.882588958740234,
+          "forward_backward_ms": 31.573703002929687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9190593719482423,
+          "forward_backward_ms": 24.811001586914063,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.880707168579102,
+          "forward_backward_ms": 31.014132690429687,
+          "graph_verified": true
+        }
+      ],
+      "report": "control200.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.877195167541505,
+              "forward_backward_ms": 30.998410034179685
+            },
+            "candidate": {
+              "forward_ms": 4.8883216857910154,
+              "forward_backward_ms": 31.556439208984372
+            },
+            "gluon": {
+              "forward_ms": 3.8746400833129884,
+              "forward_backward_ms": 24.811500549316406
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward-epilogue64-v1.log",
+      "sha256": "6cc2ec0a1f1cfeca1521a3d6c2a8b0d04f115025ff5dd5cd952ac26bb10f8113",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.423023986816406,
+          "forward_backward_ms": 30.22606506347656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 3.8007904052734376,
+          "forward_backward_ms": 29.611639404296874,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.846547317504883,
+          "forward_backward_ms": 24.806658935546874,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 3.796732711791992,
+          "forward_backward_ms": 29.610955810546876,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.925376129150391,
+          "forward_backward_ms": 24.80609893798828,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.41882553100586,
+          "forward_backward_ms": 30.227435302734374,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward-epilogue64-v1.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.4209247589111325,
+              "forward_backward_ms": 30.226750183105466
+            },
+            "candidate": {
+              "forward_ms": 3.798761558532715,
+              "forward_backward_ms": 29.611297607421875
+            },
+            "gluon": {
+              "forward_ms": 3.885961723327637,
+              "forward_backward_ms": 24.80637893676758
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward-vote.log",
+      "sha256": "0ee941a6a18d9ff3a00f9c3384a1b94df04d15b5d23f3eb422234ed8ef1bdb5b",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.886300659179687,
+          "forward_backward_ms": 31.00946960449219,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.889168167114258,
+          "forward_backward_ms": 31.05353698730469,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8368961334228517,
+          "forward_backward_ms": 24.81866912841797,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.900275039672851,
+          "forward_backward_ms": 31.04095458984375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9274559020996094,
+          "forward_backward_ms": 24.818858337402343,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.878620910644531,
+          "forward_backward_ms": 31.026705932617187,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward-vote.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.882460784912109,
+              "forward_backward_ms": 31.018087768554686
+            },
+            "candidate": {
+              "forward_ms": 4.894721603393554,
+              "forward_backward_ms": 31.04724578857422
+            },
+            "gluon": {
+              "forward_ms": 3.8821760177612306,
+              "forward_backward_ms": 24.818763732910156
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward128-paired-vote.log",
+      "sha256": "170c19644b8ff91331c5384c22e27960d17ef4ebf91877b36b21769a96f5de24",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.880656051635742,
+          "forward_backward_ms": 31.018997192382812,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.451744079589844,
+          "forward_backward_ms": 30.626220703125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8376510620117186,
+          "forward_backward_ms": 24.810934448242186,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.443123245239258,
+          "forward_backward_ms": 30.619586181640624,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.888499069213867,
+          "forward_backward_ms": 24.80963134765625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8793376922607425,
+          "forward_backward_ms": 31.034161376953126,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward128-paired-vote.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.879996871948242,
+              "forward_backward_ms": 31.026579284667967
+            },
+            "candidate": {
+              "forward_ms": 4.447433662414551,
+              "forward_backward_ms": 30.622903442382814
+            },
+            "gluon": {
+              "forward_ms": 3.863075065612793,
+              "forward_backward_ms": 24.810282897949218
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward128-paired.log",
+      "sha256": "7e41d18d543da0a10dfbd61401d110870f6d8a1a6ce10efa22bdb1ab9ef19ee1",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.885673522949219,
+          "forward_backward_ms": 31.029208374023437,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.424124908447266,
+          "forward_backward_ms": 30.58934631347656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.836272048950195,
+          "forward_backward_ms": 24.81727752685547,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.4202625274658205,
+          "forward_backward_ms": 30.589633178710937,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9020767211914062,
+          "forward_backward_ms": 24.814553833007814,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.876028823852539,
+          "forward_backward_ms": 31.042019653320313,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward128-paired.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.880851173400879,
+              "forward_backward_ms": 31.035614013671875
+            },
+            "candidate": {
+              "forward_ms": 4.422193717956543,
+              "forward_backward_ms": 30.589489746093747
+            },
+            "gluon": {
+              "forward_ms": 3.8691743850708007,
+              "forward_backward_ms": 24.815915679931642
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward128-v1.log",
+      "sha256": "5bbf16d583bb785afe9234b42804add3f16c3c0d51afa2a45d97f4f96a648e46",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.882262420654297,
+          "forward_backward_ms": 31.004144287109376,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.490214538574219,
+          "forward_backward_ms": 30.661669921875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8300670623779296,
+          "forward_backward_ms": 24.810272216796875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.486614227294922,
+          "forward_backward_ms": 30.661431884765626,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8880992889404298,
+          "forward_backward_ms": 24.81657257080078,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.89521598815918,
+          "forward_backward_ms": 31.03919372558594,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward128-v1.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.888739204406738,
+              "forward_backward_ms": 31.021669006347658
+            },
+            "candidate": {
+              "forward_ms": 4.48841438293457,
+              "forward_backward_ms": 30.66155090332031
+            },
+            "gluon": {
+              "forward_ms": 3.8590831756591797,
+              "forward_backward_ms": 24.813422393798827
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "forward128-vote.log",
+      "sha256": "b049919e5bee85e8e2aa0a99d03d4892447349710a83fe197cfadffbea95e582",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.887424087524414,
+          "forward_backward_ms": 31.02169189453125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.438614273071289,
+          "forward_backward_ms": 30.615676879882812,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.837923049926758,
+          "forward_backward_ms": 24.819888305664062,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.439996719360352,
+          "forward_backward_ms": 30.599072265625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.88903694152832,
+          "forward_backward_ms": 24.81440887451172,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877500915527344,
+          "forward_backward_ms": 31.032083129882814,
+          "graph_verified": true
+        }
+      ],
+      "report": "forward128-vote.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.882462501525879,
+              "forward_backward_ms": 31.026887512207033
+            },
+            "candidate": {
+              "forward_ms": 4.4393054962158205,
+              "forward_backward_ms": 30.607374572753905
+            },
+            "gluon": {
+              "forward_ms": 3.863479995727539,
+              "forward_backward_ms": 24.81714859008789
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "group2.log",
+      "sha256": "74fbf30434a5712d342a224aad188e581d6ce841e9523195ef79895be8e1e61f",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.886934280395508,
+          "forward_backward_ms": 31.007757568359374,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.896646499633789,
+          "forward_backward_ms": 31.419842529296876,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8343265533447264,
+          "forward_backward_ms": 24.81525421142578,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.875990295410157,
+          "forward_backward_ms": 31.41409912109375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.9126815795898438,
+          "forward_backward_ms": 24.859788513183595,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.883820724487305,
+          "forward_backward_ms": 31.053280639648438,
+          "graph_verified": true
+        }
+      ],
+      "report": "group2.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.885377502441406,
+              "forward_backward_ms": 31.030519104003908
+            },
+            "candidate": {
+              "forward_ms": 4.886318397521973,
+              "forward_backward_ms": 31.416970825195314
+            },
+            "gluon": {
+              "forward_ms": 3.873504066467285,
+              "forward_backward_ms": 24.837521362304688
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "group4.log",
+      "sha256": "b8ca919b3bf9c1aa3e7f23e677e7899b08324a060dd8460ba510c527e5b7e6e4",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.884723281860351,
+          "forward_backward_ms": 31.01653137207031,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.888739013671875,
+          "forward_backward_ms": 31.698141479492186,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.830255889892578,
+          "forward_backward_ms": 24.81542053222656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8794303894042965,
+          "forward_backward_ms": 31.696676635742186,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.922585678100586,
+          "forward_backward_ms": 24.811785888671874,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.882447814941406,
+          "forward_backward_ms": 31.039486694335938,
+          "graph_verified": true
+        }
+      ],
+      "report": "group4.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.8835855484008786,
+              "forward_backward_ms": 31.028009033203126
+            },
+            "candidate": {
+              "forward_ms": 4.884084701538086,
+              "forward_backward_ms": 31.697409057617186
+            },
+            "gluon": {
+              "forward_ms": 3.876420783996582,
+              "forward_backward_ms": 24.813603210449216
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "loader-looped.log",
+      "sha256": "509540b506545f51d6ed2a364bd924cc2d41899472d4543ec9692fb47d5de39c",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.878348922729492,
+          "forward_backward_ms": 31.014862060546875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.882732772827149,
+          "forward_backward_ms": 30.747372436523438,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8259166717529296,
+          "forward_backward_ms": 24.808294677734374,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.876015853881836,
+          "forward_backward_ms": 30.7727783203125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8936065673828124,
+          "forward_backward_ms": 24.817079162597658,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.878659057617187,
+          "forward_backward_ms": 31.027078247070314,
+          "graph_verified": true
+        }
+      ],
+      "report": "loader-looped.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.878503990173339,
+              "forward_backward_ms": 31.020970153808594
+            },
+            "candidate": {
+              "forward_ms": 4.879374313354493,
+              "forward_backward_ms": 30.76007537841797
+            },
+            "gluon": {
+              "forward_ms": 3.859761619567871,
+              "forward_backward_ms": 24.812686920166016
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "looped.log",
+      "sha256": "1feacffef27a5d6b38729f3a9f69a75f1afb2bca9d59f09512f9e3a7af32c802",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.888825607299805,
+          "forward_backward_ms": 30.9961669921875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.884479904174805,
+          "forward_backward_ms": 30.878152465820314,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8284286499023437,
+          "forward_backward_ms": 24.812905883789064,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.879283142089844,
+          "forward_backward_ms": 30.8916748046875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.907855987548828,
+          "forward_backward_ms": 24.81214141845703,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.876796722412109,
+          "forward_backward_ms": 31.003237915039062,
+          "graph_verified": true
+        }
+      ],
+      "report": "looped.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.882811164855957,
+              "forward_backward_ms": 30.99970245361328
+            },
+            "candidate": {
+              "forward_ms": 4.881881523132325,
+              "forward_backward_ms": 30.88491363525391
+            },
+            "gluon": {
+              "forward_ms": 3.868142318725586,
+              "forward_backward_ms": 24.812523651123048
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "overlap-dp-v1-probe.log",
+      "sha256": "b4d52d1b4c4618383c6c1a6c0e6293ac2b2dd6a0fb4fde1f0a2b65f840f86f6b",
+      "json_records": [
+        {
+          "backend": "baseline",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        }
+      ]
+    },
+    {
+      "log": "overlap-dp-v2-probe.log",
+      "sha256": "887dde2707c47c554256b1fcd0dfbda7700e1b396c5e2fdd45a7ad6e1cd2c14b",
+      "json_records": [
+        {
+          "backend": "baseline",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "baseline",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        }
+      ],
+      "report": "overlap-dp-v2-probe.json",
+      "paired_run_completed": true,
+      "cases": []
+    },
+    {
+      "log": "overlap-dp-v2.log",
+      "sha256": "9dd12dae6a1b7da42db47d219e588c5c8234b9343ed2b6a3793dd6da26567cca",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.881999969482422,
+          "forward_backward_ms": 31.000274658203125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8776702880859375,
+          "forward_backward_ms": 32.67137451171875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8355487823486327,
+          "forward_backward_ms": 24.805215454101564,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.893628692626953,
+          "forward_backward_ms": 32.65867614746094,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8888065338134767,
+          "forward_backward_ms": 24.80846405029297,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.892716979980468,
+          "forward_backward_ms": 31.014007568359375,
+          "graph_verified": true
+        }
+      ],
+      "report": "overlap-dp-v2.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.887358474731445,
+              "forward_backward_ms": 31.00714111328125
+            },
+            "candidate": {
+              "forward_ms": 4.885649490356445,
+              "forward_backward_ms": 32.665025329589845
+            },
+            "gluon": {
+              "forward_ms": 3.8621776580810545,
+              "forward_backward_ms": 24.806839752197266
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "phase-cursor-looped.log",
+      "sha256": "cfe744c5c29ac0221bb3c3469e11c904f24f42575d47eb127b46c23618504167",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.895475387573242,
+          "forward_backward_ms": 31.018975830078126,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.893289566040039,
+          "forward_backward_ms": 31.415499877929687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.833292770385742,
+          "forward_backward_ms": 24.81800994873047,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.908127975463867,
+          "forward_backward_ms": 31.408819580078124,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.915359878540039,
+          "forward_backward_ms": 24.814227294921874,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.890832138061524,
+          "forward_backward_ms": 31.05321044921875,
+          "graph_verified": true
+        }
+      ],
+      "report": "phase-cursor-looped.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.8931537628173825,
+              "forward_backward_ms": 31.036093139648436
+            },
+            "candidate": {
+              "forward_ms": 4.900708770751953,
+              "forward_backward_ms": 31.412159729003903
+            },
+            "gluon": {
+              "forward_ms": 3.8743263244628903,
+              "forward_backward_ms": 24.81611862182617
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "phase-cursor-v1-probe.log",
+      "sha256": "887dde2707c47c554256b1fcd0dfbda7700e1b396c5e2fdd45a7ad6e1cd2c14b",
+      "json_records": [
+        {
+          "backend": "baseline",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "baseline",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        }
+      ],
+      "report": "phase-cursor-v1-probe.json",
+      "paired_run_completed": true,
+      "cases": []
+    },
+    {
+      "log": "phase-cursor-v1.log",
+      "sha256": "e1262f36a20a319d9026cda8da6fcc48257621c99bfca1b6152d3489785d368d",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.89087028503418,
+          "forward_backward_ms": 31.003421020507812,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8791358947753904,
+          "forward_backward_ms": 33.16328125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8341438293457033,
+          "forward_backward_ms": 24.8197021484375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.883855819702148,
+          "forward_backward_ms": 33.08995666503906,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.831679916381836,
+          "forward_backward_ms": 24.814291381835936,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.888617706298828,
+          "forward_backward_ms": 31.030267333984376,
+          "graph_verified": true
+        }
+      ],
+      "report": "phase-cursor-v1.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.889743995666504,
+              "forward_backward_ms": 31.016844177246092
+            },
+            "candidate": {
+              "forward_ms": 4.88149585723877,
+              "forward_backward_ms": 33.126618957519526
+            },
+            "gluon": {
+              "forward_ms": 3.83291187286377,
+              "forward_backward_ms": 24.816996765136718
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "profile-v2-run.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "json_records": []
+    },
+    {
+      "log": "query-seven-looped.log",
+      "sha256": "3a89c7ebb2d1e62b4737017a860e989fac7e619e1b3956f35c168797c8c74e02",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.87231674194336,
+          "forward_backward_ms": 31.011795043945312,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.893571090698242,
+          "forward_backward_ms": 32.84400329589844,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8340385437011717,
+          "forward_backward_ms": 24.8082275390625,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.880470275878906,
+          "forward_backward_ms": 32.838385009765624,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.923833465576172,
+          "forward_backward_ms": 24.815155029296875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877590560913086,
+          "forward_backward_ms": 31.033737182617188,
+          "graph_verified": true
+        }
+      ],
+      "report": "query-seven-looped.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.874953651428223,
+              "forward_backward_ms": 31.02276611328125
+            },
+            "candidate": {
+              "forward_ms": 4.887020683288574,
+              "forward_backward_ms": 32.84119415283203
+            },
+            "gluon": {
+              "forward_ms": 3.878936004638672,
+              "forward_backward_ms": 24.811691284179688
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "query-seven.log",
+      "sha256": "85f655632a9f31b96df94b293cb6ddb73b724222f9630236002a0174a21c283f",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.879107284545898,
+          "forward_backward_ms": 30.99052734375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8771007537841795,
+          "forward_backward_ms": 35.23494262695313,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.832905578613281,
+          "forward_backward_ms": 24.81239013671875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.883200073242188,
+          "forward_backward_ms": 35.30467834472656,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.920841598510742,
+          "forward_backward_ms": 24.802153015136717,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877827072143555,
+          "forward_backward_ms": 31.043475341796874,
+          "graph_verified": true
+        }
+      ],
+      "report": "query-seven.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.878467178344726,
+              "forward_backward_ms": 31.017001342773437
+            },
+            "candidate": {
+              "forward_ms": 4.880150413513183,
+              "forward_backward_ms": 35.26981048583984
+            },
+            "gluon": {
+              "forward_ms": 3.8768735885620114,
+              "forward_backward_ms": 24.807271575927736
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "selected-run.log",
+      "sha256": "b4a6c06672677cf0e25ec72bec83beae33305cee4b8087f168962014373b02bb",
+      "json_records": []
+    },
+    {
+      "log": "selected-v2-run.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "json_records": []
+    },
+    {
+      "log": "selected-v3-run.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "json_records": []
+    },
+    {
+      "log": "slots4.log",
+      "sha256": "dd804a4b4cd3b308866979e67f0fe4663f6c35fcfea6342da905cde7cd416253",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.8897758483886715,
+          "forward_backward_ms": 31.006048583984374,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.88939208984375,
+          "forward_backward_ms": 34.12248229980469,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8353729248046875,
+          "forward_backward_ms": 24.80614013671875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.876959991455078,
+          "forward_backward_ms": 34.0843017578125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.904723358154297,
+          "forward_backward_ms": 24.806915283203125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.87907829284668,
+          "forward_backward_ms": 31.018466186523437,
+          "graph_verified": true
+        }
+      ],
+      "report": "slots4.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.884427070617676,
+              "forward_backward_ms": 31.012257385253903
+            },
+            "candidate": {
+              "forward_ms": 4.883176040649414,
+              "forward_backward_ms": 34.10339202880859
+            },
+            "gluon": {
+              "forward_ms": 3.8700481414794923,
+              "forward_backward_ms": 24.80652770996094
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "slots5.log",
+      "sha256": "b1d293d798fe1f9bfcea65d9b1f4a50b9e34cca4fb4be8e7ddc02d78aab5189d",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.884473419189453,
+          "forward_backward_ms": 31.010464477539063,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.885142517089844,
+          "forward_backward_ms": 31.898980712890626,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8469982147216797,
+          "forward_backward_ms": 24.807286071777344,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.884073638916016,
+          "forward_backward_ms": 31.896890258789064,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8292190551757814,
+          "forward_backward_ms": 24.810879516601563,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.882684707641602,
+          "forward_backward_ms": 31.03473815917969,
+          "graph_verified": true
+        }
+      ],
+      "report": "slots5.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.883579063415527,
+              "forward_backward_ms": 31.022601318359378
+            },
+            "candidate": {
+              "forward_ms": 4.88460807800293,
+              "forward_backward_ms": 31.897935485839845
+            },
+            "gluon": {
+              "forward_ms": 3.8381086349487306,
+              "forward_backward_ms": 24.809082794189454
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "split-dp-v1-probe.log",
+      "sha256": "887dde2707c47c554256b1fcd0dfbda7700e1b396c5e2fdd45a7ad6e1cd2c14b",
+      "json_records": [
+        {
+          "backend": "baseline",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.bfloat16",
+          "causal": false,
+          "scale": 0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.007853648342434738,
+            0.0401220581798718,
+            0.03270807378063978,
+            0.017456878115195806
+          ]
+        },
+        {
+          "backend": "baseline",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        },
+        {
+          "backend": "candidate",
+          "dtype": "torch.float16",
+          "causal": true,
+          "scale": -0.125,
+          "fp64_checked": true,
+          "max_absolute_errors": [
+            0.001131520004467923,
+            0.004655519261648422,
+            0.006281419381013009,
+            0.0036117936428858854
+          ]
+        }
+      ],
+      "report": "split-dp-v1-probe.json",
+      "paired_run_completed": true,
+      "cases": []
+    },
+    {
+      "log": "split-dp-v1.log",
+      "sha256": "7b39005bfe16d315455981ec400c6590b7a5fb05ad76861d84a933ea9568fc73",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.889142227172852,
+          "forward_backward_ms": 31.009210205078126,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.878643035888672,
+          "forward_backward_ms": 43.18894958496094,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8351360321044923,
+          "forward_backward_ms": 24.811337280273438,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.880467224121094,
+          "forward_backward_ms": 43.166867065429685,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.904489517211914,
+          "forward_backward_ms": 24.807344055175783,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.877001571655273,
+          "forward_backward_ms": 31.031591796875,
+          "graph_verified": true
+        }
+      ],
+      "report": "split-dp-v1.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.8830718994140625,
+              "forward_backward_ms": 31.020401000976562
+            },
+            "candidate": {
+              "forward_ms": 4.879555130004883,
+              "forward_backward_ms": 43.17790832519531
+            },
+            "gluon": {
+              "forward_ms": 3.869812774658203,
+              "forward_backward_ms": 24.809340667724612
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "split-dp-v2.log",
+      "sha256": "e3c06133eff2ab49ea3d6691e0911601bcd134c6b96cb295efd0dc5541885ac8",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.878803253173828,
+          "forward_backward_ms": 31.007916259765626,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8865409851074215,
+          "forward_backward_ms": 41.94572143554687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.838095855712891,
+          "forward_backward_ms": 24.820040893554687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.8752288818359375,
+          "forward_backward_ms": 41.94402160644531,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8605953216552735,
+          "forward_backward_ms": 24.80606689453125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.876316833496094,
+          "forward_backward_ms": 31.016030883789064,
+          "graph_verified": true
+        }
+      ],
+      "report": "split-dp-v2.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.877560043334961,
+              "forward_backward_ms": 31.011973571777347
+            },
+            "candidate": {
+              "forward_ms": 4.8808849334716795,
+              "forward_backward_ms": 41.94487152099609
+            },
+            "gluon": {
+              "forward_ms": 3.8493455886840824,
+              "forward_backward_ms": 24.813053894042966
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "stack-pilot.log",
+      "sha256": "7740f10158bc8a6cb829deed628aafa4a48708bb68ab33b64259eb73850e1f11",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.872927856445313,
+          "forward_backward_ms": 31.01759033203125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.44554557800293,
+          "forward_backward_ms": 30.292208862304687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.835500717163086,
+          "forward_backward_ms": 24.811923217773437,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.449363327026367,
+          "forward_backward_ms": 30.28284912109375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.901571273803711,
+          "forward_backward_ms": 24.816636657714845,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.88166389465332,
+          "forward_backward_ms": 31.05146484375,
+          "graph_verified": true
+        }
+      ],
+      "report": "stack-pilot.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.877295875549317,
+              "forward_backward_ms": 31.034527587890626
+            },
+            "candidate": {
+              "forward_ms": 4.447454452514648,
+              "forward_backward_ms": 30.28752899169922
+            },
+            "gluon": {
+              "forward_ms": 3.8685359954833984,
+              "forward_backward_ms": 24.81427993774414
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "summary-run.log",
+      "sha256": "8153122ad099299b618c9c5ef28cac24ca2ff53f8ca6a486dcb5c412e0900e4f",
+      "json_records": [],
+      "errors": [
+        "AssertionError"
+      ]
+    },
+    {
+      "log": "summary-v2-run.log",
+      "sha256": "0ab7f8896a69a34cb92a77e6d0d3887da87c5c2026b89f5cb9d214c106a443b4",
+      "json_records": []
+    },
+    {
+      "log": "summary-v3-run.log",
+      "sha256": "c1afe532f3c78c8c70fbce28f4bd7e1a278b3167d94da26d54a420589bc7cb48",
+      "json_records": []
+    },
+    {
+      "log": "waits-v1.log",
+      "sha256": "9153c7e6d0988b801541a4760922f833ef780643d4e1a56b1ec76c9e7ecff4cf",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.875961685180664,
+          "forward_backward_ms": 31.02216491699219,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.899926376342774,
+          "forward_backward_ms": 30.921185302734376,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8324031829833984,
+          "forward_backward_ms": 24.813320922851563,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.873308944702148,
+          "forward_backward_ms": 30.92384033203125,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.918592071533203,
+          "forward_backward_ms": 24.817567443847658,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.880195236206054,
+          "forward_backward_ms": 31.054376220703126,
+          "graph_verified": true
+        }
+      ],
+      "report": "waits-v1.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.878078460693359,
+              "forward_backward_ms": 31.038270568847658
+            },
+            "candidate": {
+              "forward_ms": 4.886617660522461,
+              "forward_backward_ms": 30.922512817382813
+            },
+            "gluon": {
+              "forward_ms": 3.8754976272583006,
+              "forward_backward_ms": 24.815444183349612
+            }
+          }
+        }
+      ]
+    },
+    {
+      "log": "waits-v2.log",
+      "sha256": "27416a243da6f399985b2e72badfa41491635be5fb00ccae20a9e8ebbcc1f814",
+      "json_records": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.880729675292969,
+          "forward_backward_ms": 31.017062377929687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.887360000610352,
+          "forward_backward_ms": 30.880343627929687,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8327041625976563,
+          "forward_backward_ms": 24.80955810546875,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "candidate",
+          "forward_ms": 4.873411178588867,
+          "forward_backward_ms": 30.8609375,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "gluon",
+          "forward_ms": 3.8911392211914064,
+          "forward_backward_ms": 24.808869934082033,
+          "graph_verified": true
+        },
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "backend": "baseline",
+          "forward_ms": 4.875446319580078,
+          "forward_backward_ms": 31.038845825195313,
+          "graph_verified": true
+        }
+      ],
+      "report": "waits-v2.json",
+      "paired_run_completed": true,
+      "cases": [
+        {
+          "shape": [
+            1,
+            16,
+            4096,
+            512
+          ],
+          "medians": {
+            "baseline": {
+              "forward_ms": 4.878087997436523,
+              "forward_backward_ms": 31.0279541015625
+            },
+            "candidate": {
+              "forward_ms": 4.8803855895996096,
+              "forward_backward_ms": 30.87064056396484
+            },
+            "gluon": {
+              "forward_ms": 3.8619216918945316,
+              "forward_backward_ms": 24.80921401977539
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

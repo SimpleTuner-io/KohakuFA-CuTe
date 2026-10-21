@@ -1,0 +1,955 @@
+{
+  "scope": "Separate Nsight Systems short-length observer passes. All graph kernels retained. Sequence labels follow the frozen compare driver order [512,1024] per backend; CuTe query grid independently verifies the length. Medians are kernel observer timings, not paired end-to-end performance samples.",
+  "resources": [
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.1429295
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.029616
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.255106
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.29065850000000004
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.142545
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.0296485
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.2088335
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.2322735
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.091857
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.0543845
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 0.3242105
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.033872
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.3557785
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.05464
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.8460225
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.913575
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.35662649999999996
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.054497000000000004
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.6932370000000001
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.7539895
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.26832199999999995
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.110257
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 1.1775615
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.063472
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.14774500000000002
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.030528
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.1834575
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.24403350000000001
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.14996900000000002
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.0306085
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.146193
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.16145700000000002
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.09289649999999999
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.051711999999999994
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 0.233538
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.034144
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.34296249999999995
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.055776000000000006
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.54274
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.658949
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.344979
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.0550885
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 0.437971
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 0.461316
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 0.248882
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.1088325
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 0.7158450000000001
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.063568
+    }
+  ],
+  "timelines": [
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.14285
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_kernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i_3",
+          "start_ms": 0.142466,
+          "end_ms": 0.172098
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_4",
+          "start_ms": 0.17197,
+          "end_ms": 0.427588
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_5",
+          "start_ms": 0.42746,
+          "end_ms": 0.717702
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.142305
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 0.142177,
+          "end_ms": 0.171969
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 0.171841,
+          "end_ms": 0.380483
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 0.380355,
+          "end_ms": 0.612229
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "sequence": 512,
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.000928
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.00096,
+          "end_ms": 0.001696
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001728,
+          "end_ms": 0.002464
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.002496,
+          "end_ms": 0.093793
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.093665,
+          "end_ms": 0.094593
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 0.094497,
+          "end_ms": 0.14941
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.14925,
+          "end_ms": 0.150114
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.150018,
+          "end_ms": 0.150754
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.150786,
+          "end_ms": 0.151522
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 0.151554,
+          "end_ms": 0.4761
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 0.476196,
+          "end_ms": 0.50954
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.356035
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_kernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i_3",
+          "start_ms": 0.355907,
+          "end_ms": 0.410979
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_4",
+          "start_ms": 0.410851,
+          "end_ms": 1.255466
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_5",
+          "start_ms": 1.255338,
+          "end_ms": 2.169521
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.356994
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 0.357154,
+          "end_ms": 0.411587
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 0.411715,
+          "end_ms": 1.103656
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 1.103816,
+          "end_ms": 1.857518
+        }
+      ]
+    },
+    {
+      "mask": "dense",
+      "sequence": 1024,
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "5f81c425004235a7855eaf338ce7c1e18e55c2f73da8a783668630f5ef926ccc",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.00096
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001472,
+          "end_ms": 0.002208
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.002528,
+          "end_ms": 0.003264
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.003552,
+          "end_ms": 0.27245
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.27261,
+          "end_ms": 0.273474
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 0.273794,
+          "end_ms": 0.384643
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.384803,
+          "end_ms": 0.385539
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.385859,
+          "end_ms": 0.386595
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.386979,
+          "end_ms": 0.387747
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 0.388035,
+          "end_ms": 1.564044
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 1.56446,
+          "end_ms": 1.628428
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "d38bd48c9317b92ce56d7af3c5cfa6e8ddab8680d6f6bb1936c28740662bf440",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.147585
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_kernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i_3",
+          "start_ms": 0.147457,
+          "end_ms": 0.177665
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_4",
+          "start_ms": 0.177537,
+          "end_ms": 0.360835
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_5",
+          "start_ms": 0.360963,
+          "end_ms": 0.6049
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "d38bd48c9317b92ce56d7af3c5cfa6e8ddab8680d6f6bb1936c28740662bf440",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.150593
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 0.150465,
+          "end_ms": 0.181313
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 0.181185,
+          "end_ms": 0.327778
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 0.32765,
+          "end_ms": 0.489091
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "sequence": 512,
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "d38bd48c9317b92ce56d7af3c5cfa6e8ddab8680d6f6bb1936c28740662bf440",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.001344
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001376,
+          "end_ms": 0.00208
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.002112,
+          "end_ms": 0.00288
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.002912,
+          "end_ms": 0.095041
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.094913,
+          "end_ms": 0.095873
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 0.095745,
+          "end_ms": 0.147745
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.147649,
+          "end_ms": 0.148769
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.148417,
+          "end_ms": 0.149153
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.149185,
+          "end_ms": 0.149921
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 0.149953,
+          "end_ms": 0.383811
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 0.383939,
+          "end_ms": 0.418436
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "d38bd48c9317b92ce56d7af3c5cfa6e8ddab8680d6f6bb1936c28740662bf440",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.344003
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cute_native_baseline_kernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i_3",
+          "start_ms": 0.343875,
+          "end_ms": 0.398756
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_4",
+          "start_ms": 0.398628,
+          "end_ms": 0.940744
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_5",
+          "start_ms": 0.940712,
+          "end_ms": 1.599501
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "d38bd48c9317b92ce56d7af3c5cfa6e8ddab8680d6f6bb1936c28740662bf440",
+      "kernels": [
+        {
+          "role": "forward",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+          "start_ms": 0.0,
+          "end_ms": 0.344931
+        },
+        {
+          "role": "prepare",
+          "name": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+          "start_ms": 0.345347,
+          "end_ms": 0.400259
+        },
+        {
+          "role": "query",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+          "start_ms": 0.400387,
+          "end_ms": 0.837606
+        },
+        {
+          "role": "keyvalue",
+          "name": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+          "start_ms": 0.83799,
+          "end_ms": 1.299338
+        }
+      ]
+    },
+    {
+      "mask": "causal",
+      "sequence": 1024,
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "d38bd48c9317b92ce56d7af3c5cfa6e8ddab8680d6f6bb1936c28740662bf440",
+      "kernels": [
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.0,
+          "end_ms": 0.00096
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.001248,
+          "end_ms": 0.001984
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.002304,
+          "end_ms": 0.00304
+        },
+        {
+          "role": "forward",
+          "name": "attention_fwd_kernel",
+          "start_ms": 0.003328,
+          "end_ms": 0.253026
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.253186,
+          "end_ms": 0.25405
+        },
+        {
+          "role": "prepare",
+          "name": "_prepare_kernel",
+          "start_ms": 0.25453,
+          "end_ms": 0.362403
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.362531,
+          "end_ms": 0.363267
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.363587,
+          "end_ms": 0.364323
+        },
+        {
+          "role": "other",
+          "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+          "start_ms": 0.364643,
+          "end_ms": 0.365379
+        },
+        {
+          "role": "backward",
+          "name": "attention_bwd_kernel",
+          "start_ms": 0.365667,
+          "end_ms": 1.082088
+        },
+        {
+          "role": "convert",
+          "name": "_dq_convert_kernel",
+          "start_ms": 1.082536,
+          "end_ms": 1.145961
+        }
+      ]
+    }
+  ]
+}

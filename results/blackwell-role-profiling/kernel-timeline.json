@@ -1,0 +1,679 @@
+{
+  "scope": "Separate Nsight Systems measurements of CUDA-graph kernels.",
+  "resources": [
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.8394570000000003,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.19302599999999998,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 11.813046,
+      "launch_resources": [
+        {
+          "registersPerThread": 162,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 12.7835345,
+      "launch_resources": [
+        {
+          "registersPerThread": 150,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.867057,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.193538,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 11.8095565,
+      "launch_resources": [
+        {
+          "registersPerThread": 162,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 12.3581535,
+      "launch_resources": [
+        {
+          "registersPerThread": 150,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.825728,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 225936,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.4206915,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 512,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 1024,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 20.30622,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 216888,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.24715399999999998,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 1024,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 0,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 2.639654,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.19363350000000001,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 6.303333,
+      "launch_resources": [
+        {
+          "registersPerThread": 162,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 7.062939500000001,
+      "launch_resources": [
+        {
+          "registersPerThread": 152,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 2.6641985000000004,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 32,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 232448,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.19468950000000002,
+      "launch_resources": [
+        {
+          "registersPerThread": 60,
+          "gridX": 256,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 32,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 32768,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "query",
+      "launches": 6,
+      "median_kernel_ms": 6.2999410000000005,
+      "launch_resources": [
+        {
+          "registersPerThread": 162,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "role": "keyvalue",
+      "launches": 6,
+      "median_kernel_ms": 6.8284095,
+      "launch_resources": [
+        {
+          "registersPerThread": 152,
+          "gridX": 128,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 201728,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "forward",
+      "launches": 6,
+      "median_kernel_ms": 3.022585,
+      "launch_resources": [
+        {
+          "registersPerThread": 168,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 384,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 225936,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "prepare",
+      "launches": 6,
+      "median_kernel_ms": 0.421299,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 512,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 1024,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "backward",
+      "launches": 6,
+      "median_kernel_ms": 9.9376985,
+      "launch_resources": [
+        {
+          "registersPerThread": 128,
+          "gridX": 18,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 512,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 216888,
+          "localMemoryPerThread": 0
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "role": "convert",
+      "launches": 6,
+      "median_kernel_ms": 0.2466425,
+      "launch_resources": [
+        {
+          "registersPerThread": 255,
+          "gridX": 1024,
+          "gridY": 1,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 0,
+          "localMemoryPerThread": 0
+        }
+      ]
+    }
+  ],
+  "timelines": [
+    {
+      "causal": false,
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "9b2bb2fae081c8bb6ec057aa8af21979b76df6875813f3c15a60c2d1a8a941ba",
+      "kernels": [
+        {
+          "role": "forward",
+          "start_ms": 0.0,
+          "end_ms": 3.807393
+        },
+        {
+          "role": "prepare",
+          "start_ms": 3.807105,
+          "end_ms": 4.000867
+        },
+        {
+          "role": "query",
+          "start_ms": 4.000771,
+          "end_ms": 15.660776
+        },
+        {
+          "role": "keyvalue",
+          "start_ms": 15.660648,
+          "end_ms": 28.787705
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "9b2bb2fae081c8bb6ec057aa8af21979b76df6875813f3c15a60c2d1a8a941ba",
+      "kernels": [
+        {
+          "role": "forward",
+          "start_ms": 0.0,
+          "end_ms": 3.836001
+        },
+        {
+          "role": "prepare",
+          "start_ms": 3.835873,
+          "end_ms": 4.028867
+        },
+        {
+          "role": "query",
+          "start_ms": 4.028739,
+          "end_ms": 15.678758
+        },
+        {
+          "role": "keyvalue",
+          "start_ms": 15.678662,
+          "end_ms": 28.321362
+        }
+      ]
+    },
+    {
+      "causal": false,
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "9b2bb2fae081c8bb6ec057aa8af21979b76df6875813f3c15a60c2d1a8a941ba",
+      "kernels": [
+        {
+          "role": "forward",
+          "start_ms": 0.0,
+          "end_ms": 3.825856
+        },
+        {
+          "role": "prepare",
+          "start_ms": 3.82736,
+          "end_ms": 4.248036
+        },
+        {
+          "role": "backward",
+          "start_ms": 4.250244,
+          "end_ms": 24.559728
+        },
+        {
+          "role": "convert",
+          "start_ms": 24.559888,
+          "end_ms": 24.806994
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "baseline",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "7213ea2d189779ad025c86f5c0056cfb6dc1b825c6a0990289711dbf39b56e41",
+      "kernels": [
+        {
+          "role": "forward",
+          "start_ms": 0.0,
+          "end_ms": 2.632502
+        },
+        {
+          "role": "prepare",
+          "start_ms": 2.632374,
+          "end_ms": 2.826007
+        },
+        {
+          "role": "query",
+          "start_ms": 2.825879,
+          "end_ms": 9.128524
+        },
+        {
+          "role": "keyvalue",
+          "start_ms": 9.128396,
+          "end_ms": 16.197671
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "candidate",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "7213ea2d189779ad025c86f5c0056cfb6dc1b825c6a0990289711dbf39b56e41",
+      "kernels": [
+        {
+          "role": "forward",
+          "start_ms": 0.0,
+          "end_ms": 2.669655
+        },
+        {
+          "role": "prepare",
+          "start_ms": 2.669783,
+          "end_ms": 2.864664
+        },
+        {
+          "role": "query",
+          "start_ms": 2.864536,
+          "end_ms": 9.160813
+        },
+        {
+          "role": "keyvalue",
+          "start_ms": 9.160653,
+          "end_ms": 15.984646
+        }
+      ]
+    },
+    {
+      "causal": true,
+      "backend": "gluon",
+      "observed_replays": 6,
+      "source_sqlite_sha256": "7213ea2d189779ad025c86f5c0056cfb6dc1b825c6a0990289711dbf39b56e41",
+      "kernels": [
+        {
+          "role": "forward",
+          "start_ms": 0.0,
+          "end_ms": 3.011577
+        },
+        {
+          "role": "prepare",
+          "start_ms": 3.012793,
+          "end_ms": 3.432349
+        },
+        {
+          "role": "backward",
+          "start_ms": 3.434525,
+          "end_ms": 13.374223
+        },
+        {
+          "role": "convert",
+          "start_ms": 13.374383,
+          "end_ms": 13.62101
+        }
+      ]
+    }
+  ]
+}

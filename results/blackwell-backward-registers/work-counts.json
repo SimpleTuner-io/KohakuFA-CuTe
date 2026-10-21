@@ -1,0 +1,73 @@
+{
+  "scope": "Analytical dense matrix-product FLOPs from the frozen source schedules. These are not measured hardware operation counts, traffic, or instruction counts. Excludes pointwise work, reductions, preparation, conversion and padding. Applies only to this equal-length, equal-head, aligned dense shape.",
+  "shape": [
+    1,
+    16,
+    4096,
+    512
+  ],
+  "output_slice_width": 128,
+  "output_slices": 4,
+  "one_complete_N_squared_D_product_flops": 274877906944,
+  "products": {
+    "selected_query": {
+      "units": {
+        "QK": 4,
+        "dP": 4,
+        "dQ": 1,
+        "probability_weighted_K_mean": 1
+      },
+      "total_units": 10,
+      "analytical_flops": 2748779069440
+    },
+    "selected_keyvalue": {
+      "units": {
+        "QK": 4,
+        "dP": 4,
+        "dK": 1,
+        "dV": 1
+      },
+      "total_units": 10,
+      "analytical_flops": 2748779069440
+    },
+    "gluon_fused": {
+      "units": {
+        "QK": 4,
+        "dP": 4,
+        "dQ": 1,
+        "dK": 1,
+        "dV": 1
+      },
+      "total_units": 11,
+      "analytical_flops": 3023656976384
+    },
+    "query_owned_joint_statistics": {
+      "units": {
+        "QK": 1,
+        "dP": 1
+      },
+      "total_units": 2,
+      "analytical_flops": 549755813888
+    },
+    "query_owned_joint_gradients": {
+      "units": {
+        "QK": 4,
+        "dP": 4,
+        "dQ": 1,
+        "probability_weighted_K_mean": 1,
+        "dK": 1,
+        "dV": 1
+      },
+      "total_units": 12,
+      "analytical_flops": 3298534883328
+    }
+  },
+  "selected_total_units": 20,
+  "gluon_total_units": 11,
+  "joint_prototype_total_units": 14,
+  "selected_extra_units_vs_gluon": {
+    "duplicated_QK_and_dP": 8,
+    "probability_weighted_K_mean": 1
+  },
+  "arithmetic_scope": "Selected backward retains FP32 probabilities when constructing centered dS; Gluon uses rounded probabilities there. The additional pointwise precision work is not included in the matrix-product volume comparison."
+}

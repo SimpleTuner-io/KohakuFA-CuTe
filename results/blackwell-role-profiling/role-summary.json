@@ -1,0 +1,55 @@
+{
+  "scope": "Five-role globaltimer traces of two inner iterations; observer overhead is reported and timings are not utilization/stall counters.",
+  "rows": [
+    {
+      "backend": "baseline",
+      "observer_overhead_fraction": 0.18063826370894787,
+      "timings": {
+        "control": {
+          "backward_ms": [
+            24.863433837890625,
+            24.897108459472655,
+            24.898667907714845,
+            24.905485534667967
+          ],
+          "median_ms": 24.89788818359375
+        },
+        "instrumented": {
+          "backward_ms": [
+            29.316464233398438,
+            29.395547485351564,
+            29.40202941894531,
+            29.39525146484375
+          ],
+          "median_ms": 29.395399475097655
+        }
+      },
+      "source_sha256": "51939ec4e19a2e16d58152cd1fbb91f25f5e14629d4301e372e2fcfc4a32f9ec"
+    },
+    {
+      "backend": "selected",
+      "observer_overhead_fraction": 0.18026405143039526,
+      "timings": {
+        "control": {
+          "backward_ms": [
+            24.412860107421874,
+            24.453031921386717,
+            24.45091552734375,
+            24.451837158203126
+          ],
+          "median_ms": 24.451376342773436
+        },
+        "instrumented": {
+          "backward_ms": [
+            28.804501342773438,
+            28.856854248046876,
+            28.861306762695314,
+            28.862020874023436
+          ],
+          "median_ms": 28.859080505371097
+        }
+      },
+      "source_sha256": "f13f8f1278747a92f3f7a76fe716f07bd62df0d3c81f0f34aececbb08415c478"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "source_commit": "8a6c561d8cecdcab0d35afbeaa116afa1e540c46",
+  "original_capture": "artifacts/assembly",
+  "runtime_hash_checks": {
+    "__init__.py": true,
+    "_ops.py": true,
+    "api.py": true,
+    "blackwell.py": true,
+    "blackwell_pipeline.py": true,
+    "kernels.py": true,
+    "native.cpp": true,
+    "native.py": true,
+    "sm103.py": true
+  }
+}

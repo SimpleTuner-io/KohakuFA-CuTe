@@ -1,0 +1,25 @@
+{
+  "scope": "Common backward PTX assembled offline for sm_100a. Performance and execution on a physical B200 are unmeasured. Forward is unchanged.",
+  "checks": [
+    {
+      "dimension": 64,
+      "passed": true,
+      "log": "selected/assembly-d64/backward/sm100-legality.log"
+    },
+    {
+      "dimension": 128,
+      "passed": true,
+      "log": "selected/assembly-d128/backward/sm100-legality.log"
+    },
+    {
+      "dimension": 256,
+      "passed": true,
+      "log": "selected/assembly-d256/backward/sm100-legality.log"
+    },
+    {
+      "dimension": 512,
+      "passed": true,
+      "log": "selected/assembly-d512/backward/sm100-legality.log"
+    }
+  ]
+}

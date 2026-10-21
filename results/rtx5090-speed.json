@@ -1,0 +1,488 @@
+{
+  "device": "NVIDIA GeForce RTX 5090",
+  "torch": "2.11.0+cu130",
+  "dtype": "bf16",
+  "causal": false,
+  "iterations": 50,
+  "repeats": 3,
+  "ordering": "rotate backend order by one each repetition",
+  "timing": "CUDA event milliseconds per graph replay; forward_backward includes forward",
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.028753280639648438,
+            "forward_backward_ms": 0.1025062370300293
+          },
+          {
+            "forward_ms": 0.028950400352478027,
+            "forward_backward_ms": 0.10277440071105957
+          },
+          {
+            "forward_ms": 0.029018878936767578,
+            "forward_backward_ms": 0.10264448165893554
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.05138175964355469,
+            "forward_backward_ms": 0.13333696365356446
+          },
+          {
+            "forward_ms": 0.05147456169128418,
+            "forward_backward_ms": 0.13340991973876953
+          },
+          {
+            "forward_ms": 0.053196802139282226,
+            "forward_backward_ms": 0.13341567993164063
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.031744000911712644,
+            "forward_backward_ms": 0.1438361644744873
+          },
+          {
+            "forward_ms": 0.032829439640045165,
+            "forward_backward_ms": 0.14361536026000976
+          },
+          {
+            "forward_ms": 0.0324288010597229,
+            "forward_backward_ms": 0.14363903999328614
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.028950400352478027,
+          "forward_backward_ms": 0.10264448165893554
+        },
+        "cudnn": {
+          "forward_ms": 0.05147456169128418,
+          "forward_backward_ms": 0.13340991973876953
+        },
+        "cute": {
+          "forward_ms": 0.0324288010597229,
+          "forward_backward_ms": 0.14363903999328614
+        }
+      },
+      "unsupported": {}
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.055428481101989745,
+            "forward_backward_ms": 0.20244287490844726
+          },
+          {
+            "forward_ms": 0.055427842140197754,
+            "forward_backward_ms": 0.20189056396484376
+          },
+          {
+            "forward_ms": 0.05544511795043945,
+            "forward_backward_ms": 0.2029644775390625
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.053406081199645995,
+            "forward_backward_ms": 0.20719039916992188
+          },
+          {
+            "forward_ms": 0.053498239517211915,
+            "forward_backward_ms": 0.20859968185424804
+          },
+          {
+            "forward_ms": 0.05336832046508789,
+            "forward_backward_ms": 0.20922176361083986
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.05958208084106445,
+            "forward_backward_ms": 0.28068927764892576
+          },
+          {
+            "forward_ms": 0.059563522338867185,
+            "forward_backward_ms": 0.2809913635253906
+          },
+          {
+            "forward_ms": 0.05950143814086914,
+            "forward_backward_ms": 0.28073471069335937
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.055428481101989745,
+          "forward_backward_ms": 0.20244287490844726
+        },
+        "cudnn": {
+          "forward_ms": 0.053406081199645995,
+          "forward_backward_ms": 0.20859968185424804
+        },
+        "cute": {
+          "forward_ms": 0.059563522338867185,
+          "forward_backward_ms": 0.28073471069335937
+        }
+      },
+      "unsupported": {}
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        256
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.15758784294128417,
+            "forward_backward_ms": 0.5229344177246094
+          },
+          {
+            "forward_ms": 0.15926591873168947,
+            "forward_backward_ms": 0.5227859115600586
+          },
+          {
+            "forward_ms": 0.15892224311828612,
+            "forward_backward_ms": 0.5272089767456055
+          }
+        ],
+        "cudnn": [],
+        "cute": [
+          {
+            "forward_ms": 0.11079360008239746,
+            "forward_backward_ms": 0.7535667419433594
+          },
+          {
+            "forward_ms": 0.11073408126831055,
+            "forward_backward_ms": 0.7537760162353515
+          },
+          {
+            "forward_ms": 0.11083392143249511,
+            "forward_backward_ms": 0.7634873962402344
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.15892224311828612,
+          "forward_backward_ms": 0.5229344177246094
+        },
+        "cute": {
+          "forward_ms": 0.11079360008239746,
+          "forward_backward_ms": 0.7537760162353515
+        }
+      },
+      "unsupported": {
+        "cudnn": "No available cuDNN kernel."
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.5387615966796875,
+            "forward_backward_ms": 5.257315673828125
+          },
+          {
+            "forward_ms": 0.5459052658081055,
+            "forward_backward_ms": 5.238538208007813
+          },
+          {
+            "forward_ms": 0.5443814468383789,
+            "forward_backward_ms": 5.251622314453125
+          }
+        ],
+        "cudnn": [],
+        "cute": [
+          {
+            "forward_ms": 0.4774668884277344,
+            "forward_backward_ms": 3.8187322998046875
+          },
+          {
+            "forward_ms": 0.4799737548828125,
+            "forward_backward_ms": 3.860555419921875
+          },
+          {
+            "forward_ms": 0.48279296875,
+            "forward_backward_ms": 3.838847961425781
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.5443814468383789,
+          "forward_backward_ms": 5.251622314453125
+        },
+        "cute": {
+          "forward_ms": 0.4799737548828125,
+          "forward_backward_ms": 3.838847961425781
+        }
+      },
+      "unsupported": {
+        "cudnn": "No available cuDNN kernel."
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.3988755035400391,
+            "forward_backward_ms": 1.422093505859375
+          },
+          {
+            "forward_ms": 0.4051897430419922,
+            "forward_backward_ms": 1.4229017639160155
+          },
+          {
+            "forward_ms": 0.4055910491943359,
+            "forward_backward_ms": 1.424351348876953
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.39726593017578127,
+            "forward_backward_ms": 1.5604953002929687
+          },
+          {
+            "forward_ms": 0.40393409729003904,
+            "forward_backward_ms": 1.5611244201660157
+          },
+          {
+            "forward_ms": 0.4028275299072266,
+            "forward_backward_ms": 1.5602021789550782
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.3882195281982422,
+            "forward_backward_ms": 1.844325714111328
+          },
+          {
+            "forward_ms": 0.38872001647949217,
+            "forward_backward_ms": 1.8499685668945312
+          },
+          {
+            "forward_ms": 0.3885196685791016,
+            "forward_backward_ms": 1.8498809814453125
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.4051897430419922,
+          "forward_backward_ms": 1.4229017639160155
+        },
+        "cudnn": {
+          "forward_ms": 0.4028275299072266,
+          "forward_backward_ms": 1.5604953002929687
+        },
+        "cute": {
+          "forward_ms": 0.3885196685791016,
+          "forward_backward_ms": 1.8498809814453125
+        }
+      },
+      "unsupported": {}
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 0.832147216796875,
+            "forward_backward_ms": 2.658819274902344
+          },
+          {
+            "forward_ms": 0.8341062164306641,
+            "forward_backward_ms": 2.660150451660156
+          },
+          {
+            "forward_ms": 0.834716796875,
+            "forward_backward_ms": 2.6591787719726563
+          }
+        ],
+        "cudnn": [
+          {
+            "forward_ms": 0.7660915374755859,
+            "forward_backward_ms": 2.7395538330078124
+          },
+          {
+            "forward_ms": 0.7709907531738281,
+            "forward_backward_ms": 2.7485247802734376
+          },
+          {
+            "forward_ms": 0.7706092834472656,
+            "forward_backward_ms": 2.748501892089844
+          }
+        ],
+        "cute": [
+          {
+            "forward_ms": 0.76159423828125,
+            "forward_backward_ms": 3.693516845703125
+          },
+          {
+            "forward_ms": 0.7625132751464844,
+            "forward_backward_ms": 3.692169494628906
+          },
+          {
+            "forward_ms": 0.762458267211914,
+            "forward_backward_ms": 3.6939666748046873
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 0.8341062164306641,
+          "forward_backward_ms": 2.6591787719726563
+        },
+        "cudnn": {
+          "forward_ms": 0.7706092834472656,
+          "forward_backward_ms": 2.748501892089844
+        },
+        "cute": {
+          "forward_ms": 0.762458267211914,
+          "forward_backward_ms": 3.693516845703125
+        }
+      },
+      "unsupported": {}
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 1.460723876953125,
+            "forward_backward_ms": 5.9082763671875
+          },
+          {
+            "forward_ms": 1.46057861328125,
+            "forward_backward_ms": 5.918517456054688
+          },
+          {
+            "forward_ms": 1.4626438903808594,
+            "forward_backward_ms": 5.9265289306640625
+          }
+        ],
+        "cudnn": [],
+        "cute": [
+          {
+            "forward_ms": 1.6151116943359376,
+            "forward_backward_ms": 10.657535400390625
+          },
+          {
+            "forward_ms": 1.6139450073242188,
+            "forward_backward_ms": 10.662940673828125
+          },
+          {
+            "forward_ms": 1.616162567138672,
+            "forward_backward_ms": 10.656678466796874
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 1.460723876953125,
+          "forward_backward_ms": 5.918517456054688
+        },
+        "cute": {
+          "forward_ms": 1.6151116943359376,
+          "forward_backward_ms": 10.657535400390625
+        }
+      },
+      "unsupported": {
+        "cudnn": "No available cuDNN kernel."
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "samples": {
+        "sdpa": [
+          {
+            "forward_ms": 7.163951416015625,
+            "forward_backward_ms": 48.8145068359375
+          },
+          {
+            "forward_ms": 7.162775268554688,
+            "forward_backward_ms": 48.83876953125
+          },
+          {
+            "forward_ms": 7.186397094726562,
+            "forward_backward_ms": 48.795078125
+          }
+        ],
+        "cudnn": [],
+        "cute": [
+          {
+            "forward_ms": 6.42667236328125,
+            "forward_backward_ms": 65.2200244140625
+          },
+          {
+            "forward_ms": 6.437183837890625,
+            "forward_backward_ms": 65.11818359375
+          },
+          {
+            "forward_ms": 6.423942260742187,
+            "forward_backward_ms": 65.168173828125
+          }
+        ]
+      },
+      "medians": {
+        "sdpa": {
+          "forward_ms": 7.163951416015625,
+          "forward_backward_ms": 48.8145068359375
+        },
+        "cute": {
+          "forward_ms": 6.42667236328125,
+          "forward_backward_ms": 65.168173828125
+        }
+      },
+      "unsupported": {
+        "cudnn": "No available cuDNN kernel."
+      }
+    }
+  ]
+}

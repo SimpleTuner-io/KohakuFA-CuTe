@@ -1,0 +1,31 @@
+{
+  "baseline_commit": "8a6c561d8cecdcab0d35afbeaa116afa1e540c46",
+  "baseline_pipeline_sha256": "6226a08e321421497c18d8a15f57287c0640364ee11bbf4744d05c5da8c9f64b",
+  "runtime_sha256": {
+    "__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "_ops.py": "2adbb1d41dd4f579959457a49e17018f9cafc4e27c740abc6ab604949112d7be",
+    "api.py": "9efd08614aec3846680e9638e46f885714671197a1bbb9644acfa5b64ca00077",
+    "blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "blackwell_pipeline.py": "6a7f2580b4cadcccb40c03e0c40a6e358cd2f9bcf6f90dc8c2cb1981515637f6",
+    "kernels.py": "5227383020d3f57e626e9fd40f88997a90e4ea91c0c1120c2b3e595b439134d6",
+    "native.cpp": "88ba6be790f662338bfcc8691db68f60d6a2827fcea8978d3d8cad4b5c7de6f3",
+    "native.py": "d844470a5d0fdc70e5563f3864152d5c17559576a736f56df82b9e5f9fda863a",
+    "sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8"
+  },
+  "benchmark_sha256": "5f4528349a88714149d4a48087d93dc1f1223870beebbc1af3b29330268dad92",
+  "test_kernels_sha256": "ae2bf51d3e54cec7c8ec4647f4d57e5469dc97ccb4a3645e8397632225464969",
+  "policy": {
+    "forward_D512": "128-wide boxes, three slots; final output staging aliases resident Q only after its last MMA read",
+    "forward_other_dimensions": "64-wide boxes, four slots",
+    "forward_rescaling": "paired FP32 multiplication, unchanged scalar rounding",
+    "backward": "non-unrolled loader chunk loops; existing P/dP completion barriers subsume redundant S/dS handoffs",
+    "D512_causal_query": "descending query tile order; longest work first",
+    "forward_output_register_window": 64
+  },
+  "precision": "FP32 probabilities, complete probability-weighted centering residual and independent gradient ownership retained",
+  "device": "B300 MIG 1g.34gb, 18 SMs, capability (10,3)",
+  "measurement_limit": "MIG measurements only; offline sm_100a assembly is not B200 execution",
+  "local_formatting": "Black/isort pass for src, benchmarks and tests/test_kernels.py. Whole-tree Black also reports unchanged tests/test_training.py; no unrelated formatting edits.",
+  "selected_source": "selected-source-v3",
+  "selected_measurements": "selected-v3"
+}

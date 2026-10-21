@@ -1,0 +1,29 @@
+{
+  "scope": "Quadratic-memory diagnostic, not production attention. Full backward includes two FP32-output cuBLAS BF16 GEMMs, CuTe weight reconstruction/packing, four FP32-output gradient GEMMs and both centered corrections. Forward statistics are fixed, forward is untimed. Reduced precision intermediate BF16 GEMM reductions disabled.",
+  "shape": [
+    1,
+    16,
+    4096,
+    512
+  ],
+  "causal": false,
+  "source_sha256": "5ad0375ed6be9003b58688e3940a688dbbf2721943928ec6639b3d41760cce52",
+  "sdpa_checked": true,
+  "graph_checked": true,
+  "max_abs_error_dq_dk_dv": [
+    0.001953125,
+    0.0009765625,
+    0.00048828125
+  ],
+  "samples_ms": [
+    24.471110534667968,
+    24.470333862304688,
+    24.46974334716797,
+    24.46758117675781,
+    24.46585693359375
+  ],
+  "median_ms": 24.46974334716797,
+  "workspace_bytes": 4295491584,
+  "peak_allocated_bytes": 5906629632,
+  "passed": true
+}

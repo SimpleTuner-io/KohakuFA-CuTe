@@ -1,7 +1,0 @@
-{
-  "archive": "kohakufa-joint-readout-20261021.tar.gz",
-  "sha256": "d04859480b538d20df4631ebdec7bc38fc6adb8e52d676e86b5145fc02d3992a",
-  "bytes": 4661889,
-  "manifest_files_verified": 598,
-  "status": "Completed GPU reports and artifacts retrieved after Runpod host recovery"
-}

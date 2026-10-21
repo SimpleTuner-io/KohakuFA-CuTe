@@ -1,8 +1,0 @@
-{
-  "gpu_test_methods": 4,
-  "source_reference": "eff98699fe5d582a8f098aaaefd06f656f6fd0a6",
-  "runtime_files_verified": 35,
-  "production_graph_verified_samples": 16,
-  "production_configurations_verified": true,
-  "tested_device": "B300 MIG 1g.34gb, 18 SMs, sm_103"
-}

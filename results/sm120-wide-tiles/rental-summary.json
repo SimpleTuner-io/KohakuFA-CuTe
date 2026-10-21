@@ -1,0 +1,28 @@
+{
+  "method": "Published offer rate including storage times wall time from create response to destroy response; estimate, not invoice. Metered network transfer is excluded.",
+  "rentals": [
+    {
+      "scope": "initial startup failure",
+      "estimated_hourly_usd_with_storage": 0.6162962962962963,
+      "runtime_hours": 0.03629857891135745,
+      "estimated_compute_storage_usd": 0.02237067974388845,
+      "destroyed": true
+    },
+    {
+      "scope": "initial profiling host",
+      "estimated_hourly_usd_with_storage": 1.057037037037037,
+      "runtime_hours": 1.6312869724962447,
+      "estimated_compute_storage_usd": 1.7243307479645489,
+      "destroyed": true
+    },
+    {
+      "scope": "stable measurement host",
+      "estimated_hourly_usd_with_storage": 1.1496296296296296,
+      "runtime_hours": 1.2139410324891409,
+      "estimated_compute_storage_usd": 1.395582579572701,
+      "destroyed": true
+    }
+  ],
+  "estimated_compute_storage_usd_total": 3.1422840072811384,
+  "stable_instance_absent_after_termination": true
+}

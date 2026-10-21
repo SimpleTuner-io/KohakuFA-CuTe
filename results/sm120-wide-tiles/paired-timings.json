@@ -1,0 +1,2378 @@
+{
+  "candidate_source_sha256": "f7ba93a691c3e18f6a7659fb2817c3f21cb4f9d9d595d51bf758e3bed1d83fff",
+  "control_source_sha256": "7de31cb7528549c0aa6e3060aa7f5f0dbbf6bd60e725846704bfeed02c73b7cd",
+  "torch": "2.11.0+cu130",
+  "protocol": {
+    "rounds": 5,
+    "target_window_ms": 1000.0,
+    "native_abi": true,
+    "rotated_backends": true,
+    "graph_checked": true,
+    "profiler": false,
+    "telemetry": false,
+    "timing": "CUDA events; all samples retained, includes GPU context scheduling"
+  },
+  "cases": [
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "bf16",
+      "causal": false,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 15.486528396606445,
+              "ms_per_iteration": 0.4839540123939514
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 11.226495742797852,
+              "ms_per_iteration": 0.35082799196243286
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 16.993120193481445,
+              "ms_per_iteration": 0.5310350060462952
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 1034,
+                "window_ms": 499.51641845703125,
+                "ms_per_iteration": 0.4830913137882314
+              },
+              {
+                "replays": 1034,
+                "window_ms": 502.0713195800781,
+                "ms_per_iteration": 0.48556220462289956
+              },
+              {
+                "replays": 1034,
+                "window_ms": 502.55474853515625,
+                "ms_per_iteration": 0.4860297374614664
+              },
+              {
+                "replays": 1034,
+                "window_ms": 502.2494201660156,
+                "ms_per_iteration": 0.4857344489033033
+              },
+              {
+                "replays": 1034,
+                "window_ms": 502.8790283203125,
+                "ms_per_iteration": 0.4863433542749637
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 1426,
+                "window_ms": 500.6441955566406,
+                "ms_per_iteration": 0.3510828860846007
+              },
+              {
+                "replays": 1426,
+                "window_ms": 501.40985107421875,
+                "ms_per_iteration": 0.3516198114124956
+              },
+              {
+                "replays": 1426,
+                "window_ms": 502.5491638183594,
+                "ms_per_iteration": 0.3524187684560725
+              },
+              {
+                "replays": 1426,
+                "window_ms": 502.73980712890625,
+                "ms_per_iteration": 0.3525524594171853
+              },
+              {
+                "replays": 1426,
+                "window_ms": 502.45037841796875,
+                "ms_per_iteration": 0.35234949398174525
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 942,
+                "window_ms": 501.3673095703125,
+                "ms_per_iteration": 0.5322370589918392
+              },
+              {
+                "replays": 942,
+                "window_ms": 501.9309997558594,
+                "ms_per_iteration": 0.5328354562164113
+              },
+              {
+                "replays": 942,
+                "window_ms": 503.55694580078125,
+                "ms_per_iteration": 0.5345615135889398
+              },
+              {
+                "replays": 942,
+                "window_ms": 503.5950012207031,
+                "ms_per_iteration": 0.5346019121238886
+              },
+              {
+                "replays": 942,
+                "window_ms": 503.41229248046875,
+                "ms_per_iteration": 0.5344079538009222
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              0.4830913137882314,
+              0.48556220462289956,
+              0.4860297374614664,
+              0.4857344489033033,
+              0.4863433542749637
+            ],
+            "candidate": [
+              0.3510828860846007,
+              0.3516198114124956,
+              0.3524187684560725,
+              0.3525524594171853,
+              0.35234949398174525
+            ],
+            "sdpa": [
+              0.5322370589918392,
+              0.5328354562164113,
+              0.5345615135889398,
+              0.5346019121238886,
+              0.5344079538009222
+            ]
+          },
+          "median_ms": {
+            "control": 0.4857344489033033,
+            "candidate": 0.35234949398174525,
+            "sdpa": 0.5344079538009222
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 100.9939193725586,
+              "ms_per_iteration": 3.156059980392456
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 59.86592102050781,
+              "ms_per_iteration": 1.8708100318908691
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 161.71466064453125,
+              "ms_per_iteration": 5.053583145141602
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 317,
+                "window_ms": 1004.0487670898438,
+                "ms_per_iteration": 3.1673462684222202
+              },
+              {
+                "replays": 317,
+                "window_ms": 1004.5682983398438,
+                "ms_per_iteration": 3.1689851682644914
+              },
+              {
+                "replays": 317,
+                "window_ms": 1004.2525634765625,
+                "ms_per_iteration": 3.167989159232058
+              },
+              {
+                "replays": 317,
+                "window_ms": 1005.2360229492188,
+                "ms_per_iteration": 3.171091555044854
+              },
+              {
+                "replays": 317,
+                "window_ms": 1003.8624267578125,
+                "ms_per_iteration": 3.1667584440309544
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 535,
+                "window_ms": 1005.04736328125,
+                "ms_per_iteration": 1.8785932023948597
+              },
+              {
+                "replays": 535,
+                "window_ms": 1002.71630859375,
+                "ms_per_iteration": 1.8742360908294393
+              },
+              {
+                "replays": 535,
+                "window_ms": 1003.9293212890625,
+                "ms_per_iteration": 1.8765034042786215
+              },
+              {
+                "replays": 535,
+                "window_ms": 1003.9714965820312,
+                "ms_per_iteration": 1.8765822366019276
+              },
+              {
+                "replays": 535,
+                "window_ms": 1003.8056030273438,
+                "ms_per_iteration": 1.8762721551912966
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 198,
+                "window_ms": 1002.9323120117188,
+                "ms_per_iteration": 5.065314707129892
+              },
+              {
+                "replays": 198,
+                "window_ms": 1003.10009765625,
+                "ms_per_iteration": 5.066162109375
+              },
+              {
+                "replays": 198,
+                "window_ms": 1003.401611328125,
+                "ms_per_iteration": 5.067684905697601
+              },
+              {
+                "replays": 198,
+                "window_ms": 1004.5001220703125,
+                "ms_per_iteration": 5.073232939749053
+              },
+              {
+                "replays": 198,
+                "window_ms": 1004.1599731445312,
+                "ms_per_iteration": 5.071515015881471
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              3.1673462684222202,
+              3.1689851682644914,
+              3.167989159232058,
+              3.171091555044854,
+              3.1667584440309544
+            ],
+            "candidate": [
+              1.8785932023948597,
+              1.8742360908294393,
+              1.8765034042786215,
+              1.8765822366019276,
+              1.8762721551912966
+            ],
+            "sdpa": [
+              5.065314707129892,
+              5.066162109375,
+              5.067684905697601,
+              5.073232939749053,
+              5.071515015881471
+            ]
+          },
+          "median_ms": {
+            "control": 3.167989159232058,
+            "candidate": 1.8765034042786215,
+            "sdpa": 5.067684905697601
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            0.001007777562471733,
+            0.0010121929285965667,
+            8.407604142910381e-05,
+            8.885465957592476e-05
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.0016060539197958116,
+            0.00362920882333354,
+            0.0036244664126727577,
+            0.0001730511147844815
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_bf16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::bfloat16_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_bf16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::bfloat16_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    },
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "bf16",
+      "causal": true,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 8.978943824768066,
+              "ms_per_iteration": 0.2805919945240021
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 6.623456001281738,
+              "ms_per_iteration": 0.20698300004005432
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 9.667136192321777,
+              "ms_per_iteration": 0.30209800601005554
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 1782,
+                "window_ms": 500.3801574707031,
+                "ms_per_iteration": 0.2807969458309221
+              },
+              {
+                "replays": 1782,
+                "window_ms": 500.8834533691406,
+                "ms_per_iteration": 0.2810793789950284
+              },
+              {
+                "replays": 1782,
+                "window_ms": 500.89404296875,
+                "ms_per_iteration": 0.28108532153128507
+              },
+              {
+                "replays": 1782,
+                "window_ms": 500.9646301269531,
+                "ms_per_iteration": 0.2811249327311746
+              },
+              {
+                "replays": 1782,
+                "window_ms": 501.1598815917969,
+                "ms_per_iteration": 0.28123450145443146
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 2416,
+                "window_ms": 501.2649841308594,
+                "ms_per_iteration": 0.20747722853098485
+              },
+              {
+                "replays": 2416,
+                "window_ms": 501.2545166015625,
+                "ms_per_iteration": 0.20747289594435533
+              },
+              {
+                "replays": 2416,
+                "window_ms": 501.3741455078125,
+                "ms_per_iteration": 0.20752241122012108
+              },
+              {
+                "replays": 2416,
+                "window_ms": 501.3531799316406,
+                "ms_per_iteration": 0.20751373341541415
+              },
+              {
+                "replays": 2416,
+                "window_ms": 501.38995361328125,
+                "ms_per_iteration": 0.20752895431013296
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 1656,
+                "window_ms": 502.4439697265625,
+                "ms_per_iteration": 0.3034081942793252
+              },
+              {
+                "replays": 1656,
+                "window_ms": 502.41619873046875,
+                "ms_per_iteration": 0.3033914243541478
+              },
+              {
+                "replays": 1656,
+                "window_ms": 502.43145751953125,
+                "ms_per_iteration": 0.30340063859875077
+              },
+              {
+                "replays": 1656,
+                "window_ms": 502.3886413574219,
+                "ms_per_iteration": 0.30337478342839486
+              },
+              {
+                "replays": 1656,
+                "window_ms": 502.7473449707031,
+                "ms_per_iteration": 0.3035913918905212
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              0.2807969458309221,
+              0.2810793789950284,
+              0.28108532153128507,
+              0.2811249327311746,
+              0.28123450145443146
+            ],
+            "candidate": [
+              0.20747722853098485,
+              0.20747289594435533,
+              0.20752241122012108,
+              0.20751373341541415,
+              0.20752895431013296
+            ],
+            "sdpa": [
+              0.3034081942793252,
+              0.3033914243541478,
+              0.30340063859875077,
+              0.30337478342839486,
+              0.3035913918905212
+            ]
+          },
+          "median_ms": {
+            "control": 0.28108532153128507,
+            "candidate": 0.20751373341541415,
+            "sdpa": 0.30340063859875077
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 53.6517448425293,
+              "ms_per_iteration": 1.6766170263290405
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 32.90070343017578,
+              "ms_per_iteration": 1.0281469821929932
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 127.04390716552734,
+              "ms_per_iteration": 3.9701220989227295
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 597,
+                "window_ms": 1003.62890625,
+                "ms_per_iteration": 1.6811204459798994
+              },
+              {
+                "replays": 597,
+                "window_ms": 1004.0552978515625,
+                "ms_per_iteration": 1.6818346697681115
+              },
+              {
+                "replays": 597,
+                "window_ms": 1003.7659301757812,
+                "ms_per_iteration": 1.6813499667936034
+              },
+              {
+                "replays": 597,
+                "window_ms": 1005.3278198242188,
+                "ms_per_iteration": 1.6839661973605005
+              },
+              {
+                "replays": 597,
+                "window_ms": 1004.9738159179688,
+                "ms_per_iteration": 1.6833732259932475
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 973,
+                "window_ms": 999.9655151367188,
+                "ms_per_iteration": 1.0277137873964222
+              },
+              {
+                "replays": 973,
+                "window_ms": 1000.7135009765625,
+                "ms_per_iteration": 1.0284825292667652
+              },
+              {
+                "replays": 973,
+                "window_ms": 1000.33984375,
+                "ms_per_iteration": 1.028098503340185
+              },
+              {
+                "replays": 973,
+                "window_ms": 1003.960205078125,
+                "ms_per_iteration": 1.0318193269045477
+              },
+              {
+                "replays": 973,
+                "window_ms": 1001.7278442382812,
+                "ms_per_iteration": 1.0295250197721286
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 252,
+                "window_ms": 1000.8593139648438,
+                "ms_per_iteration": 3.9716639443049355
+              },
+              {
+                "replays": 252,
+                "window_ms": 999.9492797851562,
+                "ms_per_iteration": 3.968052697560144
+              },
+              {
+                "replays": 252,
+                "window_ms": 1000.7144165039062,
+                "ms_per_iteration": 3.9710889543805803
+              },
+              {
+                "replays": 252,
+                "window_ms": 1000.9205322265625,
+                "ms_per_iteration": 3.9719068739149304
+              },
+              {
+                "replays": 252,
+                "window_ms": 1000.0164184570312,
+                "ms_per_iteration": 3.968319120861235
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              1.6811204459798994,
+              1.6818346697681115,
+              1.6813499667936034,
+              1.6839661973605005,
+              1.6833732259932475
+            ],
+            "candidate": [
+              1.0277137873964222,
+              1.0284825292667652,
+              1.028098503340185,
+              1.0318193269045477,
+              1.0295250197721286
+            ],
+            "sdpa": [
+              3.9716639443049355,
+              3.968052697560144,
+              3.9710889543805803,
+              3.9719068739149304,
+              3.968319120861235
+            ]
+          },
+          "median_ms": {
+            "control": 1.6818346697681115,
+            "candidate": 1.0284825292667652,
+            "sdpa": 3.9710889543805803
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            0.0010118628609644817,
+            0.001073328771456336,
+            6.25138210652169e-05,
+            4.437863880739466e-05
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.0014165647814413404,
+            0.003732665241825637,
+            0.0037376785517354476,
+            0.0001723922152102234
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_bf16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::bfloat16_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_bf16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::bfloat16_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    },
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "fp16",
+      "causal": false,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 15.317791938781738,
+              "ms_per_iteration": 0.4786809980869293
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 11.311391830444336,
+              "ms_per_iteration": 0.3534809947013855
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 17.097824096679688,
+              "ms_per_iteration": 0.5343070030212402
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 1045,
+                "window_ms": 499.9479675292969,
+                "ms_per_iteration": 0.4784191076835377
+              },
+              {
+                "replays": 1045,
+                "window_ms": 501.9847412109375,
+                "ms_per_iteration": 0.4803681734075957
+              },
+              {
+                "replays": 1045,
+                "window_ms": 501.4927062988281,
+                "ms_per_iteration": 0.4798973266017494
+              },
+              {
+                "replays": 1045,
+                "window_ms": 501.3956298828125,
+                "ms_per_iteration": 0.47980443050986843
+              },
+              {
+                "replays": 1045,
+                "window_ms": 501.47357177734375,
+                "ms_per_iteration": 0.4798790160548744
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 1415,
+                "window_ms": 504.4465637207031,
+                "ms_per_iteration": 0.3564993383185181
+              },
+              {
+                "replays": 1415,
+                "window_ms": 504.2270812988281,
+                "ms_per_iteration": 0.35634422706630964
+              },
+              {
+                "replays": 1415,
+                "window_ms": 504.7806091308594,
+                "ms_per_iteration": 0.35673541281332816
+              },
+              {
+                "replays": 1415,
+                "window_ms": 504.69659423828125,
+                "ms_per_iteration": 0.3566760383309408
+              },
+              {
+                "replays": 1415,
+                "window_ms": 504.721923828125,
+                "ms_per_iteration": 0.3566939391011484
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 936,
+                "window_ms": 502.47930908203125,
+                "ms_per_iteration": 0.5368368686773838
+              },
+              {
+                "replays": 936,
+                "window_ms": 502.798583984375,
+                "ms_per_iteration": 0.537177974342281
+              },
+              {
+                "replays": 936,
+                "window_ms": 502.7578430175781,
+                "ms_per_iteration": 0.5371344476683527
+              },
+              {
+                "replays": 936,
+                "window_ms": 502.78143310546875,
+                "ms_per_iteration": 0.537159650753706
+              },
+              {
+                "replays": 936,
+                "window_ms": 502.7162170410156,
+                "ms_per_iteration": 0.5370899754711705
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              0.4784191076835377,
+              0.4803681734075957,
+              0.4798973266017494,
+              0.47980443050986843,
+              0.4798790160548744
+            ],
+            "candidate": [
+              0.3564993383185181,
+              0.35634422706630964,
+              0.35673541281332816,
+              0.3566760383309408,
+              0.3566939391011484
+            ],
+            "sdpa": [
+              0.5368368686773838,
+              0.537177974342281,
+              0.5371344476683527,
+              0.537159650753706,
+              0.5370899754711705
+            ]
+          },
+          "median_ms": {
+            "control": 0.4798790160548744,
+            "candidate": 0.3566760383309408,
+            "sdpa": 0.5371344476683527
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 101.84425354003906,
+              "ms_per_iteration": 3.1826329231262207
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 60.907806396484375,
+              "ms_per_iteration": 1.9033689498901367
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 103.37328338623047,
+              "ms_per_iteration": 3.230415105819702
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 315,
+                "window_ms": 1005.06982421875,
+                "ms_per_iteration": 3.1906978546626985
+              },
+              {
+                "replays": 315,
+                "window_ms": 1007.2623901367188,
+                "ms_per_iteration": 3.197658381386409
+              },
+              {
+                "replays": 315,
+                "window_ms": 1006.6732177734375,
+                "ms_per_iteration": 3.195787992931548
+              },
+              {
+                "replays": 315,
+                "window_ms": 1007.5750122070312,
+                "ms_per_iteration": 3.1986508324032736
+              },
+              {
+                "replays": 315,
+                "window_ms": 1007.967529296875,
+                "ms_per_iteration": 3.1998969184027777
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 526,
+                "window_ms": 1003.2821044921875,
+                "ms_per_iteration": 1.907380426791231
+              },
+              {
+                "replays": 526,
+                "window_ms": 1003.3296508789062,
+                "ms_per_iteration": 1.9074708191614187
+              },
+              {
+                "replays": 526,
+                "window_ms": 1003.4327392578125,
+                "ms_per_iteration": 1.9076668046726473
+              },
+              {
+                "replays": 526,
+                "window_ms": 1004.5453491210938,
+                "ms_per_iteration": 1.909782032549608
+              },
+              {
+                "replays": 526,
+                "window_ms": 1003.31396484375,
+                "ms_per_iteration": 1.907440997801806
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 310,
+                "window_ms": 1001.2455444335938,
+                "ms_per_iteration": 3.2298243368825603
+              },
+              {
+                "replays": 310,
+                "window_ms": 1001.8583984375,
+                "ms_per_iteration": 3.231801285282258
+              },
+              {
+                "replays": 310,
+                "window_ms": 1001.9692993164062,
+                "ms_per_iteration": 3.2321590300529235
+              },
+              {
+                "replays": 310,
+                "window_ms": 1004.6805419921875,
+                "ms_per_iteration": 3.240904974168347
+              },
+              {
+                "replays": 310,
+                "window_ms": 1004.3460693359375,
+                "ms_per_iteration": 3.2398260301159274
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              3.1906978546626985,
+              3.197658381386409,
+              3.195787992931548,
+              3.1986508324032736,
+              3.1998969184027777
+            ],
+            "candidate": [
+              1.907380426791231,
+              1.9074708191614187,
+              1.9076668046726473,
+              1.909782032549608,
+              1.907440997801806
+            ],
+            "sdpa": [
+              3.2298243368825603,
+              3.231801285282258,
+              3.2321590300529235,
+              3.240904974168347,
+              3.2398260301159274
+            ]
+          },
+          "median_ms": {
+            "control": 3.197658381386409,
+            "candidate": 1.9074708191614187,
+            "sdpa": 3.2321590300529235
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            0.00012614133592993515,
+            0.00012661669462897662,
+            3.075407246886411e-05,
+            3.140294805335346e-05
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.0002036259360115219,
+            0.0004526741835045024,
+            0.00045250032685572477,
+            7.068362725797497e-05
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_f16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_f16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::half_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    },
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "fp16",
+      "causal": true,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 9.043231964111328,
+              "ms_per_iteration": 0.282600998878479
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 6.663455963134766,
+              "ms_per_iteration": 0.20823299884796143
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 9.696255683898926,
+              "ms_per_iteration": 0.30300799012184143
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 1770,
+                "window_ms": 501.1253356933594,
+                "ms_per_iteration": 0.2831216585838189
+              },
+              {
+                "replays": 1770,
+                "window_ms": 501.8653564453125,
+                "ms_per_iteration": 0.28353974940413135
+              },
+              {
+                "replays": 1770,
+                "window_ms": 501.8611145019531,
+                "ms_per_iteration": 0.2835373528259622
+              },
+              {
+                "replays": 1770,
+                "window_ms": 501.98931884765625,
+                "ms_per_iteration": 0.2836097846596928
+              },
+              {
+                "replays": 1770,
+                "window_ms": 501.8449401855469,
+                "ms_per_iteration": 0.2835282147940943
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 2402,
+                "window_ms": 501.48046875,
+                "ms_per_iteration": 0.2087762151332223
+              },
+              {
+                "replays": 2402,
+                "window_ms": 501.5562744140625,
+                "ms_per_iteration": 0.2088077745270868
+              },
+              {
+                "replays": 2402,
+                "window_ms": 501.6199645996094,
+                "ms_per_iteration": 0.20883429000816378
+              },
+              {
+                "replays": 2402,
+                "window_ms": 501.5046081542969,
+                "ms_per_iteration": 0.20878626484358737
+              },
+              {
+                "replays": 2402,
+                "window_ms": 501.6467590332031,
+                "ms_per_iteration": 0.20884544505961827
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 1651,
+                "window_ms": 501.8822021484375,
+                "ms_per_iteration": 0.30398679718257876
+              },
+              {
+                "replays": 1651,
+                "window_ms": 502.00933837890625,
+                "ms_per_iteration": 0.3040638027734138
+              },
+              {
+                "replays": 1651,
+                "window_ms": 501.9827575683594,
+                "ms_per_iteration": 0.30404770294873373
+              },
+              {
+                "replays": 1651,
+                "window_ms": 502.0033874511719,
+                "ms_per_iteration": 0.3040601983350526
+              },
+              {
+                "replays": 1651,
+                "window_ms": 501.9822692871094,
+                "ms_per_iteration": 0.3040474071999451
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              0.2831216585838189,
+              0.28353974940413135,
+              0.2835373528259622,
+              0.2836097846596928,
+              0.2835282147940943
+            ],
+            "candidate": [
+              0.2087762151332223,
+              0.2088077745270868,
+              0.20883429000816378,
+              0.20878626484358737,
+              0.20884544505961827
+            ],
+            "sdpa": [
+              0.30398679718257876,
+              0.3040638027734138,
+              0.30404770294873373,
+              0.3040601983350526,
+              0.3040474071999451
+            ]
+          },
+          "median_ms": {
+            "control": 0.2835373528259622,
+            "candidate": 0.2088077745270868,
+            "sdpa": 0.30404770294873373
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 54.78307342529297,
+              "ms_per_iteration": 1.7119710445404053
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 33.109153747558594,
+              "ms_per_iteration": 1.034661054611206
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 60.45334243774414,
+              "ms_per_iteration": 1.8891669511795044
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 585,
+                "window_ms": 1004.3754272460938,
+                "ms_per_iteration": 1.716881072215545
+              },
+              {
+                "replays": 585,
+                "window_ms": 1005.2574462890625,
+                "ms_per_iteration": 1.7183887970753204
+              },
+              {
+                "replays": 585,
+                "window_ms": 1005.3626098632812,
+                "ms_per_iteration": 1.7185685638688568
+              },
+              {
+                "replays": 585,
+                "window_ms": 1005.1765747070312,
+                "ms_per_iteration": 1.7182505550547542
+              },
+              {
+                "replays": 585,
+                "window_ms": 1005.3515625,
+                "ms_per_iteration": 1.7185496794871795
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 967,
+                "window_ms": 1003.8302001953125,
+                "ms_per_iteration": 1.0380870736249355
+              },
+              {
+                "replays": 967,
+                "window_ms": 1004.0101318359375,
+                "ms_per_iteration": 1.0382731456421277
+              },
+              {
+                "replays": 967,
+                "window_ms": 1004.2399291992188,
+                "ms_per_iteration": 1.0385107851077753
+              },
+              {
+                "replays": 967,
+                "window_ms": 1004.4463500976562,
+                "ms_per_iteration": 1.0387242503595204
+              },
+              {
+                "replays": 967,
+                "window_ms": 1003.9851684570312,
+                "ms_per_iteration": 1.0382473303588742
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 530,
+                "window_ms": 1003.9988403320312,
+                "ms_per_iteration": 1.8943374345887383
+              },
+              {
+                "replays": 530,
+                "window_ms": 1004.175537109375,
+                "ms_per_iteration": 1.8946708247346697
+              },
+              {
+                "replays": 530,
+                "window_ms": 1004.430419921875,
+                "ms_per_iteration": 1.895151735701651
+              },
+              {
+                "replays": 530,
+                "window_ms": 1003.9899291992188,
+                "ms_per_iteration": 1.8943206211306014
+              },
+              {
+                "replays": 530,
+                "window_ms": 1004.2966918945312,
+                "ms_per_iteration": 1.894899418668927
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              1.716881072215545,
+              1.7183887970753204,
+              1.7185685638688568,
+              1.7182505550547542,
+              1.7185496794871795
+            ],
+            "candidate": [
+              1.0380870736249355,
+              1.0382731456421277,
+              1.0385107851077753,
+              1.0387242503595204,
+              1.0382473303588742
+            ],
+            "sdpa": [
+              1.8943374345887383,
+              1.8946708247346697,
+              1.895151735701651,
+              1.8943206211306014,
+              1.894899418668927
+            ]
+          },
+          "median_ms": {
+            "control": 1.7183887970753204,
+            "candidate": 1.0382731456421277,
+            "sdpa": 1.8946708247346697
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            0.00012494878337270516,
+            0.00013253205886893518,
+            1.7737163037931852e-05,
+            1.5453843763299148e-05
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.00017819990564563325,
+            0.0004606405714363329,
+            0.00046096049380116647,
+            5.605742140034287e-05
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_f16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_f16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::half_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "bf16",
+      "causal": false,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 207.09628295898438,
+              "ms_per_iteration": 6.471758842468262
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 148.91427612304688,
+              "ms_per_iteration": 4.653571128845215
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 224.8192901611328,
+              "ms_per_iteration": 7.0256028175354
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 78,
+                "window_ms": 504.4178466796875,
+                "ms_per_iteration": 6.466895470252404
+              },
+              {
+                "replays": 78,
+                "window_ms": 504.8406066894531,
+                "ms_per_iteration": 6.4723154703776045
+              },
+              {
+                "replays": 78,
+                "window_ms": 506.4954833984375,
+                "ms_per_iteration": 6.493531838441506
+              },
+              {
+                "replays": 78,
+                "window_ms": 505.8791809082031,
+                "ms_per_iteration": 6.485630524464143
+              },
+              {
+                "replays": 78,
+                "window_ms": 505.1313171386719,
+                "ms_per_iteration": 6.47604252741887
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 108,
+                "window_ms": 505.08514404296875,
+                "ms_per_iteration": 4.676714296694155
+              },
+              {
+                "replays": 108,
+                "window_ms": 503.3979797363281,
+                "ms_per_iteration": 4.661092404966001
+              },
+              {
+                "replays": 108,
+                "window_ms": 505.41253662109375,
+                "ms_per_iteration": 4.679745709454572
+              },
+              {
+                "replays": 108,
+                "window_ms": 502.9422302246094,
+                "ms_per_iteration": 4.656872502079716
+              },
+              {
+                "replays": 108,
+                "window_ms": 505.7492370605469,
+                "ms_per_iteration": 4.682863306116174
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 72,
+                "window_ms": 505.7458801269531,
+                "ms_per_iteration": 7.024248335096571
+              },
+              {
+                "replays": 72,
+                "window_ms": 505.3616638183594,
+                "ms_per_iteration": 7.018911997477214
+              },
+              {
+                "replays": 72,
+                "window_ms": 505.3854064941406,
+                "ms_per_iteration": 7.019241756863064
+              },
+              {
+                "replays": 72,
+                "window_ms": 506.44793701171875,
+                "ms_per_iteration": 7.033999125162761
+              },
+              {
+                "replays": 72,
+                "window_ms": 506.88763427734375,
+                "ms_per_iteration": 7.040106031629774
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              6.466895470252404,
+              6.4723154703776045,
+              6.493531838441506,
+              6.485630524464143,
+              6.47604252741887
+            ],
+            "candidate": [
+              4.676714296694155,
+              4.661092404966001,
+              4.679745709454572,
+              4.656872502079716,
+              4.682863306116174
+            ],
+            "sdpa": [
+              7.024248335096571,
+              7.018911997477214,
+              7.019241756863064,
+              7.033999125162761,
+              7.040106031629774
+            ]
+          },
+          "median_ms": {
+            "control": 6.47604252741887,
+            "candidate": 4.676714296694155,
+            "sdpa": 7.024248335096571
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 1678.6207275390625,
+              "ms_per_iteration": 52.4568977355957
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 886.2413330078125,
+              "ms_per_iteration": 27.69504165649414
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 1541.6695556640625,
+              "ms_per_iteration": 48.17717361450195
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 32,
+                "window_ms": 1680.4549560546875,
+                "ms_per_iteration": 52.514217376708984
+              },
+              {
+                "replays": 32,
+                "window_ms": 1683.411865234375,
+                "ms_per_iteration": 52.60662078857422
+              },
+              {
+                "replays": 32,
+                "window_ms": 1683.2392578125,
+                "ms_per_iteration": 52.601226806640625
+              },
+              {
+                "replays": 32,
+                "window_ms": 1684.93896484375,
+                "ms_per_iteration": 52.65434265136719
+              },
+              {
+                "replays": 32,
+                "window_ms": 1683.644287109375,
+                "ms_per_iteration": 52.61388397216797
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 37,
+                "window_ms": 1025.4627685546875,
+                "ms_per_iteration": 27.7152099609375
+              },
+              {
+                "replays": 37,
+                "window_ms": 1030.10498046875,
+                "ms_per_iteration": 27.840675147804053
+              },
+              {
+                "replays": 37,
+                "window_ms": 1028.6695556640625,
+                "ms_per_iteration": 27.8018798828125
+              },
+              {
+                "replays": 37,
+                "window_ms": 1027.768310546875,
+                "ms_per_iteration": 27.7775219066723
+              },
+              {
+                "replays": 37,
+                "window_ms": 1030.61767578125,
+                "ms_per_iteration": 27.85453177787162
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 32,
+                "window_ms": 1541.3907470703125,
+                "ms_per_iteration": 48.168460845947266
+              },
+              {
+                "replays": 32,
+                "window_ms": 1543.2056884765625,
+                "ms_per_iteration": 48.22517776489258
+              },
+              {
+                "replays": 32,
+                "window_ms": 1543.572265625,
+                "ms_per_iteration": 48.23663330078125
+              },
+              {
+                "replays": 32,
+                "window_ms": 1542.7506103515625,
+                "ms_per_iteration": 48.21095657348633
+              },
+              {
+                "replays": 32,
+                "window_ms": 1540.9659423828125,
+                "ms_per_iteration": 48.15518569946289
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              52.514217376708984,
+              52.60662078857422,
+              52.601226806640625,
+              52.65434265136719,
+              52.61388397216797
+            ],
+            "candidate": [
+              27.7152099609375,
+              27.840675147804053,
+              27.8018798828125,
+              27.7775219066723,
+              27.85453177787162
+            ],
+            "sdpa": [
+              48.168460845947266,
+              48.22517776489258,
+              48.23663330078125,
+              48.21095657348633,
+              48.15518569946289
+            ]
+          },
+          "median_ms": {
+            "control": 52.60662078857422,
+            "candidate": 27.8018798828125,
+            "sdpa": 48.21095657348633
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            0.0007963631732568376,
+            0.0008241784550291295,
+            0.0001621099292544236,
+            0.0001750147117978485
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.0012846218705443047,
+            0.003623583043427291,
+            0.0036184110330340843,
+            0.0002859926731466348
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_bf16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::bfloat16_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_bf16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::bfloat16_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "bf16",
+      "causal": true,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 103.5634536743164,
+              "ms_per_iteration": 3.2363579273223877
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 75.0074234008789,
+              "ms_per_iteration": 2.343981981277466
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 117.51519775390625,
+              "ms_per_iteration": 3.6723499298095703
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 155,
+                "window_ms": 504.80029296875,
+                "ms_per_iteration": 3.256776083669355
+              },
+              {
+                "replays": 155,
+                "window_ms": 504.27227783203125,
+                "ms_per_iteration": 3.2533695344002016
+              },
+              {
+                "replays": 155,
+                "window_ms": 504.6168518066406,
+                "ms_per_iteration": 3.2555925923009075
+              },
+              {
+                "replays": 155,
+                "window_ms": 505.6832580566406,
+                "ms_per_iteration": 3.262472632623488
+              },
+              {
+                "replays": 155,
+                "window_ms": 504.6265563964844,
+                "ms_per_iteration": 3.2556552025579637
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 214,
+                "window_ms": 507.1763916015625,
+                "ms_per_iteration": 2.3699831383250585
+              },
+              {
+                "replays": 214,
+                "window_ms": 503.68988037109375,
+                "ms_per_iteration": 2.353691029771466
+              },
+              {
+                "replays": 214,
+                "window_ms": 507.6473693847656,
+                "ms_per_iteration": 2.37218396908769
+              },
+              {
+                "replays": 214,
+                "window_ms": 507.9079895019531,
+                "ms_per_iteration": 2.373401820102585
+              },
+              {
+                "replays": 214,
+                "window_ms": 507.3585510253906,
+                "ms_per_iteration": 2.3708343505859375
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 137,
+                "window_ms": 502.4613342285156,
+                "ms_per_iteration": 3.667600979770187
+              },
+              {
+                "replays": 137,
+                "window_ms": 501.7549133300781,
+                "ms_per_iteration": 3.6624446228472856
+              },
+              {
+                "replays": 137,
+                "window_ms": 502.0483093261719,
+                "ms_per_iteration": 3.6645861994611084
+              },
+              {
+                "replays": 137,
+                "window_ms": 502.29827880859375,
+                "ms_per_iteration": 3.666410794223312
+              },
+              {
+                "replays": 137,
+                "window_ms": 502.5357360839844,
+                "ms_per_iteration": 3.668144059007185
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              3.256776083669355,
+              3.2533695344002016,
+              3.2555925923009075,
+              3.262472632623488,
+              3.2556552025579637
+            ],
+            "candidate": [
+              2.3699831383250585,
+              2.353691029771466,
+              2.37218396908769,
+              2.373401820102585,
+              2.3708343505859375
+            ],
+            "sdpa": [
+              3.667600979770187,
+              3.6624446228472856,
+              3.6645861994611084,
+              3.666410794223312,
+              3.668144059007185
+            ]
+          },
+          "median_ms": {
+            "control": 3.2556552025579637,
+            "candidate": 2.3708343505859375,
+            "sdpa": 3.666410794223312
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 758.9031372070312,
+              "ms_per_iteration": 23.715723037719727
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 425.4978942871094,
+              "ms_per_iteration": 13.296809196472168
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 948.60302734375,
+              "ms_per_iteration": 29.643844604492188
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 43,
+                "window_ms": 1019.877685546875,
+                "ms_per_iteration": 23.71808571039244
+              },
+              {
+                "replays": 43,
+                "window_ms": 1020.2953491210938,
+                "ms_per_iteration": 23.72779881676962
+              },
+              {
+                "replays": 43,
+                "window_ms": 1020.3788452148438,
+                "ms_per_iteration": 23.729740586391713
+              },
+              {
+                "replays": 43,
+                "window_ms": 1020.0087280273438,
+                "ms_per_iteration": 23.721133209938227
+              },
+              {
+                "replays": 43,
+                "window_ms": 1020.3760986328125,
+                "ms_per_iteration": 23.729676712390987
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 76,
+                "window_ms": 1003.2317504882812,
+                "ms_per_iteration": 13.200417769582648
+              },
+              {
+                "replays": 76,
+                "window_ms": 1002.6847534179688,
+                "ms_per_iteration": 13.193220439710116
+              },
+              {
+                "replays": 76,
+                "window_ms": 1005.2861328125,
+                "ms_per_iteration": 13.227449115953947
+              },
+              {
+                "replays": 76,
+                "window_ms": 1002.0845336914062,
+                "ms_per_iteration": 13.18532281172903
+              },
+              {
+                "replays": 76,
+                "window_ms": 1002.7303466796875,
+                "ms_per_iteration": 13.19382035104852
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 34,
+                "window_ms": 1007.3403930664062,
+                "ms_per_iteration": 29.627658619600183
+              },
+              {
+                "replays": 34,
+                "window_ms": 1007.996337890625,
+                "ms_per_iteration": 29.64695111443015
+              },
+              {
+                "replays": 34,
+                "window_ms": 1007.1232299804688,
+                "ms_per_iteration": 29.621271470013788
+              },
+              {
+                "replays": 34,
+                "window_ms": 1007.6560668945312,
+                "ms_per_iteration": 29.636943143956803
+              },
+              {
+                "replays": 34,
+                "window_ms": 1007.570068359375,
+                "ms_per_iteration": 29.634413775275736
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              23.71808571039244,
+              23.72779881676962,
+              23.729740586391713,
+              23.721133209938227,
+              23.729676712390987
+            ],
+            "candidate": [
+              13.200417769582648,
+              13.193220439710116,
+              13.227449115953947,
+              13.18532281172903,
+              13.19382035104852
+            ],
+            "sdpa": [
+              29.627658619600183,
+              29.64695111443015,
+              29.621271470013788,
+              29.636943143956803,
+              29.634413775275736
+            ]
+          },
+          "median_ms": {
+            "control": 23.72779881676962,
+            "candidate": 13.19382035104852,
+            "sdpa": 29.634413775275736
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            0.0009933786181241255,
+            0.0010544777306678611,
+            9.1109859356487e-05,
+            8.172146234042837e-05
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.0014325699458586716,
+            0.00366101386893196,
+            0.0036830174674620597,
+            0.00025312007972607775
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_bf16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::bfloat16_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_bf16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::bfloat16_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "fp16",
+      "causal": false,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 207.73065185546875,
+              "ms_per_iteration": 6.491582870483398
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 148.7539520263672,
+              "ms_per_iteration": 4.648561000823975
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 225.4029083251953,
+              "ms_per_iteration": 7.0438408851623535
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 78,
+                "window_ms": 506.2342834472656,
+                "ms_per_iteration": 6.49018312111879
+              },
+              {
+                "replays": 78,
+                "window_ms": 508.6053466796875,
+                "ms_per_iteration": 6.520581367688301
+              },
+              {
+                "replays": 78,
+                "window_ms": 507.3102722167969,
+                "ms_per_iteration": 6.503977848933293
+              },
+              {
+                "replays": 78,
+                "window_ms": 508.5032043457031,
+                "ms_per_iteration": 6.5192718505859375
+              },
+              {
+                "replays": 78,
+                "window_ms": 506.2419128417969,
+                "ms_per_iteration": 6.490280933869191
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 108,
+                "window_ms": 509.1264343261719,
+                "ms_per_iteration": 4.714133651168258
+              },
+              {
+                "replays": 108,
+                "window_ms": 507.9748229980469,
+                "ms_per_iteration": 4.703470583315249
+              },
+              {
+                "replays": 108,
+                "window_ms": 508.1578369140625,
+                "ms_per_iteration": 4.70516515661169
+              },
+              {
+                "replays": 108,
+                "window_ms": 510.59869384765625,
+                "ms_per_iteration": 4.727765683774595
+              },
+              {
+                "replays": 108,
+                "window_ms": 508.82958984375,
+                "ms_per_iteration": 4.711385091145833
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 71,
+                "window_ms": 499.6482849121094,
+                "ms_per_iteration": 7.037299787494498
+              },
+              {
+                "replays": 71,
+                "window_ms": 500.53692626953125,
+                "ms_per_iteration": 7.049815862951144
+              },
+              {
+                "replays": 71,
+                "window_ms": 499.9289855957031,
+                "ms_per_iteration": 7.04125331824934
+              },
+              {
+                "replays": 71,
+                "window_ms": 499.6724548339844,
+                "ms_per_iteration": 7.037640208929357
+              },
+              {
+                "replays": 71,
+                "window_ms": 500.3260192871094,
+                "ms_per_iteration": 7.046845342071963
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              6.49018312111879,
+              6.520581367688301,
+              6.503977848933293,
+              6.5192718505859375,
+              6.490280933869191
+            ],
+            "candidate": [
+              4.714133651168258,
+              4.703470583315249,
+              4.70516515661169,
+              4.727765683774595,
+              4.711385091145833
+            ],
+            "sdpa": [
+              7.037299787494498,
+              7.049815862951144,
+              7.04125331824934,
+              7.037640208929357,
+              7.046845342071963
+            ]
+          },
+          "median_ms": {
+            "control": 6.503977848933293,
+            "candidate": 4.711385091145833,
+            "sdpa": 7.04125331824934
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 1690.4346923828125,
+              "ms_per_iteration": 52.82608413696289
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 907.0384521484375,
+              "ms_per_iteration": 28.344951629638672
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 1527.3040771484375,
+              "ms_per_iteration": 47.72825241088867
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 32,
+                "window_ms": 1691.55126953125,
+                "ms_per_iteration": 52.86097717285156
+              },
+              {
+                "replays": 32,
+                "window_ms": 1690.2908935546875,
+                "ms_per_iteration": 52.821590423583984
+              },
+              {
+                "replays": 32,
+                "window_ms": 1690.835693359375,
+                "ms_per_iteration": 52.83861541748047
+              },
+              {
+                "replays": 32,
+                "window_ms": 1689.5142822265625,
+                "ms_per_iteration": 52.79732131958008
+              },
+              {
+                "replays": 32,
+                "window_ms": 1690.8125,
+                "ms_per_iteration": 52.837890625
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 36,
+                "window_ms": 1022.9024658203125,
+                "ms_per_iteration": 28.413957383897568
+              },
+              {
+                "replays": 36,
+                "window_ms": 1021.6793212890625,
+                "ms_per_iteration": 28.379981146918404
+              },
+              {
+                "replays": 36,
+                "window_ms": 1024.7281494140625,
+                "ms_per_iteration": 28.464670817057293
+              },
+              {
+                "replays": 36,
+                "window_ms": 1019.2757568359375,
+                "ms_per_iteration": 28.313215467664932
+              },
+              {
+                "replays": 36,
+                "window_ms": 1023.6400146484375,
+                "ms_per_iteration": 28.434444851345486
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 32,
+                "window_ms": 1526.42919921875,
+                "ms_per_iteration": 47.70091247558594
+              },
+              {
+                "replays": 32,
+                "window_ms": 1531.18310546875,
+                "ms_per_iteration": 47.84947204589844
+              },
+              {
+                "replays": 32,
+                "window_ms": 1528.0416259765625,
+                "ms_per_iteration": 47.75130081176758
+              },
+              {
+                "replays": 32,
+                "window_ms": 1528.959228515625,
+                "ms_per_iteration": 47.77997589111328
+              },
+              {
+                "replays": 32,
+                "window_ms": 1531.2901611328125,
+                "ms_per_iteration": 47.85281753540039
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              52.86097717285156,
+              52.821590423583984,
+              52.83861541748047,
+              52.79732131958008,
+              52.837890625
+            ],
+            "candidate": [
+              28.413957383897568,
+              28.379981146918404,
+              28.464670817057293,
+              28.313215467664932,
+              28.434444851345486
+            ],
+            "sdpa": [
+              47.70091247558594,
+              47.84947204589844,
+              47.75130081176758,
+              47.77997589111328,
+              47.85281753540039
+            ]
+          },
+          "median_ms": {
+            "control": 52.837890625,
+            "candidate": 28.413957383897568,
+            "sdpa": 47.77997589111328
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            9.958573525345617e-05,
+            0.00010503008361623907,
+            5.324071289755645e-05,
+            5.6979851267426956e-05
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.0001678330625489723,
+            0.0004540881658938137,
+            0.00045323084076359925,
+            9.331329317150246e-05
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_f16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_f16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::half_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "fp16",
+      "causal": true,
+      "heads": 16,
+      "phases": {
+        "forward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 104.40911865234375,
+              "ms_per_iteration": 3.262784957885742
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 75.22882843017578,
+              "ms_per_iteration": 2.350900888442993
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 117.92447662353516,
+              "ms_per_iteration": 3.6851398944854736
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 154,
+                "window_ms": 505.5025634765625,
+                "ms_per_iteration": 3.282484178419237
+              },
+              {
+                "replays": 154,
+                "window_ms": 505.97894287109375,
+                "ms_per_iteration": 3.2855775511109986
+              },
+              {
+                "replays": 154,
+                "window_ms": 505.7569274902344,
+                "ms_per_iteration": 3.2841358927937296
+              },
+              {
+                "replays": 154,
+                "window_ms": 509.599853515625,
+                "ms_per_iteration": 3.309089957893669
+              },
+              {
+                "replays": 154,
+                "window_ms": 507.2701110839844,
+                "ms_per_iteration": 3.2939617602856126
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 213,
+                "window_ms": 511.168701171875,
+                "ms_per_iteration": 2.399853057144953
+              },
+              {
+                "replays": 213,
+                "window_ms": 508.14483642578125,
+                "ms_per_iteration": 2.3856565090412265
+              },
+              {
+                "replays": 213,
+                "window_ms": 511.6175231933594,
+                "ms_per_iteration": 2.401960202785725
+              },
+              {
+                "replays": 213,
+                "window_ms": 512.0598754882812,
+                "ms_per_iteration": 2.404036974123386
+              },
+              {
+                "replays": 213,
+                "window_ms": 508.6806335449219,
+                "ms_per_iteration": 2.3881719884738115
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 136,
+                "window_ms": 499.3490905761719,
+                "ms_per_iteration": 3.6716844895306755
+              },
+              {
+                "replays": 136,
+                "window_ms": 499.95098876953125,
+                "ms_per_iteration": 3.6761102115406707
+              },
+              {
+                "replays": 136,
+                "window_ms": 498.9123840332031,
+                "ms_per_iteration": 3.6684734120088467
+              },
+              {
+                "replays": 136,
+                "window_ms": 499.15521240234375,
+                "ms_per_iteration": 3.670258914723116
+              },
+              {
+                "replays": 136,
+                "window_ms": 499.0999755859375,
+                "ms_per_iteration": 3.6698527616613053
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              3.282484178419237,
+              3.2855775511109986,
+              3.2841358927937296,
+              3.309089957893669,
+              3.2939617602856126
+            ],
+            "candidate": [
+              2.399853057144953,
+              2.3856565090412265,
+              2.401960202785725,
+              2.404036974123386,
+              2.3881719884738115
+            ],
+            "sdpa": [
+              3.6716844895306755,
+              3.6761102115406707,
+              3.6684734120088467,
+              3.670258914723116,
+              3.6698527616613053
+            ]
+          },
+          "median_ms": {
+            "control": 3.2855775511109986,
+            "candidate": 2.399853057144953,
+            "sdpa": 3.670258914723116
+          }
+        },
+        "forward_backward": {
+          "calibration": {
+            "control": {
+              "replays": 32,
+              "window_ms": 773.6485595703125,
+              "ms_per_iteration": 24.176517486572266
+            },
+            "candidate": {
+              "replays": 32,
+              "window_ms": 427.19000244140625,
+              "ms_per_iteration": 13.349687576293945
+            },
+            "sdpa": {
+              "replays": 32,
+              "window_ms": 681.7718505859375,
+              "ms_per_iteration": 21.305370330810547
+            }
+          },
+          "attempts": {
+            "control": [
+              {
+                "replays": 42,
+                "window_ms": 1016.9146118164062,
+                "ms_per_iteration": 24.212252662295388
+              },
+              {
+                "replays": 42,
+                "window_ms": 1016.4523315429688,
+                "ms_per_iteration": 24.201245989118302
+              },
+              {
+                "replays": 42,
+                "window_ms": 1017.07763671875,
+                "ms_per_iteration": 24.216134207589285
+              },
+              {
+                "replays": 42,
+                "window_ms": 1016.0916137695312,
+                "ms_per_iteration": 24.192657470703125
+              },
+              {
+                "replays": 42,
+                "window_ms": 1016.61474609375,
+                "ms_per_iteration": 24.205113002232142
+              }
+            ],
+            "candidate": [
+              {
+                "replays": 75,
+                "window_ms": 998.7811279296875,
+                "ms_per_iteration": 13.317081705729167
+              },
+              {
+                "replays": 75,
+                "window_ms": 998.534423828125,
+                "ms_per_iteration": 13.313792317708334
+              },
+              {
+                "replays": 75,
+                "window_ms": 1001.2006225585938,
+                "ms_per_iteration": 13.349341634114584
+              },
+              {
+                "replays": 75,
+                "window_ms": 994.4541625976562,
+                "ms_per_iteration": 13.259388834635416
+              },
+              {
+                "replays": 75,
+                "window_ms": 996.2217407226562,
+                "ms_per_iteration": 13.28295654296875
+              }
+            ],
+            "sdpa": [
+              {
+                "replays": 47,
+                "window_ms": 1000.9017944335938,
+                "ms_per_iteration": 21.29578286028923
+              },
+              {
+                "replays": 47,
+                "window_ms": 1001.167724609375,
+                "ms_per_iteration": 21.30144094913564
+              },
+              {
+                "replays": 47,
+                "window_ms": 1000.6202392578125,
+                "ms_per_iteration": 21.28979232463431
+              },
+              {
+                "replays": 47,
+                "window_ms": 1001.5457763671875,
+                "ms_per_iteration": 21.30948460355718
+              },
+              {
+                "replays": 47,
+                "window_ms": 1000.8978271484375,
+                "ms_per_iteration": 21.295698449966757
+              }
+            ]
+          },
+          "samples_ms": {
+            "control": [
+              24.212252662295388,
+              24.201245989118302,
+              24.216134207589285,
+              24.192657470703125,
+              24.205113002232142
+            ],
+            "candidate": [
+              13.317081705729167,
+              13.313792317708334,
+              13.349341634114584,
+              13.259388834635416,
+              13.28295654296875
+            ],
+            "sdpa": [
+              21.29578286028923,
+              21.30144094913564,
+              21.28979232463431,
+              21.30948460355718,
+              21.295698449966757
+            ]
+          },
+          "median_ms": {
+            "control": 24.205113002232142,
+            "candidate": 13.313792317708334,
+            "sdpa": 21.29578286028923
+          }
+        }
+      },
+      "errors": [
+        {
+          "backend": "candidate",
+          "relative_l2_vs_control": [
+            0.0001234390490553489,
+            0.00013530871888957179,
+            3.1783326500547095e-05,
+            2.907280326145934e-05
+          ]
+        },
+        {
+          "backend": "sdpa",
+          "relative_l2_vs_control": [
+            0.00018100108749833006,
+            0.0004576499483697064,
+            0.0004609105773476821,
+            8.779885164270266e-05
+          ]
+        }
+      ],
+      "sdpa_gpu_kernels": [
+        "fmha_cutlassF_f16_aligned_32x128_gmem_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 32, 128, 65536, true, true>::Params)",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)",
+        "fmha_cutlassB_f16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::half_t, true, false, false, 128, 64, 65536, false>::Params)"
+      ]
+    }
+  ],
+  "finished": true
+}

@@ -1,0 +1,26 @@
+{
+  "torch": "2.11.0+cu130",
+  "torch_git": "70d99e998b4955e0049d13a98d77ae1b14db1f45",
+  "cuda": "13.0",
+  "python": "3.12.3",
+  "device": "NVIDIA GeForce RTX 5090",
+  "capability": [
+    12,
+    0
+  ],
+  "multiprocessors": 170,
+  "memory_bytes": 33670758400,
+  "shared_limit": 101376,
+  "packages": {
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15.post0",
+    "triton": "3.6.0"
+  },
+  "nsys": "NVIDIA Nsight Systems version 2025.3.2.474-253236389321v0\n",
+  "ncu": "NVIDIA (R) Nsight Compute Command Line Profiler\nCopyright (c) 2018-2025 NVIDIA Corporation\nVersion 2025.3.1.0 (build 36398880) (public-release)\n",
+  "driver": "595.71.05",
+  "power_limit_watts": 600,
+  "gpu_image_scope": "Frozen Python 3.12 compatibility benchmark environment; development checks use Python 3.13.16.",
+  "control_commit": "eb1c2f2",
+  "native_abi": true
+}

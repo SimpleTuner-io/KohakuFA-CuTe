@@ -1,0 +1,48 @@
+{
+  "scope": "Same-host RTX5090 D128 BF16 dense attribution; no production changes or selected optimization.",
+  "counter_access": "Single Nsight Compute attempt denied ERR_NVGPUCTRPERM; no retry.",
+  "instrumentation": {
+    "added_sync_calls": 0,
+    "q_and_kv_iterations_recorded": 128,
+    "bitwise_eager_graph_checks_pass": true,
+    "muted_encoded_sass_matches_expanded_original": true,
+    "caveat": "Sampled thread intervals and resource changes expose observer effects. Stage fractions are not baseline hardware stall/utilization measurements."
+  },
+  "collector_control": {
+    "all_owned_collectors_stopped": true,
+    "NVML_free_capture_complete": true,
+    "periodic_interruptions_persist": true,
+    "mechanism": "Unproven; do not attribute to telemetry, power cap or another workload."
+  },
+  "driver_potential_occupancy": {
+    "control": {
+      "threads": 128,
+      "registers": 255,
+      "local_bytes": 24,
+      "dynamic_shared": 49152,
+      "CTAs_per_SM": 2,
+      "warps_per_SM": 8
+    },
+    "q8n4": {
+      "threads": 256,
+      "registers": 143,
+      "local_bytes": 0,
+      "dynamic_shared": 50176,
+      "CTAs_per_SM": 1,
+      "warps_per_SM": 8
+    },
+    "q8n4tma": {
+      "threads": 256,
+      "registers": 102,
+      "local_bytes": 0,
+      "dynamic_shared": 83968,
+      "CTAs_per_SM": 1,
+      "warps_per_SM": 8
+    }
+  },
+  "occupancy_scope": "Exact emitted cubins reloaded; exact launch dynamic-SMEM opt-in applied privately; driver-computed potential occupancy, not measured residency.",
+  "archives": {
+    "v1": "5cf26ed33eb4cefa039e564257e307a10e36e63f6de203a7a09e967cfcdd3dc7",
+    "extension_v2": "6b12d546b60c2220a09e8c3fab477f2a6d25c38e3382b43a69a6a9e235c35514"
+  }
+}

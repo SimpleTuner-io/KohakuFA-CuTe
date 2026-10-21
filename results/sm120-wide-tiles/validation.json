@@ -1,0 +1,63 @@
+{
+  "runtime_source_sha256": "f7ba93a691c3e18f6a7659fb2817c3f21cb4f9d9d595d51bf758e3bed1d83fff",
+  "source_files": {
+    "src/kohakufa_cute/kernels.py": "f7ba93a691c3e18f6a7659fb2817c3f21cb4f9d9d595d51bf758e3bed1d83fff",
+    "benchmarks/tune_sm120.py": "3da5128b282e622459febc8da69a04b76408c69924ad176eb687211db540f075",
+    "benchmarks/plot_sm120_wide.py": "3ded2ad6f29e98764120272fdc1558493846837df60689494610b12874b278ae",
+    "tests/test_kernels.py": "76b3b10d450d66b695f96c76d2c6ea5761813efd431e6ad07dd4f7f8a960ee46",
+    "tests/test_tune_sm120.py": "f7e50f37398988f2be6c3b6702ecb5e0e10da125931a35d6cf339df7fb02a401"
+  },
+  "cpu": {
+    "python": "3.13.16",
+    "command": "CUDA_VISIBLE_DEVICES='' PYTHONPATH=src python -m unittest discover -v -f",
+    "tests": 100,
+    "passed": 46,
+    "skipped": 54,
+    "result": "OK",
+    "raw_log_sha256": "575757149565e59ab5d2560485b318d39ae00ffbf34173e3e2706d90a7187d94"
+  },
+  "gpu": {
+    "python": "3.12.3",
+    "scope": "Frozen compatibility benchmark image; actual RTX 5090, SM120.",
+    "tests": 8,
+    "passed": 8,
+    "skipped": 0,
+    "result": "OK",
+    "raw_log_sha256": "fa226fd0f8e9532b3d515f47aa40fed1d4845681e331838c104b51f92d9c0021",
+    "methods": [
+      "test_sm120_backward_layouts_reuse_warm_programs",
+      "test_sm120_backward_layouts_read_changed_graph_inputs",
+      "test_wide_head_gradient_cancellation",
+      "test_wide_head_tails_masks_gqa_and_strides",
+      "test_zero_negative_scale_and_offset_views",
+      "test_single_query_and_key_tma_layouts",
+      "test_preserves_projection_layout_with_compiled_backward",
+      "test_cuda_graph_current_stream_and_gradients"
+    ],
+    "additional_updated_method": {
+      "method": "test_preserves_projection_layout_with_compiled_backward",
+      "result": "PASS",
+      "scope": "SM120 dimension 512 added after the original eight-method run; affected method rerun.",
+      "raw_log_sha256": "aab5b6eb7b601d1a095311048be9b43c0029f74166ad3ef32dc597ebae33d051"
+    }
+  },
+  "formatting": {
+    "black": "24.8.0",
+    "isort": "5.13.2",
+    "scope": [
+      "src/kohakufa_cute/kernels.py",
+      "benchmarks/tune_sm120.py",
+      "benchmarks/plot_sm120_wide.py",
+      "tests/test_kernels.py",
+      "tests/test_tune_sm120.py"
+    ],
+    "result": "PASS"
+  },
+  "qualification": {
+    "cases": 56,
+    "output_gradient_metric_records": 224,
+    "changed_input_graphs": 4,
+    "result": "PASS",
+    "file": "precision.json"
+  }
+}

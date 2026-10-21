@@ -143,7 +143,9 @@ A dash indicates that cuDNN did not provide a kernel for that timing call. Sourc
 
 The [SDPA comparison and profiling followup](results/sm120-sdpa-comparison/README.md)
 records actual PyTorch backend selection, matching-source PTX and native SASS,
-and newer backward layouts. The table below retains the original tuning run.
+and newer backward layouts. [Full-width D512 tiles](results/sm120-wide-tiles/README.md)
+report the subsequent forward/backward gains against main and default SDPA.
+The table below retains the original tuning run.
 
 BF16 dense attention, batch 1, 16 heads, median of three rotating-order CUDA-graph
 repetitions with 50 timed replays per sample. Forward/backward includes forward;

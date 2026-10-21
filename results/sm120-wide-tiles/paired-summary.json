@@ -1,0 +1,410 @@
+{
+  "scope": "RTX 5090, B1 H16 D512; unprofiled native CUDA graphs. All samples retained in paired-timings.json.",
+  "control_commit": "eb1c2f2",
+  "source_sha256": "f7ba93a691c3e18f6a7659fb2817c3f21cb4f9d9d595d51bf758e3bed1d83fff",
+  "control_source_sha256": "7de31cb7528549c0aa6e3060aa7f5f0dbbf6bd60e725846704bfeed02c73b7cd",
+  "protocol": {
+    "rounds": 5,
+    "target_window_ms": 1000.0,
+    "native_abi": true,
+    "rotated_backends": true,
+    "graph_checked": true,
+    "profiler": false,
+    "telemetry": false,
+    "timing": "CUDA events; all samples retained, includes GPU context scheduling"
+  },
+  "cases": [
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "bf16",
+      "causal": false,
+      "heads": 16,
+      "forward_ms": {
+        "control": 0.4857344489033033,
+        "candidate": 0.35234949398174525,
+        "sdpa": 0.5344079538009222
+      },
+      "forward_backward_ms": {
+        "control": 3.167989159232058,
+        "candidate": 1.8765034042786215,
+        "sdpa": 5.067684905697601
+      },
+      "latency_reduction_vs_main_percent": 40.76673530241819,
+      "latency_reduction_vs_sdpa_percent": 62.97119021411795,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            0.4830913137882314,
+            0.4863433542749637
+          ],
+          "candidate": [
+            0.3510828860846007,
+            0.3525524594171853
+          ],
+          "sdpa": [
+            0.5322370589918392,
+            0.5346019121238886
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            3.1667584440309544,
+            3.171091555044854
+          ],
+          "candidate": [
+            1.8742360908294393,
+            1.8785932023948597
+          ],
+          "sdpa": [
+            5.065314707129892,
+            5.073232939749053
+          ]
+        }
+      }
+    },
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "bf16",
+      "causal": true,
+      "heads": 16,
+      "forward_ms": {
+        "control": 0.28108532153128507,
+        "candidate": 0.20751373341541415,
+        "sdpa": 0.30340063859875077
+      },
+      "forward_backward_ms": {
+        "control": 1.6818346697681115,
+        "candidate": 1.0284825292667652,
+        "sdpa": 3.9710889543805803
+      },
+      "latency_reduction_vs_main_percent": 38.84758426293051,
+      "latency_reduction_vs_sdpa_percent": 74.10074311903219,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            0.2807969458309221,
+            0.28123450145443146
+          ],
+          "candidate": [
+            0.20747289594435533,
+            0.20752895431013296
+          ],
+          "sdpa": [
+            0.30337478342839486,
+            0.3035913918905212
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            1.6811204459798994,
+            1.6839661973605005
+          ],
+          "candidate": [
+            1.0277137873964222,
+            1.0318193269045477
+          ],
+          "sdpa": [
+            3.968052697560144,
+            3.9719068739149304
+          ]
+        }
+      }
+    },
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "fp16",
+      "causal": false,
+      "heads": 16,
+      "forward_ms": {
+        "control": 0.4798790160548744,
+        "candidate": 0.3566760383309408,
+        "sdpa": 0.5371344476683527
+      },
+      "forward_backward_ms": {
+        "control": 3.197658381386409,
+        "candidate": 1.9074708191614187,
+        "sdpa": 3.2321590300529235
+      },
+      "latency_reduction_vs_main_percent": 40.34788611989263,
+      "latency_reduction_vs_sdpa_percent": 40.98462354650335,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            0.4784191076835377,
+            0.4803681734075957
+          ],
+          "candidate": [
+            0.35634422706630964,
+            0.35673541281332816
+          ],
+          "sdpa": [
+            0.5368368686773838,
+            0.537177974342281
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            3.1906978546626985,
+            3.1998969184027777
+          ],
+          "candidate": [
+            1.907380426791231,
+            1.909782032549608
+          ],
+          "sdpa": [
+            3.2298243368825603,
+            3.240904974168347
+          ]
+        }
+      }
+    },
+    {
+      "dim": 512,
+      "seq": 1024,
+      "dtype": "fp16",
+      "causal": true,
+      "heads": 16,
+      "forward_ms": {
+        "control": 0.2835373528259622,
+        "candidate": 0.2088077745270868,
+        "sdpa": 0.30404770294873373
+      },
+      "forward_backward_ms": {
+        "control": 1.7183887970753204,
+        "candidate": 1.0382731456421277,
+        "sdpa": 1.8946708247346697
+      },
+      "latency_reduction_vs_main_percent": 39.57868280977753,
+      "latency_reduction_vs_sdpa_percent": 45.20034128949403,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            0.2831216585838189,
+            0.2836097846596928
+          ],
+          "candidate": [
+            0.2087762151332223,
+            0.20884544505961827
+          ],
+          "sdpa": [
+            0.30398679718257876,
+            0.3040638027734138
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            1.716881072215545,
+            1.7185685638688568
+          ],
+          "candidate": [
+            1.0380870736249355,
+            1.0387242503595204
+          ],
+          "sdpa": [
+            1.8943206211306014,
+            1.895151735701651
+          ]
+        }
+      }
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "bf16",
+      "causal": false,
+      "heads": 16,
+      "forward_ms": {
+        "control": 6.47604252741887,
+        "candidate": 4.676714296694155,
+        "sdpa": 7.024248335096571
+      },
+      "forward_backward_ms": {
+        "control": 52.60662078857422,
+        "candidate": 27.8018798828125,
+        "sdpa": 48.21095657348633
+      },
+      "latency_reduction_vs_main_percent": 47.151367135805714,
+      "latency_reduction_vs_sdpa_percent": 42.33285987504721,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            6.466895470252404,
+            6.493531838441506
+          ],
+          "candidate": [
+            4.656872502079716,
+            4.682863306116174
+          ],
+          "sdpa": [
+            7.018911997477214,
+            7.040106031629774
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            52.514217376708984,
+            52.65434265136719
+          ],
+          "candidate": [
+            27.7152099609375,
+            27.85453177787162
+          ],
+          "sdpa": [
+            48.15518569946289,
+            48.23663330078125
+          ]
+        }
+      }
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "bf16",
+      "causal": true,
+      "heads": 16,
+      "forward_ms": {
+        "control": 3.2556552025579637,
+        "candidate": 2.3708343505859375,
+        "sdpa": 3.666410794223312
+      },
+      "forward_backward_ms": {
+        "control": 23.72779881676962,
+        "candidate": 13.19382035104852,
+        "sdpa": 29.634413775275736
+      },
+      "latency_reduction_vs_main_percent": 44.39509348113746,
+      "latency_reduction_vs_sdpa_percent": 55.47804504890781,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            3.2533695344002016,
+            3.262472632623488
+          ],
+          "candidate": [
+            2.353691029771466,
+            2.373401820102585
+          ],
+          "sdpa": [
+            3.6624446228472856,
+            3.668144059007185
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            23.71808571039244,
+            23.729740586391713
+          ],
+          "candidate": [
+            13.18532281172903,
+            13.227449115953947
+          ],
+          "sdpa": [
+            29.621271470013788,
+            29.64695111443015
+          ]
+        }
+      }
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "fp16",
+      "causal": false,
+      "heads": 16,
+      "forward_ms": {
+        "control": 6.503977848933293,
+        "candidate": 4.711385091145833,
+        "sdpa": 7.04125331824934
+      },
+      "forward_backward_ms": {
+        "control": 52.837890625,
+        "candidate": 28.413957383897568,
+        "sdpa": 47.77997589111328
+      },
+      "latency_reduction_vs_main_percent": 46.224277601169725,
+      "latency_reduction_vs_sdpa_percent": 40.53166236699095,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            6.49018312111879,
+            6.520581367688301
+          ],
+          "candidate": [
+            4.703470583315249,
+            4.727765683774595
+          ],
+          "sdpa": [
+            7.037299787494498,
+            7.049815862951144
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            52.79732131958008,
+            52.86097717285156
+          ],
+          "candidate": [
+            28.313215467664932,
+            28.464670817057293
+          ],
+          "sdpa": [
+            47.70091247558594,
+            47.85281753540039
+          ]
+        }
+      }
+    },
+    {
+      "dim": 512,
+      "seq": 4096,
+      "dtype": "fp16",
+      "causal": true,
+      "heads": 16,
+      "forward_ms": {
+        "control": 3.2855775511109986,
+        "candidate": 2.399853057144953,
+        "sdpa": 3.670258914723116
+      },
+      "forward_backward_ms": {
+        "control": 24.205113002232142,
+        "candidate": 13.313792317708334,
+        "sdpa": 21.29578286028923
+      },
+      "latency_reduction_vs_main_percent": 44.99595058085222,
+      "latency_reduction_vs_sdpa_percent": 37.48155489256565,
+      "ranges_ms": {
+        "forward": {
+          "control": [
+            3.282484178419237,
+            3.309089957893669
+          ],
+          "candidate": [
+            2.3856565090412265,
+            2.404036974123386
+          ],
+          "sdpa": [
+            3.6684734120088467,
+            3.6761102115406707
+          ]
+        },
+        "forward_backward": {
+          "control": [
+            24.192657470703125,
+            24.216134207589285
+          ],
+          "candidate": [
+            13.259388834635416,
+            13.349341634114584
+          ],
+          "sdpa": [
+            21.28979232463431,
+            21.30948460355718
+          ]
+        }
+      }
+    }
+  ]
+}

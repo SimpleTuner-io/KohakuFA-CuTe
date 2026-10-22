@@ -26,11 +26,11 @@ class SM120TuningTests(unittest.TestCase):
                 # reduction buffer must also fit before the tile is admitted.
                 self.assertNotIn(option, candidates(mode, 512, baseline, 98304))
 
-    def test_full_width_keyvalue_reuses_v_for_weights(self):
+    def test_full_width_keyvalue_keeps_v_and_counts_packed_operands(self):
         baseline = (32, 256, 2, False, True, False, False)
         option = (32, 512, 4, False, True, False, False)
-        self.assertIn(option, candidates("kv", 512, baseline, 98304))
-        self.assertNotIn(option, candidates("kv", 512, baseline, 98303))
+        self.assertIn(option, candidates("kv", 512, baseline, 100352))
+        self.assertNotIn(option, candidates("kv", 512, baseline, 100351))
 
 
 if __name__ == "__main__":

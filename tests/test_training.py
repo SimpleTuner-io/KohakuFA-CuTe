@@ -32,8 +32,8 @@ class TrainingBlock(torch.nn.Module):
 
 
 @unittest.skipUnless(
-    torch.cuda.is_available() and torch.cuda.get_device_capability() in {(8, 9), (9, 0), (10, 0), (10, 3), (12, 0)},
-    "Requires centered Ada/Hopper/Blackwell kernels",
+    torch.cuda.is_available() and torch.cuda.get_device_capability() in {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0)},
+    "Requires centered Ampere/Ada/Hopper/Blackwell kernels",
 )
 class TrainingTests(unittest.TestCase):
     def test_fresh_compiled_automatic_call_selects_cute(self):
@@ -41,7 +41,8 @@ class TrainingTests(unittest.TestCase):
         import sys
         import textwrap
 
-        code = textwrap.dedent("""
+        code = textwrap.dedent(
+            """
             import torch
             from kohakufa_cute import api
             from benchmarks.reference import fp64_reference
@@ -63,7 +64,8 @@ class TrainingTests(unittest.TestCase):
             assert gradients[0][..., 0].item() > 0
             for actual, expected in zip((out, *gradients), reference):
                 torch.testing.assert_close(actual.double(), expected, atol=0, rtol=0.02)
-        """)
+        """
+        )
         result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=180)
         self.assertEqual(result.returncode, 0, result.stderr)
 
@@ -72,7 +74,8 @@ class TrainingTests(unittest.TestCase):
         import sys
         import textwrap
 
-        code = textwrap.dedent("""
+        code = textwrap.dedent(
+            """
             import torch
             from kohakufa_cute import attention
             from benchmarks.reference import fp64_reference
@@ -87,7 +90,8 @@ class TrainingTests(unittest.TestCase):
                 gradients = torch.autograd.grad(out, inputs, dout)
                 for actual, reference in zip((out, *gradients), expected):
                     torch.testing.assert_close(actual.double(), reference, atol=0.02, rtol=0.02)
-        """)
+        """
+        )
         result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=180)
         self.assertEqual(result.returncode, 0, result.stderr)
 

@@ -61,7 +61,7 @@ def candidates(mode, dimension, baseline, shared_limit, tcgen=False, sm103=False
             # P (and dS) reuse the consumed source tile; only row reductions
             # need additional shared storage for these N-warp layouts.
             shared += 8 * column_warps * rows
-        elif column_warps > 1 and not wide_kv:
+        elif column_warps > 1:
             shared += 4 * rows * columns
         # Keep tiles inside the existing 64x64 mask classification cells.
         if rows <= 64 and shared <= shared_limit:

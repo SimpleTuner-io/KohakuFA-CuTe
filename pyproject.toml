@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "kohakufa-cute"
 version = "0.2.0"
-description = "CuTe attention with stable large-logit backward for Ada, Hopper, and Blackwell"
+description = "CuTe attention with stable large-logit backward for Ampere, Ada, Hopper, and Blackwell"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "AGPL-3.0-or-later"

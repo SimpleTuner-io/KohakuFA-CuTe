@@ -9,6 +9,186 @@ import torch
     "Requires Ampere, Ada, Hopper or Blackwell",
 )
 class CuTeAttentionTests(unittest.TestCase):
+    def test_sm89_split_forward_compiled_dynamic_query_boundaries(self):
+        if torch.cuda.get_device_capability() not in {(8, 9), (9, 0)}:
+            self.skipTest("Requires Ada or Hopper short-query forward kernels.")
+        from benchmarks.reference import fp64_reference
+        from kohakufa_cute import attention
+
+        torch.compiler.reset()
+        self.addCleanup(torch.compiler.reset)
+        function = torch.compile(attention, fullgraph=True, dynamic=True)
+        for queries in (31, 33, 65, 257, 12):
+            with self.subTest(queries=queries):
+                torch.manual_seed(817)
+                q = torch.randn(1, queries, 16, 64, device="cuda", dtype=torch.bfloat16).transpose(1, 2)
+                k, v = [torch.randn(1, 257, 16, 64, device="cuda", dtype=q.dtype).transpose(1, 2) for _ in range(2)]
+                dout = torch.randn_like(q)
+                expected = fp64_reference((q, k, v), dout)
+                inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
+                output = function(*inputs)
+                gradients = torch.autograd.grad(output, inputs, dout)
+                for got, want in zip((output, *gradients), expected):
+                    torch.testing.assert_close(got.double(), want, atol=0.02, rtol=0.02)
+
+    def test_sm89_short_query_split_forward_matches_fp64_and_saved_statistics(self):
+        if torch.cuda.get_device_capability() not in {(8, 9), (9, 0)}:
+            self.skipTest("Requires Ada or Hopper short-query forward kernels.")
+        from benchmarks.reference import fp64_reference
+        from kohakufa_cute import native
+
+        extension = native.extension()
+        extension.clear_cache()
+        try:
+            for dtype, queries, keys, scale in itertools.product(
+                (torch.float16, torch.bfloat16), (1, 3, 12, 32, 64, 128, 129, 256), (256, 787), (0.125, -0.125, 0.0)
+            ):
+                with self.subTest(dtype=dtype, queries=queries, keys=keys, scale=scale):
+                    torch.manual_seed(813)
+                    q = torch.randn(1, queries, 16, 64, device="cuda", dtype=dtype).transpose(1, 2)
+                    k, v = [torch.randn(1, keys, 16, 64, device="cuda", dtype=dtype).transpose(1, 2) for _ in range(2)]
+                    dout = torch.randn_like(q)
+
+                    def run():
+                        out, maximum, logsum, blocks = extension.forward(q, k, v, None, scale, False)
+                        gradients = extension.backward(q, k, v, None, maximum, logsum, dout, blocks, out, scale, False)
+                        return out, *gradients
+
+                    run()
+                    run()
+                    torch.cuda.synchronize()
+                    graph = torch.cuda.CUDAGraph()
+                    with torch.cuda.graph(graph):
+                        actual = run()
+                    for seed in (814, 815):
+                        torch.manual_seed(seed)
+                        for tensor in (q, k, v, dout):
+                            tensor.copy_(torch.randn_like(tensor))
+                        graph.replay()
+                        torch.cuda.synchronize()
+                        expected = fp64_reference((q, k, v), dout, scale=scale)
+                        tolerance = 0.02 if dtype == torch.bfloat16 else 0.003
+                        for got, want in zip(actual, expected):
+                            torch.testing.assert_close(got.double(), want, atol=tolerance, rtol=tolerance)
+        finally:
+            extension.clear_cache()
+
+    def test_sm89_short_query_split_forward_saturated_and_offset_logits(self):
+        if torch.cuda.get_device_capability() not in {(8, 9), (9, 0)}:
+            self.skipTest("Requires Ada or Hopper short-query forward kernels.")
+        from benchmarks.precision import make_inputs
+        from benchmarks.reference import fp64_reference
+        from kohakufa_cute import attention, native
+
+        native.extension().clear_cache()
+        try:
+            for dtype, logit_scale, offset in itertools.product(
+                (torch.float16, torch.bfloat16), (10, 1000, 1e5, 1e7), (0, 100)
+            ):
+                with self.subTest(dtype=dtype, logit_scale=logit_scale, offset=offset):
+                    q, k, v, dout = make_inputs(logit_scale, device="cuda", dtype=dtype, seq=787, dim=64, seed=0, heads=16)
+                    q, dout = q[:, :, :3].contiguous(), dout[:, :, :3].contiguous()
+                    k = (k.float() + offset).to(dtype)
+                    inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
+                    output = attention(*inputs)
+                    actual = (output, *torch.autograd.grad(output, inputs, dout))
+                    expected = fp64_reference(inputs, dout)
+                    tolerance = 0.02 if dtype == torch.bfloat16 else 0.003
+                    torch.testing.assert_close(actual[0].double(), expected[0], atol=tolerance, rtol=tolerance)
+                    for got, want in zip(actual[1:], expected[1:]):
+                        torch.testing.assert_close(got.double(), want, atol=tolerance, rtol=tolerance)
+            for dtype in (torch.float16, torch.bfloat16):
+                q, k, v, dout = make_inputs(1e5, device="cuda", dtype=dtype, seq=787, dim=64, seed=0, heads=16)
+                q, dout = q[:, :, :3].contiguous(), torch.ones_like(dout[:, :, :3])
+                v.fill_(1)
+                inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
+                output = attention(*inputs)
+                dq, dk, _ = torch.autograd.grad(output, inputs, dout)
+                self.assertEqual(dq.count_nonzero().item(), 0)
+                self.assertEqual(dk.count_nonzero().item(), 0)
+            for dtype, gap in itertools.product((torch.float16, torch.bfloat16), (1, 5)):
+                with self.subTest(dtype=dtype, saturated_gap=gap):
+                    q = torch.zeros(1, 16, 3, 64, device="cuda", dtype=dtype)
+                    k = torch.zeros(1, 16, 787, 64, device="cuda", dtype=dtype)
+                    v, dout = torch.zeros_like(k), torch.zeros_like(q)
+                    q[..., 0], k[..., 0], k[:, :, 0, 0] = 10, 10 - gap, 10
+                    v[..., 0], v[:, :, 0, 0], dout[..., 0] = -1, 1, 1
+                    inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
+                    output = attention(*inputs, scale=1.0)
+                    actual = (output, *torch.autograd.grad(output, inputs, dout))
+                    expected = fp64_reference(inputs, dout, scale=1.0)
+                    for got, want in zip(actual, expected):
+                        torch.testing.assert_close(got.double(), want, atol=1e-7 if dtype == torch.float16 else 0, rtol=0.02)
+        finally:
+            native.extension().clear_cache()
+
+    def test_sm89_short_query_split_forward_fallback_boundaries(self):
+        if torch.cuda.get_device_capability() not in {(8, 9), (9, 0)}:
+            self.skipTest("Requires Ada or Hopper short-query forward kernels.")
+        from unittest.mock import patch
+
+        from kohakufa_cute import native
+
+        extension = native.extension()
+        extension.clear_cache()
+        compiler = patch.object(native, "compile_kernel", wraps=native.compile_kernel)
+        compiled = compiler.start()
+        try:
+            # Keep the warm native cache valid while crossing each selection boundary.
+            for queries, keys, heads, kvheads, mode in (
+                (3, 255, 16, 16, "dense"),
+                (3, 256, 16, 16, "dense"),
+                (3, 257, 16, 16, "dense"),
+                (31, 257, 16, 16, "dense"),
+                (32, 257, 16, 16, "dense"),
+                (33, 257, 16, 16, "dense"),
+                (63, 257, 16, 16, "dense"),
+                (64, 257, 16, 16, "dense"),
+                (65, 257, 16, 16, "dense"),
+                (127, 257, 16, 16, "dense"),
+                (128, 257, 16, 16, "dense"),
+                (129, 257, 16, 16, "dense"),
+                (255, 257, 16, 16, "dense"),
+                (256, 257, 16, 16, "dense"),
+                (257, 257, 16, 16, "dense"),
+                (3, 16384, 16, 16, "dense"),
+                (3, 16385, 16, 16, "dense"),
+                (3, 257, 16, 4, "dense"),
+                (3, 257, 2, 2, "dense"),
+                (3, 257, 16, 16, "causal"),
+                (3, 257, 16, 16, "masked"),
+                (3, 257, 16, 16, "strided"),
+                (3, 256, 16, 16, "dense"),
+            ):
+                with self.subTest(queries=queries, keys=keys, heads=heads, kvheads=kvheads, mode=mode):
+                    torch.manual_seed(816)
+                    step = 2 if mode == "strided" else 1
+                    q = torch.randn(1, queries, heads, 64 * step, device="cuda", dtype=torch.bfloat16)[
+                        ..., ::step
+                    ].transpose(1, 2)
+                    k, v = [
+                        torch.randn(1, keys, kvheads, 64 * step, device="cuda", dtype=q.dtype)[..., ::step].transpose(1, 2)
+                        for _ in range(2)
+                    ]
+                    mask = torch.ones(1, 1, queries, keys, device="cuda", dtype=torch.bool) if mode == "masked" else None
+                    if mask is not None:
+                        mask[..., 0, :] = False
+                    previous = compiled.call_count
+                    self.compare(q, k, v, mask=mask, causal=mode == "causal")
+                    forward_compiles = [
+                        call.args for call in compiled.call_args_list[previous:] if call.args[0] == "forward"
+                    ]
+                    split = (
+                        queries <= 256 and 256 <= keys <= 16384 and heads == kvheads == 16 and mode in ("dense", "strided")
+                    )
+                    for arguments in forward_compiles:
+                        self.assertEqual(arguments[1][7].ndim == 5, split)
+                    if queries == 3 and keys == 257 and heads == kvheads == 16 and mode == "dense":
+                        self.assertEqual(len(forward_compiles), 1)
+        finally:
+            compiler.stop()
+            extension.clear_cache()
+
     def test_generic_backward_layouts_reuse_warm_programs(self):
         if torch.cuda.get_device_capability() not in ((8, 6), (8, 9), (12, 0)):
             self.skipTest("Requires measured generic warp-MMA layouts.")

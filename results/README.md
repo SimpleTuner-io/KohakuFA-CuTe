@@ -1,37 +1,51 @@
 # Performance guide
 
-These are the latest retained measurements for each input family, consolidated from completed runs. This documentation update does not rerun GPU benchmarks. [performance.json](performance.json) holds all **69 comparisons**, software versions, source identifiers, and timing samples where available.
+[performance.json](performance.json) holds the latest retained comparisons, software versions, source identifiers, and timing samples where available. The current consumer GPU grid replaces the earlier unmasked RTX 5090 runs.
 
 All times below are median milliseconds per attention call. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
-## RTX 5090
+## RTX 5090, RTX 4090 and RTX 3090 Ti
 
-B=1, H=16, matching contiguous BHSD inputs. The unmasked grid covers S1024/S4096, D64/128/256/512, FP16/BF16, dense/implicit causal. Actual default PyTorch dispatch is **FlashAttention-2 at D64/128/256** and **CUTLASS efficient attention at D512**. Explicit boolean masks in the tested cases select efficient attention. “SDPA” means that actual default, rather than a forced slower backend.
+Each GPU has a complete 32-case unmasked grid: B=1, H=16, matching contiguous BHSD inputs, S1024/S4096, D64/128/256/512, FP16/BF16, dense/implicit causal. Actual default PyTorch dispatch is **FlashAttention-2 at D64/128/256** and **CUTLASS efficient attention at D512**. “SDPA” means that actual default. Forced PyTorch FlashAttention-2 controls on the Ti select the same smaller-head kernels; the standalone `flash-attn` package was not measured.
 
-![RTX 5090 performance across the complete unmasked grid](performance.svg)
+![Current consumer GPU performance across the complete unmasked grids](performance.svg)
 
-Ratios above 1 favor CuTe. Forward alone wins in **19/32** tested unmasked cases; forward + backward wins in **8/32**, all D512. Smaller unmasked heads still favor FlashAttention-2 for the complete call. The explicit-mask comparisons below form a separate dataset.
+Ratios above 1 favor CuTe. All three GPUs beat default SDPA for complete D512 calls; **smaller unmasked heads still favor FlashAttention-2 for the complete call**.
 
-### D512: faster forward and backward
+| GPU | Forward wins | F+B wins | D512 SDPA / CuTe F+B |
+| --- | ---: | ---: | ---: |
+| RTX 5090 | 18/32 | 8/32 | 1.84–4.41× |
+| RTX 4090 | 10/32 | 8/32 | 1.91–3.94× |
+| RTX 3090 Ti | 10/32 | 8/32 | 1.67–2.53× |
 
-| Tokens | Dtype | Visibility | CuTe F+B | SDPA F+B | SDPA / CuTe |
-| ---: | --- | --- | ---: | ---: | ---: |
-| 1024 | BF16 | Dense | 1.877 | 5.068 | 2.70× |
-| 1024 | BF16 | Causal | 1.028 | 3.971 | 3.86× |
-| 1024 | FP16 | Dense | 1.907 | 3.232 | 1.69× |
-| 1024 | FP16 | Causal | 1.038 | 1.895 | 1.82× |
-| 4096 | BF16 | Dense | 27.802 | 48.211 | 1.73× |
-| 4096 | BF16 | Causal | 13.194 | 29.634 | 2.25× |
-| 4096 | FP16 | Dense | 28.414 | 47.780 | 1.68× |
-| 4096 | FP16 | Causal | 13.314 | 21.296 | 1.60× |
+Representative BF16 S4096 complete calls:
 
-CuTe uses **37–74% less latency** than SDPA in these eight cases. The selected full-width tiles share score work across all 512 output columns. Boolean masks use a separate path, measured below.
+| GPU | Head dim | Visibility | CuTe F+B | SDPA F+B | SDPA / CuTe |
+| --- | ---: | --- | ---: | ---: | ---: |
+| RTX 5090 | 512 | Dense | 23.175 | 48.215 | 2.08× |
+| RTX 5090 | 512 | Causal | 11.449 | 29.683 | 2.59× |
+| RTX 4090 | 512 | Dense | 31.541 | 60.833 | 1.93× |
+| RTX 4090 | 512 | Causal | 16.011 | 35.765 | 2.23× |
+| RTX 3090 Ti | 512 | Dense | 68.507 | 114.648 | 1.67× |
+| RTX 3090 Ti | 512 | Causal | 33.843 | 63.758 | 1.88× |
 
-D512 measurements: October 21, 2026; 170-SM/32-GB RTX 5090, 600 W limit, driver 595.71.05, PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1, Triton 3.6.0, TVM FFI 0.1.15.post0. Five rotated rounds target 1-second F+B and 0.5-second forward windows, with at least 32 replays. All samples are retained; graph outputs/gradients are checked against eager execution. No profiler or telemetry collector runs in the timed windows.
+The selected full-width D512 tiles share score work across output columns. Backward overlaps full-order QK and dO·V in separate warp groups, retains stationary V and packs DS/P shared stores. Wider operand copies are selected on SM86/SM89; measured cache policy and a causal D128 query layout are selected separately on SM120. These choices retain the centered FP32 corrections described in the [precision guide](../docs/precision.md).
 
-D64/128/256 measurements use the same Torch/CUDA/DSL versions, driver 580.178.04, seven rotated rounds of 30 measured replays after 30 warmups. Their selected paths are unchanged by the later D512 optimization. This is a separate host run; its absolute times are not paired with the D512 run.
+Against paired previous-main controls, RTX 4090 F+B latency falls **75.6–78.1% at D512** and **13.1–23.1% at D256**. RTX 5090 D512 backward falls **15.9–20.2%**, and F+B falls **12.8–16.8%**; D128 F+B falls **0.2–15.9%**. The 5090 D256 cache-policy change is small and mixed: **0.36% slower to 2.12% faster** for F+B. D64 retains its existing 5090 selection. SM86 is newly supported, so Ti performance is compared with default SDPA rather than claiming a speedup over unsupported main.
 
-### Explicit boolean masks
+### Measurement conditions
+
+Measured October 22, 2026 UTC with PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1 and TVM FFI 0.1.15.post0:
+
+| GPU | SMs / memory | Power limit | Driver | Five-round timing windows |
+| --- | --- | ---: | --- | --- |
+| RTX 5090 | 170 / 32 GB | 600 W | 595.71.05 | 0.5 s forward; 1 s backward/F+B; minimum 32 replays |
+| RTX 4090 | 128 / 24 GB | 450 W | 580.173.02 | 0.5 s forward; 1 s backward/F+B; minimum 32 replays |
+| RTX 3090 Ti | 84 / 24 GB | **285 W** | 595.91.07 | 0.75 s per phase; minimum eight replays |
+
+No profiler or telemetry collector runs in timed windows. Graph outputs/gradients are checked against eager execution. Ti backward-only retains its forward graph; separately timed phases need not sum exactly to a complete-call median. Source hashes identify the architecture-specific snapshots used for timing. The integrated source passes the full GPU suite on each card; all 128 device functions across each 32-case grid match the timed snapshot in encoded instructions and resource records. The JSON retains the integrated source and comparison hashes. These device results do not establish performance on other cards sharing the same architecture. In particular, the Ti result describes its recorded 285 W limit.
+
+## RTX 5090 explicit boolean masks
 
 BF16, B=1/H=16. Mask preparation is included. The causal triangle is supplied as a boolean mask with `is_causal=False`; this is a different backend selection from implicit `is_causal=True`.
 
@@ -45,7 +59,7 @@ BF16, B=1/H=16. Mask preparation is included. The causal triangle is supplied as
 | 1024 | 512 | Causal triangle | 2.306 | 5.095 | 2.21× |
 | 4096 | 512 | Causal triangle | 32.895 | 48.754 | 1.48× |
 
-All seven tested explicit-mask cases favor CuTe. The triangle lets CuTe skip fully hidden tiles; the all-true control also favors CuTe. These results do not establish performance for arbitrary mask densities or layouts. Five rotated rounds of 30 replays use the smaller-head software/driver stack above. Subsequent unmasked optimizations retain these mask paths.
+All seven tested explicit-mask cases favor CuTe. The triangle lets CuTe skip fully hidden tiles; the all-true control also favors CuTe. These results do not establish performance for arbitrary mask densities or layouts. Retained October 21 measurements use PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1 and driver 580.178.04, with five rotated rounds of 30 replays. The current unmasked optimizations retain these mask paths.
 
 ## B300 MIG versus KohakuFA Gluon
 
@@ -67,7 +81,7 @@ Measured October 21, 2026 with PyTorch 2.12.0+cu130, CUDA 13.0, and CuTe DSL 4.8
 
 ## H100 and L40S
 
-Last published dense BF16 results, B=1/H=16/S=4096. The full JSON also covers S1024. These training cases favor native SDPA; CuTe provides the stronger backward calculation described in the [precision guide](../docs/precision.md).
+Last published dense BF16 results, B=1/H=16/S=4096. L40S has not been remeasured after the current SM89 changes; its rows retain their recorded source identifier. The full JSON also covers S1024. These training cases favor native SDPA; CuTe provides the stronger backward calculation described in the [precision guide](../docs/precision.md).
 
 | GPU | Head dim | CuTe F+B | Default SDPA F+B |
 | --- | ---: | ---: | ---: |

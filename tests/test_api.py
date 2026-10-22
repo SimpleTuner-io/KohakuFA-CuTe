@@ -82,12 +82,15 @@ assert not any(name.startswith(('cutlass', 'tvm_ffi', 'kohakufa_cute.native', 's
 
         q, k, v = tensor(), tensor(), tensor()
         for capability, expected in [
+            ((8, 6), True),
             ((8, 9), True),
             ((9, 0), True),
             ((10, 0), True),
             ((12, 0), True),
             ((10, 3), True),
             ((10, 1), False),
+            ((8, 0), False),
+            ((8, 7), False),
         ]:
             with (
                 self.subTest(capability=capability),

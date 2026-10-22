@@ -1,11 +1,11 @@
 # KohakuFA-CuTe
 
-CuTe DSL attention for **RTX 5090, B200/B300, H100, and L40S**, with stable backward gradients when attention becomes sharp. It brings [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) precision approach to Ada, Hopper, and Blackwell, and adds a centered FP32 correction that retains tiny saturated gradients.
+CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, H100, and L40S**, with stable backward gradients when attention becomes sharp. It brings [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) precision approach to Ampere, Ada, Hopper, and Blackwell, and adds a centered FP32 correction that retains tiny saturated gradients.
 
 ## When to use it
 
 - **Training with sharp attention or large logits:** forward outputs can look correct while query/key gradients are wrong. The kernels preserve separate softmax statistics and a centered backward correction. See [precision](docs/precision.md).
-- **RTX 5090 with 512-wide heads:** forward plus backward is **1.60–3.86× faster than default PyTorch SDPA** across all eight tested FP16/BF16, dense/causal, S1024/S4096 cases.
+- **RTX cards with 512-wide heads:** forward plus backward beats default PyTorch SDPA across all eight tested FP16/BF16, dense/causal, S1024/S4096 cases per card: **1.84–4.41× on RTX 5090**, **1.91–3.94× on RTX 4090**, and **1.67–2.53× on RTX 3090 Ti** (285 W).
 - **RTX 5090 with explicit boolean masks:** the tested BF16 causal masks are **1.48–4.72× faster than default SDPA**, including mask preparation. Arbitrary masks need their own benchmarks.
 - **Other workloads:** choose it for its gradient calculation, then benchmark your shapes. Smaller unmasked RTX heads still have slower backward than FlashAttention-2. H100/L40S also trade throughput for precision in the measured training cases.
 
@@ -17,13 +17,17 @@ Attention-call latency, **forward + backward**, in milliseconds; lower is better
 
 | GPU | Head dim | Visibility | CuTe | Default SDPA | SDPA / CuTe |
 | --- | ---: | --- | ---: | ---: | ---: |
-| RTX 5090 | 512 | Dense | **27.802** | 48.211 | **1.73×** |
-| RTX 5090 | 512 | Causal | **13.194** | 29.634 | **2.25×** |
-| RTX 5090 | 256 | Boolean causal mask | **6.052** | 24.294 | **4.01×** |
-| RTX 5090 | 128 | Boolean causal mask | **2.318** | 10.050 | **4.33×** |
-| RTX 5090 | 128 | Dense | 3.608 | **2.601** | 0.72× |
-| H100 | 128 | Dense | 1.300 | **0.927** | 0.71× |
-| L40S | 128 | Dense | 3.547 | **2.721** | 0.77× |
+| RTX 5090 | 512 | Dense | 23.175 | 48.215 | 2.08× |
+| RTX 5090 | 512 | Causal | 11.449 | 29.683 | 2.59× |
+| RTX 4090 | 512 | Dense | 31.541 | 60.833 | 1.93× |
+| RTX 4090 | 512 | Causal | 16.011 | 35.765 | 2.23× |
+| RTX 3090 Ti | 512 | Dense | 68.507 | 114.648 | 1.67× |
+| RTX 3090 Ti | 512 | Causal | 33.843 | 63.758 | 1.88× |
+| RTX 5090 | 256 | Boolean causal mask | 6.052 | 24.294 | 4.01× |
+| RTX 5090 | 128 | Boolean causal mask | 2.318 | 10.050 | 4.33× |
+| RTX 5090 | 128 | Dense | 3.669 | 2.657 | 0.72× |
+| H100 | 128 | Dense | 1.300 | 0.927 | 0.71× |
+| L40S | 128 | Dense | 3.547 | 2.721 | 0.77× |
 
 On the **B300 MIG 1g.34gb (18 SMs)**, BF16 D512 causal forward + backward is approximately tied with upstream Gluon at S4096 (**13.649 vs 13.703 ms**) and slightly faster at S8192 (**50.766 vs 51.276 ms**). Smaller cases still favor Gluon. These timings describe the partition; current full-device B200/B300 performance has not been remeasured.
 
@@ -72,7 +76,7 @@ Strict APIs propagate validation, build, and kernel errors. Automatic selection 
 
 Supported CuTe inputs:
 
-- CUDA SM89/90/100/103/120; matching FP16 or BF16 Q/K/V; head dimensions **1–512**.
+- CUDA SM86/89/90/100/103/120; matching FP16 or BF16 Q/K/V; head dimensions **1–512**.
 - Four-dimensional BHSD tensors, including supported strided layouts; equal K/V shapes; query heads divisible by K/V heads.
 - Dense, token-causal, or broadcastable boolean masks (`True` means visible). All-hidden rows return zero.
 - GQA, eager/compiled autograd, CUDA graphs, and signed or zero scales.

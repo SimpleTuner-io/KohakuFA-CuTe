@@ -8,8 +8,8 @@ from packaging.version import Version
 
 from . import _ops
 
-_CAPABILITIES = {(8, 9), (9, 0), (10, 0), (10, 3), (12, 0)}
-_CENTERED_CAPABILITIES = {(8, 9), (9, 0), (10, 0), (10, 3), (12, 0)}
+_CAPABILITIES = {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0)}
+_CENTERED_CAPABILITIES = {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0)}
 _native_sdpa = torch.nn.functional.scaled_dot_product_attention
 
 
@@ -79,7 +79,7 @@ def _validate(q, k, v, mask, dropout, causal, gqa, *, combined_mask=False):
         if causal and not combined_mask:
             raise ValueError("CuTe attention requires causal visibility folded into the boolean mask.")
     if torch.cuda.get_device_capability(q.device) not in _CAPABILITIES:
-        raise ValueError("CuTe attention requires sm_89, sm_90, sm_100, sm_103 or sm_120.")
+        raise ValueError("CuTe attention requires sm_86, sm_89, sm_90, sm_100, sm_103 or sm_120.")
 
 
 def _center_keys(k):

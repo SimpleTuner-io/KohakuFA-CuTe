@@ -1,4 +1,4 @@
-"""Plot the current consumer GPU unmasked comparison grids."""
+"""Plot the current RTX and L40S unmasked comparison grids."""
 
 import argparse
 import json
@@ -25,8 +25,9 @@ def main():
         ("rtx5090-current", "RTX 5090"),
         ("rtx4090-current", "RTX 4090"),
         ("rtx3090ti-current", "RTX 3090 Ti · 285 W"),
+        ("l40s-current", "L40S"),
     )
-    figure, axes = plt.subplots(len(devices), 2, figsize=(11.5, 14), layout="constrained")
+    figure, axes = plt.subplots(len(devices), 2, figsize=(11.5, 4.4 * len(devices) + 0.8), layout="constrained")
     for pair, (dataset_id, device) in zip(axes, devices):
         rows = datasets[dataset_id]["rows"]
         lookup = {(r["dtype"], r["shape"][2], r["mask"], r["shape"][3]): r for r in rows}

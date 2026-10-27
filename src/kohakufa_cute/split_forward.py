@@ -7,6 +7,7 @@ from cutlass.cute.nvgpu import cpasync, warp
 from cutlass.memory import SmemAllocator
 
 from .kernels import Attention, quad_max, quad_sum, row_view
+from .launch import block_indices, launch_grid
 
 
 class Forward(Attention):
@@ -110,12 +111,12 @@ class Forward(Attention):
             permutation_mnk=(self.rows, 16, 16),
         )
         self.kernel(q, k, v, partial, stats, scale, mma).launch(
-            grid=(cute.ceil_div(q.shape[2], self.rows), q.shape[0] * q.shape[1], self.splits),
+            grid=launch_grid(cute.ceil_div(q.shape[2], self.rows), q.shape[0] * q.shape[1], self.splits),
             block=(32 * self.warps, 1, 1),
             stream=stream,
         )
         self.merge(partial, stats, out, maximum, logsum, scale).launch(
-            grid=(cute.ceil_div(q.shape[2], 2), q.shape[0] * q.shape[1], 1),
+            grid=launch_grid(cute.ceil_div(q.shape[2], 2), q.shape[0] * q.shape[1]),
             block=(128, 1, 1),
             stream=stream,
         )
@@ -123,7 +124,7 @@ class Forward(Attention):
     @cute.kernel
     def kernel(self, q, k, v, partial, stats, scale, mma):
         tid, _, _ = cute.arch.thread_idx()
-        tile, bh, split = cute.arch.block_idx()
+        tile, bh, split = block_indices(cute.ceil_div(q.shape[2], self.rows), q.shape[0] * q.shape[1])
         batch = bh // q.shape[1]
         head = bh % q.shape[1]
         kvhead = head // (q.shape[1] // k.shape[1])
@@ -217,7 +218,7 @@ class Forward(Attention):
     @cute.kernel
     def merge(self, partial, stats, out, maximum_out, logsum_out, scale):
         tid, _, _ = cute.arch.thread_idx()
-        tile, bh, _ = cute.arch.block_idx()
+        tile, bh, _ = block_indices(cute.ceil_div(out.shape[2], 2), out.shape[0] * out.shape[1])
         dim = tid % 64
         row = tile * 2 + tid // 64
         head = bh % out.shape[1]

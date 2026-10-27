@@ -102,6 +102,55 @@ python -m benchmarks.precision --dtype bf16 --seq 256 --dim 128 \
 
 Tests cover FP64 gradient comparisons, tiny gradients, masks, GQA, head tails, strides, compiled backward, checkpointed LoRA updates, streams, and changed-input graph replay. The [benchmark guide](results/README.md#reproduce) includes causal and upstream comparisons.
 
+Directed [cuDNN regression cases](benchmarks/adversarial.py) cover negative row
+maxima/LSE, partial query/key tiles, the reported single-query and tiny-gradient
+inputs, masked rows, GQA, and signed/zero scales. Compare each forced backend
+with centered FP64 equations on identical rounded inputs:
+
+```bash
+python -m unittest tests.test_adversarial -v
+python -m benchmarks.cudnn_regressions --backends kohakufa-cute cudnn flash math \
+  --output adversarial.json
+```
+
+The comparator checks first/last rows separately and uses norm-relative gradient
+errors so small gradients cannot disappear under a loose absolute tolerance.
+Optional `--backends frontend frontend-padding` additionally tests cuDNN Frontend
+directly and its full-length padding-mask control; install `nvidia-cudnn-frontend`
+for those modes. Backend execution/support errors are recorded separately from
+numerical failures, and any CuTe failure makes the command exit unsuccessfully.
+
+Additional tracker regressions exercise large batch/head launch grids, warmed
+cache reuse across lengths and strides, NaN-poisoned storage outside live KV
+views, masked nonpositive scales, and every head's saved GQA statistics:
+
+```bash
+python -m benchmarks.tracker_regressions --backends cute cudnn --frontend-plan \
+  --output tracker-regressions.json
+```
+
+Each test runs in an isolated process with a timeout so native backend crashes
+are retained as results. The optional Frontend control builds only the reported
+single-head/single-query backward plan; it does not establish numerical parity.
+Dense view/cache cases adapt the reported contracts without adding a ragged or
+execute-time shape-override API to CuTe.
+Run `python -m unittest tests.test_blackwell_launch_limits -v` on B200/B300
+to force native TMEM, fused, wide-backward, and split-forward launch paths
+across the batch/head boundary.
+The cases derive from NVIDIA/cudnn-frontend issues
+[1573](https://github.com/NVIDIA/cudnn-frontend/issues/1573) (launch limits),
+[1567](https://github.com/NVIDIA/cudnn-frontend/issues/1567),
+[1570](https://github.com/NVIDIA/cudnn-frontend/issues/1570), and
+[624](https://github.com/NVIDIA/cudnn-frontend/issues/624) (live views/cache storage),
+[1428](https://github.com/NVIDIA/cudnn-frontend/issues/1428) and
+[1435](https://github.com/NVIDIA/cudnn-frontend/issues/1435) (nonpositive scales),
+[1071](https://github.com/NVIDIA/cudnn-frontend/issues/1071) (single query),
+[1083](https://github.com/NVIDIA/cudnn-frontend/issues/1083) (GQA statistics), and
+[100](https://github.com/NVIDIA/cudnn-frontend/issues/100) (gradient strides).
+CuTe flattens batch/head products above 65,535 onto grid-x for attention,
+mask packing, and backward delta preparation; smaller launches keep their
+existing grid layout.
+
 ## License and attribution
 
 Developed in [SimpleTuner](https://github.com/bghira/SimpleTuner/pull/3256), under [AGPL-3.0-or-later](LICENSE). [KohakuFA](https://github.com/KohakuBlueleaf/KohakuFA) originated the precision investigation and arithmetic approach; its Gluon kernels are not bundled. NVIDIA CUTLASS and FlashAttention helper adaptations retain their BSD notices in [NOTICE](NOTICE) and [LICENSES/BSD-3-Clause.txt](LICENSES/BSD-3-Clause.txt).

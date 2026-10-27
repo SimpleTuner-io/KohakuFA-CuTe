@@ -11,11 +11,9 @@ import torch
 )
 class LaunchLimitTests(unittest.TestCase):
     def run_attention(self, inputs, dout, *, mask=None):
-        from kohakufa_cute import attention
+        from tests.test_tracker_regressions import run_attention
 
-        variables = [value.detach().requires_grad_() for value in inputs]
-        out = attention(*variables, mask=mask)
-        return out, *torch.autograd.grad(out, variables, dout)
+        return run_attention(inputs, dout, mask=mask)
 
     def test_grid_limits(self):
         # One visible key gives an exact oracle without a huge FP64 score matrix.

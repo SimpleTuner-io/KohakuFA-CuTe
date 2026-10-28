@@ -41,7 +41,8 @@ def run_attention(inputs, dout, *, mask=None, causal=False, scale=None):
 
 
 @unittest.skipUnless(
-    torch.cuda.is_available() and torch.cuda.get_device_capability() in {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0)},
+    torch.cuda.is_available()
+    and torch.cuda.get_device_capability() in {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)},
     "Requires supported CuTe CUDA kernels",
 )
 class TrackerRegressionTests(unittest.TestCase):

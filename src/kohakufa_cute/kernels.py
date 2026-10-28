@@ -19,6 +19,7 @@ from cutlass.cutlass_dsl import T, dsl_user_op
 from cutlass.memory import SmemAllocator, TmemAllocator
 
 from .blackwell import dot as blackwell_dot
+from .launch import block_indices, launch_grid
 
 
 @cute.jit
@@ -248,7 +249,7 @@ class Attention:
         self.kernel(
             q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, delta_base, scale, mma, tma_args
         ).launch(
-            grid=(cute.ceil_div(length, self.grid_rows), q.shape[0] * heads, widths),
+            grid=launch_grid(cute.ceil_div(length, self.grid_rows), q.shape[0] * heads, widths),
             block=(32 * self.warps, 1, 1),
             stream=stream,
         )
@@ -1055,11 +1056,17 @@ class Attention:
             full = full and key + columns <= query + 1
         return active, full
 
+    @cute.jit
+    def grid_coordinates(self, q, k):
+        length = k.shape[2] if cutlass.const_expr(self.mode == "kv") else q.shape[2]
+        heads = k.shape[1] if cutlass.const_expr(self.mode == "kv") else q.shape[1]
+        return block_indices(cute.ceil_div(length, self.grid_rows), q.shape[0] * heads)
+
     @cute.kernel
     def kernel(self, q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, delta_base, scale, mma, tma_args):
         tid, _, _ = cute.arch.thread_idx()
         lane = tid % 32
-        tile, bh, width = cute.arch.block_idx()
+        tile, bh, width = self.grid_coordinates(q, k)
         if cutlass.const_expr(self.forward_overlap):
             tile = cute.ceil_div(q.shape[2], self.grid_rows) - 1 - tile
         thread = mma.get_slice(tid % 128 if cutlass.const_expr(self.hopper) else tid)
@@ -1714,7 +1721,7 @@ class ForwardLoadSpecialized(Attention):
     def kernel(self, q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, delta_base, scale, mma, tma_args):
         tid, _, _ = cute.arch.thread_idx()
         lane = tid % 32
-        tile, bh, width = cute.arch.block_idx()
+        tile, bh, width = self.grid_coordinates(q, k)
         batch = bh // q.shape[1]
         head = bh % q.shape[1]
         kvhead = head // (q.shape[1] // k.shape[1])
@@ -2367,7 +2374,7 @@ class PackMask:
     @cute.jit
     def __call__(self, mask: cute.Tensor, blocks: cute.Tensor, stream: cuda.CUstream):
         self.kernel(mask, blocks).launch(
-            grid=(cute.ceil_div(blocks.shape[2] * blocks.shape[3], 4), blocks.shape[0] * blocks.shape[1], 1),
+            grid=launch_grid(cute.ceil_div(blocks.shape[2] * blocks.shape[3], 4), blocks.shape[0] * blocks.shape[1]),
             block=(128, 1, 1),
             stream=stream,
         )
@@ -2375,7 +2382,7 @@ class PackMask:
     @cute.kernel
     def kernel(self, mask, blocks):
         tid, _, _ = cute.arch.thread_idx()
-        tile, bh, _ = cute.arch.block_idx()
+        tile, bh, _ = block_indices(cute.ceil_div(blocks.shape[2] * blocks.shape[3], 4), blocks.shape[0] * blocks.shape[1])
         tile = tile * 4 + tid // 32
         qr, kc = tile // blocks.shape[3], tile % blocks.shape[3]
         batch, head = bh // blocks.shape[1], bh % blocks.shape[1]
@@ -2413,13 +2420,13 @@ class OutputDelta:
             warp.MmaF16BF16Op(out.element_type, cutlass.Float32, (16, 8, 16)), (1, 1, 1), permutation_mnk=(16, 16, 16)
         )
         self.kernel(out, dout, delta, mma).launch(
-            grid=(cute.ceil_div(out.shape[2], 16), out.shape[0] * out.shape[1], 1), block=(32, 1, 1), stream=stream
+            grid=launch_grid(cute.ceil_div(out.shape[2], 16), out.shape[0] * out.shape[1]), block=(32, 1, 1), stream=stream
         )
 
     @cute.kernel
     def kernel(self, out, dout, delta, mma):
         tid, _, _ = cute.arch.thread_idx()
-        tile, bh, _ = cute.arch.block_idx()
+        tile, bh, _ = block_indices(cute.ceil_div(out.shape[2], 16), out.shape[0] * out.shape[1])
         batch, head = bh // out.shape[1], bh % out.shape[1]
         padded = cute.ceil_div(out.shape[3], 32) * 32
         atom = cute.make_composed_layout(cute.make_swizzle(2, 3, 3), 0, cute.make_layout((8, 32), stride=(32, 1)))

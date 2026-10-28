@@ -2001,6 +2001,16 @@ def kernel_configuration(device, mode, descriptors):
         and _aligned_tiles(descriptors)
     ):
         return 32, 256, 8, False, False, False, False
+    if (
+        capability == (12, 1)
+        and dimension == 512
+        and descriptors[3][0] != torch.bool
+        and descriptors[0][0] in (torch.float16, torch.bfloat16)
+        and _aligned_tiles(descriptors)
+    ):
+        # GB10 has room for one wide CTA. Share QK/dP across output
+        # columns instead of repeating them in one-warp feature slices.
+        return 32, 512, 4, False, mode != "forward", False, False
     if capability == (12, 0):
         selected = _SM120_CONFIGURATIONS.get((dimension, mode))
         if (
@@ -2151,7 +2161,7 @@ def backward_options(device, causal, masked, descriptors, q_configuration, kv_co
     # These options are part of the Python compilation cache key. Keep shape-dependent
     # choices within the same runtime sequence/stride classes used by native.cpp.
     if (
-        torch.cuda.get_device_capability(device) not in ((8, 6), (8, 9), (12, 0))
+        torch.cuda.get_device_capability(device) not in ((8, 6), (8, 9), (12, 0), (12, 1))
         or masked
         or descriptors[0][0] not in (torch.float16, torch.bfloat16)
     ):

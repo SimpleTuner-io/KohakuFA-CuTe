@@ -1044,11 +1044,66 @@ class CuTeAttentionTests(unittest.TestCase):
                     k, v = [torch.randn(1, 1, 35, dim, device="cuda", dtype=dtype) for _ in range(2)]
                     self.compare(q, k, v)
 
+    def test_sm121_wide_head_tails_masks_and_layouts(self):
+        if torch.cuda.get_device_capability() != (12, 1):
+            self.skipTest("Requires GB10 wide-head dispatch.")
+        for dtype, mode in itertools.product(
+            (torch.float16, torch.bfloat16), ("dense", "causal", "gqa", "mask", "padding", "projection", "strided")
+        ):
+            with self.subTest(dtype=dtype, mode=mode):
+                torch.manual_seed(121)
+                q = torch.randn(1, 4, 19, 512, device="cuda", dtype=dtype)
+                k, v = [torch.randn(1, 2 if mode == "gqa" else 4, 37, 512, device="cuda", dtype=dtype) for _ in range(2)]
+                mask = None
+                if mode == "mask":
+                    mask = torch.rand(1, 1, 19, 37, device="cuda") > 0.25
+                    mask[..., 0, :] = False
+                elif mode == "padding":
+                    mask = torch.arange(37, device="cuda") < 29
+                elif mode == "projection":
+                    q, k, v = [x.transpose(1, 2).contiguous().transpose(1, 2) for x in (q, k, v)]
+                elif mode == "strided":
+                    q, k, v = [torch.stack((x, x), -1).flatten(-2)[..., ::2] for x in (q, k, v)]
+                self.compare(q, k, v, mask, mode == "causal", scale=-0.125, compiled=mode == "projection")
+
+    def test_sm121_wide_graph_reads_changed_inputs(self):
+        if torch.cuda.get_device_capability() != (12, 1):
+            self.skipTest("Requires GB10 wide-head dispatch.")
+        from benchmarks.reference import fp64_reference
+        from kohakufa_cute import native
+
+        extension = native.extension()
+        q = torch.randn(1, 2, 33, 512, device="cuda", dtype=torch.bfloat16)
+        k, v = [torch.randn(1, 2, 65, 512, device="cuda", dtype=q.dtype) for _ in range(2)]
+        dout = torch.randn_like(q)
+
+        def run():
+            out, maximum, logsum, blocks = extension.forward(q, k, v, None, -0.125, False)
+            gradients = extension.backward(q, k, v, None, maximum, logsum, dout, blocks, out, -0.125, False)
+            return out, *gradients
+
+        run()
+        torch.cuda.synchronize()
+        graph = torch.cuda.CUDAGraph()
+        with torch.cuda.graph(graph):
+            actual = run()
+        for seed in (122, 123):
+            torch.manual_seed(seed)
+            for tensor in (q, k, v, dout):
+                tensor.copy_(torch.randn_like(tensor))
+            graph.replay()
+            torch.cuda.synchronize()
+            expected = fp64_reference((q, k, v), dout, scale=-0.125)
+            for got, want in zip(actual, expected):
+                torch.testing.assert_close(got.double(), want, atol=0.02, rtol=0.02)
+
     def test_preserves_projection_layout_with_compiled_backward(self):
         from kohakufa_cute import attention
 
         dimensions = (
-            (64, 128, 256, 512) if torch.cuda.get_device_capability() in ((8, 6), (8, 9), (12, 0)) else (64, 128, 256)
+            (64, 128, 256, 512)
+            if torch.cuda.get_device_capability() in ((8, 6), (8, 9), (12, 0), (12, 1))
+            else (64, 128, 256)
         )
         for dim, causal in itertools.product(dimensions, (False, True)):
             with self.subTest(dim=dim, causal=causal):
@@ -1114,7 +1169,7 @@ class CuTeAttentionTests(unittest.TestCase):
         dimensions = (
             (128, 256, 512)
             if torch.cuda.get_device_capability() == (12, 0)
-            else (256, 512) if torch.cuda.get_device_capability() in ((8, 6), (8, 9)) else (256,)
+            else (256, 512) if torch.cuda.get_device_capability() in ((8, 6), (8, 9), (12, 1)) else (256,)
         )
         cases = ((torch.float16, 1e5), (torch.float16, 1e6), (torch.bfloat16, 1e6))
         for dimension, (dtype, logit_scale) in itertools.product(dimensions, cases):

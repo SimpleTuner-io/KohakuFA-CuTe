@@ -1,8 +1,115 @@
 # Performance guide
 
-[performance.json](performance.json) holds the latest retained comparisons, software versions, source identifiers, and timing samples where available. The current RTX and L40S grids replace the earlier measurements for those input families.
+[performance.json](performance.json) holds the latest retained comparisons, software versions, source identifiers, and timing samples where available. The current RTX and L40S grids replace the earlier measurements for those input families. [gb10.json](gb10.json) retains the GB10 comparison separately.
 
-All times below are median milliseconds per attention call. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
+Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
+
+## GB10 (DGX / RTX Spark)
+
+GB10 supports FP16/BF16 forward and centered backward on Linux ARM64. Use the [GB10 installation instructions](../README.md#install); `CUTE_DSL_ARCH=sm_121a` and the CUDA 13 DSL libraries were used for validation. Automatic selection checks compatibility rather than predicted speed, so benchmark the intended shapes.
+
+### Short-sequence comparisons
+
+B=1, H=4, S=128, contiguous BHSD self-attention, default scale. **These short-sequence tables use microseconds**, unlike the millisecond tables elsewhere. Dense means noncausal without an explicit mask; causal means implicit token-causal attention. All five head dimensions are shown, including controls that receive no new short-forward kernel. Ratios above one favor CuTe; D16/D64 forward differences are within measurement noise and are treated as ties.
+
+Forward retains gradients. BF16 forward, microseconds:
+
+| Head dim | Dense SDPA | Dense CuTe | SDPA / CuTe | Causal SDPA | Causal CuTe | SDPA / CuTe |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 16 | 6.15 | 6.15 | 1.00× | 6.15 | 6.15 | 1.00× |
+| 64 | 6.15 | 6.15 | 1.00× | 6.15 | 6.15 | 1.00× |
+| 128 | 10.24 | 8.20 | 1.25× | 10.24 | 8.20 | 1.25× |
+| 256 | 12.07 | 6.15 | 1.96× | 11.32 | 6.15 | 1.84× |
+| 512 | 14.34 | 8.20 | 1.75× | 14.34 | 8.20 | 1.75× |
+
+FP16 forward, microseconds:
+
+| Head dim | Dense SDPA | Dense CuTe | SDPA / CuTe | Causal SDPA | Causal CuTe | SDPA / CuTe |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 16 | 6.15 | 6.15 | 1.00× | 6.15 | 6.15 | 1.00× |
+| 64 | 6.15 | 6.15 | 1.00× | 6.15 | 6.15 | 1.00× |
+| 128 | 10.25 | 8.20 | 1.25× | 10.24 | 8.20 | 1.25× |
+| 256 | 12.02 | 6.15 | 1.96× | 11.33 | 6.15 | 1.84× |
+| 512 | 14.34 | 8.20 | 1.75× | 14.34 | 8.20 | 1.75× |
+
+BF16 forward + backward, microseconds; these times include forward:
+
+| Head dim | Dense SDPA | Dense CuTe | SDPA / CuTe | Causal SDPA | Causal CuTe | SDPA / CuTe |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 16 | 18.43 | 16.38 | 1.13× | 18.44 | 15.03 | 1.23× |
+| 64 | 20.49 | 18.44 | 1.11× | 21.30 | 18.44 | 1.15× |
+| 128 | 26.65 | 26.65 | 1.00× | 27.57 | 25.83 | 1.07× |
+| 256 | 36.04 | 28.67 | 1.26× | 35.70 | 29.57 | 1.21× |
+| 512 | 198.56 | 38.39 | 5.17× | 197.51 | 36.87 | 5.36× |
+
+FP16 forward + backward, microseconds:
+
+| Head dim | Dense SDPA | Dense CuTe | SDPA / CuTe | Causal SDPA | Causal CuTe | SDPA / CuTe |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 16 | 17.38 | 16.04 | 1.08× | 18.44 | 14.74 | 1.25× |
+| 64 | 20.50 | 18.46 | 1.11× | 21.49 | 18.44 | 1.17× |
+| 128 | 27.80 | 26.92 | 1.03× | 27.90 | 26.63 | 1.05× |
+| 256 | 34.85 | 28.82 | 1.21× | 35.61 | 28.76 | 1.24× |
+| 512 | 116.50 | 38.91 | 2.99× | 116.69 | 37.30 | 3.13× |
+
+The large D512 complete-call advantage includes the existing centered backward implementation; it is not a speedup attributable solely to the new forward kernel. At S128/B1/H4, the new BF16 D256 forward drops from 14.30 to 6.15 µs and D512 from 16.39 to 8.20 µs against the paired preceding CuTe implementation. D16/D64/D128 retain their existing dispatch.
+
+### Longer sequences and scope
+
+BF16, B=1/H=4, dense attention; milliseconds:
+
+| Tokens | Head dim | SDPA forward | CuTe forward | SDPA F+B | CuTe F+B |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 512 | 256 | 0.0328 | 0.0337 | 0.1444 | 0.1712 |
+| 512 | 512 | 0.1081 | 0.0876 | 1.0782 | 0.3699 |
+| 1024 | 256 | 0.1118 | 0.1118 | 0.3758 | 0.5150 |
+| 1024 | 512 | 0.3485 | 0.2391 | 5.4171 | 1.5651 |
+
+D512 benefits at longer lengths from sharing QK and backward score work across output features. D256 full-call latency still trails SDPA at S512/S1024; short-sequence wins do not establish a general GB10 advantage. These are attention-call measurements, not whole-model or generation throughput. Explicit masks use the existing fallback and are outside this timing matrix.
+
+The short-forward path is restricted to SM121, FP16/BF16, eligible aligned D256/D512 layouts, no explicit boolean mask, and both query/key lengths at most 128. Other calls use the existing attention program. A runtime length check preserves compiled-cache reuse across either 128/129 boundary. Query/output tiles depend on batch × heads; performance should be rechecked for the intended geometry.
+
+### Kernel design and profiling
+
+- D512 uses four-warp full-width tiles to share QK/dP work across output columns. This avoids repeated score work and removes the observed dQ stack traffic from the initial GB10 layout.
+- Short forward streams Q/K feature chunks through two shared stages while retaining the full active key score tile in FP32. S128 needs one softmax update rather than four 32-key updates.
+- Once QK finishes, shared storage is reused for probabilities and double-buffered V stripes. V transfers overlap softmax; one FP32 reciprocal per row is reused across output stripes. Eligible async copies use the L1-bypassing `cp.async.cg` policy.
+- Warp-local reductions avoid cross-warp scratch when each warp owns complete rows. The selected 32-head causal D256 layout omits unreachable keys for the first query block.
+
+Nsight Systems and the actual selected PyTorch kernels informed these choices. At D512, default SDPA selects memory-efficient CUTLASS; D256 selects PyTorch FlashAttention, sometimes with split-KV/combine. The selected D512 wheel SASS was inspected. Its matching forward PTX was absent from the wheel, so the exact template was rebuilt from the installed PyTorch headers and matching CUTLASS revision for SM121. That PTX is source-matched reconstruction, not captured driver output or a byte-identical wheel rebuild. PyTorch source revision: `70d99e998b4955e0049d13a98d77ae1b14db1f45`; CUTLASS revision: `0d2b201e8c1c4a03efa6e9c468161916e2334725`.
+
+The B1/H4 D512 short kernel uses 68 registers/thread and 68.5 KiB dynamic shared memory, versus 254 registers and 96.5 KiB for the preceding wide CuTe path. CUDA's occupancy API permits one CTA/SM for that layout; larger-head D512 uses 40.5 KiB and permits two. A narrow D256 layout uses 32 KiB and permits three. These are resource bounds, not measured achieved utilization. Nsight Compute counters were blocked by `ERR_NVGPUCTRPERM`; no measured stall, cache, tensor-utilization or bandwidth percentages are claimed.
+
+### Measurement and validation
+
+Measured October 28, 2026 UTC on a 48-SM GB10 with 128 GB unified memory, Linux ARM64, driver 610.57.04, Python 3.13.18, PyTorch 2.11.0+cu130, CUDA toolkit 13.0.1 and CUTLASS DSL 4.8.1. CuTe's bundled NVVM 13.4.59 emits PTX 9.4; source-matched SDPA PTX reconstruction used NVCC 13.0. Nsight Systems/Compute were 2026.3.2/2026.3.1.
+
+Each backend sample warms and measures 300 single-operation CUDA graph replays using CUDA events. Nine repetitions rotate SDPA, preceding CuTe and new CuTe; compilation is excluded and clocks are not locked. A separate grouped-graph experiment reduces launch overhead, but its numbers are not mixed into these tables. The preceding CuTe control uses the `5014578` forward algorithm and the same centered backward as the new path. The final kernel snapshot is `8940028`; [gb10.json](gb10.json) records its source hashes, medians, all timing samples and output/Q/K/V FP64 errors, including the full 52-case S128 matrix and four longer-sequence controls. The additional S128 geometries are B1/H1, B1/H16, B1/H32 and B4/H16 at D256/D512, both dtypes and modes. D16 was a separate follow-up on the same device/source with the same protocol.
+
+All 52 S128 cases pass independent FP64 checks for output and each gradient, using norm-relative limits of 1% for BF16 and 0.5% for FP16. The timing driver checks graph outputs/gradients against eager execution. Focused GPU tests additionally cover changed-input graph replay, both cache length boundaries, GQA, projection strides, saved statistics, partial tiles, negative maxima, signed/zero scales and tiny gradients. The 92-case precision regression matrix has zero CuTe failures, the six-test adversarial suite passes, and Compute Sanitizer racecheck reports zero hazards for the final causal-prefix and narrow-output layouts. Larger-length comparisons preserve the previous forward path within run-to-run variation.
+
+### Reproduce on GB10
+
+After installing the ARM64 CUDA stack, compare all five dimensions in both modes:
+
+```bash
+python -m benchmarks.speed --heads 4 --dtype bf16 --seq 128 \
+  --dim 16 64 128 256 512 --backends sdpa cute \
+  --iterations 300 --repeats 9 --output ../gb10-dense.json
+python -m benchmarks.speed --heads 4 --dtype bf16 --seq 128 --causal \
+  --dim 16 64 128 256 512 --backends sdpa cute \
+  --iterations 300 --repeats 9 --output ../gb10-causal.json
+# Repeat with --dtype fp16. Add --seq 512 1024 for longer-length controls.
+python -m unittest tests.test_kernels -v
+python -m benchmarks.cudnn_regressions --backends kohakufa-cute math \
+  --output ../gb10-precision.json
+# Capture warmed ranges separately from timing, keeping reports outside the tree.
+nsys profile --capture-range=cudaProfilerApi --capture-range-end=stop \
+  --trace=cuda,nvtx -o ../gb10-cute-forward \
+  python -m benchmarks.profile_nsight --backend cute --phase forward --seq 128
+```
+
+The public speed command compares installed CuTe with default SDPA; it does not recreate the internal previous-CuTe control or exactly the random-input sequence of the retained paired run. It uses SDPA for its numerical control; the FP64 regression command and GPU tests provide independent accuracy checks. Repeat the profiler command with `--backend sdpa` to inspect actual dispatch; use `--phase joint` for forward plus backward or `--phase backward` for a retained-forward backward range.
 
 ## RTX 5090, RTX 4090 and RTX 3090 Ti
 

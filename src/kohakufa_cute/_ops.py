@@ -62,7 +62,15 @@ def setup_context(ctx, inputs, output):
     q, k, v, mask, ctx.scale, ctx.causal = inputs
     out, maximum, logsum, blocks = output
     ctx.has_mask = mask is not None
-    ctx.centered = torch.cuda.get_device_capability(q.device.index) in ((8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0))
+    ctx.centered = torch.cuda.get_device_capability(q.device.index) in (
+        (8, 6),
+        (8, 9),
+        (9, 0),
+        (10, 0),
+        (10, 3),
+        (12, 0),
+        (12, 1),
+    )
     ctx.save_for_backward(
         q, k, v, maximum, logsum, blocks, *(() if mask is None else (mask,)), *((out,) if ctx.centered else ())
     )

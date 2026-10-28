@@ -87,6 +87,8 @@ assert not any(name.startswith(('cutlass', 'tvm_ffi', 'kohakufa_cute.native', 's
             ((9, 0), True),
             ((10, 0), True),
             ((12, 0), True),
+            ((12, 1), True),
+            ((12, 2), False),
             ((10, 3), True),
             ((10, 1), False),
             ((8, 0), False),

@@ -50,6 +50,18 @@ python -m pip install '.[cuda]'
 
 Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and a C++17 compiler. The native launcher builds on first use. `pip install .` installs the API without CUDA extras; automatic selection can then use native SDPA on CPU/MPS.
 
+Initial **GB10 (SM121, DGX / RTX Spark)** support uses the generic centered
+kernels and is validated on Linux ARM64. Install an ARM64 CUDA-enabled PyTorch
+build and the CUDA 13 DSL libraries:
+
+```bash
+python -m pip install '.[cuda]' 'nvidia-cutlass-dsl[cu13]>=4.8,<4.9'
+export CUTE_DSL_ARCH=sm_121a
+```
+
+Validation used Python 3.13, PyTorch 2.11/CUDA 13, and CUTLASS DSL 4.8.1.
+GB10-specific tile and pipeline tuning is ongoing.
+
 ## Use
 
 ```python
@@ -81,7 +93,7 @@ Strict APIs propagate validation, build, and kernel errors. Automatic selection 
 
 Supported CuTe inputs:
 
-- CUDA SM86/89/90/100/103/120; matching FP16 or BF16 Q/K/V; head dimensions **1–512**.
+- CUDA SM86/89/90/100/103/120/121; matching FP16 or BF16 Q/K/V; head dimensions **1–512**.
 - Four-dimensional BHSD tensors, including supported strided layouts; equal K/V shapes; query heads divisible by K/V heads.
 - Dense, token-causal, or broadcastable boolean masks (`True` means visible). All-hidden rows return zero.
 - GQA, eager/compiled autograd, CUDA graphs, and signed or zero scales.

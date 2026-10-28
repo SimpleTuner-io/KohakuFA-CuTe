@@ -164,7 +164,7 @@ def main():
                                 selected["q"] = list(
                                     kernels.backward_query_configuration(q.device.index, args.causal, False, descriptors)
                                 )
-                                columns, statistics = kernels.backward_options(
+                                columns, stage_statistics = kernels.backward_options(
                                     q.device.index,
                                     args.causal,
                                     False,
@@ -173,7 +173,7 @@ def main():
                                     tuple(selected["kv"]),
                                 )
                                 selected["backward_options"] = dict(
-                                    query_column_warps=columns, shared_kv_statistics=statistics
+                                    query_column_warps=columns, shared_kv_statistics=stage_statistics
                                 )
                             elif backend in ("kohakufa", "kohakufa-default"):
                                 selected = upstream_configurations(q, k, args.causal)

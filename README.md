@@ -1,6 +1,6 @@
 # KohakuFA-CuTe
 
-CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, H100, and L40S**, with stable backward gradients when attention becomes sharp. It brings [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) precision approach to Ampere, Ada, Hopper, and Blackwell, and adds a centered FP32 correction that retains tiny saturated gradients.
+CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, with stable backward gradients when attention becomes sharp. It brings [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) precision approach to Ampere, Ada, Hopper, and Blackwell, and adds a centered FP32 correction that retains tiny saturated gradients.
 
 ## When to use it
 
@@ -36,6 +36,8 @@ Attention-call latency, **forward + backward**, in milliseconds; lower is better
 
 On the **B300 MIG 1g.34gb (18 SMs)**, BF16 D512 causal forward + backward is approximately tied with upstream Gluon at S4096 (**13.649 vs 13.703 ms**) and slightly faster at S8192 (**50.766 vs 51.276 ms**). Smaller cases still favor Gluon. These timings describe the partition; current full-device B200/B300 performance has not been remeasured.
 
+**GB10 (DGX / RTX Spark, SM121)** has tuned D512 forward/backward and D256/D512 short-sequence forward paths. See the [GB10 comparison](results/README.md#gb10-dgx--rtx-spark) for all tested head dimensions, dense/causal results, and remaining limitations.
+
 [Performance details](results/README.md) cover both dtypes, forward-only results, actual SDPA backends, measurement conditions, and reproduction. [Machine-readable measurements](results/performance.json) retain timing samples where available. These are attention benchmarks, not end-to-end training speedups.
 
 ## Install
@@ -50,9 +52,8 @@ python -m pip install '.[cuda]'
 
 Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and a C++17 compiler. The native launcher builds on first use. `pip install .` installs the API without CUDA extras; automatic selection can then use native SDPA on CPU/MPS.
 
-Initial **GB10 (SM121, DGX / RTX Spark)** support uses the generic centered
-kernels and is validated on Linux ARM64. Install an ARM64 CUDA-enabled PyTorch
-build and the CUDA 13 DSL libraries:
+**GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
+CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:
 
 ```bash
 python -m pip install '.[cuda]' 'nvidia-cutlass-dsl[cu13]>=4.8,<4.9'
@@ -60,7 +61,6 @@ export CUTE_DSL_ARCH=sm_121a
 ```
 
 Validation used Python 3.13, PyTorch 2.11/CUDA 13, and CUTLASS DSL 4.8.1.
-GB10-specific tile and pipeline tuning is ongoing.
 
 ## Use
 

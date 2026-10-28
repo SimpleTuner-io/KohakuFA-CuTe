@@ -2,6 +2,14 @@
 
 Use Python 3.13, unittest, Black 24.8, and isort 5.13. Keep changes focused and preserve untracked files.
 
+## Worktree workflow
+
+Before editing files for a task, create its branch and dedicated worktree from the current upstream base. Perform all task edits, tests, commits, and publication preparation inside that worktree. Keep the primary checkout clean; do not edit it first and then copy changes into a worktree, or leave duplicate uncommitted task files there after publishing.
+
+Periodically, especially before starting new work and after a PR merges, fetch upstream and inspect `git worktree list`. Clean up completed task worktrees and their local branches once their changes are confirmed merged upstream. For squash or rebase merges, verify the PR state and resulting content rather than relying only on commit ancestry.
+
+Before removing a worktree, check its index, working files, and untracked files, and confirm the task is finished. Preserve unfinished or untracked work and leave active or unrelated worktrees alone. Do not force-remove worktrees or use broad cleanup commands that discard files. After merged work is cleaned up, fast-forward the primary checkout when possible and verify that it is clean.
+
 ## Publication workflow
 
 Commit and publish only within the user's authorized scope. Use repository-relative references and commands in publication text and generated metadata. Keep raw machine captures outside the tracked tree.

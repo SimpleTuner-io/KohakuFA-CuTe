@@ -10,6 +10,62 @@ Periodically, especially before starting new work and after a PR merges, fetch u
 
 Before removing a worktree, check its index, working files, and untracked files, and confirm the task is finished. Preserve unfinished or untracked work and leave active or unrelated worktrees alone. Do not force-remove worktrees or use broad cleanup commands that discard files. After merged work is cleaned up, fast-forward the primary checkout when possible and verify that it is clean.
 
+## Kernel optimization workflow
+
+Optimize the user's complete computation while preserving this project's numerical guarantees. A lower-level language, more fusion, higher occupancy, or a deeper pipeline does not establish that an implementation is faster. Use measured evidence to choose and validate changes.
+
+### Establish the computation and baseline
+
+- Read the relevant upstream implementation and official backend support before designing a replacement. Reuse available source and inspect existing experiments; do not repeatedly rediscover already rejected approaches. Check current supported framework releases and record why any older qualified stack is retained.
+- Capture representative application inputs and inventory shapes, strides, masks, dtypes, head counts, quantization coverage, and required transforms. Include scaling, rotations, correction biases, normalization, activation rounding, retained floating-point layers, and output heads. A baseline that omits required math is a different computation and cannot establish a speedup for the complete path.
+- Compare identical rounded inputs, weights, and output contracts in the same process and software stack where possible. Separate different checkpoints, calibration recipes, layer coverage, runtime stacks, and graph policies. Label those as complete implementation comparisons rather than isolated kernel improvements.
+- Define the timing boundary before measuring: kernel only, preparation plus kernel, forward, backward, combined training step, complete model, or serving latency. Distinguish prefill from decoding and resident GPU time from tokenization, transfers, HTTP scheduling, loading, compilation, and graph capture. Include costs required by the advertised API.
+- Record source revisions, framework/compiler/runtime versions, actual loaded libraries, device capability, SM count, partitioning, memory limits, and power limit. A partition or another GPU sharing the same compute capability is not a substitute for full-device performance or qualification.
+
+### Verify that the intended path executes
+
+- Identify the selected backend and actual launched kernels; an API name or installed package is insufficient. Count expected modules, preparations, GEMMs, normalizations, copies, and fallback calls. Trace both the measured graph path and eager execution when their preparation differs.
+- Check dispatch predicates against real runtime objects, including parametrized modules, subclasses, wrappers, compiled calls, tails, and cached shapes. Prefer appropriate type or capability checks over exact class-name strings. A skipped fusion can dominate performance even when the selected GEMM is efficient.
+- Make initialization failures of required transforms or adapters stop execution rather than silently serving a different computation. Distinguish an explicitly supported fallback from a failed installation or unsupported selected kernel.
+- Inspect repeated casts, reductions, pointwise passes, layout conversions, dequantization, materialized intermediates, and duplicated input preparation before assuming tensor-core GEMM is the bottleneck. Cache immutable inference preparation when valid, and verify that graph replay still reads changing inputs.
+- Check GPU memory and other running work before interpreting OOM or timing results. Serialize independent benchmark campaigns on one GPU unless concurrency is the workload being measured. Clean up owned test processes while honoring the user's resource-retention instructions.
+
+### Profile the application and deployed machine code
+
+- Measure the complete workload first, rank concentrations of device time and launch gaps, then isolate suspected stages on captured operands. After a local improvement, remeasure the original workload. A microbenchmark win alone is insufficient to retain a dispatch preset or claim an application speedup.
+- Use Systems timelines to establish launch order, copies, synchronization, preparation, overlap, and actual kernel selection. Use Compute counters when available to test specific hypotheses. If counters are denied or unavailable, record the limitation and use timing, traces, loaded code, resource metadata, and controlled interventions; do not invent stall, cache-hit, bank-conflict, or utilization measurements.
+- Inspect PTX and SASS for both implementations. Match the exact profiled kernel symbol, loaded cubin, architecture, and compile configuration. Extract packaged PTX when available. Clearly distinguish deployed code from a source rebuild, a similar library symbol, or an empty disassembly result.
+- Analyze prologue, steady main loop, drain, and epilogue separately. Normalize instruction counts by equal K work, warp geometry, and output work. Separate inner GEMM backedges from persistent tile-scheduler or stream-K loops. Exclude predicated-off padding from claims about executed work.
+- Compare matrix-load width, shared-memory layout, address arithmetic, carried iterators, async-copy issue placement, register prefetch, tensor instructions, barriers, and output-store width. Fewer matrix-load instructions need not mean fewer transferred bytes; equal barrier counts can still have different scheduling. Static instruction counts are evidence, not runtime percentages.
+- Inspect actual register allocation, spills, static and dynamic shared memory, alignment, and resident-CTA limits. Higher occupancy or fewer registers is not automatically faster. Compute resource requirements from the instantiated kernel and target device, including padding and epilogue storage.
+
+### Test hypotheses about pipelines and layouts
+
+- State the suspected bottleneck, supporting evidence, proposed intervention, and expected observation before a sweep. Change one factor at a time or use an explicit small factorial comparison. Record negative results so the same experiment is not repeated under another name.
+- Treat pipeline depth, tile size, register layout, and CTA ordering as coupled design choices. Matching another kernel's stage count does not reproduce its iterator, register pipeline, load schedule, or work distribution. A K64 stage and a K128 stage contain different amounts of work and storage.
+- Verify producer/consumer ownership and buffer lifetimes when moving prefetches, reducing barriers, reusing shared memory, or fusing epilogues. Preserve tail predicates and zero filling. Reuse staging only after every reader has finished; validate asynchronous paths for races, uninitialized reads, and deadlocks.
+- Evaluate projection merging and shared preparation separately from the GEMM loop. Fewer launches and activation reads can help, but a merge can also discard useful normalization or activation fusion, add copies, or increase resource pressure. Include those costs in the comparison.
+- Requalify on each target GPU and important workload family. Transfer arithmetic and design lessons across architectures; do not assume previously tuned tiles, memory budgets, instruction paths, or pipeline schedules remain optimal.
+- Do not stop at a list of plausible gaps. While optimization work is authorized, implement and test the highest-impact supported intervention. Distinguish disproven hypotheses, validated improvements, unresolved causes, and measured hardware limits. A profiler permission failure or an unsuccessful tuning knob is not itself a performance ceiling.
+
+### Measure sustained performance fairly
+
+- Warm compilation, allocation, caches, and execution separately. Use repeated device-event measurements or appropriately scoped graph replay, alternate baseline/candidate order, and retain samples and variability. Keep profiling runs separate from uninstrumented benchmark medians.
+- Observe sustained power, clocks, temperature, and competing activity where available. Kernel design can change power limiting and reverse the ranking between short and long workloads. Do not substitute cold single-pass trace durations for sustained latency or treat coarse post-call clock samples as precise cycle normalization.
+- Distinguish theoretical peak throughput, resource-derived occupancy, sampled device utilization, and measured accelerator work. Do not report HFU from a generic utilization percentage or infer a bandwidth/power ceiling without evidence.
+- Cover the user's actual cases and important dispatch boundaries. For attention this includes short sequences, multiple head dimensions including 16/64/128/256/512, dense and causal visibility, rectangular shapes, GQA, key-padding and full masks, partial tiles, and backward paths. Use a focused matrix during diagnosis and broaden relevant correctness/performance checks before accepting a dispatch change.
+
+### Preserve precision and report the result honestly
+
+- Separate mathematical accuracy, compatibility with an existing execution order, and task-level quality. SDPA or another optimized backend is not a numerical oracle. Use stable FP64 equations on identical rounded inputs where feasible, including centered backward references for sharp attention and tiny gradients.
+- Check outputs and dQ/dK/dV independently, including tails, all-hidden rows, negative maxima/LSE, signed or zero scales, strided views, and stale or poisoned storage. Finite or near-zero loss is insufficient: an incorrectly zero gradient is still finite. Use meaningful relative and absolute metrics rather than tolerances that hide lost gradients.
+- Audit FMA contraction, reduction/shuffle order, rounding boundaries, saturation, overflow, accumulator promotion, and reduced-precision accumulation. A library's default fast path can fail a stricter numerical contract. Preserve failed cases and test a precision-controlled variant; do not loosen a gate merely to accept the faster result.
+- Qualify reference-sensitive fused operations on actual intermediate tensors as well as synthetic inputs. A framework upgrade can change a native reduction policy. Preserve existing qualified policies and restrict compatibility fixes to the versions, layouts, and devices actually checked.
+- Validate graph replay with changed data, supported shape/stride changes, cache reuse, and selected fallbacks. Run relevant GPU correctness checks and sanitizer checks for changed memory ownership or asynchronous synchronization. Revalidate final source after meaningful changes to the implementation or toolchain.
+- Keep calibration, selection, and evaluation data disjoint. For quality comparisons, retain paired decisions and resample independent source units; multiple questions from the same problem are not independent observations. Small score differences or agreement with a floating-point baseline do not establish an accuracy winner.
+- Report measured scope, samples, precision contract, selected backend, and limitations alongside gains. Execution errors, OOM, numerical failures, and unsupported paths are not successful timing results. Distinguish released code from experimental candidates and keep the main README concise, with detailed evidence in the appropriate performance documentation.
+- Preserve compact reproducible summaries, configuration/source hashes, and retained experiment code. Keep raw machine captures outside the tracked tree and apply the publication workflow below to every outgoing artifact and its metadata.
+
 ## Publication workflow
 
 Commit and publish only within the user's authorized scope. Use repository-relative references and commands in publication text and generated metadata. Keep raw machine captures outside the tracked tree.

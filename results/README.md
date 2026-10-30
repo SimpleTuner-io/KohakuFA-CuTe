@@ -122,7 +122,7 @@ All four plotted grids use B=1, H=16, contiguous BHSD, S128/S1024/S4096, D16/64/
 Ratios above one favor CuTe. Counts below compare the observed medians; values close to one can be ties within variability. All four GPUs beat default SDPA in the eight long D512 complete-call cases. The new schedules remain selected specifically on RTX 4090, which also wins all 20 short cases and all eight long D16 cases. Its long D64/D128/D256 complete calls still trail SDPA.
 
 | GPU | Forward wins | Backward wins | F+B wins | Long D512 SDPA / CuTe F+B |
-| --- | ---: | ---: | ---: | ---: | ---: |
+| --- | ---: | ---: | ---: | ---: |
 | RTX 5090 | 31/60 | 25/60 | 24/60 | 1.90–4.42× |
 | RTX 4090 | 46/60 | 31/60 | 36/60 | 2.09–4.32× |
 | RTX 3090 Ti | 18/60 | 24/60 | 20/60 | 1.61–2.71× |

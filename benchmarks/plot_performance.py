@@ -17,29 +17,38 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, default=Path("results"))
     args = parser.parse_args()
-    report = json.loads((args.results / "performance.json").read_text())
-    datasets = {dataset["id"]: dataset for dataset in report["datasets"]}
-    latest_4090 = json.loads((args.results / "rtx4090.json").read_text())
-    datasets["rtx4090-current"] = {
-        "date": latest_4090["date"],
-        "torch": latest_4090["stack"]["torch"],
-        "rows": [
-            {
-                "shape": row["shape"],
-                "dtype": row["dtype"],
-                "mask": row["mode"],
-                "medians_ms": {
-                    backend: {"forward_ms": times["forward"], "forward_backward_ms": times["joint"]}
-                    for backend, times in row["medians_ms"].items()
-                },
-            }
-            for row in latest_4090["measurements"]
-        ],
-    }
+    datasets = {}
+    for dataset_id, filename in (
+        ("rtx5090-current", "rtx5090.json"),
+        ("rtx4090-current", "rtx4090.json"),
+        ("rtx3090ti-current", "rtx3090ti.json"),
+        ("l40s-current", "l40s.json"),
+    ):
+        current = json.loads((args.results / filename).read_text())
+        power_limit = current["device"].get("power_limit_w")
+        if power_limit is None:
+            power_limit = float(current["device"]["board_before"]["power.limit"])
+        datasets[dataset_id] = {
+            "date": current["date"],
+            "torch": current["stack"]["torch"],
+            "power_limit_w": power_limit,
+            "rows": [
+                {
+                    "shape": row["shape"],
+                    "dtype": row["dtype"],
+                    "mask": row["mode"],
+                    "medians_ms": {
+                        backend: {"forward_ms": times["forward"], "forward_backward_ms": times["joint"]}
+                        for backend, times in row["medians_ms"].items()
+                    },
+                }
+                for row in current["measurements"]
+            ],
+        }
     devices = (
         ("rtx5090-current", "RTX 5090"),
         ("rtx4090-current", "RTX 4090"),
-        ("rtx3090ti-current", "RTX 3090 Ti · 285 W"),
+        ("rtx3090ti-current", "RTX 3090 Ti"),
         ("l40s-current", "L40S"),
     )
     row_counts = [len({(r["dtype"], r["shape"][2], r["mask"]) for r in datasets[key]["rows"]}) for key, _ in devices]
@@ -82,15 +91,19 @@ def main():
             axis.set_yticks(
                 range(len(keys)), [f"{dtype.upper()} · S{seq} · {mask}" for dtype, seq, mask in keys], fontsize=9
             )
-            axis.set_title(f"{device} · {title}\n{dataset['date']} · PyTorch {dataset['torch']}", fontsize=11, pad=10)
+            axis.set_title(
+                f"{device} · {dataset['power_limit_w']:g} W · {title}\n{dataset['date']} · PyTorch {dataset['torch']}",
+                fontsize=11,
+                pad=10,
+            )
             axis.tick_params(length=0)
             for spine in axis.spines.values():
                 spine.set_visible(False)
     figure.suptitle("Default SDPA time / CuTe time · B1 H16", fontsize=14)
     figure.supxlabel(
         "Above 1×: CuTe faster (teal). Below 1×: SDPA faster (brown).\n"
-        "D64–256: FlashAttention-2; D512: efficient attention. RTX 4090 also includes D16 and S128.\n"
-        "Each cell compares backends on the same GPU and stack; dates and framework versions differ between GPUs.",
+        "All panels include D16 and S128. Actual SDPA kernel names are retained in the reports.\n"
+        "Each cell compares backends on the same GPU and stack; hardware and compiler stacks differ between GPUs.",
         fontsize=10,
     )
     output = args.results / "performance.svg"

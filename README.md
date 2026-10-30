@@ -5,9 +5,9 @@ CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100,
 ## When to use it
 
 - **Training with sharp attention or large logits:** forward outputs can look correct while query/key gradients are wrong. The kernels preserve separate softmax statistics and a centered backward correction. See [precision](docs/precision.md).
-- **RTX cards with 512-wide heads:** forward plus backward beats default PyTorch SDPA across all eight tested FP16/BF16, dense/causal, S1024/S4096 cases per card: **1.84–4.41× on RTX 5090**, **2.09–4.32× on RTX 4090**, and **1.67–2.53× on RTX 3090 Ti** (285 W).
+- **RTX cards with 512-wide heads:** forward plus backward beats default PyTorch SDPA across all eight tested FP16/BF16, dense/causal, S1024/S4096 cases per card: **1.90–4.42× on RTX 5090**, **2.09–4.32× on RTX 4090**, and **1.61–2.71× on RTX 3090 Ti** (450 W).
 - **RTX 4090 short D128 and long D16:** forward plus backward beats SDPA in both dtypes and visibility modes at S128/D128 and S1024/S4096/D16. All 20 short cases across D16/64/128/256/512 win; see the [4090 comparison](docs/rtx4090-tuning.md) for timings and sustained-load checks.
-- **L40S with 512-wide heads:** forward plus backward is **2.50–4.20× faster than default SDPA** across the same eight tested FP16/BF16, dense/causal, S1024/S4096 cases.
+- **L40S with 512-wide heads:** forward plus backward is **2.70–4.68× faster than default SDPA** across the same eight tested FP16/BF16, dense/causal, S1024/S4096 cases.
 - **H100 text inference with Clef 27B:** captured BF16 D256 backbone calls beat cuDNN SDPA by **1.24× at 787 tokens and 1.03× at 9,835 tokens**; schema calls beat it by **1.61–4.28×**. Small shapes and whole-model numerical compatibility still need work; see the [27B comparison](results/README.md#clef-27b-text-inference).
 - **RTX 5090 with explicit boolean masks:** the tested BF16 causal masks are **1.48–4.72× faster than default SDPA**, including mask preparation. Arbitrary masks need their own benchmarks.
 - **Other workloads:** choose it for its gradient calculation, then benchmark your shapes. Long D64/D128/D256 complete calls still trail SDPA on RTX 4090; smaller heads on the other RTX cards also have gaps. The measured H100 training cases trade throughput for precision; L40S comparisons are below.
@@ -16,31 +16,31 @@ Automatic selection checks compatibility; it does **not** choose whichever backe
 
 ## Performance
 
-Attention-call latency, **forward + backward**, in milliseconds; lower is better. B=1, H=16, BF16, S=4096. These are matched comparisons within each row, with compilation excluded.
+Attention-call latency, **forward + backward**, in milliseconds; lower is better. B=1, H=16, BF16, S=4096. These are matched comparisons within each row, with compilation excluded. The RTX 3090 Ti run uses a 450 W limit; hardware and stack details are in the performance guide.
 
 | GPU | Head dim | Visibility | CuTe | Default SDPA | SDPA / CuTe |
 | --- | ---: | --- | ---: | ---: | ---: |
-| RTX 5090 | 512 | Dense | 23.175 | 48.215 | 2.08× |
-| RTX 5090 | 512 | Causal | 11.449 | 29.683 | 2.59× |
+| RTX 5090 | 512 | Dense | 23.408 | 50.095 | 2.14× |
+| RTX 5090 | 512 | Causal | 11.511 | 29.991 | 2.61× |
 | RTX 4090 | 512 | Dense | 32.045 | 67.136 | 2.10× |
 | RTX 4090 | 512 | Causal | 16.225 | 39.596 | 2.44× |
 | RTX 4090 | 16 | Dense | 0.718 | 0.877 | 1.22× |
 | RTX 4090 | 16 | Causal | 0.558 | 0.605 | 1.08× |
-| RTX 3090 Ti | 512 | Dense | 68.507 | 114.648 | 1.67× |
-| RTX 3090 Ti | 512 | Causal | 33.843 | 63.758 | 1.88× |
-| L40S | 512 | Dense | 26.523 | 67.186 | 2.53× |
-| L40S | 512 | Causal | 14.014 | 37.417 | 2.67× |
+| RTX 3090 Ti | 512 | Dense | 63.654 | 102.242 | 1.61× |
+| RTX 3090 Ti | 512 | Causal | 30.965 | 57.699 | 1.86× |
+| L40S | 512 | Dense | 26.247 | 72.344 | 2.76× |
+| L40S | 512 | Causal | 14.159 | 40.870 | 2.89× |
 | RTX 5090 | 256 | Boolean causal mask | 6.052 | 24.294 | 4.01× |
 | RTX 5090 | 128 | Boolean causal mask | 2.318 | 10.050 | 4.33× |
-| RTX 5090 | 128 | Dense | 3.669 | 2.657 | 0.72× |
-| L40S | 128 | Dense | 4.648 | 3.363 | 0.72× |
+| RTX 5090 | 128 | Dense | 3.682 | 2.658 | 0.72× |
+| L40S | 128 | Dense | 3.924 | 2.866 | 0.73× |
 | H100 | 128 | Dense | 1.300 | 0.927 | 0.71× |
 
 On the **B300 MIG 1g.34gb (18 SMs)**, BF16 D512 causal forward + backward is approximately tied with upstream Gluon at S4096 (**13.649 vs 13.703 ms**) and slightly faster at S8192 (**50.766 vs 51.276 ms**). Smaller cases still favor Gluon. These timings describe the partition; current full-device B200/B300 performance has not been remeasured.
 
 **GB10 (DGX / RTX Spark, SM121)** has tuned D512 forward/backward and D256/D512 short-sequence forward paths. See the [GB10 comparison](results/README.md#gb10-dgx--rtx-spark) for all tested head dimensions, dense/causal results, and remaining limitations.
 
-[Performance details and charts](results/README.md) cover both dtypes, forward-only results, actual SDPA backends, measurement conditions, and reproduction. Machine-readable measurements retain the [October 30 RTX 4090 run](results/rtx4090.json) and [other device runs](results/performance.json), including their different stacks and dates. These are attention benchmarks, not end-to-end training speedups.
+[Performance details and charts](results/README.md) cover both dtypes, forward-only results, actual SDPA backends, measurement conditions, and reproduction. Machine-readable [RTX and L40S reports](results/README.md#rtx-5090-rtx-4090-and-rtx-3090-ti) retain the current timing samples, software stacks, and hardware limits; [other device comparisons](results/performance.json) are retained separately. These are attention benchmarks, not end-to-end training speedups.
 
 ## Install
 

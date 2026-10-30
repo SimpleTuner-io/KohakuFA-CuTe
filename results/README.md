@@ -186,44 +186,6 @@ Forward wins in **8/32** cases; backward alone wins in **8/32**; forward + backw
 
 Measured October 22, 2026 UTC with PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1, TVM FFI 0.1.15.post0 and driver 595.91.07. Five rotated CUDA-graph rounds target 250-ms forward and 500-ms backward/F+B windows, with at least 32 replays. Compilation, profiling and task-owned telemetry are excluded from timed windows. Graph outputs/gradients match eager execution. All 224 FP64 cases and 16 changed-input graph checks passed. The unmodified 100-test suite completed with 19 skips and one existing BF16 dV tolerance failure at B2/H16/Sq1023/Sk17/D128. All outputs and gradients in that failing case are bitwise identical on pre-tuning kernels and fresh current main. Exact inputs and diagnostics are retained with the evidence; no accuracy tolerance was changed.
 
-### Clef-Flash text inference
-
-Forward-only comparisons on 142-SM L40S devices at their stock 350 W limit, using actual Q/K/V tensors captured from [Clef-Flash](https://huggingface.co/Cloudflare/clef-flash) revision `17f0b0ad64efb65d273590632833508766b2aae6`. Backbone, schema and model investigations use separate devices; each comparison within a row uses the same GPU. Two synthetic records contain three or 64 four-choice questions and 256 state words, producing 787 or 9,835 input tokens. The eight full-attention backbone layers use causal D256 GQA16/4. The schema head uses dense D64 attention with short queries into that input sequence. Projection strides are preserved. The model's 24 linear-attention blocks and native MHA self-attention fastpath keep their existing implementations.
-
-BF16, B=1; median milliseconds per forward attention call, including the split-forward merge. Projections, tokenization, and the rest of the model are excluded from this table:
-
-| Query × key tokens | Head dim | Q/KV heads | Main CuTe | Tuned CuTe | Default SDPA | SDPA / tuned |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 787 × 787 | 256 | 16/4 | 0.083867 | 0.064955 | 0.073119 | 1.13× |
-| 9835 × 9835 | 256 | 16/4 | 4.697606 | 4.189800 | 4.197516 | 1.00× |
-| 12 × 787 | 64 | 16/16 | 0.017716 | 0.005214 | 0.007848 | 1.51× |
-| 3 × 787 | 64 | 16/16 | 0.017919 | 0.004951 | 0.007858 | 1.59× |
-| 256 × 9835 | 64 | 16/16 | 0.168197 | 0.061462 | 0.064517 | 1.05× |
-| 64 × 9835 | 64 | 16/16 | 0.157460 | 0.021609 | 0.025747 | 1.19× |
-
-Default SDPA selects FlashAttention-2. All four schema shapes beat it in all seven paired rounds, for both BF16 and FP16 casts of the captured inputs. The JSON retains all eight schema rows. The D256 short case wins all five rounds; the long case is near parity, with round ratios on both sides of one. Against main CuTe, D256 latency falls 22.5% and 10.8% on these two shapes. A separate 13-case B1/B2, S128–16384 grid improves main throughout; several power-of-two cases still favor SDPA. These results do not establish gains for every shape on SM89 or for the vision encoder.
-
-The schema kernel partitions the key sequence across thread blocks, retains FP32 partial outputs, and merges backward-compatible maxima and sums. Queries above 64 use 128-row tiles. The larger schema tiles and D256 path stagger V loads across QK compute and next-K loads across softmax/PV, while complete tiles bypass per-element boundary checks. D256 also uses coalesced copies and schedules longer causal query blocks first. Its values, softmax statistics, and gradients retain main's per-row arithmetic order and match the serial control bitwise in the regression checks.
-
-PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1, TVM FFI 0.1.15.post0, driver 595.71.05. Schema timings use seven rotating rounds, 32 calls per CUDA graph and at least 100 ms per backend window. Old-main schema controls run separately on the same GPU and inputs under that protocol, rotating with native SDPA. D256 uses one call per graph and five rotating main/candidate/SDPA rounds targeting 250 ms, with at least 32 replays. Compilation and task-owned profiling/telemetry are excluded from all timing windows. Nsight Systems, actual loaded native kernel names, PTX/SASS resources, and controlled layout experiments informed the changes. Nsight Compute counters were unavailable because the driver resource was busy.
-
-Validation retains the existing FP16 `.003/.003` and BF16 `.02/.02` absolute/relative bounds. Schema checks cover 96 parameter configurations, 192 changed-input graph replays, 22 adversarial cases and 23 cache boundaries. D256 checks cover exact serial equivalence across 18 configurations, changed-input graphs, a signed-scale FP64 oracle, and all 43,507,712 output values in the two actual backbone captures.
-
-Full-model measurements and final integrated-suite results are recorded with the consolidated dataset. Whole-model gains are much smaller than the attention ratios: GEMMs and linear-attention work dominate these records, while softmax attention occupies roughly 1–3% of the warmed Nsight ranges. Model timing includes the encoded batch through device logits and excludes tokenization and collation. Full-model timing uses normal eager execution rather than the attention-only CUDA-graph protocol.
-
-Whole-model BF16 medians in milliseconds, three rotating rounds of five forwards, with native MHA fastpaths retained:
-
-| Questions / tokens | Native SDPA | Main CuTe | Tuned CuTe |
-| --- | ---: | ---: | ---: |
-| 3 / 787 | 81.248 | 81.185 | 81.175 |
-| 64 / 9835 | 1017.795 | 1021.774 | 1020.018 |
-
-Timing distributions overlap. These samples establish neither a reliable end-to-end SDPA win nor a large model speedup over main.
-
-Head-only replacement passes all six records' unchanged attention/logit gates and preserves all 201 decisions, including four held-out records. Backbone replacement preserves existing CuTe results bitwise, but existing CuTe and native SDPA can exceed those model-level bounds after BF16 rounding accumulates through the backbone. Both implementations pass the attention-level FP64 checks. Zero observed decision changes do not establish full-model numerical equivalence to native SDPA; the failed comparisons remain in the evidence.
-
-Local Python 3.13 CPU discovery completes 111 tests with 62 device skips and no failures. Full L40S discovery runs 109 tests with 19 skips, one baseline-identical D128 dV tolerance failure and no setup errors; its exit status remains a failure. After fixing stale native-build reuse, four affected GPU tests, four CPU tests, all six BF16 attention replays, the head-only native model gates, and the combined model comparison against main pass with the source-keyed binary. The replay verifies full FP64 outputs and changed-input graph behavior. Its two-round timing samples are retained separately from the table's qualification runs; the long backbone remains variable and has no established SDPA advantage. No correctness tolerance was changed.
-
 ## RTX 5090 explicit boolean masks
 
 BF16, B=1/H=16. Mask preparation is included. The causal triangle is supplied as a boolean mask with `is_causal=False`; this is a different backend selection from implicit `is_causal=True`.
@@ -354,35 +316,11 @@ python -m benchmarks.plot_performance
 
 These commands rerun the general timing/precision protocol on the installed stack; they do not recreate every historical host or the specialized explicit-mask driver. Check actual SDPA dispatch with `benchmarks.profile_attention` when interpreting a new result. GPU captures, PTX/SASS, rental records, and exploratory reports belong outside the package; the repository keeps the usage comparisons above.
 
-### Clef captures and replay
+### Clef 27B captures and replay
 
-Download the pinned model snapshot outside the source tree. Its model loader additionally requires Transformers 5.12.1, flash-linear-attention 0.5.2, causal-conv1d 1.7.0, Accelerate, Pillow, Hugging Face Hub and Safetensors. The CUDA extensions must support the installed PyTorch/CUDA stack. The measured model uses unmodified BF16 weights and occupies about 19 GB before activations.
+Download the pinned model snapshot outside the source tree. Its model loader additionally requires Transformers 5.12.1, flash-linear-attention 0.5.2, causal-conv1d 1.7.0, Accelerate, Pillow, Hugging Face Hub and Safetensors. The CUDA extensions must support the installed PyTorch/CUDA stack.
 
-```bash
-hf download Cloudflare/clef-flash \
-  --revision 17f0b0ad64efb65d273590632833508766b2aae6 \
-  --local-dir ../clef-flash-weights
-# Capture the six distinct SDPA signatures and their actual projection layouts.
-python -m benchmarks.clef_forward --model ../clef-flash-weights \
-  --output ../clef-captures --state-words 256 --questions 3 64 \
-  --backends native --capture-tensors --rounds 1 --repeat 1
-# Replay schema attention without loading the model weights.
-python -m benchmarks.clef_forward --captures ../clef-captures \
-  --output ../clef-head --attention-dim 64 --rounds 7 \
-  --calls-per-graph 32 --window-ms 100
-# Replay the two causal GQA backbone shapes.
-python -m benchmarks.clef_forward --captures ../clef-captures \
-  --output ../clef-backbone --attention-dim 256 --rounds 5 \
-  --calls-per-graph 1 --window-ms 250
-# Measure model-level head replacement separately from backbone replacement.
-python -m benchmarks.clef_forward --model ../clef-flash-weights \
-  --output ../clef-model-head --state-words 256 --questions 3 64 \
-  --backends native cute-head --rounds 3 --repeat 5
-```
-
-Use fresh output directories. Replay restores strides and storage offsets, validates every output against a chunked FP64 oracle, checks that captured graphs respond to changed values, and rotates native SDPA/CuTe timing windows. Add `--dtype fp16` for casts of the captures; this does not measure an FP16 model. Replay compares the installed CuTe version with SDPA; reproducing the old-main control requires a separate checkout of the recorded source. The model harness records numerical failures and excludes failed variants from timing rather than changing its correctness bounds.
-
-For the non-Flash 27B model, use its own pinned snapshot and explicit model metadata. Unmodified BF16 weights occupy about 54 GB before activations; the measured device has 80 GB.
+Use the pinned Clef 27B snapshot and explicit model metadata. Unmodified BF16 weights occupy about 54 GB before activations; the measured device has 80 GB.
 
 ```bash
 hf download Cloudflare/clef \
@@ -403,5 +341,7 @@ python -m benchmarks.clef_forward --model ../clef-27b-weights \
   --output ../clef-27b-model-head --state-words 16 256 2048 --questions 3 64 \
   --backends native cute-head --rounds 3 --repeat 5
 ```
+
+Use fresh output directories. Replay restores strides and storage offsets, validates every output against a chunked FP64 oracle, checks that captured graphs respond to changed values, and rotates native SDPA/CuTe timing windows. Add `--dtype fp16` for casts of the captures; this does not measure an FP16 model. Replay compares the installed CuTe version with SDPA; reproducing the old-main control requires a separate checkout of the recorded source. The model harness records numerical failures and excludes failed variants from timing rather than changing its correctness bounds.
 
 The public replay uses default SDPA. To check its stronger FlashAttention alternative separately, run the SDPA call inside `torch.nn.attention.sdpa_kernel(torch.nn.attention.SDPBackend.FLASH_ATTENTION)` and verify the actual loaded kernel. The retained H100 comparisons include both backends.

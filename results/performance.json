@@ -3,7 +3,7 @@
   "units": "milliseconds per attention call",
   "timing": "Median CUDA-event time per CUDA-graph replay; forward_backward includes forward. Compilation excluded.",
   "ordering": "Backends rotated within each dataset. Compare backends within a row; hosts/software differ across datasets.",
-  "status": "Retained RTX and L40S grids, Clef-Flash and H100 Clef 27B forward shapes, and explicit-mask, B300 MIG and H100 training comparisons. The October 22 RTX 4090 grid is superseded by rtx4090.json.",
+  "status": "Retained historical and other-device comparisons. The October 22 RTX/L40S unmasked grids are superseded by the per-device rtx5090.json, rtx4090.json, rtx3090ti.json and l40s.json reports.",
   "datasets": [
     {
       "id": "rtx5090-current",
@@ -3376,7 +3376,8 @@
         "encoded_sass_equal": true,
         "resource_records_equal": true,
         "comparison_sha256": "7fccc351916ccf6fbb42ca95f4081c9c8a25474e20f84bf07838648bc28d3f40"
-      }
+      },
+      "superseded_by": "rtx5090.json"
     },
     {
       "id": "rtx4090-current",
@@ -10945,7 +10946,8 @@
         "encoded_sass_equal": true,
         "resource_records_equal": true,
         "comparison_sha256": "73680fceb01e7533b72d1811139cb763b0ab3fec2302a748fd0d48258a023ff7"
-      }
+      },
+      "superseded_by": "rtx3090ti.json"
     },
     {
       "id": "rtx5090-explicit-masks",
@@ -15743,7 +15745,8 @@
             "forward_backward_ms": 71.73084662468393
           }
         }
-      ]
+      ],
+      "superseded_by": "l40s.json"
     },
     {
       "id": "l40s-clef-schema-forward",

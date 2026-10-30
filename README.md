@@ -5,12 +5,13 @@ CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100,
 ## When to use it
 
 - **Training with sharp attention or large logits:** forward outputs can look correct while query/key gradients are wrong. The kernels preserve separate softmax statistics and a centered backward correction. See [precision](docs/precision.md).
-- **RTX cards with 512-wide heads:** forward plus backward beats default PyTorch SDPA across all eight tested FP16/BF16, dense/causal, S1024/S4096 cases per card: **1.84–4.41× on RTX 5090**, **1.91–3.94× on RTX 4090**, and **1.67–2.53× on RTX 3090 Ti** (285 W).
+- **RTX cards with 512-wide heads:** forward plus backward beats default PyTorch SDPA across all eight tested FP16/BF16, dense/causal, S1024/S4096 cases per card: **1.84–4.41× on RTX 5090**, **2.09–4.32× on RTX 4090**, and **1.67–2.53× on RTX 3090 Ti** (285 W).
+- **RTX 4090 short D128 and long D16:** forward plus backward beats SDPA in both dtypes and visibility modes at S128/D128 and S1024/S4096/D16. All 20 short cases across D16/64/128/256/512 win; see the [4090 comparison](docs/rtx4090-tuning.md) for timings and sustained-load checks.
 - **L40S with 512-wide heads:** forward plus backward is **2.50–4.20× faster than default SDPA** across the same eight tested FP16/BF16, dense/causal, S1024/S4096 cases.
 - **L40S text inference with Clef-Flash:** the measured BF16 D64 schema attention calls are **1.05–1.59× faster than SDPA**. D256 causal GQA is **1.13× faster at 787 tokens** and approximately tied at 9,835 tokens. These are attention-call gains; see the [model comparisons](results/README.md#clef-flash-text-inference).
 - **H100 text inference with Clef 27B:** captured BF16 D256 backbone calls beat cuDNN SDPA by **1.24× at 787 tokens and 1.03× at 9,835 tokens**; schema calls beat it by **1.61–4.28×**. Small shapes and whole-model numerical compatibility still need work; see the [27B comparison](results/README.md#clef-27b-text-inference).
 - **RTX 5090 with explicit boolean masks:** the tested BF16 causal masks are **1.48–4.72× faster than default SDPA**, including mask preparation. Arbitrary masks need their own benchmarks.
-- **Other workloads:** choose it for its gradient calculation, then benchmark your shapes. Smaller unmasked RTX heads still have slower backward than FlashAttention-2. The measured H100 training cases also trade throughput for precision; L40S comparisons are below.
+- **Other workloads:** choose it for its gradient calculation, then benchmark your shapes. Long D64/D128/D256 complete calls still trail SDPA on RTX 4090; smaller heads on the other RTX cards also have gaps. The measured H100 training cases trade throughput for precision; L40S comparisons are below.
 
 Automatic selection checks compatibility; it does **not** choose whichever backend is fastest for a shape.
 
@@ -22,8 +23,10 @@ Attention-call latency, **forward + backward**, in milliseconds; lower is better
 | --- | ---: | --- | ---: | ---: | ---: |
 | RTX 5090 | 512 | Dense | 23.175 | 48.215 | 2.08× |
 | RTX 5090 | 512 | Causal | 11.449 | 29.683 | 2.59× |
-| RTX 4090 | 512 | Dense | 31.541 | 60.833 | 1.93× |
-| RTX 4090 | 512 | Causal | 16.011 | 35.765 | 2.23× |
+| RTX 4090 | 512 | Dense | 32.045 | 67.136 | 2.10× |
+| RTX 4090 | 512 | Causal | 16.225 | 39.596 | 2.44× |
+| RTX 4090 | 16 | Dense | 0.718 | 0.877 | 1.22× |
+| RTX 4090 | 16 | Causal | 0.558 | 0.605 | 1.08× |
 | RTX 3090 Ti | 512 | Dense | 68.507 | 114.648 | 1.67× |
 | RTX 3090 Ti | 512 | Causal | 33.843 | 63.758 | 1.88× |
 | L40S | 512 | Dense | 26.523 | 67.186 | 2.53× |
@@ -38,7 +41,7 @@ On the **B300 MIG 1g.34gb (18 SMs)**, BF16 D512 causal forward + backward is app
 
 **GB10 (DGX / RTX Spark, SM121)** has tuned D512 forward/backward and D256/D512 short-sequence forward paths. See the [GB10 comparison](results/README.md#gb10-dgx--rtx-spark) for all tested head dimensions, dense/causal results, and remaining limitations.
 
-[Performance details](results/README.md) cover both dtypes, forward-only results, actual SDPA backends, measurement conditions, and reproduction. [Machine-readable measurements](results/performance.json) retain timing samples where available. These are attention benchmarks, not end-to-end training speedups.
+[Performance details and charts](results/README.md) cover both dtypes, forward-only results, actual SDPA backends, measurement conditions, and reproduction. Machine-readable measurements retain the [October 30 RTX 4090 run](results/rtx4090.json) and [other device runs](results/performance.json), including their different stacks and dates. These are attention benchmarks, not end-to-end training speedups.
 
 ## Install
 

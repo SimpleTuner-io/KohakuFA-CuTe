@@ -1,8 +1,8 @@
 # Performance guide
 
-[performance.json](performance.json) retains the RTX and L40S comparisons, software versions, source identifiers, and timing samples where available. [gb10.json](gb10.json) retains the GB10 comparison separately.
+[performance.json](performance.json) retains the RTX 5090, RTX 3090 Ti, L40S and other comparisons, software versions, source identifiers, and timing samples where available. Its October 22 RTX 4090 snapshot is superseded by [rtx4090.json](rtx4090.json). [gb10.json](gb10.json) retains the GB10 comparison separately.
 
-The [RTX 4090 scheduling follow-up](../docs/rtx4090-tuning.md) and [comparison data](rtx4090.json) add same-process PyTorch 2.15 comparisons, all five head dimensions at S128/S1024/S4096, and the remaining backward arithmetic gap. The RTX grid and figure below retain their October 22 measurement conditions; use the follow-up for the newer 4090 schedules.
+The chart and RTX 4090 tables below use the October 30 PyTorch 2.15 measurements, including all five head dimensions at S128/S1024/S4096. The [RTX 4090 analysis](../docs/rtx4090-tuning.md) covers the remaining backward arithmetic gap, precision checks, and sustained power/clocks. Other plotted GPUs retain their October 22 measurements; each panel labels its date and framework version.
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
@@ -115,16 +115,16 @@ The public speed command compares installed CuTe with default SDPA; it does not 
 
 ## RTX 5090, RTX 4090 and RTX 3090 Ti
 
-Each GPU has a complete 32-case unmasked grid: B=1, H=16, matching contiguous BHSD inputs, S1024/S4096, D64/128/256/512, FP16/BF16, dense/implicit causal. Actual default PyTorch dispatch is **FlashAttention-2 at D64/128/256** and **CUTLASS efficient attention at D512**. “SDPA” means that actual default. Forced PyTorch FlashAttention-2 controls on the Ti select the same smaller-head kernels; the standalone `flash-attn` package was not measured.
+All grids use B=1, H=16, matching contiguous BHSD inputs, FP16/BF16 and dense/implicit causal visibility. RTX 5090 and RTX 3090 Ti each have 32 cases at S1024/S4096 and D64/128/256/512. RTX 4090 has 60 cases, adding S128 and D16. Actual default PyTorch dispatch is **FlashAttention-2 at D64/128/256** and **CUTLASS efficient attention at D512**. “SDPA” means that actual default. Forced PyTorch FlashAttention-2 controls on the Ti select the same smaller-head kernels; the standalone `flash-attn` package was not measured.
 
 ![Current RTX and L40S performance across the complete unmasked grids](performance.svg)
 
-Ratios above 1 favor CuTe. All three GPUs beat default SDPA for complete D512 calls; **smaller unmasked heads still favor FlashAttention-2 for the complete call**.
+Ratios above 1 favor CuTe. All three GPUs beat default SDPA for complete D512 calls. RTX 4090 also wins all 20 short complete-call cases and all eight long D16 cases; its long D64/D128/D256 calls still favor SDPA. Smaller heads on RTX 5090 and RTX 3090 Ti continue to favor FlashAttention-2 for complete calls.
 
 | GPU | Forward wins | F+B wins | D512 SDPA / CuTe F+B |
 | --- | ---: | ---: | ---: |
 | RTX 5090 | 18/32 | 8/32 | 1.84–4.41× |
-| RTX 4090 | 10/32 | 8/32 | 1.91–3.94× |
+| RTX 4090 | 46/60 | 36/60 | 2.09–4.32× |
 | RTX 3090 Ti | 10/32 | 8/32 | 1.67–2.53× |
 
 Representative BF16 S4096 complete calls:
@@ -133,30 +133,36 @@ Representative BF16 S4096 complete calls:
 | --- | ---: | --- | ---: | ---: | ---: |
 | RTX 5090 | 512 | Dense | 23.175 | 48.215 | 2.08× |
 | RTX 5090 | 512 | Causal | 11.449 | 29.683 | 2.59× |
-| RTX 4090 | 512 | Dense | 31.541 | 60.833 | 1.93× |
-| RTX 4090 | 512 | Causal | 16.011 | 35.765 | 2.23× |
+| RTX 4090 | 512 | Dense | 32.045 | 67.136 | 2.10× |
+| RTX 4090 | 512 | Causal | 16.225 | 39.596 | 2.44× |
+| RTX 4090 | 16 | Dense | 0.718 | 0.877 | 1.22× |
+| RTX 4090 | 16 | Causal | 0.558 | 0.605 | 1.08× |
 | RTX 3090 Ti | 512 | Dense | 68.507 | 114.648 | 1.67× |
 | RTX 3090 Ti | 512 | Causal | 33.843 | 63.758 | 1.88× |
 
 The selected full-width D512 tiles share score work across output columns. Backward overlaps full-order QK and dO·V in separate warp groups, retains stationary V and packs DS/P shared stores. Wider operand copies are selected on SM86/SM89; measured cache policy and a causal D128 query layout are selected separately on SM120. These choices retain the centered FP32 corrections described in the [precision guide](../docs/precision.md).
 
-Against paired previous-main controls, RTX 4090 F+B latency falls **75.6–78.1% at D512** and **13.1–23.1% at D256**. RTX 5090 D512 backward falls **15.9–20.2%**, and F+B falls **12.8–16.8%**; D128 F+B falls **0.2–15.9%**. The 5090 D256 cache-policy change is small and mixed: **0.36% slower to 2.12% faster** for F+B. D64 retains its existing 5090 selection. SM86 is newly supported, so Ti performance is compared with default SDPA rather than claiming a speedup over unsupported main.
+RTX 4090 BF16 S128/D128 complete latency is **15.54 µs dense and 15.56 µs causal**, versus SDPA's 29.33 and 25.31 µs. Long D16 removes padded matrix work and fuses centering; the complete-call lead survives sustained load at approximately 732 versus 875 µs dense and 562 versus 606 µs causal. Its long D64/D128 scheduling gains and remaining losses are detailed in the [4090 report](../docs/rtx4090-tuning.md).
+
+Against paired previous-main controls in the October 22 RTX 5090 run, D512 backward falls **15.9–20.2%**, and F+B falls **12.8–16.8%**; D128 F+B falls **0.2–15.9%**. The 5090 D256 cache-policy change is small and mixed: **0.36% slower to 2.12% faster** for F+B. D64 retains its existing 5090 selection. SM86 was newly supported in that measurement, so Ti performance is compared with default SDPA rather than claiming a speedup over unsupported main.
 
 ### Measurement conditions
 
-Measured October 22, 2026 UTC with PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1 and TVM FFI 0.1.15.post0:
+RTX 4090 was measured October 30, 2026 UTC with Python 3.13.18, PyTorch 2.15.0+cu132, CUDA 13.2, CuTe DSL 4.8.1, TVM FFI 0.1.15.post0 and Triton 3.9. Seven rotating rounds target 200 ms per backend and phase, with at least 16 graph replays. All 60 rows pass independent full-length centered FP64 checks; the GPU suite passes 150 tests with 33 skips. Memcheck and racecheck each pass 31 changed-input graph cases. Profiling and telemetry are excluded from these timing windows; the separate sustained measurements retain latency samples and board telemetry.
 
-| GPU | SMs / memory | Power limit | Driver | Five-round timing windows |
+RTX 5090 and RTX 3090 Ti were measured October 22, 2026 UTC with PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1 and TVM FFI 0.1.15.post0, using five rotating rounds. Hardware and timing windows for all three RTX runs:
+
+| GPU | SMs / memory | Power limit | Driver | Timing windows |
 | --- | --- | ---: | --- | --- |
 | RTX 5090 | 170 / 32 GB | 600 W | 595.71.05 | 0.5 s forward; 1 s backward/F+B; minimum 32 replays |
-| RTX 4090 | 128 / 24 GB | 450 W | 580.173.02 | 0.5 s forward; 1 s backward/F+B; minimum 32 replays |
+| RTX 4090 | 128 / 24 GB | 450 W | 615.71.09 | Seven rounds; 0.2 s per phase; minimum 16 replays |
 | RTX 3090 Ti | 84 / 24 GB | **285 W** | 595.91.07 | 0.75 s per phase; minimum eight replays |
 
-No profiler or telemetry collector runs in timed windows. Graph outputs/gradients are checked against eager execution. Ti backward-only retains its forward graph; separately timed phases need not sum exactly to a complete-call median. Source hashes identify the architecture-specific snapshots used for timing. On the three RTX cards, the integrated source passed the full GPU suite; all 128 device functions across each 32-case grid match the timed snapshot in encoded instructions and resource records. The JSON retains the integrated source and comparison hashes. These device results do not establish performance on other cards sharing the same architecture. In particular, the Ti result describes its recorded 285 W limit.
+No profiler or telemetry collector runs in timed windows. Graph outputs/gradients are checked against eager execution. Backward-only retains its forward graph; separately timed phases need not sum exactly to a complete-call median. Source hashes identify the snapshots used for timing. The October 22 RTX 5090 and Ti integrated source passed the full GPU suite; all 128 device functions across each 32-case grid match the timed snapshot in encoded instructions and resource records. The October 30 RTX 4090 report retains its own qualification, source hashes, and deployed-code captures. These device results do not establish performance on other cards sharing the same architecture. In particular, the Ti result describes its recorded 285 W limit.
 
 ## L40S
 
-Current main (`c0786dd`) is compared with the pre-Ada-tuning kernels (`b33ee8f`) and default SDPA on the **same 142-SM/48-GB L40S at its stock 350 W limit**. The 32-case grid uses B=1/H=16, contiguous BHSD, S1024/S4096, D64/128/256/512, FP16/BF16 and dense/implicit causal attention. Actual default SDPA selects FlashAttention-2 at D64/128/256 and CUTLASS efficient attention at D512.
+The October 22 CuTe snapshot (`c0786dd`) is compared with the pre-Ada-tuning kernels (`b33ee8f`) and default SDPA on the **same 142-SM/48-GB L40S at its stock 350 W limit**. The 32-case grid uses B=1/H=16, contiguous BHSD, S1024/S4096, D64/128/256/512, FP16/BF16 and dense/implicit causal attention. Actual default SDPA selects FlashAttention-2 at D64/128/256 and CUTLASS efficient attention at D512.
 
 Complete-call ratios across all eight cases per head dimension; values above 1 favor current CuTe:
 
@@ -341,7 +347,7 @@ python -m benchmarks.speed --dtype bf16 --seq 1024 4096 --dim 512 \
   --backends sdpa cute kohakufa --output upstream-speed.json
 python -m benchmarks.precision --dtype bf16 --seq 256 --dim 128 \
   --backends auto kohakufa-cute --output precision.json
-# Regenerate the comparison figure from the retained timing data.
+# Regenerate the figure from performance.json and the newer rtx4090.json.
 python -m pip install '.[plots]'
 python -m benchmarks.plot_performance
 ```

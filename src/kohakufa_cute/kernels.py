@@ -125,6 +125,16 @@ class Attention:
         paired_scores=False,
         wide_row_copies=False,
         forward_overlap=False,
+        kv_column_statistics=False,
+        forward_register_q=False,
+        backward_register_q=False,
+        narrow_n=False,
+        kv_column_warps=None,
+        warp_centering=False,
+        logical_width=0,
+        full_visibility=False,
+        full_copies=False,
+        packed_statistics=False,
     ):
         self.mode, self.causal, self.masked = mode, causal, masked
         self.columns, self.width, self.warps = columns, width, warps
@@ -138,6 +148,35 @@ class Attention:
         self.paired_scores = paired_scores
         self.wide_row_copies = wide_row_copies or forward_overlap
         self.forward_overlap = forward_overlap
+        self.kv_column_statistics = kv_column_statistics
+        self.forward_register_q = forward_register_q
+        self.backward_register_q = backward_register_q
+        self.narrow_n = narrow_n
+        self.warp_centering = warp_centering
+        self.logical_width = logical_width
+        self.full_visibility = full_visibility
+        self.full_copies = full_copies
+        self.packed_statistics = packed_statistics
+        if packed_statistics and (mode not in ("q", "kv") or not centered or masked or hopper or tma or pipelined or tcgen):
+            raise ValueError("Packed statistics require generic centered backward ownership.")
+        if (narrow_n or warp_centering or full_visibility or full_copies) and (
+            masked or hopper or tma or pipelined or tcgen or sm103_rows
+        ):
+            raise ValueError("Compact warp schedules require unmasked generic kernels.")
+        if narrow_n and mode not in ("q", "kv"):
+            raise ValueError("Narrow N-warp tiles require backward ownership.")
+        if warp_centering and (mode != "q" or not centered):
+            raise ValueError("Fused centering requires centered query ownership.")
+        if logical_width and (
+            logical_width != 16 or width != 32 or masked or hopper or tma or pipelined or tcgen or sm103_rows
+        ):
+            raise ValueError("Logical-width trimming requires an unmasked generic D16 tile.")
+        if backward_register_q and (mode != "q" or width > 128 or hopper or tma or pipelined or tcgen or sm103_rows):
+            raise ValueError("Register-resident query operands require a narrow generic query backward kernel.")
+        if forward_register_q and (mode != "forward" or width > 128 or hopper or tma or pipelined or tcgen or sm103_rows):
+            raise ValueError("Register-resident queries require a narrow generic forward kernel.")
+        if kv_column_statistics and (mode != "kv" or hopper or not centered):
+            raise ValueError("Column statistics require a generic centered KV kernel.")
         if stage_statistics and (mode != "kv" or hopper or warps != 4 or not centered):
             raise ValueError("Shared KV statistics require a centered four-warp generic KV kernel.")
         self.pointwise_overlap = hopper and centered and width == 128 and mode != "forward"
@@ -166,8 +205,12 @@ class Attention:
         self.column_warps = 2 if not hopper and (mode == "kv" and width > 128 or self.forward_columns) else 1
         if self.split_kv:
             self.column_warps = 4
+        if mode == "kv" and kv_column_warps is not None:
+            self.column_warps = kv_column_warps
         if mode == "q":
             self.column_warps = query_column_warps
+        if narrow_n and (warps % self.column_warps or columns < 8 * self.column_warps):
+            raise ValueError("N-warp tiles must cover complete score columns.")
         self.split_query = (
             mode == "q"
             and centered
@@ -188,7 +231,24 @@ class Attention:
         self.grid_rows = 128 if hopper and mode == "forward" and warps == 8 else self.rows
         self.specialized_load = False
         self.vector = vector
-        self.product_width = width // 2 if hopper and mode == "kv" and warps == 8 else width
+        self.product_width = logical_width or (width // 2 if hopper and mode == "kv" and warps == 8 else width)
+        if narrow_n and self.product_width < 8 * self.column_warps:
+            raise ValueError("N-warp tiles must cover complete output columns.")
+        self.score_b_matrices = 2 if narrow_n else 4
+        self.center_loader = (
+            Attention(
+                "forward",
+                False,
+                False,
+                columns=16,
+                width=32 if logical_width else 64,
+                warps=1,
+                vector=vector,
+                logical_width=logical_width,
+            )
+            if warp_centering
+            else None
+        )
 
     @cute.jit
     def __call__(
@@ -210,6 +270,13 @@ class Attention:
         scale: cutlass.Float32,
         stream: cuda.CUstream,
     ):
+        if cutlass.const_expr(self.logical_width and q.shape[3] != self.logical_width):
+            raise ValueError("The logical width must match the input head dimension.")
+        if cutlass.const_expr(self.packed_statistics):
+            if cutlass.const_expr(self.mode == "q" and not self.warp_centering):
+                raise ValueError("Packed query statistics require fused centering.")
+            if cutlass.const_expr(self.mode == "kv" and (not self.kv_column_statistics or self.stage_statistics)):
+                raise ValueError("Packed KV statistics require direct column loads.")
         if cutlass.const_expr(self.hopper):
             mma = cute.make_tiled_mma(
                 warpgroup.MmaF16BF16Op(
@@ -226,7 +293,7 @@ class Attention:
             mma = cute.make_tiled_mma(
                 warp.MmaF16BF16Op(q.element_type, cutlass.Float32, (16, 8, 16)),
                 (self.warps // self.column_warps, self.column_warps, 1),
-                permutation_mnk=(self.rows, 16 * self.column_warps, 16),
+                permutation_mnk=(self.rows, (8 if self.narrow_n else 16) * self.column_warps, 16),
             )
         length = k.shape[2] if cutlass.const_expr(self.mode == "kv") else q.shape[2]
         heads = k.shape[1] if cutlass.const_expr(self.mode == "kv") else q.shape[1]
@@ -353,7 +420,18 @@ class Attention:
                 cute.make_identity_tensor((source.shape[2], source.shape[3])), (rows, width), (start // rows, 0)
             )
             g, dest, c = (thread.partition_S(tile), thread.partition_D(shared), thread.partition_S(coords))
-            if cutlass.const_expr(self.forward_overlap):
+            if cutlass.const_expr(self.full_copies):
+                for r in cutlass.range_constexpr(cute.size(dest.shape[1])):
+                    for d in cutlass.range_constexpr(cute.size(dest.shape[2])):
+                        if cutlass.const_expr(source.shape[3] % self.width == 0):
+                            cute.copy(copy, g[None, r, d], dest[None, r, d])
+                        else:
+                            row, dim = c[0, r, d]
+                            if dim < source.shape[3]:
+                                cute.copy(copy, g[None, r, d], dest[None, r, d])
+                            else:
+                                dest[None, r, d].fill(0)
+            elif cutlass.const_expr(self.forward_overlap):
                 if start + rows <= source.shape[2] and width <= source.shape[3]:
                     for r in cutlass.range_constexpr(cute.size(dest.shape[1])):
                         for d in cutlass.range_constexpr(cute.size(dest.shape[2])):
@@ -431,11 +509,45 @@ class Attention:
             cute.arch.sync_threads()
 
     @cute.jit
-    def dot(self, a, b, mma, thread, tid, wait: cutlass.Constexpr = True, tcgen_state=None):
+    def register_operand_a(self, source, mma, thread, tid):
+        registers = thread.make_fragment_A(thread.partition_A(source))
+        copy = cute.make_tiled_copy_A(
+            cute.make_copy_atom(warp.LdMatrix8x8x16bOp(transpose=False, num_matrices=4), source.element_type), mma
+        )
+        copier = copy.get_slice(tid)
+        src, dst = copier.partition_S(source), copier.retile(registers)
+        for chunk in cutlass.range_constexpr(cute.size(src.shape[2])):
+            cute.copy(copy, src[None, None, chunk], dst[None, None, chunk])
+        return registers
+
+    @cute.jit
+    def dot(self, a, b, mma, thread, tid, wait: cutlass.Constexpr = True, tcgen_state=None, preloaded_a=None):
         if cutlass.const_expr(self.tcgen):
             result = blackwell_dot(a, b, thread, tid, self.columns, tcgen_state)
         elif cutlass.const_expr(self.hopper):
             result = self.dot_hopper(a, b, mma, thread, tid, wait)
+        elif cutlass.const_expr(preloaded_a is not None):
+            result = cute.make_rmem_tensor(thread.partition_shape_C((self.rows, self.columns)), cutlass.Float32)
+            result.fill(0.0)
+            rb = thread.make_fragment_B(thread.partition_B(cute.local_tile(b, (self.columns, 32), (0, 0))))
+            copy = cute.make_tiled_copy_B(
+                cute.make_copy_atom(
+                    warp.LdMatrix8x8x16bOp(transpose=False, num_matrices=self.score_b_matrices), b.element_type
+                ),
+                mma,
+            )
+            copier = copy.get_slice(tid)
+            src, dst = copier.partition_S(b), copier.retile(rb)
+            cute.copy(copy, src[None, None, 0], dst[None, None, 0])
+            for chunk in cutlass.range_constexpr(
+                (self.logical_width // 16 if self.logical_width else cute.size(src.shape[2]))
+            ):
+                slot = chunk % 2
+                if cutlass.const_expr(
+                    chunk + 1 < (self.logical_width // 16 if self.logical_width else cute.size(src.shape[2]))
+                ):
+                    cute.copy(copy, src[None, None, chunk + 1], dst[None, None, (chunk + 1) % 2])
+                cute.gemm(mma, result, preloaded_a[None, None, chunk], rb[None, None, slot], result)
         else:
             result = cute.make_rmem_tensor(thread.partition_shape_C((self.rows, self.columns)), cutlass.Float32)
             result.fill(0.0)
@@ -445,17 +557,22 @@ class Attention:
                 cute.make_copy_atom(warp.LdMatrix8x8x16bOp(transpose=False, num_matrices=4), a.element_type), mma
             )
             cb = cute.make_tiled_copy_B(
-                cute.make_copy_atom(warp.LdMatrix8x8x16bOp(transpose=False, num_matrices=4), b.element_type), mma
+                cute.make_copy_atom(
+                    warp.LdMatrix8x8x16bOp(transpose=False, num_matrices=self.score_b_matrices), b.element_type
+                ),
+                mma,
             )
             ta, tb = ca.get_slice(tid), cb.get_slice(tid)
             sa, sb = ta.partition_S(a), tb.partition_S(b)
             da, db = ta.retile(ra), tb.retile(rb)
             cute.copy(ca, sa[None, None, 0], da[None, None, 0])
             cute.copy(cb, sb[None, None, 0], db[None, None, 0])
-            for chunk in cutlass.range(cute.size(sa.shape[2]), unroll_full=True):
+            for chunk in cutlass.range(
+                (self.logical_width // 16 if self.logical_width else cute.size(sa.shape[2])), unroll_full=True
+            ):
                 slot = chunk % 2
                 next_slot = (chunk + 1) % 2
-                if chunk + 1 < cute.size(sa.shape[2]):
+                if chunk + 1 < (self.logical_width // 16 if self.logical_width else cute.size(sa.shape[2])):
                     cute.copy(ca, sa[None, None, chunk + 1], da[None, None, next_slot])
                     cute.copy(cb, sb[None, None, chunk + 1], db[None, None, next_slot])
                 cute.gemm(mma, result, ra[None, None, slot], rb[None, None, slot], result)
@@ -475,9 +592,9 @@ class Attention:
                 sa, da = ta.partition_S(weights), ta.retile(ra)
             else:
                 ra = operand_a(weights, source.element_type)
-            source_tile = cute.local_tile(source, (self.columns, self.width), (0, offset // self.width))
+            source_tile = cute.local_tile(source, (self.columns, self.product_width), (0, offset // self.product_width))
             transposed = cute.composition(
-                source_tile, cute.make_layout((self.width, self.columns), stride=(self.columns, 1))
+                source_tile, cute.make_layout((self.product_width, self.columns), stride=(self.columns, 1))
             )
             rb = thread.make_fragment_B(thread.partition_B(transposed))
             cb = cute.make_tiled_copy_B(
@@ -538,6 +655,22 @@ class Attention:
         warpgroup.wait_group(0)
 
     @cute.jit
+    def load_packed_statistics(self, storage, batch, head, row, queries, heads):
+        pointer = (storage.iterator + 4 * ((batch * heads + head) * queries + row)).align(16)
+        values = cute.make_rmem_tensor((4,), cutlass.Float32)
+        statistics_copy = cute.make_copy_atom(cute.nvgpu.CopyUniversalOp(), cutlass.Float32, num_bits_per_copy=128)
+        cute.copy(statistics_copy, cute.make_tensor(pointer, cute.make_layout(4)), values)
+        return values[0], values[1], values[2], values[3]
+
+    @cute.jit
+    def store_packed_statistics(self, storage, batch, head, row, queries, heads, maximum, logsum, correction, center):
+        pointer = (storage.iterator + 4 * ((batch * heads + head) * queries + row)).align(16)
+        values = cute.make_rmem_tensor((4,), cutlass.Float32)
+        values[0], values[1], values[2], values[3] = maximum, logsum, correction, center
+        statistics_copy = cute.make_copy_atom(cute.nvgpu.CopyUniversalOp(), cutlass.Float32, num_bits_per_copy=128)
+        cute.copy(statistics_copy, values, cute.make_tensor(pointer, cute.make_layout(4)))
+
+    @cute.jit
     def kv_weights(
         self,
         left,
@@ -591,33 +724,69 @@ class Attention:
             cute.arch.cp_async_wait_group(0)
             cute.arch.sync_threads()
         probability = cute.make_rmem_tensor(scores.shape, cutlass.Float32)
-        for i in cutlass.range_constexpr(cute.size(coords)):
-            row, col = coords[i]
-            qr = query + col
-            p = cutlass.Float32(0.0)
-            correction = cutlass.Float32(0.0)
-            center = cutlass.Float32(0.0)
-            if self.visible(mask, batch, head, qr, start + row, sq, sk, full):
+        if cutlass.const_expr(self.kv_column_statistics):
+            cv, sv, dpv, pv = row_view(coords), row_view(scores), row_view(dp), row_view(probability)
+            for c in cutlass.range_constexpr(cute.size(cv.shape[1])):
+                statistics_col = cv[0, c][1]
+                qr = query + statistics_col
                 row_max = cutlass.Float32(0.0)
                 row_logsum = cutlass.Float32(0.0)
-                if cutlass.const_expr(shared_statistics is not None):
-                    row_max = shared_statistics[0, col]
-                    row_logsum = shared_statistics[1, col]
-                    correction = shared_statistics[2, col]
-                    center = shared_statistics[3, col]
-                else:
-                    row_max = maximum[batch, head, qr]
-                    row_logsum = logsum[batch, head, qr]
-                    correction = delta[batch, head, qr]
-                    if cutlass.const_expr(self.centered):
+                correction = cutlass.Float32(0.0)
+                center = cutlass.Float32(0.0)
+                if self.full_visibility or qr < sq:
+                    if cutlass.const_expr(self.packed_statistics):
+                        row_max, row_logsum, correction, center = self.load_packed_statistics(
+                            delta, batch, head, qr, sq, maximum.shape[1]
+                        )
+                    elif cutlass.const_expr(shared_statistics is not None):
+                        row_max = shared_statistics[0, statistics_col]
+                        row_logsum = shared_statistics[1, statistics_col]
+                        correction = shared_statistics[2, statistics_col]
+                        center = shared_statistics[3, statistics_col]
+                    else:
+                        row_max = maximum[batch, head, qr]
+                        row_logsum = logsum[batch, head, qr]
+                        correction = delta[batch, head, qr]
                         center = delta_base[batch, head, qr]
-                p = cute.math.exp2(
-                    (scores[i] * sign - row_max) * magnitude * 1.4426950408889634 - row_logsum,
-                    fastmath=True,
-                )
-            probability[i] = p
-            if cutlass.const_expr(not self.pointwise_overlap):
-                scores[i] = p * ((dp[i] - center) - correction)
+                for r in cutlass.range_constexpr(cute.size(cv.shape[0])):
+                    p = cutlass.Float32(0.0)
+                    visible = self.visible(mask, batch, head, qr, start + cv[r, c][0], sq, sk, full)
+                    if visible:
+                        p = cute.math.exp2(
+                            (sv[r, c] * sign - row_max) * magnitude * 1.4426950408889634 - row_logsum,
+                            fastmath=True,
+                        )
+                    pv[r, c] = p
+                    # Hidden coordinates retain the original zero center.
+                    sv[r, c] = p * ((dpv[r, c] - (center if visible else 0.0)) - (correction if visible else 0.0))
+        else:
+            for i in cutlass.range_constexpr(cute.size(coords)):
+                row, col = coords[i]
+                qr = query + col
+                p = cutlass.Float32(0.0)
+                correction = cutlass.Float32(0.0)
+                center = cutlass.Float32(0.0)
+                if self.visible(mask, batch, head, qr, start + row, sq, sk, full):
+                    row_max = cutlass.Float32(0.0)
+                    row_logsum = cutlass.Float32(0.0)
+                    if cutlass.const_expr(shared_statistics is not None):
+                        row_max = shared_statistics[0, col]
+                        row_logsum = shared_statistics[1, col]
+                        correction = shared_statistics[2, col]
+                        center = shared_statistics[3, col]
+                    else:
+                        row_max = maximum[batch, head, qr]
+                        row_logsum = logsum[batch, head, qr]
+                        correction = delta[batch, head, qr]
+                        if cutlass.const_expr(self.centered):
+                            center = delta_base[batch, head, qr]
+                    p = cute.math.exp2(
+                        (scores[i] * sign - row_max) * magnitude * 1.4426950408889634 - row_logsum,
+                        fastmath=True,
+                    )
+                probability[i] = p
+                if cutlass.const_expr(not self.pointwise_overlap):
+                    scores[i] = p * ((dp[i] - center) - correction)
         if cutlass.const_expr(self.pointwise_overlap):
             warpgroup.wait_group(0)
             for i in cutlass.range_constexpr(cute.size(coords)):
@@ -674,10 +843,18 @@ class Attention:
             tcgen_state=tcgen_state,
         )
         coords = thread.partition_C(cute.make_identity_tensor((self.rows, self.columns)))
-        for i in cutlass.range_constexpr(cute.size(coords)):
-            row, col = coords[i]
-            shared_scores[row, col] = scores[i].to(left.element_type)
-            shared_probabilities[row, col] = probabilities[i].to(left.element_type)
+        if cutlass.const_expr(self.narrow_n):
+            rounded_scores = cute.make_fragment_like(scores, left.element_type)
+            rounded_probabilities = cute.make_fragment_like(probabilities, left.element_type)
+            packed_half_conversion(scores, rounded_scores)
+            packed_half_conversion(probabilities, rounded_probabilities)
+            self.store_packed_weights(rounded_scores, shared_scores, coords)
+            self.store_packed_weights(rounded_probabilities, shared_probabilities, coords)
+        else:
+            for i in cutlass.range_constexpr(cute.size(coords)):
+                row, col = coords[i]
+                shared_scores[row, col] = scores[i].to(left.element_type)
+                shared_probabilities[row, col] = probabilities[i].to(left.element_type)
 
     @cute.jit
     def dual_product(self, weights, probabilities, source, offset, mma, thread, tid, result, mean):
@@ -722,8 +899,10 @@ class Attention:
             else:
                 ra = operand_a(weights, source.element_type)
                 rp = operand_a(probabilities, source.element_type)
-            tile = cute.local_tile(source, (self.columns, self.width), (0, offset // self.width))
-            transposed = cute.composition(tile, cute.make_layout((self.width, self.columns), stride=(self.columns, 1)))
+            tile = cute.local_tile(source, (self.columns, self.product_width), (0, offset // self.product_width))
+            transposed = cute.composition(
+                tile, cute.make_layout((self.product_width, self.columns), stride=(self.columns, 1))
+            )
             rb = thread.make_fragment_B(thread.partition_B(transposed))
             cb = cute.make_tiled_copy_B(
                 cute.make_copy_atom(warp.LdMatrix8x8x16bOp(transpose=True, num_matrices=4), source.element_type), mma
@@ -1036,7 +1215,7 @@ class Attention:
 
     @cute.jit
     def visible(self, mask, batch, head, row, col, sq, sk, full):
-        valid = row < sq and col < sk
+        valid = True if self.full_visibility else row < sq and col < sk
         if cutlass.const_expr(self.causal):
             if not full:
                 valid = valid and col <= row
@@ -1171,7 +1350,14 @@ class Attention:
         cute.arch.sync_threads()
         if cutlass.const_expr(self.grid_rows > self.rows):
             left = cute.local_tile(left, (self.rows, padded), (tid // 128, 0))
+        register_left, register_dout = None, None
+        if cutlass.const_expr(self.backward_register_q):
+            register_left = self.register_operand_a(left, mma, thread, tid)
+            register_dout = self.register_operand_a(other_left, mma, thread, tid)
         if cutlass.const_expr(self.mode == "forward"):
+            register_q = None
+            if cutlass.const_expr(self.forward_register_q):
+                register_q = self.register_operand_a(left, mma, thread, tid)
             forward_statistics = None
             if cutlass.const_expr(self.forward_columns):
                 forward_statistics = allocator.allocate_tensor(
@@ -1232,7 +1418,7 @@ class Attention:
                             barrier,
                             phase_tma,
                         )
-                    scores = self.dot(left, right, mma, thread, tid, tcgen_state=tcgen_state)
+                    scores = self.dot(left, right, mma, thread, tid, tcgen_state=tcgen_state, preloaded_a=register_q)
                     if cutlass.const_expr(self.forward_overlap):
                         cute.arch.cp_async_wait_group(0)
                         cute.arch.sync_threads()
@@ -1312,6 +1498,8 @@ class Attention:
                 weight_layout = cute.tile_to_shape(atom, (self.rows, self.columns), (0, 1))
                 if cutlass.const_expr(self.column_warps > 2 or self.warps == 2 or self.split_query):
                     # V is dead after dP; reuse its storage for the two MMA operands.
+                    if cutlass.const_expr(2 * self.rows > padded):
+                        raise ValueError("Derivative operands exceed the released V buffer.")
                     query_derivatives = cute.make_tensor(other_right.iterator, weight_layout)
                     query_probabilities = cute.make_tensor(other_right.iterator + self.rows * self.columns, weight_layout)
                 else:
@@ -1325,6 +1513,41 @@ class Attention:
                     query_sums = cute.make_tensor(cute.recast_ptr(other_right.iterator, dtype=cutlass.Float32), sums_layout)
                 else:
                     query_sums = allocator.allocate_tensor(cutlass.Float32, sums_layout, byte_alignment=128)
+            if cutlass.const_expr(self.warp_centering):
+                center_base = allocator.allocate_tensor(cutlass.Float32, cute.make_layout((self.rows,)), byte_alignment=128)
+                center_rows = min(self.rows, self.columns)
+                center_mma = cute.make_tiled_mma(
+                    warp.MmaF16BF16Op(q.element_type, cutlass.Float32, (16, 8, 16)),
+                    (1, 1, 1),
+                    permutation_mnk=(16, 16, 16),
+                )
+                center_thread = center_mma.get_slice(tid % 32)
+                center_coords = row_view(center_thread.partition_C(cute.make_identity_tensor((16, 16))))
+                center_out = cute.local_tile(other_right, (center_rows, padded), (0, 0))
+                for part in cutlass.range_constexpr(self.rows // center_rows):
+                    self.load(out, center_out, batch, head, start + part * center_rows, tid)
+                    cute.arch.cp_async_commit_group()
+                    cute.arch.cp_async_wait_group(0)
+                    cute.arch.sync_threads()
+                    if tid < 32 * (center_rows // 16):
+                        center_group = tid // 32
+                        center_do = cute.local_tile(other_left, (16, padded), (part * (center_rows // 16) + center_group, 0))
+                        center_value = cute.local_tile(center_out, (16, padded), (center_group, 0))
+                        diagonal = self.center_loader.dot(center_do, center_value, center_mma, center_thread, tid % 32)
+                        diagonal_view = row_view(diagonal)
+                        for r in cutlass.range_constexpr(cute.size(center_coords.shape[0])):
+                            value = cutlass.Float32(0.0)
+                            for c in cutlass.range_constexpr(cute.size(center_coords.shape[1])):
+                                if center_coords[r, c][0] == center_coords[r, c][1]:
+                                    value = diagonal_view[r, c]
+                            value = quad_sum(value)
+                            local_query = part * center_rows + center_group * 16 + center_coords[r, 0][0]
+                            qr = start + local_query
+                            if lane % 4 == 0:
+                                center_base[local_query] = value
+                                if qr < q.shape[2] and width == 0:
+                                    delta_base[batch, head, qr] = value
+                    cute.arch.sync_threads()
             if cutlass.const_expr(self.centered and self.hopper and q.shape[3] in (64, 128)):
                 for part in cutlass.range_constexpr(self.rows // self.columns):
                     self.load(out, other_right, batch, head, start + part * self.columns, tid)
@@ -1349,8 +1572,10 @@ class Attention:
                 qr = start + rc[r, 0][0]
                 row_max[r] = cutlass.Float32(0.0)
                 row_logsum[r] = cutlass.Float32(0.0)
-                if qr < q.shape[2]:
-                    if cutlass.const_expr(
+                if self.full_visibility or qr < q.shape[2]:
+                    if cutlass.const_expr(self.warp_centering):
+                        base[r] = center_base[rc[r, 0][0]]
+                    elif cutlass.const_expr(
                         self.centered and not self.reload_center and not (self.hopper and q.shape[3] in (64, 128))
                     ):
                         base[r] = delta_base[batch, head, qr]
@@ -1430,7 +1655,14 @@ class Attention:
                             )
                         else:
                             scores = self.dot(
-                                left, right, mma, thread, tid, wait=not self.pointwise_overlap, tcgen_state=tcgen_state
+                                left,
+                                right,
+                                mma,
+                                thread,
+                                tid,
+                                wait=not self.pointwise_overlap,
+                                tcgen_state=tcgen_state,
+                                preloaded_a=register_left,
                             )
                             dp = self.dot(
                                 other_left,
@@ -1440,6 +1672,7 @@ class Attention:
                                 tid,
                                 wait=not self.pointwise_overlap,
                                 tcgen_state=tcgen_state,
+                                preloaded_a=register_dout,
                             )
                             if cutlass.const_expr(self.pointwise_overlap):
                                 warpgroup.wait_group(1)
@@ -1504,10 +1737,16 @@ class Attention:
                                     if cutlass.const_expr(self.column_warps > 2 or self.warps == 2 or self.split_query):
                                         # All warps must finish reading V before its storage is overwritten.
                                         cute.arch.sync_threads()
-                                    for i in cutlass.range_constexpr(cute.size(coords)):
-                                        row, col = coords[i]
-                                        query_derivatives[row, col] = rounded_scores[i]
-                                        query_probabilities[row, col] = dp[i].to(q.element_type)
+                                    if cutlass.const_expr(self.narrow_n):
+                                        rounded_probabilities = cute.make_fragment_like(dp, q.element_type)
+                                        packed_half_conversion(dp, rounded_probabilities)
+                                        self.store_packed_weights(rounded_scores, query_derivatives, coords)
+                                        self.store_packed_weights(rounded_probabilities, query_probabilities, coords)
+                                    else:
+                                        for i in cutlass.range_constexpr(cute.size(coords)):
+                                            row, col = coords[i]
+                                            query_derivatives[row, col] = rounded_scores[i]
+                                            query_probabilities[row, col] = dp[i].to(q.element_type)
                                     cute.arch.sync_threads()
                                     self.dual_product(
                                         query_derivatives, query_probabilities, right, offset, mma, thread, tid, accum, mean
@@ -1523,7 +1762,21 @@ class Attention:
                         row = start + rc[r, 0][0]
                         publish = tid < 32 * (self.warps // self.column_warps)
                         if lane % 4 == 0 and row < q.shape[2] and width == 0 and publish:
-                            delta[batch, head, row] = totals[r]
+                            if cutlass.const_expr(self.packed_statistics):
+                                self.store_packed_statistics(
+                                    delta,
+                                    batch,
+                                    head,
+                                    row,
+                                    q.shape[2],
+                                    q.shape[1],
+                                    row_max[r],
+                                    row_logsum[r],
+                                    totals[r],
+                                    base[r],
+                                )
+                            else:
+                                delta[batch, head, row] = totals[r]
             if cutlass.const_expr(self.centered):
                 mv = row_view(mean)
                 for r in cutlass.range_constexpr(cute.size(rc.shape[0])):
@@ -2197,6 +2450,39 @@ def backward_options(device, causal, masked, descriptors, q_configuration, kv_co
     return column_warps, statistics
 
 
+def _rtx4090_tuning(device, mode, masked, layouts, configuration, kv_configuration, vector):
+    dimension = layouts[0][1][-1]
+    if (
+        masked
+        or vector != 8
+        or layouts[0][0] not in (torch.float16, torch.bfloat16)
+        or layouts[0][1][:2] != (1, 16)
+        or layouts[1][1][1] != 16
+        or dimension not in (16, 64, 128, 256, 512)
+        or any(stride >= 0 for i in (0, 1, 2, 7) for stride in layouts[i][2][:-1])
+        or torch.cuda.get_device_capability(device) != (8, 9)
+        or torch.cuda.get_device_name(device) != "NVIDIA GeForce RTX 4090"
+    ):
+        return False
+    if mode == "forward":
+        return (
+            configuration
+            == {
+                16: (64, 32, 4, False, False, False, False),
+                64: (64, 64, 4, False, False, False, False),
+                128: (64, 128, 4, False, False, False, False),
+                256: (32, 256, 8, False, False, False, False),
+                512: (32, 512, 4, False, False, False, False),
+            }[dimension]
+        )
+    return (
+        mode == "backward"
+        and dimension in (16, 64, 128)
+        and configuration == (32, 32 if dimension == 16 else dimension, 4, False, True, False, False)
+        and kv_configuration == (32, 32 if dimension == 16 else dimension, 4, False, True, False, False)
+    )
+
+
 @lru_cache(maxsize=128)
 def _compile_kernel(
     device,
@@ -2366,6 +2652,12 @@ def _compile_kernel(
                     and configuration == (32, 256, 8, False, False, False, False)
                 ),
             )
+    if isinstance(program, (Attention, JointBackward)) and _rtx4090_tuning(
+        device, mode, masked, layouts, configuration, kv_configuration, vector
+    ):
+        from .ada import schedule
+
+        program = schedule(program, mode, layouts[0][1][-1], causal)
     if (
         mode == "forward"
         and capability == (12, 1)

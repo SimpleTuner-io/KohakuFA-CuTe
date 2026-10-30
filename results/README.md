@@ -1,6 +1,8 @@
 # Performance guide
 
-[performance.json](performance.json) holds the latest retained comparisons, software versions, source identifiers, and timing samples where available. The current RTX and L40S grids replace the earlier measurements for those input families. [gb10.json](gb10.json) retains the GB10 comparison separately.
+[performance.json](performance.json) retains the RTX and L40S comparisons, software versions, source identifiers, and timing samples where available. [gb10.json](gb10.json) retains the GB10 comparison separately.
+
+The [RTX 4090 scheduling follow-up](../docs/rtx4090-tuning.md) and [comparison data](rtx4090.json) add same-process PyTorch 2.15 comparisons, all five head dimensions at S128/S1024/S4096, and the remaining backward arithmetic gap. The RTX grid and figure below retain their October 22 measurement conditions; use the follow-up for the newer 4090 schedules.
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
@@ -105,7 +107,7 @@ python -m benchmarks.cudnn_regressions --backends kohakufa-cute math \
   --output ../gb10-precision.json
 # Capture warmed ranges separately from timing, keeping reports outside the tree.
 nsys profile --capture-range=cudaProfilerApi --capture-range-end=stop \
-  --trace=cuda,nvtx -o ../gb10-cute-forward \
+  --trace=cuda,nvtx --cuda-graph-trace=node -o ../gb10-cute-forward \
   python -m benchmarks.profile_nsight --backend cute --phase forward --seq 128
 ```
 

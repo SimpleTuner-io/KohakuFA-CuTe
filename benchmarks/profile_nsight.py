@@ -9,7 +9,7 @@ import json
 
 import torch
 
-from kohakufa_cute import attention
+from kohakufa_cute import scaled_dot_product_attention
 
 
 def main():
@@ -22,6 +22,7 @@ def main():
     parser.add_argument("--iterations", type=int, default=20)
     parser.add_argument("--warmup", type=int, default=5)
     parser.add_argument("--dtype", choices=("fp16", "bf16"), default="bf16")
+    parser.add_argument("--causal", action="store_true")
     parser.add_argument("--eager", action="store_true", help="Profile ordinary launches instead of CUDA graph replay")
     args = parser.parse_args()
     if min(args.seq, args.dim, args.heads, args.iterations, args.warmup) < 1:
@@ -32,16 +33,16 @@ def main():
         torch.randn(1, args.heads, args.seq, args.dim, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)
     ]
     dout = torch.randn_like(inputs[0])
-    operation = attention if args.backend == "cute" else torch.nn.functional.scaled_dot_product_attention
+    operation = scaled_dot_product_attention if args.backend == "cute" else torch.nn.functional.scaled_dot_product_attention
     stream = torch.cuda.Stream()
     stream.wait_stream(torch.cuda.current_stream())
     with torch.cuda.stream(stream):
-        saved = operation(*inputs) if args.phase == "backward" else None
+        saved = operation(*inputs, is_causal=args.causal) if args.phase == "backward" else None
 
     def run():
         if args.phase == "backward":
             return torch.autograd.grad(saved, inputs, dout, retain_graph=True)
-        output = operation(*inputs)
+        output = operation(*inputs, is_causal=args.causal)
         if args.phase == "joint":
             return output, *torch.autograd.grad(output, inputs, dout)
         return (output,)
@@ -58,7 +59,7 @@ def main():
         graph.replay()
         torch.cuda.synchronize()
     assert all(torch.isfinite(t).all() for t in values)
-    label = f"{args.backend}:{args.phase}:S{args.seq}:D{args.dim}"
+    label = f"{args.backend}:{args.phase}:S{args.seq}:D{args.dim}:{'causal' if args.causal else 'dense'}"
     torch.cuda.cudart().cudaProfilerStart()
     torch.cuda.nvtx.range_push(label)
     try:

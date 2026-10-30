@@ -228,6 +228,11 @@ repository's current SM100/SM103 backward uses a five-product formulation with
 centering derived from rounded output; it is useful source evidence, not a
 qualified RTX 4090 implementation or numerical oracle.
 
+The subsequent [ownership and value-lifetime audit](rtx4090-backward-ownership.md)
+checks the complete-row centering dependency, native accumulator representation,
+shared-buffer lifetimes and measured joint-kernel interventions. It separates
+required numerical work from avoidable communication and scheduling costs.
+
 ### Experiments rejected
 
 Measured interventions also included paired score instructions, smaller N

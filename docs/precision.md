@@ -66,7 +66,7 @@ Extra tensor-core products have a real cost. The device analyses and retained fo
 
 The high/low split preserves an FP32 weight more faithfully; it cannot recover information already lost while forming that weight. A retained BF16 large-gradient diagnostic produces two distinct FP64 probabilities that round to the same FP32 value. Both the high and low products then lose their difference, and the gradient norm gate fails. This is a limitation of the current FP32 probability reconstruction, rather than a hardware performance ceiling or an unavoidable output-dtype limit.
 
-Final output rounding is a separate constraint. In additional FP16 diagnostics with dO scaled by `1e-5`, direct FP64-to-FP16 rounding alone exceeds the unchanged 0.5% gradient norm gate for some components. Some selected paths also retain avoidable loss beyond that floor. These are recorded failures. The [5090 analysis](rtx5090-outliers.md#scope-and-remaining-numerical-limits) separates component errors, output-rounding floors and lost representable values; ordinary grid qualification does not imply those diagnostics pass.
+Final output rounding is a separate constraint. In additional FP16 diagnostics with dO scaled by `1e-5`, direct FP64-to-FP16 rounding alone exceeds the unchanged 0.5% gradient norm gate for some components. Some selected paths also retain avoidable loss beyond that floor. These are recorded failures. The [5090 analysis](rtx5090-outliers.md#numerical-limits) separates component errors, output-rounding floors and lost representable values; ordinary grid qualification does not imply those diagnostics pass.
 
 ## Check gradients, including their magnitude
 

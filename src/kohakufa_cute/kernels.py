@@ -2657,11 +2657,11 @@ def _rtx4090_tuning(device, mode, masked, layouts, configuration, kv_configurati
     )
 
 
-def precision_schedule(program, dimension):
+def precision_schedule(program, dimension, *, device=None):
     """Apply the qualified operand-precision policy after device scheduling."""
     from .precision import schedule
 
-    return schedule(program, dimension)
+    return schedule(program, dimension, device=device)
 
 
 @lru_cache(maxsize=128)
@@ -2839,6 +2839,11 @@ def _compile_kernel(
         from .ada import schedule
 
         program = schedule(program, mode, layouts[0][1][-1], causal)
+    if capability == (8, 6) and isinstance(program, (Attention, JointBackward)):
+        from . import sm86
+
+        if sm86.eligible(device, mode, masked, layouts, configuration, kv_configuration, vector):
+            program = sm86.schedule(program, mode, layouts[0][1][-1], causal)
     from . import l40s
 
     if isinstance(program, (Attention, JointBackward)) and l40s.eligible(
@@ -2859,9 +2864,10 @@ def _compile_kernel(
             ((12, 0), "NVIDIA GeForce RTX 5090"),
         )
         and layouts[0][0] in (torch.bfloat16, torch.float16)
-        and layouts[0][1][-1] in (16, 64, 128)
+        and layouts[0][1][-1] in (16, 64, 128, 256, 512)
+        and (layouts[0][1][-1] != 256 or layouts[0][1][1] == layouts[1][1][1])
     ):
-        program = precision_schedule(program, layouts[0][1][-1])
+        program = precision_schedule(program, layouts[0][1][-1], device=device)
     if (
         mode == "forward"
         and capability == (12, 1)

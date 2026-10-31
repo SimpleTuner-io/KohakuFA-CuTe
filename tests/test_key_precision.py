@@ -58,6 +58,7 @@ class KeyCancellationReferenceTests(unittest.TestCase):
 
 def qualified_device():
     return torch.cuda.is_available() and torch.cuda.get_device_capability() in {
+        (8, 0),
         (8, 6),
         (8, 9),
         (9, 0),

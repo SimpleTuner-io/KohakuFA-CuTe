@@ -63,6 +63,7 @@ def setup_context(ctx, inputs, output):
     out, maximum, logsum, blocks = output
     ctx.has_mask = mask is not None
     ctx.centered = torch.cuda.get_device_capability(q.device.index) in (
+        (8, 0),
         (8, 6),
         (8, 9),
         (9, 0),

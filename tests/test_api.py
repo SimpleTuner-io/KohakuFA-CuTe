@@ -91,7 +91,7 @@ assert not any(name.startswith(('cutlass', 'tvm_ffi', 'kohakufa_cute.native', 's
             ((12, 2), False),
             ((10, 3), True),
             ((10, 1), False),
-            ((8, 0), False),
+            ((8, 0), True),
             ((8, 7), False),
         ]:
             with (
@@ -117,6 +117,28 @@ assert not any(name.startswith(('cutlass', 'tvm_ffi', 'kohakufa_cute.native', 's
         ):
             with self.assertRaisesRegex(RuntimeError, "kernel failure"):
                 api.automatic_scaled_dot_product_attention(q, q, q)
+
+    def test_sm80_compiled_autograd_retains_actual_output_for_delta(self):
+        from kohakufa_cute import _ops
+
+        q, k, v, out = [torch.randn(1, 2, 3, 64, dtype=torch.bfloat16) for _ in range(4)]
+        statistics = torch.empty(1, 2, 3, dtype=torch.float32)
+        blocks = torch.empty(1, 2, 1, 1, dtype=torch.int32)
+        for mask in (None, torch.ones(3, 3, dtype=torch.bool)):
+            with self.subTest(masked=mask is not None):
+                context = SimpleNamespace(mark_non_differentiable=Mock())
+
+                def save(*tensors):
+                    context.saved_tensors = tensors
+
+                context.save_for_backward = save
+                with patch.object(torch.cuda, "get_device_capability", return_value=(8, 0)):
+                    _ops.setup_context(context, (q, k, v, mask, 0.125, False), (out, statistics, statistics, blocks))
+                self.assertIs(context.saved_tensors[-1], out)
+                with patch.object(_ops, "backward", return_value=(q, k, v)) as backward:
+                    _ops.autograd_backward(context, torch.randn_like(out), None, None, None)
+                self.assertIs(backward.call_args.args[8], out)
+                self.assertIs(backward.call_args.args[3], mask)
 
 
 if __name__ == "__main__":

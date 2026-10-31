@@ -1,6 +1,6 @@
 # KohakuFA-CuTe
 
-CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
+CuTe DSL attention for **A100, RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
 
 ## When to use it
 
@@ -89,12 +89,14 @@ Strict APIs propagate validation, build, and kernel errors. Automatic selection 
 
 Supported CuTe inputs:
 
-- CUDA SM86/89/90/100/103/120/121; matching FP16 or BF16 Q/K/V; head dimensions **1–512**.
+- CUDA SM80/86/89/90/100/103/120/121; matching FP16 or BF16 Q/K/V; head dimensions **1–512**.
 - Four-dimensional BHSD tensors, including supported strided layouts; equal K/V shapes; query heads divisible by K/V heads.
 - Dense, token-causal, or broadcastable boolean masks (`True` means visible). All-hidden rows return zero.
 - GQA, eager/compiled autograd, CUDA graphs, and signed or zero scales.
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
+
+A100 uses the generic SM80 schedule; see its [qualification and baseline comparison](docs/a100-support.md) before choosing it for performance.
 
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 

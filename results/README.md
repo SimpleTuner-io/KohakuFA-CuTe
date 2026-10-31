@@ -6,6 +6,54 @@ The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each 
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
+## Standalone FlashAttention comparisons
+
+The retained grids below compare default PyTorch SDPA. Use the explicit standalone
+adapter to measure the installed FA2, FA3 or FA4 implementation separately:
+
+```bash
+# Set CAPTURE_DIR to a directory outside this checkout.
+python -m benchmarks.compare_flashattention --backends cute fa2 sdpa \
+  --seq 128 1024 4096 --dim 16 64 128 256 512 --dtype bf16 fp16 \
+  --repeats 5 --window-ms 100 --output "$CAPTURE_DIR/comparison.json" \
+  --export-code "$CAPTURE_DIR/code"
+```
+
+Select `fa3` or `fa4` for their qualified target architectures. Install the chosen
+backend from its [official source](https://github.com/Dao-AILab/flash-attention)
+first; an import, launch or unsupported-shape failure is recorded, without
+selecting another implementation. `--flash-revision` records the source revision
+verified by the installer; loaded adapter and runtime source hashes are retained
+separately. Inspect each backend and phase status before interpreting a median.
+FA2 does not support D512. This driver uses square causal attention because the
+APIs differ in rectangular causal alignment.
+
+The timing boundary includes the BHSD API call, backend preparation, and output
+view. Backward retains its forward; joint includes both. Five rotating CUDA-graph
+rounds retain samples, actual launched kernel symbols/resources, independent
+per-head FP64 checks, and diagnostics against the rounded backward equations.
+Short single-operation replay loops can include CPU submission gaps.
+Standalone FlashAttention retains its own arithmetic policy, which can differ
+from this project's single-rounded P/dS contract; these are complete attention
+implementation comparisons.
+
+Profile warmed execution separately from timing:
+
+```bash
+nsys profile --capture-range=cudaProfilerApi --capture-range-end=stop \
+  --trace=cuda,nvtx --cuda-graph-trace=node -o "$CAPTURE_DIR/fa2-backward" \
+  python -m benchmarks.profile_nsight --backend fa2 --phase backward \
+  --seq 4096 --dim 128 --heads 16
+```
+
+Use `--eager` to inspect ordinary launches. Explicit experiments can be selected
+with `--candidate module:factory --candidate-kwargs '{}'`, or a CuTe dispatch
+context with `--context module:context_factory`; these do not change default
+dispatch. Compiler-returned PTX/cubin files are retained by content hash to avoid
+automatic filename collisions. Exact instruction comparisons additionally need
+an unambiguous binding to the loaded graph function; a matching symbol alone
+can be insufficient across variants. Retain raw captures outside the tracked tree.
+
 ## GB10 (DGX / RTX Spark)
 
 The timings and qualification below describe the recorded pre-removal revision.

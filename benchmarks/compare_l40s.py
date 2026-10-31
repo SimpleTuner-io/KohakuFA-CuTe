@@ -135,9 +135,11 @@ def main():
     properties = torch.cuda.get_device_properties(0)
     if properties.multi_processor_count != 142:
         parser.error("The comparison requires a full 142-SM L40S.")
+    from kohakufa_cute import sm86, sm120_schedule
+
     if not callable(getattr(kernels, "precision_schedule", None)):
         raise RuntimeError("The comparison requires the integrated final precision hook.")
-    architecture_modules = (l40s,)
+    architecture_modules = (l40s, sm86, sm120_schedule)
 
     @contextmanager
     def backend_control(backend):

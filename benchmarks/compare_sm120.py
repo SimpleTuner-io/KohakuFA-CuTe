@@ -19,7 +19,7 @@ from benchmarks.compare_ada import capture, measure
 from benchmarks.compare_devices import board_state, driver_api_version, loaded_libraries
 from benchmarks.precision import evaluate
 from benchmarks.reference import fp64_reference, metrics
-from kohakufa_cute import kernels, l40s, native, scaled_dot_product_attention, sm120_schedule
+from kohakufa_cute import kernels, l40s, native, scaled_dot_product_attention, sm86, sm120_schedule
 
 
 def graph_nodes(graph):
@@ -184,7 +184,7 @@ def main():
                 if args.control == "previous"
                 else "Retain selected forward schedules and disable only new backward schedules; native workspace is unchanged."
             ),
-            "released_control": "Disable sm120_schedule.eligible and l40s.eligible, and replace kernels.precision_schedule with identity accepting **kwargs. This reconstructs3e17149 computation under the current compiler, not the historical binary.",
+            "released_control": "Disable sm120_schedule.eligible, sm86.eligible and l40s.eligible, and replace kernels.precision_schedule with identity accepting **kwargs. This reconstructs3e17149 computation under the current compiler, not the historical binary.",
             "reference": "Full-length centered FP64 on identical rounded inputs, two-head chunks.",
             "accuracy_gate": "Each output/dQ/dK/dV norm-relative error below 1% BF16 or 0.5% FP16; exact zero when reference norm is zero.",
             "pointwise_gate": "Each output/dQ/dK/dV element also meets atol=rtol=0.02 BF16 or 0.003 FP16. Failed released or SDPA rows remain diagnostic.",
@@ -211,7 +211,7 @@ def main():
     def control(backend):
         context = ExitStack()
         if backend == "released":
-            for selector in (sm120_schedule, l40s):
+            for selector in (sm120_schedule, sm86, l40s):
                 context.enter_context(patch.object(selector, "eligible", return_value=False))
             context.enter_context(patch.object(kernels, "precision_schedule", side_effect=lambda program, *a, **kw: program))
         elif backend == "previous":

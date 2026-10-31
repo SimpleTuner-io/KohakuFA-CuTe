@@ -23,7 +23,14 @@ class SM120OutlierTests(unittest.TestCase):
     def assert_reference(self, actual, inputs, dout, causal, scale=None):
         from benchmarks.reference import fp64_reference, metrics
 
-        expected = fp64_reference(inputs, dout, causal=causal, scale=scale)
+        if inputs[0].shape[1] == inputs[1].shape[1] and max(t.shape[2] for t in inputs) > 512:
+            parts = [
+                fp64_reference(tuple(t[:, h : h + 2] for t in inputs), dout[:, h : h + 2], causal=causal, scale=scale)
+                for h in range(0, inputs[0].shape[1], 2)
+            ]
+            expected = tuple(torch.cat([part[i] for part in parts], dim=1) for i in range(4))
+        else:
+            expected = fp64_reference(inputs, dout, causal=causal, scale=scale)
         for name, got, want in zip(("out", "dq", "dk", "dv"), actual, expected):
             error = metrics(got, want)
             with self.subTest(component=name):
@@ -101,6 +108,99 @@ class SM120OutlierTests(unittest.TestCase):
                 actual = self.run_attention((q, k, v), dout, causal)
                 self.assert_reference(actual, (q, k, v), dout, causal)
 
+    def test_d64_column_cache_preserves_both_length_axes(self):
+        from kohakufa_cute import native
+
+        shapes = ((127, 127), (128, 128), (129, 129), (128, 129), (129, 128), (511, 511), (512, 512), (513, 513))
+        for dtype, causal in itertools.product((torch.float16, torch.bfloat16), (False, True)):
+            native.extension().clear_cache()
+            with patch.object(native, "compile_kernel", wraps=native.compile_kernel) as compiler:
+                for queries, keys in shapes:
+                    with self.subTest(dtype=dtype, causal=causal, queries=queries, keys=keys):
+                        torch.manual_seed(1471)
+                        q = torch.randn(1, 16, queries, 64, device="cuda", dtype=dtype, requires_grad=True)
+                        k, v = [
+                            torch.randn(1, 16, keys, 64, device="cuda", dtype=dtype, requires_grad=True) for _ in range(2)
+                        ]
+                        dout = torch.randn_like(q)
+                        self.assert_reference(self.run_attention((q, k, v), dout, causal), (q, k, v), dout, causal)
+                self.assertEqual(compiler.call_count, 2)
+
+    def test_d64_column_causal_upper_boundary_preserves_rectangular_fallbacks(self):
+        from kohakufa_cute import native
+
+        for dtype in (torch.float16, torch.bfloat16):
+            native.extension().clear_cache()
+            with patch.object(native, "compile_kernel", wraps=native.compile_kernel) as compiler:
+                for queries, keys in ((4095, 4095), (4096, 4096), (4097, 4097), (4096, 4097), (4097, 4096)):
+                    with self.subTest(dtype=dtype, queries=queries, keys=keys):
+                        torch.manual_seed(1481)
+                        q = torch.randn(1, 16, queries, 64, device="cuda", dtype=dtype, requires_grad=True)
+                        k, v = [
+                            torch.randn(1, 16, keys, 64, device="cuda", dtype=dtype, requires_grad=True) for _ in range(2)
+                        ]
+                        dout = torch.randn_like(q)
+                        self.assert_reference(self.run_attention((q, k, v), dout, True), (q, k, v), dout, True)
+                self.assertEqual(compiler.call_count, 2)
+
+    def test_d64_column_graph_reads_changed_strided_inputs(self):
+        from benchmarks.compare_sm120 import graph_nodes
+
+        for dtype, causal in itertools.product((torch.float16, torch.bfloat16), (False, True)):
+            with self.subTest(dtype=dtype, causal=causal):
+                torch.manual_seed(1483)
+                q, k, v = [
+                    torch.randn(1, 16, 137, 64, device="cuda", dtype=dtype)[:, :, :129].requires_grad_() for _ in range(3)
+                ]
+                dout = torch.randn_like(q)
+                stream = torch.cuda.Stream()
+                stream.wait_stream(torch.cuda.current_stream())
+                with torch.cuda.stream(stream):
+                    self.run_attention((q, k, v), dout, causal)
+                    graph = torch.cuda.CUDAGraph(keep_graph=True)
+                    with torch.cuda.graph(graph, stream=stream):
+                        actual = self.run_attention((q, k, v), dout, causal)
+                torch.cuda.current_stream().wait_stream(stream)
+                self.assertTrue(any("sm120_backwardD64Values" in n.get("symbol", "") for n in graph_nodes(graph)))
+                for changed in (False, True):
+                    if changed:
+                        with torch.no_grad():
+                            for tensor in (q, k, v, dout):
+                                tensor.copy_(torch.randn_like(tensor) * 0.75)
+                    with torch.no_grad():
+                        for tensor in actual:
+                            tensor.fill_(float("nan"))
+                    graph.replay()
+                    self.assert_reference(actual, (q, k, v), dout, causal)
+
+    def test_d64_column_preserves_strong_causal_key_coordinate(self):
+        from tests.test_key_precision import key_cancellation, key_coordinate
+
+        for dtype in (torch.float16, torch.bfloat16):
+            with self.subTest(dtype=dtype):
+                inputs, dout = key_cancellation(64, dtype, "cuda", square=True)
+                q, k, v = inputs
+                # Every active query now sees all 1031 non-negligible keys,
+                # preserving the original closed form under causal visibility.
+                q, dout = q.roll(1031, 2), dout.roll(1031, 2)
+                inputs = tuple(t.requires_grad_() for t in (q, k, v))
+                actual = self.run_attention(inputs, dout, True)
+                self.assert_reference(actual, inputs, dout, True)
+                coordinate = actual[2][:, :, 0, 0].double()
+                self.assertTrue((coordinate < 0).all())
+                torch.testing.assert_close(coordinate, torch.full_like(coordinate, key_coordinate(64)), atol=0, rtol=0.02)
+
+    def test_d64_column_preserves_signed_scales_and_negative_maxima(self):
+        for dtype, causal, scale in itertools.product((torch.float16, torch.bfloat16), (False, True), (-0.25, 0.0, None)):
+            with self.subTest(dtype=dtype, causal=causal, scale=scale):
+                torch.manual_seed(1487)
+                q, k, v, dout = [torch.randn(1, 16, 129, 64, device="cuda", dtype=dtype) for _ in range(4)]
+                q.mul_(0.3)
+                k.mul_(0.3)
+                q[..., 0], k[..., 0] = 20, -20
+                inputs = tuple(t.requires_grad_() for t in (q, k, v))
+                self.assert_reference(self.run_attention(inputs, dout, causal, scale), inputs, dout, causal, scale)
+
     def test_d16_signed_scales_negative_maxima_and_tiny_gradients(self):
         for dtype, causal, case in itertools.product(
             (torch.float16, torch.bfloat16), (False, True), ("negative", "zero", "maxima", "sharp")
@@ -166,6 +266,8 @@ class SM120OutlierTests(unittest.TestCase):
             (2, 16, 16, 16, False),
             (1, 16, 4, 128, False),
             (1, 16, 16, 256, True),
+            (1, 16, 4, 64, False),
+            (1, 16, 16, 64, True),
         ):
             with self.subTest(batch=batch, kvheads=kvheads, dimension=dimension, masked=masked):
                 torch.manual_seed(1199)

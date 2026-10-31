@@ -27,6 +27,12 @@ def eligible(device, mode, masked, layouts, configuration, kv_configuration, vec
             and configuration == (32, 32, 4, False, True, False, False)
             and kv_configuration == configuration
         )
+    if dimension == 64:
+        return (
+            mode == "backward"
+            and configuration == (32, 64, 4, False, True, True, True)
+            and kv_configuration == (64, 64, 4, False, True, True, True)
+        )
     if mode == "backward" and dimension in (128, 256):
         return configuration == (
             (32, 128, 4, False, True, False, False) if dimension == 128 else (64, 256, 8, False, True, False, False)
@@ -118,6 +124,11 @@ def schedule(program, mode, dimension, causal, vector):
             for policy in policies:
                 policy.query.reload_center = program.query.reload_center
         return result
+    if dimension == 64:
+        from .sm120_backward import D64Square
+
+        program.keyvalue = D64Square(program.keyvalue)
+        return program
     if mode == "backward":
         return ShortBackwardOnly(program, dimension, causal)
     return ShortOnly(program, dimension, causal, vector)

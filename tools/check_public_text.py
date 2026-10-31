@@ -4,11 +4,11 @@
 import argparse
 import getpass
 import os
-from pathlib import Path
 import re
 import socket
 import subprocess
 import sys
+from pathlib import Path
 
 BLOCKED = "Blocked: local machine identity was found in public text."
 SERVICE_IDENTITIES = {"root", "runner", "ubuntu", "user", "git", "nobody", "localhost"}
@@ -70,6 +70,28 @@ def scan(data, private):
         raise Blocked
 
 
+def scan_tree(data, private, hash_bytes):
+    """Scan tree entry names, keeping fixed-width binary object IDs opaque."""
+    if hash_bytes not in (20, 32):
+        raise Blocked
+    position = 0
+    while position < len(data):
+        separator = data.find(b" ", position)
+        terminator = data.find(b"\0", separator + 1)
+        if separator < 0 or terminator < 0:
+            raise Blocked
+        mode = data[position:separator]
+        name = data[separator + 1 : terminator]
+        if mode not in (b"40000", b"040000", b"100644", b"100755", b"120000", b"160000"):
+            raise Blocked
+        if not name or name in (b".", b"..") or b"/" in name:
+            raise Blocked
+        position = terminator + 1 + hash_bytes
+        if position > len(data):
+            raise Blocked
+        scan(name, private)
+
+
 def scan_objects(objects, private):
     with subprocess.Popen(
         ["git", "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL
@@ -81,11 +103,18 @@ def scan_objects(objects, private):
                 header = process.stdout.readline().split()
                 if len(header) != 3 or header[1] not in (b"blob", b"tree", b"commit", b"tag"):
                     raise Blocked
+                if not re.fullmatch(rb"[0-9a-f]{40}(?:[0-9a-f]{24})?", header[0]):
+                    raise Blocked
                 size = int(header[2])
+                if size < 0:
+                    raise Blocked
                 data = process.stdout.read(size)
                 if len(data) != size or process.stdout.read(1) != b"\n":
                     raise Blocked
-                scan(data, private)
+                if header[1] == b"tree":
+                    scan_tree(data, private, len(header[0]) // 2)
+                else:
+                    scan(data, private)
         finally:
             process.stdin.close()
             process.wait()
@@ -134,7 +163,9 @@ def main():
     parser.add_argument("--metadata", action="store_true", help="Scan exact author and committer identities.")
     parser.add_argument("--history", action="store_true", help="Scan all objects reachable from local refs.")
     parser.add_argument("--push-refs", action="store_true", help="Also scan pre-push tips from standard input.")
-    parser.add_argument("--message-stdin", action="store_true", help="Scan an exact commit message from standard input.")
+    parser.add_argument(
+        "--message-stdin", action="store_true", help="Scan an exact commit message from standard input."
+    )
     parser.add_argument("--message-file", action="append", default=[], metavar="FILE")
     parser.add_argument("--text-file", action="append", default=[], metavar="FILE")
     parser.add_argument("--file", action="append", default=[], metavar="FILE")

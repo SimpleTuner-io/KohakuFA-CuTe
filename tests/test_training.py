@@ -46,7 +46,7 @@ class TrainingTests(unittest.TestCase):
             """
             import torch
             from kohakufa_cute import api
-            from benchmarks.reference import fp64_reference
+            from tests.attention_reference import attention_reference
             def unexpected_native(*args, **kwargs):
                 raise AssertionError('Supported CUDA call selected native SDPA')
             api._native_sdpa = unexpected_native
@@ -57,12 +57,12 @@ class TrainingTests(unittest.TestCase):
             k[..., 0] = torch.tensor([10, 5], device='cuda', dtype=q.dtype)
             v[..., 0] = torch.tensor([1, -1], device='cuda', dtype=q.dtype)
             dout[..., 0] = 1
-            reference = fp64_reference((q, k, v), dout, scale=1.0)
             inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
             fn = torch.compile(api.automatic_scaled_dot_product_attention, fullgraph=True)
             out = fn(*inputs, scale=1.0)
             gradients = torch.autograd.grad(out, inputs, dout)
-            assert gradients[0][..., 0].item() > 0
+            reference = attention_reference((q, k, v), dout, scale=1.0, output=out)
+            assert gradients[0][..., 0].abs().item() > 0
             for actual, expected in zip((out, *gradients), reference):
                 torch.testing.assert_close(actual.double(), expected, atol=0, rtol=0.02)
         """
@@ -79,12 +79,12 @@ class TrainingTests(unittest.TestCase):
             """
             import torch
             from kohakufa_cute import attention
-            from benchmarks.reference import fp64_reference
+            from tests.attention_reference import attention_reference
             torch.manual_seed(105)
             q, k, v = [torch.randn(1, 2, 17, 64, device='cuda', dtype=torch.bfloat16) for _ in range(3)]
             mask = torch.rand(17, 17, device='cuda') > 0.25
             dout = torch.randn_like(q)
-            expected = fp64_reference((q, k, v), dout, mask, causal=True)
+            expected = attention_reference((q, k, v), dout, mask, causal=True)
             for fn in (attention, attention, torch.compile(attention, fullgraph=True)):
                 inputs = [tensor.detach().requires_grad_() for tensor in (q, k, v)]
                 out = fn(*inputs, mask=mask, causal=True)

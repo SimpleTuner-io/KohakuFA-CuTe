@@ -221,6 +221,7 @@ class Attention:
         self.full_visibility = full_visibility
         self.full_copies = full_copies
         self.packed_statistics = packed_statistics
+        self.baseline_precision = True
         self.compensated_normalizer = False
         self.compensated_values = False
         self.compensated_keys = False
@@ -767,7 +768,9 @@ class Attention:
             if tid < self.columns:
                 for field in cutlass.range_constexpr(4):
                     source = (maximum, logsum, delta, delta_base)[field]
-                    if query + tid < sq:
+                    if cutlass.const_expr(self.baseline_precision and field == 2):
+                        shared_statistics[field, tid] = cutlass.Float32(0.0)
+                    elif query + tid < sq:
                         source_ptr = source.iterator + cute.crd2idx((batch, head, query + tid), source.layout)
                         target_ptr = shared_statistics.iterator + cute.crd2idx((field, tid), shared_statistics.layout)
                         copy = cute.make_copy_atom(
@@ -812,12 +815,20 @@ class Attention:
                     elif cutlass.const_expr(shared_statistics is not None):
                         row_max = shared_statistics[0, statistics_col]
                         row_logsum = shared_statistics[1, statistics_col]
-                        correction = shared_statistics[2, statistics_col]
+                        correction = (
+                            shared_statistics[2, statistics_col]
+                            if cutlass.const_expr(not self.baseline_precision)
+                            else cutlass.Float32(0.0)
+                        )
                         center = shared_statistics[3, statistics_col]
                     else:
                         row_max = maximum[batch, head, qr]
                         row_logsum = logsum[batch, head, qr]
-                        correction = delta[batch, head, qr]
+                        correction = (
+                            delta[batch, head, qr]
+                            if cutlass.const_expr(not self.baseline_precision)
+                            else cutlass.Float32(0.0)
+                        )
                         center = delta_base[batch, head, qr]
                 for r in cutlass.range_constexpr(cute.size(cv.shape[0])):
                     p = cutlass.Float32(0.0)
@@ -827,6 +838,8 @@ class Attention:
                             (sv[r, c] * sign - row_max) * magnitude * 1.4426950408889634 - row_logsum,
                             fastmath=True,
                         )
+                    if cutlass.const_expr(self.baseline_precision):
+                        p = p.to(left.element_type).to(cutlass.Float32)
                     pv[r, c] = p
                     # Hidden coordinates retain the original zero center.
                     sv[r, c] = p * ((dpv[r, c] - (center if visible else 0.0)) - (correction if visible else 0.0))
@@ -843,18 +856,28 @@ class Attention:
                     if cutlass.const_expr(shared_statistics is not None):
                         row_max = shared_statistics[0, col]
                         row_logsum = shared_statistics[1, col]
-                        correction = shared_statistics[2, col]
+                        correction = (
+                            shared_statistics[2, col]
+                            if cutlass.const_expr(not self.baseline_precision)
+                            else cutlass.Float32(0.0)
+                        )
                         center = shared_statistics[3, col]
                     else:
                         row_max = maximum[batch, head, qr]
                         row_logsum = logsum[batch, head, qr]
-                        correction = delta[batch, head, qr]
+                        correction = (
+                            delta[batch, head, qr]
+                            if cutlass.const_expr(not self.baseline_precision)
+                            else cutlass.Float32(0.0)
+                        )
                         if cutlass.const_expr(self.centered):
                             center = delta_base[batch, head, qr]
                     p = cute.math.exp2(
                         (scores[i] * sign - row_max) * magnitude * 1.4426950408889634 - row_logsum,
                         fastmath=True,
                     )
+                if cutlass.const_expr(self.baseline_precision):
+                    p = p.to(left.element_type).to(cutlass.Float32)
                 probability[i] = p
                 if cutlass.const_expr(not self.pointwise_overlap):
                     scores[i] = p * ((dp[i] - center) - correction)
@@ -867,10 +890,18 @@ class Attention:
                 center = cutlass.Float32(0.0)
                 if self.visible(mask, batch, head, qr, start + row, sq, sk, full):
                     if cutlass.const_expr(shared_statistics is not None):
-                        correction = shared_statistics[2, col]
+                        correction = (
+                            shared_statistics[2, col]
+                            if cutlass.const_expr(not self.baseline_precision)
+                            else cutlass.Float32(0.0)
+                        )
                         center = shared_statistics[3, col]
                     else:
-                        correction = delta[batch, head, qr]
+                        correction = (
+                            delta[batch, head, qr]
+                            if cutlass.const_expr(not self.baseline_precision)
+                            else cutlass.Float32(0.0)
+                        )
                         center = delta_base[batch, head, qr]
                 scores[i] = probability[i] * ((dp[i] - center) - correction)
         return scores, probability
@@ -1106,9 +1137,12 @@ class Attention:
                         probability = cute.math.exp2(
                             (sv[r, c] * sign - row_max[r]) * magnitude * 1.4426950408889634 - row_logsum[r], fastmath=True
                         )
+                    if cutlass.const_expr(self.baseline_precision):
+                        probability = probability.to(left.element_type).to(cutlass.Float32)
                     sv[r, c] = probability * (pv[r, c] - center)
                     pv[r, c] = probability
-                totals[r] += quad_sum(sv[r, None].load().reduce(cute.ReductionOp.ADD, 0.0, 0))
+                if cutlass.const_expr(not self.baseline_precision):
+                    totals[r] += quad_sum(sv[r, None].load().reduce(cute.ReductionOp.ADD, 0.0, 0))
             packed_half_conversion(scores, rounded_scores)
             packed_half_conversion(dp, rounded_probabilities)
             rounded_view = row_view(rounded_scores)
@@ -1119,14 +1153,19 @@ class Attention:
         if tid < 32 * self.score_warps:
             if cutlass.const_expr(self.paired_scores):
                 self.store_packed_weights(rounded_scores, query_derivatives, coords)
-                self.store_packed_weights(rounded_probabilities, query_probabilities, coords)
+                if cutlass.const_expr(not self.baseline_precision):
+                    self.store_packed_weights(rounded_probabilities, query_probabilities, coords)
             else:
                 for i in cutlass.range_constexpr(cute.size(coords)):
                     row, col = coords[i]
                     query_derivatives[row, col] = rounded_scores[i]
-                    query_probabilities[row, col] = rounded_probabilities[i]
+                    if cutlass.const_expr(not self.baseline_precision):
+                        query_probabilities[row, col] = rounded_probabilities[i]
         cute.arch.sync_threads()
-        self.dual_product(query_derivatives, query_probabilities, right, offset, mma, thread, tid, accum, mean)
+        if cutlass.const_expr(self.baseline_precision):
+            self.product(query_derivatives, right, offset, mma, thread, tid, accum)
+        else:
+            self.dual_product(query_derivatives, query_probabilities, right, offset, mma, thread, tid, accum, mean)
 
     @cute.jit
     def split_keyvalue_step(
@@ -1661,8 +1700,10 @@ class Attention:
             if cutlass.const_expr(self.centered):
                 rounded = cute.make_rmem_tensor(totals.shape, cutlass.Float32)
                 base = cute.make_rmem_tensor(totals.shape, cutlass.Float32)
-                mean = cute.make_rmem_tensor(accum.shape, cutlass.Float32)
-                mean.fill(0.0)
+                mean = None
+                if cutlass.const_expr(not self.baseline_precision):
+                    mean = cute.make_rmem_tensor(accum.shape, cutlass.Float32)
+                    mean.fill(0.0)
                 rounded.fill(0.0)
                 base.fill(0.0)
             if cutlass.const_expr(self.column_warps > 1):
@@ -1675,7 +1716,9 @@ class Attention:
                     query_probabilities = cute.make_tensor(other_right.iterator + self.rows * self.columns, weight_layout)
                 else:
                     query_derivatives = self.shared(allocator, q.element_type, weight_layout)
-                    query_probabilities = self.shared(allocator, q.element_type, weight_layout)
+                    query_probabilities = None
+                    if cutlass.const_expr(not self.baseline_precision):
+                        query_probabilities = self.shared(allocator, q.element_type, weight_layout)
                 sums_layout = cute.make_layout(
                     (2, self.column_warps, self.rows), stride=(self.column_warps * self.rows, self.rows, 1)
                 )
@@ -1683,7 +1726,9 @@ class Attention:
                     # Row reduction happens after the final product and loop barrier.
                     query_sums = cute.make_tensor(cute.recast_ptr(other_right.iterator, dtype=cutlass.Float32), sums_layout)
                 else:
-                    query_sums = allocator.allocate_tensor(cutlass.Float32, sums_layout, byte_alignment=128)
+                    query_sums = None
+                    if cutlass.const_expr(not self.baseline_precision):
+                        query_sums = allocator.allocate_tensor(cutlass.Float32, sums_layout, byte_alignment=128)
             if cutlass.const_expr(self.warp_centering):
                 center_base = allocator.allocate_tensor(cutlass.Float32, cute.make_layout((self.rows,)), byte_alignment=128)
                 center_rows = min(self.rows, self.columns)
@@ -1875,6 +1920,8 @@ class Attention:
                                             (sv[r, c] * sign - row_max[r]) * magnitude * 1.4426950408889634 - row_logsum[r],
                                             fastmath=True,
                                         )
+                                    if cutlass.const_expr(self.baseline_precision):
+                                        probability = probability.to(q.element_type).to(cutlass.Float32)
                                     if cutlass.const_expr(self.pointwise_overlap):
                                         sv[r, c] = probability
                                     elif cutlass.const_expr(self.centered):
@@ -1912,22 +1959,38 @@ class Attention:
                                         rounded_probabilities = cute.make_fragment_like(dp, q.element_type)
                                         packed_half_conversion(dp, rounded_probabilities)
                                         self.store_packed_weights(rounded_scores, query_derivatives, coords)
-                                        self.store_packed_weights(rounded_probabilities, query_probabilities, coords)
+                                        if cutlass.const_expr(not self.baseline_precision):
+                                            self.store_packed_weights(rounded_probabilities, query_probabilities, coords)
                                     else:
                                         for i in cutlass.range_constexpr(cute.size(coords)):
                                             row, col = coords[i]
                                             query_derivatives[row, col] = rounded_scores[i]
-                                            query_probabilities[row, col] = dp[i].to(q.element_type)
+                                            if cutlass.const_expr(not self.baseline_precision):
+                                                query_probabilities[row, col] = dp[i].to(q.element_type)
                                     cute.arch.sync_threads()
-                                    self.dual_product(
-                                        query_derivatives, query_probabilities, right, offset, mma, thread, tid, accum, mean
-                                    )
+                                    if cutlass.const_expr(self.baseline_precision):
+                                        self.product(query_derivatives, right, offset, mma, thread, tid, accum)
+                                    else:
+                                        self.dual_product(
+                                            query_derivatives,
+                                            query_probabilities,
+                                            right,
+                                            offset,
+                                            mma,
+                                            thread,
+                                            tid,
+                                            accum,
+                                            mean,
+                                        )
                                 else:
-                                    self.dual_product(rounded_scores, dp, right, offset, mma, thread, tid, accum, mean)
+                                    if cutlass.const_expr(self.baseline_precision):
+                                        self.product(rounded_scores, right, offset, mma, thread, tid, accum)
+                                    else:
+                                        self.dual_product(rounded_scores, dp, right, offset, mma, thread, tid, accum, mean)
                     if cutlass.const_expr(self.pipelined) or active:
                         cute.arch.sync_threads()
                 if cutlass.const_expr(phase == 0):
-                    if cutlass.const_expr(self.column_warps > 1):
+                    if cutlass.const_expr(self.column_warps > 1 and not self.baseline_precision):
                         self.combine_query_rows(totals, rounded, rc, query_sums, tid)
                     for r in cutlass.range_constexpr(cute.size(rc.shape[0])):
                         row = start + rc[r, 0][0]
@@ -1943,12 +2006,13 @@ class Attention:
                                     q.shape[1],
                                     row_max[r],
                                     row_logsum[r],
-                                    totals[r],
+                                    totals[r] if cutlass.const_expr(not self.baseline_precision) else cutlass.Float32(0.0),
                                     base[r],
                                 )
                             else:
-                                delta[batch, head, row] = totals[r]
-            if cutlass.const_expr(self.centered):
+                                if cutlass.const_expr(not self.baseline_precision):
+                                    delta[batch, head, row] = totals[r]
+            if cutlass.const_expr(self.centered and not self.baseline_precision):
                 mv = row_view(mean)
                 for r in cutlass.range_constexpr(cute.size(rc.shape[0])):
                     av[r, None] = av[r, None].load() - rounded[r] * mv[r, None].load()
@@ -2754,7 +2818,7 @@ def _rtx4090_tuning(device, mode, masked, layouts, configuration, kv_configurati
 
 
 def precision_schedule(program, dimension, *, device=None):
-    """Apply the qualified operand-precision policy after device scheduling."""
+    """Explicit benchmark helper for the former compensated operand policy."""
     from .precision import schedule
 
     return schedule(program, dimension, device=device)
@@ -2951,26 +3015,6 @@ def _compile_kernel(
 
         if sm120_schedule.eligible(device, mode, masked, layouts, configuration, kv_configuration, vector):
             program = sm120_schedule.schedule(program, mode, layouts[0][1][-1], causal, vector)
-    if (
-        (capability, torch.cuda.get_device_name(device))
-        in (
-            ((8, 6), "NVIDIA GeForce RTX 3090 Ti"),
-            ((8, 9), "NVIDIA L40S"),
-            ((12, 0), "NVIDIA GeForce RTX 5090"),
-        )
-        and layouts[0][0] in (torch.bfloat16, torch.float16)
-        and layouts[0][1][-1] in (16, 64, 128, 256, 512)
-        and (layouts[0][1][-1] != 256 or layouts[0][1][1] == layouts[1][1][1])
-        and (
-            mode == "backward"
-            or mode == "forward"
-            and capability == (12, 0)
-            and layouts[0][0] == torch.float16
-            and layouts[0][1][-1] == 256
-            and not masked
-        )
-    ):
-        program = precision_schedule(program, layouts[0][1][-1], device=device)
     if (
         mode == "forward"
         and capability == (12, 1)

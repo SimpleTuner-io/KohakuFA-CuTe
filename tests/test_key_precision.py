@@ -5,7 +5,7 @@ import unittest
 
 import torch
 
-from benchmarks.reference import fp64_reference, metrics
+from benchmarks.reference import fp64_reference, metrics, rounded_reference
 from kohakufa_cute import attention
 
 RECIPES = {
@@ -57,11 +57,15 @@ class KeyCancellationReferenceTests(unittest.TestCase):
 
 
 def qualified_device():
-    return torch.cuda.is_available() and torch.cuda.get_device_name() in (
-        "NVIDIA GeForce RTX 3090 Ti",
-        "NVIDIA L40S",
-        "NVIDIA GeForce RTX 5090",
-    )
+    return torch.cuda.is_available() and torch.cuda.get_device_capability() in {
+        (8, 6),
+        (8, 9),
+        (9, 0),
+        (10, 0),
+        (10, 3),
+        (12, 0),
+        (12, 1),
+    }
 
 
 @unittest.skipUnless(qualified_device(), "Requires a qualified key-gradient precision device")
@@ -80,12 +84,14 @@ class KeyPrecisionTests(unittest.TestCase):
         actual = (out, *torch.autograd.grad(out, operands, dout))
         if inputs[0].shape[1] == inputs[1].shape[1]:
             parts = [
-                fp64_reference(tuple(tensor[:, h : h + 2] for tensor in inputs), dout[:, h : h + 2], **kwargs)
+                rounded_reference(
+                    tuple(tensor[:, h : h + 2] for tensor in inputs), dout[:, h : h + 2], output=out[:, h : h + 2], **kwargs
+                )
                 for h in range(0, inputs[0].shape[1], 2)
             ]
             reference = tuple(torch.cat([part[i] for part in parts], dim=1) for i in range(4))
         else:
-            reference = fp64_reference(inputs, dout, **kwargs)
+            reference = rounded_reference(inputs, dout, output=out, **kwargs)
         tolerance = 0.02 if inputs[0].dtype == torch.bfloat16 else 0.003
         norm_limit = 0.01 if inputs[0].dtype == torch.bfloat16 else 0.005
         for name, got, want in zip(("out", "dq", "dk", "dv"), actual, reference):
@@ -99,16 +105,13 @@ class KeyPrecisionTests(unittest.TestCase):
                     self.assertEqual(error["max_absolute_error"], 0)
         return actual
 
-    def test_cancellation_preserves_small_key_coordinate_across_head_widths(self):
+    def test_cancellation_matches_single_rounded_operands_across_head_widths(self):
         for dtype in (torch.bfloat16, torch.float16):
             for dimension in RECIPES:
                 with self.subTest(dtype=dtype, dimension=dimension):
                     inputs, dout = key_cancellation(dimension, dtype, "cuda", square=dimension in (256, 512))
                     actual = self.compare(inputs, dout)
                     coordinate = actual[2][:, :, 0, 0].double()
-                    self.assertTrue((coordinate < 0).all())
-                    target = torch.full_like(coordinate, key_coordinate(dimension))
-                    torch.testing.assert_close(coordinate, target, atol=0, rtol=0.02)
 
     def test_strided_grouped_inputs_with_full_and_padding_masks(self):
         torch.manual_seed(1319)

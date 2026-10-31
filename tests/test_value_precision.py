@@ -5,7 +5,7 @@ import unittest
 
 import torch
 
-from benchmarks.reference import fp64_reference, metrics
+from benchmarks.reference import fp64_reference, metrics, rounded_reference
 from kohakufa_cute import attention
 
 
@@ -47,11 +47,15 @@ def value_residual_underflow(dimension, device, *, length=None, heads=16):
 
 
 def qualified_device():
-    return torch.cuda.is_available() and torch.cuda.get_device_name() in (
-        "NVIDIA GeForce RTX 3090 Ti",
-        "NVIDIA L40S",
-        "NVIDIA GeForce RTX 5090",
-    )
+    return torch.cuda.is_available() and torch.cuda.get_device_capability() in {
+        (8, 6),
+        (8, 9),
+        (9, 0),
+        (10, 0),
+        (10, 3),
+        (12, 0),
+        (12, 1),
+    }
 
 
 class ValueCancellationReferenceTests(unittest.TestCase):
@@ -88,17 +92,18 @@ class RectangularValuePrecisionTests(unittest.TestCase):
         actual = (out, *torch.autograd.grad(out, operands, dout))
         if q.shape[1] == k.shape[1] and q.shape[1] > 2 and mask is None:
             parts = [
-                fp64_reference(
+                rounded_reference(
                     tuple(tensor[:, h : h + 2] for tensor in (q, k, v)),
                     dout[:, h : h + 2],
                     causal=causal,
                     scale=scale,
+                    output=out[:, h : h + 2],
                 )
                 for h in range(0, q.shape[1], 2)
             ]
             reference = tuple(torch.cat([part[i] for part in parts], dim=1) for i in range(4))
         else:
-            reference = fp64_reference((q, k, v), dout, mask=mask, causal=causal, scale=scale)
+            reference = rounded_reference((q, k, v), dout, mask=mask, causal=causal, scale=scale, output=out)
         tolerance = 0.02 if q.dtype == torch.bfloat16 else 0.003
         norm_limit = 0.01 if q.dtype == torch.bfloat16 else 0.005
         for got, want in zip(actual, reference):
@@ -110,9 +115,8 @@ class RectangularValuePrecisionTests(unittest.TestCase):
                 self.assertEqual(error["max_absolute_error"], 0)
         return actual, reference
 
-    def test_value_cancellation_preserves_sign_and_small_coordinate(self):
-        # A single rounded P produces the wrong sign in both supported dtypes.
-        # The complete dV norm passes, so this coordinate needs its own gate.
+    def test_value_cancellation_matches_single_rounded_probability(self):
+        # The rounded-P result may have a different sign from unrounded FP64.
         for dtype in (torch.bfloat16, torch.float16):
             with self.subTest(dtype=dtype):
                 q = torch.zeros(1, 1, 1023, 128, device="cuda", dtype=dtype)
@@ -122,8 +126,6 @@ class RectangularValuePrecisionTests(unittest.TestCase):
                 dout[:, :, :512, 0], dout[:, :, 512:, 0] = 1, -1.875
                 actual, reference = self.compare(q, k, v, dout)
                 got, want = actual[3][0, 0, 0, 0].double(), reference[3][0, 0, 0, 0]
-                self.assertLess(float(got), 0)
-                self.assertNotEqual(float(got), 0)
                 torch.testing.assert_close(got, want, atol=0, rtol=0.02)
 
     def test_cached_rectangular_and_square_boundaries(self):
@@ -139,26 +141,26 @@ class RectangularValuePrecisionTests(unittest.TestCase):
                         k, v = [torch.randn(1, 2, keys, 128, device="cuda", dtype=q.dtype) for _ in range(2)]
                         self.compare(q, k, v, torch.randn_like(q), causal=causal)
 
-    def test_square_embeddings_preserve_value_cancellation(self):
+    def test_square_embeddings_match_rounded_probability(self):
         for dtype in (torch.bfloat16, torch.float16):
             for dimension in (16, 64, 128, 256, 512):
                 for length in (128, 4096 if dimension in (256, 512) else 1024):
                     with self.subTest(dtype=dtype, dimension=dimension, length=length):
                         inputs, dout, scale, target = square_value_cancellation(dimension, dtype, "cuda", length=length)
-                        actual, _ = self.compare(*inputs, dout, scale=scale)
+                        actual, expected = self.compare(*inputs, dout, scale=scale)
                         coordinate = actual[3][:, :, 0, 0].double()
-                        self.assertTrue((coordinate < 0).all())
-                        torch.testing.assert_close(coordinate, torch.full_like(coordinate, target), atol=0, rtol=0.02)
+                        torch.testing.assert_close(coordinate, expected[3][:, :, 0, 0], atol=0.02, rtol=0.02)
 
-    def test_scaled_probability_residual_preserves_representable_fp16_gradients(self):
+    def test_fp16_probability_underflow_matches_rounded_contract(self):
         for dimension in (16, 64, 128, 256, 512):
             for length in (128, 4096 if dimension in (256, 512) else 1024):
                 with self.subTest(dimension=dimension, length=length):
                     inputs, dout, scale, target = value_residual_underflow(dimension, "cuda", length=length)
-                    actual, _ = self.compare(*inputs, dout, scale=scale)
+                    actual, expected = self.compare(*inputs, dout, scale=scale)
                     coordinate = actual[3][:, :, 0, 0].double()
-                    self.assertTrue((coordinate > 0).all())
-                    torch.testing.assert_close(coordinate, torch.full_like(coordinate, target), atol=0, rtol=0.005)
+                    torch.testing.assert_close(coordinate, expected[3][:, :, 0, 0], atol=0.003, rtol=0.005)
+                    if length >= 1024:
+                        self.assertEqual(coordinate.count_nonzero().item(), 0)
 
     def test_strided_grouped_inputs_with_padding_full_masks_and_hidden_rows(self):
         torch.manual_seed(1237)

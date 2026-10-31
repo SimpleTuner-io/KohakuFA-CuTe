@@ -1,12 +1,16 @@
 # Performance guide
 
-[rtx5090.json](rtx5090.json), [rtx4090.json](rtx4090.json), [rtx3090ti.json](rtx3090ti.json), and [l40s.json](l40s.json) retain the latest four GPU grids, timing samples, source hashes, independent FP64 checks, and software/hardware metadata. The chart reads these reports directly. The October 22 grids in [performance.json](performance.json) are superseded; that file also retains the explicit-mask, B300 MIG, H100 and model comparisons. [gb10.json](gb10.json) retains the GB10 comparison separately.
+[rtx5090.json](rtx5090.json), [rtx4090.json](rtx4090.json), [rtx3090ti.json](rtx3090ti.json), and [l40s.json](l40s.json) retain the latest four GPU grids, timing samples, source hashes, independent FP64 checks, and software/hardware metadata. The chart reads these reports directly. The current full-device native matrices are in [h100-pcie.json](h100-pcie.json) and [b300.json](b300.json). The October 22 grids in [performance.json](performance.json) are superseded; that file also retains the explicit-mask, B300 MIG, H100 and model comparisons. [gb10.json](gb10.json) retains the GB10 comparison separately.
 
-The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each panel labels its date, PyTorch version and measured power limit. The [RTX 4090 analysis](../docs/rtx4090-tuning.md) details its scheduling changes and remaining backward gap; the new three-device runs qualify their own schedules and backward precision policies.
+The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each panel labels its date, PyTorch version and measured power limit. The [RTX 4090 analysis](../docs/rtx4090-tuning.md) details its scheduling changes and remaining backward gap; all four new runs qualify the restored baseline arithmetic on their own devices.
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
 ## GB10 (DGX / RTX Spark)
+
+The timings and qualification below describe the recorded pre-removal revision.
+SM121 was unavailable for this precision-removal campaign; these figures do not
+qualify its changed default backward arithmetic.
 
 GB10 supports FP16/BF16 forward and centered backward on Linux ARM64. Use the [GB10 installation instructions](../README.md#install); `CUTE_DSL_ARCH=sm_121a` and the CUDA 13 DSL libraries were used for validation. Automatic selection checks compatibility rather than predicted speed, so benchmark the intended shapes.
 
@@ -115,79 +119,145 @@ The public speed command compares installed CuTe with default SDPA; it does not 
 
 ## RTX cards and L40S
 
-The plotted grids use **B=1/H=16**, contiguous BHSD, S128/S1024/S4096, D16/64/128/256/512, FP16/BF16 and dense/implicit causal visibility. The October 31 RTX 5090, RTX 3090 Ti and L40S reports include the new schedules and backward precision fixes. **RTX 4090 retains its October 30 report and code qualification**; it was not rerented in this round, and its panel does not qualify the new backward fixes on that card.
+The refreshed grids use **B=1/H=16**, contiguous BHSD, S128/S1024/S4096,
+D16/64/128/256/512, FP16/BF16 and dense/implicit causal visibility. All four
+panels were measured after removing the automatic compensated arithmetic policy.
 
 ![RTX and L40S performance across the latest 60-case grids](performance.svg)
 
-Ratios above one favor CuTe. Counts compare observed medians; near-ties need the retained variability. These are attention-call measurements, rather than complete-model speedups. Default SDPA selects PyTorch FlashAttention for smaller heads and memory-efficient CUTLASS at D512 in the captured graphs; the standalone `flash-attn` package was not measured.
+Ratios above one favor CuTe. Counts compare observed medians; consult the retained
+samples for near-ties. These are attention calls, not whole-model speedups.
+Actual default SDPA symbols and resources are retained per graph in each report;
+these runs do not measure the standalone `flash-attn` package.
 
 | GPU | Forward wins | Backward wins | F+B wins | Long D512 SDPA / CuTe F+B |
 | --- | ---: | ---: | ---: | ---: |
-| RTX 5090 | 46/60 | 28/60 | 29/60 | 1.72–4.15× |
-| RTX 4090 | 46/60 | 31/60 | 36/60 | 2.09–4.32× |
-| RTX 3090 Ti | 32/60 | 26/60 | 34/60 | 1.53–2.64× |
-| L40S | 33/60 | 28/60 | 28/60 | 2.45–4.35× |
+| RTX 5090 | 45/60 | 36/60 | 36/60 | 1.96–4.71× |
+| RTX 4090 | 46/60 | 36/60 | 36/60 | 2.17–4.57× |
+| RTX 3090 Ti | 36/60 | 36/60 | 36/60 | 1.69–2.85× |
+| L40S | 35/60 | 33/60 | 33/60 | 2.80–4.80× |
 
 Representative **BF16 S4096 dense forward + backward**, milliseconds:
 
 | GPU | Head dim | CuTe F+B | Default SDPA F+B | SDPA / CuTe |
 | --- | ---: | ---: | ---: | ---: |
-| RTX 5090 | 16 | 0.696 | 0.778 | 1.12× |
-| RTX 5090 | 128 | 4.408 | 2.646 | 0.60× |
-| RTX 5090 | 256 | 9.792 | 6.129 | 0.63× |
-| RTX 5090 | 512 | 24.557 | 50.045 | 2.04× |
-| RTX 4090 | 16 | 0.718 | 0.877 | 1.22× |
-| RTX 4090 | 128 | 4.162 | 3.209 | 0.77× |
-| RTX 4090 | 256 | 11.191 | 7.980 | 0.71× |
-| RTX 4090 | 512 | 32.045 | 67.136 | 2.10× |
-| RTX 3090 Ti | 16 | 2.128 | 2.269 | 1.07× |
-| RTX 3090 Ti | 128 | 12.795 | 7.599 | 0.59× |
-| RTX 3090 Ti | 256 | 27.914 | 15.886 | 0.57× |
-| RTX 3090 Ti | 512 | 71.325 | 109.729 | 1.54× |
-| L40S | 16 | 0.916 | 0.756 | 0.83× |
-| L40S | 128 | 4.284 | 2.666 | 0.62× |
-| L40S | 256 | 9.703 | 7.149 | 0.74× |
-| L40S | 512 | 28.068 | 70.866 | 2.52× |
+| RTX 5090 | 16 | 0.543 | 0.787 | 1.45× |
+| RTX 5090 | 128 | 3.320 | 2.674 | 0.81× |
+| RTX 5090 | 256 | 8.147 | 6.153 | 0.76× |
+| RTX 5090 | 512 | 22.354 | 50.147 | 2.24× |
+| RTX 4090 | 16 | 0.654 | 0.886 | 1.35× |
+| RTX 4090 | 128 | 3.881 | 3.163 | 0.81× |
+| RTX 4090 | 256 | 10.537 | 7.781 | 0.74× |
+| RTX 4090 | 512 | 31.159 | 67.562 | 2.17× |
+| RTX 3090 Ti | 16 | 1.325 | 2.055 | 1.55× |
+| RTX 3090 Ti | 128 | 8.875 | 6.880 | 0.78× |
+| RTX 3090 Ti | 256 | 21.539 | 14.531 | 0.67× |
+| RTX 3090 Ti | 512 | 61.916 | 104.654 | 1.69× |
+| L40S | 16 | 0.732 | 0.752 | 1.03× |
+| L40S | 128 | 3.132 | 2.663 | 0.85× |
+| L40S | 256 | 8.258 | 7.088 | 0.86× |
+| L40S | 512 | 24.781 | 71.017 | 2.87× |
 
-### What changed
+### What changed and what is compared
 
-The three new runs qualify logical D16 work and compact short forward paths independently on each GPU. Short backward uses narrower output-column ownership where measured. RTX 5090 also narrows D64 key/value output fragments for dense S128–S512 squares and causal S128–S4096 squares. RTX 3090 Ti uses the fixed D64 owner for BF16 S1024–S4096 squares and query-major D256 ownership for longer squares. L40S additionally uses M128/K128 forward tiles for long D64/D128 calls when both sequence lengths are multiples of 128; shifted tails keep their checked fallback. Full-width D256/D512 backward uses separately qualified ownership to retain low components of both derivative and probability operands within the shared-memory budget.
+Default dispatch uses single-rounded FP16/BF16 P and dS operands with FP32
+accumulation. It omits the extra weighted-key dQ GEMM, row correction, residual
+P/dS products and the final compensated-owner replacement. It retains the
+architecture schedules, separate unscaled softmax statistics, masks and tail
+predicates. See the [arithmetic and model-shape audit](../docs/baseline-precision.md).
 
-The reports distinguish four comparisons on the same compiler and machine:
+The three backends are measured in the same process and stack:
 
-- **SDPA:** default native PyTorch selection.
-- **Released:** the preceding `3e17149` computation and schedules reconstructed with the current compiler, with new device selectors and the shared precision hook disabled. This is not a byte-identical old binary.
-- **Previous:** the preceding device schedule with the corrected weight precision retained.
-- **CuTe:** the selected device schedule with corrected weight precision.
+- **CuTe:** current default arithmetic and architecture schedules.
+- **Previous:** pre-change arithmetic reconstructed on this compiler. Separate
+  processes check exact numerical equality against the preceding checkout before its timings
+  are interpreted.
+- **SDPA:** default PyTorch selection, identified by the captured graph symbols.
 
-`Previous` versus `CuTe` isolates device-selector changes on matching arithmetic; both already share the corrected KV owners and their common scheduling choices. `Released` versus `CuTe` also includes the precision repair's cost. Lower latency alone does not qualify a path that loses a gradient. Long smaller-head complete calls still have gaps against native SDPA; see the [3090 Ti](../docs/rtx3090ti-outliers.md), [L40S](../docs/l40s-outliers.md) and [5090](../docs/rtx5090-outliers.md) analyses for the selected designs, rejected controls, machine-code evidence and remaining limits. The retained [4090 analysis](../docs/rtx4090-tuning.md) describes that panel separately.
+Previous/CuTe compares complete implementations with different arithmetic policies;
+it does not isolate a pipeline scheduling change. The compensated implementation
+can be more accurate on deliberately cancelled coordinates and FP16 probability
+underflow. Its stronger coordinate targets are no longer the default contract.
+The retained [device investigations](../docs/rtx4090-tuning.md) describe their own
+historical revisions; their compensated-accuracy claims do not qualify this policy.
 
-### L40S gradient regression
+Previous backward time / current backward time, across the 60-case grid:
 
-The previously reported BF16 B2/H16/Sq1023/Sk17/D128 dV failure is fixed on the qualified source. Its saved coordinate returned −0.15918 against FP64 −0.18469 before the repair. The investigation also found deterministic wrong-sign key/value gradients hidden by whole-tensor norm averages on all three devices. Both high and low weight products now accumulate separately before the epilogue; FP16 probability residuals are scaled internally to preserve representable gradients from tiny probabilities.
+| GPU | Median ratio | Observed range |
+| --- | ---: | ---: |
+| RTX 5090 | 1.26× | 1.00–1.52× |
+| RTX 4090 | 1.10× | 0.89–1.30× |
+| RTX 3090 Ti | 1.22× | 1.03–1.65× |
+| L40S | 1.17× | 0.88–1.47× |
 
-The compact [key](../tests/test_key_precision.py) and [value](../tests/test_value_precision.py) regressions cover all five plotted widths, short/square/rectangular dispatch and explicit cancellation coordinates. Their thresholds were retained. [Precision details](../docs/precision.md) distinguish these fixes from remaining FP32 probability-reconstruction failures and FP16 output-rounding floors. Passing the ordinary random grid is not a claim that every directed diagnostic passes.
+A ratio below one is a slowdown; deleting work does not guarantee a faster
+schedule. Short-call variation and remaining long smaller-head gaps are visible
+in the per-case samples rather than hidden by these summaries.
 
 ### Hardware and measurement
 
 | GPU | SMs | Power limit | Driver | Measured UTC |
 | --- | ---: | ---: | --- | --- |
-| RTX 5090 | 170 | 600 W | 595.84 | 2026-10-31 |
-| RTX 4090 | 128 | 450 W | 615.71.09 | 2026-10-30 |
-| RTX 3090 Ti | 84 | 450 W | 615.71.09 | 2026-10-31 |
+| RTX 5090 | 170 | 575 W | 610.57.04 | 2026-10-31 |
+| RTX 4090 | 128 | 450 W | 615.71.09 | 2026-10-31 |
+| RTX 3090 Ti | 84 | 450 W | 595.71.05 | 2026-10-31 |
 | L40S | 142 | 350 W | 615.71.09 | 2026-10-31 |
 
-The three new grids use Python 3.13.18, PyTorch 2.15.0+cu132 and CuTe DSL 4.8.1. Reports retain exact framework/compiler packages, loaded library basenames, emitted PTX targets, source hashes and actual graph functions/resources. Each report identifies its measured revision; later changes confined to another GPU’s selector do not replace those hashes or imply a new measurement. The GPUs have the same nominal 99-KiB opt-in shared-memory limit per block, but each schedule was requalified on its own full device. Hardware, clocks and compiler stacks differ between panels, so comparisons across dates or GPUs cannot isolate kernel changes.
+Python 3.13.18, PyTorch 2.15.0+cu132, CuTe DSL 4.8.1 and Triton 3.9.0.
+Each report retains runtime and benchmark source hashes, loaded library basenames,
+exact graph functions/resources, five timing samples per phase/backend and board
+telemetry before/after the campaign. The base revision identifies the preceding
+checkout; source hashes identify the measured edits.
 
-Seven rounds rotate all four backends, targeting 200 ms per phase with at least 16 warmed CUDA-graph replays. Timings exclude initial compilation, allocation, profiling and telemetry. CUDA-event spans around replay loops can include submission gaps, especially on short calls; device-batched replay experiments are separate diagnostics. Separately timed forward and backward medians need not sum exactly to the complete-call median. Activity profilers run in separate processes after a measured profiler-initialization effect was found; driver graph identity/resource queries verify the canonical captures.
+Five rotating rounds target 100 ms per phase with at least 16 warmed graph
+replays. CUDA events cover replay loops, excluding compilation and profiling;
+short calls can include submission gaps. Separate forward and backward medians
+need not add to the complete-call median. Each GPU runs one campaign at a time.
 
-All **180 new selected grid cases** passed independent full-length centered FP64 checks for output, dQ, dK and dV on identical rounded inputs, evaluated in two-head chunks. Pointwise limits are `atol=rtol=0.02` for BF16 or `0.003` for FP16, plus component norm-relative error below 1% or 0.5%, respectively, and exact zero for a zero reference. The reports retain each backend's failures as diagnostics and include eager/captured comparisons, changed-input replay checks and GPU memory headroom. Device analyses provide the additional boundary, mask, stride, GQA, poisoned-storage and sanitizer results.
+All **240 current grid cases** check output/dQ/dK/dV independently against
+mathematical FP64 equations on identical rounded inputs, with per-head norm limits
+of 1% BF16 / 0.5% FP16. Reports also retain errors against the declared rounded
+arithmetic, conditioned on actual O for backward delta. Directed tests cover
+operator rounding, masks, GQA, strides, partial tiles, negative maxima,
+signed/zero scales, cache reuse and changed/poisoned graph storage. The
+[precision-removal report](../docs/baseline-precision.md) records qualification
+and limitations separately from mathematical diagnostics.
 
-Nsight Compute hardware counters were unavailable on the test hosts. Systems timelines, matched native cubins, phase-associated CuTe exports, function resources and controlled timings support the analysis; no stall, cache-hit, HFU or achieved-occupancy percentages are inferred from instruction counts or theoretical limits. Separate sustained checks retain board power, clocks and temperature without mixing telemetry into canonical medians.
+The [older dataset](performance.json) retains explicit-mask timings and other
+hardware separately. New correctness checks do not requalify those historical
+timings after the arithmetic change.
 
-The [older dataset](performance.json) retains explicit boolean-mask comparisons separately. Those timings were not rerun here; the new masked backward correctness checks do not requalify the older performance numbers after arithmetic changes.
+## Native H100 PCIe and B300
+
+The current precision-policy comparison additionally measures 16 BF16 cases on
+each full device: B1/H16, S128/S4096, D64/128/256/512, dense/causal. The
+[H100 PCIe report](h100-pcie.json) is a 114-SM/80-GB device at 350 W;
+[B300 SXM6 AC](b300.json) is 148 SMs at 1,100 W. The stack and five-round
+100-ms protocol match the refreshed RTX grids. These hosts differ from the
+historical H100 SXM and B300 MIG measurements below.
+
+Native-device examples, BF16 B1/H16/S4096 dense, milliseconds:
+
+| GPU | Head dim | Previous backward | Default backward | Previous / default | Default F+B | SDPA F+B |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| H100 PCIe | 128 | 1.5870 | 1.5327 | 1.04× | 2.0835 | 1.4002 |
+| H100 PCIe | 512 | 72.4444 | 61.7925 | 1.17× | 80.0319 | 63.5586 |
+| B300 SXM6 AC | 128 | 0.5812 | 0.5595 | 1.04× | 0.7248 | 0.4289 |
+| B300 SXM6 AC | 512 | 3.2565 | 2.8314 | 1.15× | 3.4699 | 32.3734 |
+
+
+Previous/CuTe compares different arithmetic policies on the same machine/compiler.
+B300 D64 backward is 5–8% slower after the removal at S4096; removing operations
+is not a universal speedup. Smaller native shapes still trail SDPA. The
+[precision report](../docs/baseline-precision.md) records zero-tolerance control checks,
+matched PTX/SASS, mathematical tradeoffs, model-shape overlaps and sanitizer
+qualification, including B300 racecheck reports also present before the change.
+SM100 and GB10 were unavailable for requalification.
 
 ## B300 MIG versus KohakuFA Gluon
+
+This retained partition comparison predates the default arithmetic removal. It
+does not describe the newly measured full B300 or its current precision policy.
 
 **B300 MIG 1g.34gb, 18 SMs**, BF16 D512, B=1/H=16. Gluon is upstream KohakuFA `0c5ede6859307bedc0c6089523c16b1ca51b7da9`, unmodified and supplied with the measured device tuning tables. CuTe retains its centered FP32 correction. This compares complete attention calls on the same partition.
 
@@ -203,7 +273,7 @@ The [older dataset](performance.json) retains explicit boolean-mask comparisons 
 
 The largest causal cases are approximately at parity (within 1% at S4096/S8192); smaller shapes still favor Gluon. The full JSON includes 18 cases, including FP16, D256, and different batch/head counts. It retains the published medians; individual replay samples for this dataset are in the external profiling evidence, rather than duplicated here.
 
-Measured October 21, 2026 with PyTorch 2.12.0+cu130, CUDA 13.0, and CuTe DSL 4.8.1. Four rotated rounds of 20 CUDA-graph replays, with output/gradient comparisons and eager/graph checks. Source hashes identify the final vector-staging implementation. These are partition measurements. Full-device B200/B300 performance after the later shared-kernel changes remains unmeasured.
+Measured October 21, 2026 with PyTorch 2.12.0+cu130, CUDA 13.0, and CuTe DSL 4.8.1. Four rotated rounds of 20 CUDA-graph replays, with output/gradient comparisons and eager/graph checks. Source hashes identify the final vector-staging implementation. These are partition measurements. The new full-device B300 matrix is reported above; B200 performance after these changes remains unmeasured.
 
 ## H100
 
@@ -301,20 +371,21 @@ python -m benchmarks.plot_performance
 
 These commands rerun the general timing/precision protocol on the installed stack; they do not recreate every historical host or the specialized explicit-mask driver. Check actual SDPA dispatch with `benchmarks.profile_attention` when interpreting a new result. GPU captures, PTX/SASS, rental records, and exploratory reports belong outside the package; the repository keeps the usage comparisons above.
 
-### Reproduce the new RTX and L40S grids
+### Reproduce the current RTX and L40S grids
 
-Run from a source checkout with the CUDA extras installed. The defaults cover all 60 cases and use seven alternating 200-ms rounds. Profiling passes run after each row's uninstrumented timing and write raw traces outside the tracked tree.
+Run from a source checkout with the CUDA extras installed. Defaults cover all 60
+cases with five alternating 100-ms rounds; keep raw compiler output outside the
+tracked tree.
 
 ```bash
-python -m benchmarks.compare_devices --expect-device 'NVIDIA GeForce RTX 5090' \
-  --output ../rtx5090.json --profiles ../rtx5090-profiles
-python -m benchmarks.compare_devices --expect-device 'NVIDIA GeForce RTX 3090 Ti' \
-  --output ../rtx3090ti.json --profiles ../rtx3090ti-profiles
-python -m benchmarks.compare_devices --expect-device 'NVIDIA L40S' \
-  --output ../l40s.json --profiles ../l40s-profiles
+python -m benchmarks.qualify_baseline_precision --compare-previous \
+  --export-code ../precision-code --output ../precision-comparison.json
 ```
 
-The retained reports add the separate suite, launch-resource, environment and sustained evidence. Their runtime and benchmark source hashes identify the qualified code. The [4090 analysis](../docs/rtx4090-tuning.md#reproduce) retains its preceding-control reproduction command.
+First validate the previous-policy control against its preceding checkout using
+[the control verifier](../benchmarks/verify_previous_precision.py); see the
+[precision report](../docs/baseline-precision.md) for the two-process procedure.
+The older device-specific comparison drivers describe earlier arithmetic controls.
 
 ### Clef 27B captures and replay
 

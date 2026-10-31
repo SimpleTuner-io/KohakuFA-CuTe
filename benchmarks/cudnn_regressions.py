@@ -1,4 +1,4 @@
-"""Compare directed cuDNN failure cases with centered FP64 attention equations.
+"""Compare directed cuDNN failure cases with rounded and mathematical references.
 
 Run with ``python -m benchmarks.cudnn_regressions --output RESULTS.json``.
 cuDNN and other native backends are forced individually; unsupported cases
@@ -15,7 +15,7 @@ from pathlib import Path
 import torch
 
 from benchmarks.adversarial import cases, logits_statistics, make_case
-from benchmarks.reference import fp64_reference, metrics
+from benchmarks.reference import fp64_reference, metrics, rounded_reference
 
 
 def execute(backend, case, inputs, dout, mask):
@@ -152,6 +152,7 @@ def main():
     )
     parser.add_argument("--case", action="append", help="Restrict to these named fixtures")
     parser.add_argument("--quick", action="store_true")
+    parser.add_argument("--reference", choices=("rounded", "fp64"), default="rounded")
     args = parser.parse_args()
     selected = [case for case in cases(extended=not args.quick) if not args.case or case.name in args.case]
     if not selected:
@@ -165,7 +166,8 @@ def main():
         "dependencies": {
             name: importlib.metadata.version(name) for name in ("nvidia-cutlass-dsl", "apache-tvm-ffi", "triton")
         },
-        "reference": "Centered FP64 equations on identical rounded inputs; norm-relative gradient checks",
+        "reference": args.reference,
+        "reference_policy": "The selected reference is applied to every backend; single-rounded P/dS uses each actual O for delta. Independent mathematical FP64 diagnostics are retained.",
         "sources": [
             "https://github.com/NVIDIA/cudnn-frontend/issues/160",
             "https://github.com/NVIDIA/cudnn-frontend/issues/1072",
@@ -193,7 +195,12 @@ def main():
             for backend in args.backends:
                 try:
                     actual = execute(backend, case, inputs, dout, mask)
-                    result = assess(actual, expected, dtype)
+                    mathematical = assess(actual, expected, dtype)
+                    contract = rounded_reference(inputs, dout, mask, causal=case.causal, scale=case.scale, output=actual[0])
+                    rounded = assess(actual, contract, dtype)
+                    result = dict(mathematical if args.reference == "fp64" else rounded)
+                    result["fp64_diagnostic"] = mathematical
+                    result["rounded_contract"] = rounded
                     del actual
                 except FloatingPointError as exc:
                     result = {"status": "numerical_failure", "exception": type(exc).__name__}
@@ -209,6 +216,11 @@ def main():
             print(str(dtype), case.name, {name: value["status"] for name, value in row["backends"].items()}, flush=True)
     failures = sum(row["backends"].get("kohakufa-cute", {}).get("status", "pass") != "pass" for row in report["rows"])
     report["cute_failures"] = failures
+    for name, field in (("mathematical", "fp64_diagnostic"), ("contract", "rounded_contract")):
+        report["cute_" + name + "_failures"] = sum(
+            row["backends"].get("kohakufa-cute", {}).get(field, {}).get("status") == "numerical_failure"
+            for row in report["rows"]
+        )
     args.output.write_text(json.dumps(report, indent=2) + "\n")
     return bool(failures)
 

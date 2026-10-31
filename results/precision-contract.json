@@ -1,0 +1,5231 @@
+{
+  "upstream_revision": "0c5ede6859307bedc0c6089523c16b1ca51b7da9",
+  "upstream_backward_sha256": "fbe1759bfc2507fb47baf021acc23b1e4c45b9cdf351cfed1874c4c654988c3e",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "device": "NVIDIA B300 SXM6 AC",
+  "triton": "3.7.0",
+  "scope": "Directed arithmetic and selected-kernel evidence; profiling durations are not performance measurements.",
+  "reproducer_sha256": {
+    "benchmarks/compare_upstream_precision.py": "1ad16dc5c3a3a6141b179ca068235e33c282e94d8fd330a818bcd6d541d5ea60",
+    "benchmarks/adversarial.py": "a23aed0e98d007c435fcdd492681b6dc11e24c20e20ca206848a8ec120141c66",
+    "benchmarks/reference.py": "6edbefe2bea7afff3cd5f024b1a4da70bc3f8d5af6b9e0e22b6360a7fcb541a7",
+    "tests/test_key_precision.py": "9c5e37b1b9e9db47220633f4464355682faca139832362aaf4b85f1a62626994",
+    "tests/test_value_precision.py": "0215f80b7a993a2bfe0873b2100384ba78986c7bf843c53a45ced8aca25169c8"
+  },
+  "sampling": "The evaluated_head field identifies the measured head. Repeated synthetic fixtures share heads; random tracker controls report head zero. D8 tracker inputs are zero-embedded to D16 with the original scale for both implementations.",
+  "rows": [
+    {
+      "case": "bf16-key",
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 256,
+      "input_strides": [
+        [
+          16777216,
+          1048576,
+          256,
+          1
+        ],
+        [
+          16777216,
+          1048576,
+          256,
+          1
+        ],
+        [
+          16777216,
+          1048576,
+          256,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -0.8046875,
+          "mathematical_dk": -0.0017133243116608798,
+          "rounded_dk": -0.804443359375,
+          "dv_coordinate": 350.0,
+          "mathematical_dv": 349.08134389709153,
+          "rounded_dv": 349.60498046875,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81__0",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_d_1",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i6_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 18.70890582224781,
+              "relative_error": 0.0016773643568207604,
+              "max_absolute_error": 0.0013865729341245858
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.28634702760216996,
+              "relative_error": 0.08388023176254597,
+              "max_absolute_error": 0.001045227050782373
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 440.2495560963368,
+              "relative_error": 0.009347282593112826,
+              "max_absolute_error": 4.0359982069956
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 398.752165747494,
+              "relative_error": 0.0031097732484687154,
+              "max_absolute_error": 0.9186561029084714
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 18.70890582224781,
+              "relative_error": 0.0016773643568207604,
+              "max_absolute_error": 0.0013865729341245858
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.28727643093641436,
+              "relative_error": 7.511645270458708e-05,
+              "max_absolute_error": 9.5367431640625e-07
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 436.60736333447375,
+              "relative_error": 0.0008961664546993499,
+              "max_absolute_error": 0.39111328125
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 399.3886830134007,
+              "relative_error": 0.0015265832468217202,
+              "max_absolute_error": 0.39501953125
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -0.8046875,
+          "mathematical_dk": -0.0017133243116608798,
+          "rounded_dk": -0.804443359375,
+          "dv_coordinate": 350.0,
+          "mathematical_dv": 349.08134389709153,
+          "rounded_dv": 349.60498046875,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 18.70890582224781,
+              "relative_error": 0.0016773643568207604,
+              "max_absolute_error": 0.0013865729341245858
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.28634702760216996,
+              "relative_error": 0.08388023176254597,
+              "max_absolute_error": 0.001045227050782373
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 440.2495560963368,
+              "relative_error": 0.009347282593112826,
+              "max_absolute_error": 4.0359982069956
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 398.752165747494,
+              "relative_error": 0.0031097732484687154,
+              "max_absolute_error": 0.9186561029084714
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 18.70890582224781,
+              "relative_error": 0.0016773643568207604,
+              "max_absolute_error": 0.0013865729341245858
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.28727643093641436,
+              "relative_error": 7.511645270458708e-05,
+              "max_absolute_error": 9.5367431640625e-07
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 436.60736333447375,
+              "relative_error": 0.0008961664546993499,
+              "max_absolute_error": 0.39111328125
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 399.3886830134007,
+              "relative_error": 0.0015265832468217202,
+              "max_absolute_error": 0.39501953125
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "bf16-value",
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 128,
+      "input_strides": [
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ],
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ],
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.37109375,
+          "mathematical_dv": -0.018237688245736905,
+          "rounded_dv": 0.37164306640625,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81__0",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_d_1",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i6_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.52669206912147,
+              "relative_error": 0.003499119749191993,
+              "max_absolute_error": 0.3893314382457369
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.38282216753262,
+              "relative_error": 0.0010576059221044153,
+              "max_absolute_error": 0.029449462890625
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.37109375,
+          "mathematical_dv": -0.018237688245736905,
+          "rounded_dv": 0.37164306640625,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.52669206912147,
+              "relative_error": 0.003499119749191993,
+              "max_absolute_error": 0.3893314382457369
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.38282216753262,
+              "relative_error": 0.0010576059221044153,
+              "max_absolute_error": 0.029449462890625
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "fp16-value",
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 128,
+      "input_strides": [
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ],
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ],
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.00870513916015625,
+          "mathematical_dv": -0.018237688245736905,
+          "rounded_dv": 0.00870513916015625,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_d_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div_1",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64__2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.52669206912147,
+              "relative_error": 0.00040181669321028615,
+              "max_absolute_error": 0.026942827405893155
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.56166110623187,
+              "relative_error": 7.522596832242938e-06,
+              "max_absolute_error": 0.000209808349609375
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.00870513916015625,
+          "mathematical_dv": -0.018237688245736905,
+          "rounded_dv": 0.00870513916015625,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.52669206912147,
+              "relative_error": 0.00040181669321028615,
+              "max_absolute_error": 0.026942827405893155
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 111.56166110623187,
+              "relative_error": 7.522596832242938e-06,
+              "max_absolute_error": 0.000209808349609375
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "fp16-underflow",
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 128,
+      "input_strides": [
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ],
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ],
+        [
+          2097152,
+          131072,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.0,
+          "mathematical_dv": 0.6799725717325417,
+          "rounded_dv": 0.0,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_d_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div_1",
+            "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_116128i64_div8i64_div8i64__2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 512.229375055895,
+              "relative_error": 0.0013280959175368814,
+              "max_absolute_error": 0.6799725717325417
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 512.2496947347645,
+              "relative_error": 0.0,
+              "max_absolute_error": 0.0
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.0,
+          "mathematical_dv": 0.6799725717325417,
+          "rounded_dv": 0.0,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 512.229375055895,
+              "relative_error": 0.00163468105686142,
+              "max_absolute_error": 0.6799725717325417
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 512.2496947347645,
+              "relative_error": 0.000991220503416121,
+              "max_absolute_error": 0.0234375
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "bf16-negative-max",
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "causal": true,
+      "evaluated_head": 9,
+      "logical_dimension": 128,
+      "input_strides": [
+        [
+          262144,
+          16384,
+          128,
+          1
+        ],
+        [
+          262144,
+          16384,
+          128,
+          1
+        ],
+        [
+          262144,
+          16384,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 13.625,
+          "mathematical_dk": 13.58808892188558,
+          "rounded_dk": 13.599822008697636,
+          "dv_coordinate": 0.92578125,
+          "mathematical_dv": 0.9245789658326399,
+          "rounded_dv": 0.9238376952707767,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutesm103Forward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81__0",
+            "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutesm103KeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tenso_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 25.981306375842497,
+              "relative_error": 0.0018961816165234716,
+              "max_absolute_error": 0.006573338040650523
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 6.055936869699994,
+              "relative_error": 0.022157692970633757,
+              "max_absolute_error": 0.06884765624999906
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 36.79177993231875,
+              "relative_error": 0.003045287987190358,
+              "max_absolute_error": 0.0655957425566207
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 27.625753437299853,
+              "relative_error": 0.0023334216429849986,
+              "max_absolute_error": 0.014766693226276217
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 25.981305594791426,
+              "relative_error": 0.0018964733970855611,
+              "max_absolute_error": 0.006580673630126821
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 6.057885684890499,
+              "relative_error": 0.0019709934717957508,
+              "max_absolute_error": 0.0034676974194037657
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 36.796616557227466,
+              "relative_error": 0.0015592069655833794,
+              "max_absolute_error": 0.025177991302363978
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 27.629743755557943,
+              "relative_error": 0.0016484915403730442,
+              "max_absolute_error": 0.008149906992912292
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 13.625,
+          "mathematical_dk": 13.58808892188558,
+          "rounded_dk": 13.599822008697636,
+          "dv_coordinate": 0.92578125,
+          "mathematical_dv": 0.9245789658326399,
+          "rounded_dv": 0.9238376952707767,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 25.981306375842497,
+              "relative_error": 0.0018961816165234716,
+              "max_absolute_error": 0.006573338040650523
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 6.055936869699994,
+              "relative_error": 0.02215769297243017,
+              "max_absolute_error": 0.06884765624999906
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 36.79177993231875,
+              "relative_error": 0.003045287987190358,
+              "max_absolute_error": 0.0655957425566207
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 27.625753437299853,
+              "relative_error": 0.0023334216429849986,
+              "max_absolute_error": 0.014766693226276217
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 25.981305594791426,
+              "relative_error": 0.0018964733970855611,
+              "max_absolute_error": 0.006580673630126821
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 6.057885684890499,
+              "relative_error": 0.001970993451566584,
+              "max_absolute_error": 0.0034676974194037657
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 36.796616557227466,
+              "relative_error": 0.0015592069655833794,
+              "max_absolute_error": 0.025177991302363978
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 27.629743755557943,
+              "relative_error": 0.0016484915403730442,
+              "max_absolute_error": 0.008149906992912292
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "fp16-negative-max",
+      "shape": [
+        1,
+        16,
+        1025,
+        16
+      ],
+      "causal": true,
+      "evaluated_head": 6,
+      "logical_dimension": 16,
+      "input_strides": [
+        [
+          262400,
+          16400,
+          16,
+          1
+        ],
+        [
+          262400,
+          16400,
+          16,
+          1
+        ],
+        [
+          262400,
+          16400,
+          16,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -2.65625,
+          "mathematical_dk": -2.6512950755514764,
+          "rounded_dk": -2.657216787338257,
+          "dv_coordinate": -0.89892578125,
+          "mathematical_dv": -0.898757700051902,
+          "rounded_dv": -0.8987429587946281,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_11616i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 10.234778853882021,
+              "relative_error": 0.00024131528704301263,
+              "max_absolute_error": 0.00036216786891563046
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 2.970885211827676,
+              "relative_error": 0.006475076090562454,
+              "max_absolute_error": 0.0073242187500024425
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 54.781634137098095,
+              "relative_error": 0.0003674356638095714,
+              "max_absolute_error": 0.009174469280850417
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 11.626505146656315,
+              "relative_error": 0.00027063222395000034,
+              "max_absolute_error": 0.0005313333724494829
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 10.234776235057106,
+              "relative_error": 0.0002417321028900547,
+              "max_absolute_error": 0.0003602989138309365
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 2.970997122184353,
+              "relative_error": 0.002030866495980863,
+              "max_absolute_error": 0.0048828125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 54.781553601276684,
+              "relative_error": 0.0002708237747715303,
+              "max_absolute_error": 0.007515907287597656
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 11.62647772913882,
+              "relative_error": 0.00021915350119917646,
+              "max_absolute_error": 0.0005471781873893633
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -2.65625,
+          "mathematical_dk": -2.6512950755514764,
+          "rounded_dk": -2.6568663120269775,
+          "dv_coordinate": -0.89892578125,
+          "mathematical_dv": -0.898757700051902,
+          "rounded_dv": -0.8987429587946281,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 10.234778853882021,
+              "relative_error": 0.0002414771624545871,
+              "max_absolute_error": 0.00036216786891563046
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 2.970885211827676,
+              "relative_error": 0.006418911338364694,
+              "max_absolute_error": 0.0073242187500024425
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 54.781634137098095,
+              "relative_error": 0.00036809156669007016,
+              "max_absolute_error": 0.009174469280850417
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 11.626505146656315,
+              "relative_error": 0.00027027253078631475,
+              "max_absolute_error": 0.0005313333724494829
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 10.234776235057106,
+              "relative_error": 0.0002419395405944038,
+              "max_absolute_error": 0.0003602989138309365
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 2.9709959315192136,
+              "relative_error": 0.0020336211943047192,
+              "max_absolute_error": 0.0048828125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 54.781559987230345,
+              "relative_error": 0.0002681141620030357,
+              "max_absolute_error": 0.007428884506225586
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 11.62647772913882,
+              "relative_error": 0.00021910236287513924,
+              "max_absolute_error": 0.0005471781873893633
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-issue160",
+      "shape": [
+        1,
+        1,
+        2,
+        16
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 8,
+      "input_strides": [
+        [
+          32,
+          32,
+          16,
+          1
+        ],
+        [
+          32,
+          32,
+          16,
+          1
+        ],
+        [
+          32,
+          32,
+          16,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 4.627509042620659e-09,
+          "mathematical_dk": 4.642889153016267e-09,
+          "rounded_dk": 4.627286056907202e-09,
+          "dv_coordinate": -4.423782229423523e-09,
+          "mathematical_dv": -4.418732833042225e-09,
+          "rounded_dv": -4.410708243085537e-09,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.98254478312454,
+              "relative_error": 0.0013984244210600216,
+              "max_absolute_error": 0.0016230305318201133
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 9.343625674970857e-09,
+              "relative_error": 0.31069647224357333,
+              "max_absolute_error": 2.9011196199257456e-09
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 3.79793757893337e-08,
+              "relative_error": 0.005405332285796095,
+              "max_absolute_error": 1.2290855547767966e-10
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 3.334488161454746e-08,
+              "relative_error": 0.0020490126484653906,
+              "max_absolute_error": 3.485379804089852e-11
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.9825450183130333,
+              "relative_error": 0.0013983233779790852,
+              "max_absolute_error": 0.0016232240220541705
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 1.0509604520604079e-08,
+              "relative_error": 0.001878984034416838,
+              "max_absolute_error": 1.3122865948958861e-11
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 3.800705184329971e-08,
+              "relative_error": 0.0014809007693131334,
+              "max_absolute_error": 3.7457376711202165e-11
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 3.335086572188618e-08,
+              "relative_error": 0.0015770629319932993,
+              "max_absolute_error": 2.5977442419389263e-11
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 4.627509042620659e-09,
+          "mathematical_dk": 4.642889153016267e-09,
+          "rounded_dk": 4.627286056907202e-09,
+          "dv_coordinate": -4.423782229423523e-09,
+          "mathematical_dv": -4.418732833042225e-09,
+          "rounded_dv": -4.410708243085537e-09,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.98254478312454,
+              "relative_error": 0.0013984244210600216,
+              "max_absolute_error": 0.0016230305318201133
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 9.343625674970857e-09,
+              "relative_error": 0.31069647224357333,
+              "max_absolute_error": 2.9011196199257456e-09
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 3.79793757893337e-08,
+              "relative_error": 0.005405332285796095,
+              "max_absolute_error": 1.2290855547767966e-10
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 3.334488161454746e-08,
+              "relative_error": 0.0020490126484653906,
+              "max_absolute_error": 3.485379804089852e-11
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.9825450183130333,
+              "relative_error": 0.0013983233779790852,
+              "max_absolute_error": 0.0016232240220541705
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 1.0509604520604079e-08,
+              "relative_error": 0.001878984034416838,
+              "max_absolute_error": 1.3122865948958861e-11
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 3.800705184329971e-08,
+              "relative_error": 0.0014809007693131334,
+              "max_absolute_error": 3.7457376711202165e-11
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 3.335086572188618e-08,
+              "relative_error": 0.0015770629319932993,
+              "max_absolute_error": 2.5977442419389263e-11
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-issue1072",
+      "shape": [
+        1,
+        2,
+        1,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0015869140625,
+          "mathematical_dk": 0.0015800675122363775,
+          "rounded_dk": 0.0015869140625,
+          "dv_coordinate": 0.0003871917724609375,
+          "mathematical_dv": 0.00038593174035416936,
+          "rounded_dv": 0.0003866851329803467,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_te_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4167702307670111,
+              "relative_error": 0.0024225297193869373,
+              "max_absolute_error": 0.0011392660997823212
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04542078324209938,
+              "relative_error": 0.026115255435504144,
+              "max_absolute_error": 0.0011749267578117228
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06846753415997088,
+              "relative_error": 0.0030428381025647726,
+              "max_absolute_error": 9.681391262969519e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05488611509692337,
+              "relative_error": 0.0021881789347781505,
+              "max_absolute_error": 3.700307602158906e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.416764748669232,
+              "relative_error": 0.0024212605312529376,
+              "max_absolute_error": 0.0011387139587452078
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04545439660877273,
+              "relative_error": 0.001727555982546926,
+              "max_absolute_error": 2.7434714866103604e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06851855777608228,
+              "relative_error": 0.0011526277202100947,
+              "max_absolute_error": 1.5020370483398438e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0549240020364787,
+              "relative_error": 0.001577939494907656,
+              "max_absolute_error": 2.956390380859375e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0015869140625,
+          "mathematical_dk": 0.0015800675122363775,
+          "rounded_dk": 0.0015869140625,
+          "dv_coordinate": 0.0003871917724609375,
+          "mathematical_dv": 0.00038593174035416936,
+          "rounded_dv": 0.0003866851329803467,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4167702307670111,
+              "relative_error": 0.0025272959434476036,
+              "max_absolute_error": 0.0012407809821686766
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04542078324209938,
+              "relative_error": 0.020639664326685417,
+              "max_absolute_error": 0.0009231567382804728
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06846753415997088,
+              "relative_error": 0.003041622758586727,
+              "max_absolute_error": 9.681391262969519e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05488611509692337,
+              "relative_error": 0.0021881789347781505,
+              "max_absolute_error": 3.700307602158906e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.416764748669232,
+              "relative_error": 0.0025250956117693906,
+              "max_absolute_error": 0.0012384236976216434
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04544999877140218,
+              "relative_error": 0.001718627624918739,
+              "max_absolute_error": 2.6689700462156907e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06851889355228626,
+              "relative_error": 0.0011526166894859943,
+              "max_absolute_error": 1.5020370483398438e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0549240020364787,
+              "relative_error": 0.001577939494907656,
+              "max_absolute_error": 2.956390380859375e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-zero_shift_control",
+      "shape": [
+        1,
+        2,
+        1,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0015869140625,
+          "mathematical_dk": 0.0015800675122363775,
+          "rounded_dk": 0.0015869140625,
+          "dv_coordinate": 0.0003871917724609375,
+          "mathematical_dv": 0.00038593174035416936,
+          "rounded_dv": 0.0003866851329803467,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_te_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4167702307670111,
+              "relative_error": 0.0024225297193869373,
+              "max_absolute_error": 0.0011392660997823212
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04542078324209938,
+              "relative_error": 0.0035879962173509523,
+              "max_absolute_error": 5.662789963590577e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06846753415997088,
+              "relative_error": 0.0030428381025647726,
+              "max_absolute_error": 9.681391262969519e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05488611509692337,
+              "relative_error": 0.0021881789347781505,
+              "max_absolute_error": 3.700307602158906e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.416770240840019,
+              "relative_error": 0.002422537182323738,
+              "max_absolute_error": 0.001139271016102228
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04543920904000625,
+              "relative_error": 0.0017281333996243175,
+              "max_absolute_error": 2.7434714866103604e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06851855777608228,
+              "relative_error": 0.0011526277202100947,
+              "max_absolute_error": 1.5020370483398438e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0549240020364787,
+              "relative_error": 0.001577939494907656,
+              "max_absolute_error": 2.956390380859375e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0015869140625,
+          "mathematical_dk": 0.0015800675122363775,
+          "rounded_dk": 0.0015869140625,
+          "dv_coordinate": 0.0003871917724609375,
+          "mathematical_dv": 0.00038593174035416936,
+          "rounded_dv": 0.0003866851329803467,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4167702307670111,
+              "relative_error": 0.002521642708439386,
+              "max_absolute_error": 0.0012407809821686766
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04542078324209938,
+              "relative_error": 0.003592857801258034,
+              "max_absolute_error": 5.662789963590577e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06846753415997088,
+              "relative_error": 0.003041622758586727,
+              "max_absolute_error": 9.681391262969519e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05488611509692337,
+              "relative_error": 0.0021881789347781505,
+              "max_absolute_error": 3.700307602158906e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.416770240840019,
+              "relative_error": 0.002521658160420696,
+              "max_absolute_error": 0.0012407966303965845
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04544058367533983,
+              "relative_error": 0.0017184711683092685,
+              "max_absolute_error": 2.6689700462156907e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06851889355228626,
+              "relative_error": 0.0011526166894859943,
+              "max_absolute_error": 1.5020370483398438e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0549240020364787,
+              "relative_error": 0.001577939494907656,
+              "max_absolute_error": 2.956390380859375e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-key97_control",
+      "shape": [
+        1,
+        2,
+        1,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0022735595703125,
+          "mathematical_dk": 0.0022725737384135963,
+          "rounded_dk": 0.0022735595703125,
+          "dv_coordinate": 0.000568389892578125,
+          "mathematical_dv": 0.000569589669824004,
+          "rounded_dv": 0.0005699694156646729,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_te_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tenso_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2642645762625953,
+              "relative_error": 0.0016062661877342139,
+              "max_absolute_error": 0.0006212067461307536
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.05473178257217054,
+              "relative_error": 0.054121167235946496,
+              "max_absolute_error": 0.002960205078124778
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.07086826453633091,
+              "relative_error": 0.0024872082305917556,
+              "max_absolute_error": 7.284969299262145e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04813036550826411,
+              "relative_error": 0.002338035531646084,
+              "max_absolute_error": 2.010658876033366e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2642658465682763,
+              "relative_error": 0.0016070198849285954,
+              "max_absolute_error": 0.0006220304612629679
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.054897114472258216,
+              "relative_error": 0.0015554592782394579,
+              "max_absolute_error": 3.03008910123026e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0709767519354779,
+              "relative_error": 0.001172091706253032,
+              "max_absolute_error": 1.5020370483398438e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04814000727233982,
+              "relative_error": 0.0016052054621426217,
+              "max_absolute_error": 1.33514404296875e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0022735595703125,
+          "mathematical_dk": 0.0022725737384135963,
+          "rounded_dk": 0.0022735595703125,
+          "dv_coordinate": 0.000568389892578125,
+          "mathematical_dv": 0.000569589669824004,
+          "rounded_dv": 0.0005699694156646729,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2642645762625953,
+              "relative_error": 0.0016062661877342139,
+              "max_absolute_error": 0.0006212067461307536
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.05473178257217054,
+              "relative_error": 0.054121167235946496,
+              "max_absolute_error": 0.002960205078124778
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.07086826453633091,
+              "relative_error": 0.0024872082305917556,
+              "max_absolute_error": 7.284969299262145e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04813036550826411,
+              "relative_error": 0.002338035531646084,
+              "max_absolute_error": 2.010658876033366e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2642658465682763,
+              "relative_error": 0.0016070198849285954,
+              "max_absolute_error": 0.0006220304612629679
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.054897114472258216,
+              "relative_error": 0.0015554592782394579,
+              "max_absolute_error": 3.03008910123026e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0709767519354779,
+              "relative_error": 0.001172091706253032,
+              "max_absolute_error": 1.5020370483398438e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04814000727233982,
+              "relative_error": 0.0016052054621426217,
+              "max_absolute_error": 1.33514404296875e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_63",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -0.03173828125,
+          "mathematical_dk": -0.03137492944632001,
+          "rounded_dk": -0.031645894050598145,
+          "dv_coordinate": 0.0045166015625,
+          "mathematical_dv": 0.004519146469150874,
+          "rounded_dv": 0.004501701332628727,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.943752391879348,
+              "relative_error": 0.002106442469568245,
+              "max_absolute_error": 0.0027202241071059285
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5940223195566955,
+              "relative_error": 0.04812789045806516,
+              "max_absolute_error": 0.007537841796874972
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.854158964249243,
+              "relative_error": 0.002922662432562323,
+              "max_absolute_error": 0.00064165812310224
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6373627127576235,
+              "relative_error": 0.0023154919494192184,
+              "max_absolute_error": 0.0001623643858167656
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.943759141176198,
+              "relative_error": 0.002105876735625291,
+              "max_absolute_error": 0.002715794181152309
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5945368091230434,
+              "relative_error": 0.006223651547297035,
+              "max_absolute_error": 0.0019588470458984375
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8539412833850348,
+              "relative_error": 0.0015280987828854582,
+              "max_absolute_error": 0.0004730224609375
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6373407854565796,
+              "relative_error": 0.001645149437415102,
+              "max_absolute_error": 0.00011944235302507877
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -0.03173828125,
+          "mathematical_dk": -0.03137492944632001,
+          "rounded_dk": -0.031645894050598145,
+          "dv_coordinate": 0.0045166015625,
+          "mathematical_dv": 0.004519146469150874,
+          "rounded_dv": 0.004501701332628727,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.943752391879348,
+              "relative_error": 0.002106442469568245,
+              "max_absolute_error": 0.0027202241071059285
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5940223195566955,
+              "relative_error": 0.04812789045806516,
+              "max_absolute_error": 0.007537841796874972
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.854158964249243,
+              "relative_error": 0.002922662432562323,
+              "max_absolute_error": 0.00064165812310224
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6373627127576235,
+              "relative_error": 0.0023154919494192184,
+              "max_absolute_error": 0.0001623643858167656
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.943759141176198,
+              "relative_error": 0.002105876735625291,
+              "max_absolute_error": 0.002715794181152309
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5945368091230434,
+              "relative_error": 0.006223651547297035,
+              "max_absolute_error": 0.0019588470458984375
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8539412833850348,
+              "relative_error": 0.0015280987828854582,
+              "max_absolute_error": 0.0004730224609375
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6373407854565796,
+              "relative_error": 0.001645149437415102,
+              "max_absolute_error": 0.00011944235302507877
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_64",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -0.0302734375,
+          "mathematical_dk": -0.030381298638962495,
+          "rounded_dk": -0.03024756908416748,
+          "dv_coordinate": 0.00457763671875,
+          "mathematical_dv": 0.004626944534329538,
+          "rounded_dv": 0.004567202180624008,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.828530245669585,
+              "relative_error": 0.0021459061488258812,
+              "max_absolute_error": 0.0023737716667574515
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5883403779406104,
+              "relative_error": 0.04764835792038133,
+              "max_absolute_error": 0.009399414062499358
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8460258254025985,
+              "relative_error": 0.0027210658277436305,
+              "max_absolute_error": 0.0010239547679591898
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6319669621408728,
+              "relative_error": 0.0023373295626009814,
+              "max_absolute_error": 0.00014672480245050273
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.828536392068544,
+              "relative_error": 0.0021457477223652977,
+              "max_absolute_error": 0.0023704462961787742
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5890275938016526,
+              "relative_error": 0.010452595196384492,
+              "max_absolute_error": 0.00390625
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8458441300947082,
+              "relative_error": 0.0018380971609773665,
+              "max_absolute_error": 0.0007960796356201172
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6320125595561347,
+              "relative_error": 0.0017011161338193373,
+              "max_absolute_error": 0.0001292724336963147
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -0.0302734375,
+          "mathematical_dk": -0.030381298638962495,
+          "rounded_dk": -0.03024756908416748,
+          "dv_coordinate": 0.00457763671875,
+          "mathematical_dv": 0.004626944534329538,
+          "rounded_dv": 0.004567202180624008,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.828530245669585,
+              "relative_error": 0.0021459061488258812,
+              "max_absolute_error": 0.0023737716667574515
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5883403779406104,
+              "relative_error": 0.04764835792038133,
+              "max_absolute_error": 0.009399414062499358
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8460258254025985,
+              "relative_error": 0.0027210658277436305,
+              "max_absolute_error": 0.0010239547679591898
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6319669621408728,
+              "relative_error": 0.0023373295626009814,
+              "max_absolute_error": 0.00014672480245050273
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.828536392068544,
+              "relative_error": 0.0021457477223652977,
+              "max_absolute_error": 0.0023704462961787742
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5890275938016526,
+              "relative_error": 0.010452595196384492,
+              "max_absolute_error": 0.00390625
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8458441300947082,
+              "relative_error": 0.0018380971609773665,
+              "max_absolute_error": 0.0007960796356201172
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6320125595561347,
+              "relative_error": 0.0017011161338193373,
+              "max_absolute_error": 0.0001292724336963147
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_65",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -0.0252685546875,
+          "mathematical_dk": -0.02550375848752673,
+          "rounded_dk": -0.025159835815429688,
+          "dv_coordinate": 0.00396728515625,
+          "mathematical_dv": 0.003965509617309461,
+          "rounded_dv": 0.003961390117183328,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.753649470917242,
+              "relative_error": 0.002078967818545549,
+              "max_absolute_error": 0.002191029359214225
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5877462892010344,
+              "relative_error": 0.05402717438277072,
+              "max_absolute_error": 0.0134277343750005
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8382498405576381,
+              "relative_error": 0.002769589248565025,
+              "max_absolute_error": 0.0006896770555749887
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6271129270404802,
+              "relative_error": 0.0022762025644223957,
+              "max_absolute_error": 0.00013268780793031926
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.75365608629099,
+              "relative_error": 0.002078604692159639,
+              "max_absolute_error": 0.0021904119814177836
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5887950917057316,
+              "relative_error": 0.0033022210858105814,
+              "max_absolute_error": 0.0009779930114746094
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.838683575752021,
+              "relative_error": 0.0017137832774449164,
+              "max_absolute_error": 0.0006062984466552734
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6272857273843275,
+              "relative_error": 0.001654533054221955,
+              "max_absolute_error": 0.00011719716712832451
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -0.0252685546875,
+          "mathematical_dk": -0.02550375848752673,
+          "rounded_dk": -0.025159835815429688,
+          "dv_coordinate": 0.00396728515625,
+          "mathematical_dv": 0.003965509617309461,
+          "rounded_dv": 0.003961390117183328,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.753649470917242,
+              "relative_error": 0.002078967818545549,
+              "max_absolute_error": 0.002191029359214225
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5877462892010344,
+              "relative_error": 0.05402717438277072,
+              "max_absolute_error": 0.0134277343750005
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8382498405576381,
+              "relative_error": 0.002769589248565025,
+              "max_absolute_error": 0.0006896770555749887
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6271129270404802,
+              "relative_error": 0.0022762025644223957,
+              "max_absolute_error": 0.00013268780793031926
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.75365608629099,
+              "relative_error": 0.002078604692159639,
+              "max_absolute_error": 0.0021904119814177836
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5887950917057316,
+              "relative_error": 0.0033022210858105814,
+              "max_absolute_error": 0.0009779930114746094
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.838683575752021,
+              "relative_error": 0.0017137832774449164,
+              "max_absolute_error": 0.0006062984466552734
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6272857273843275,
+              "relative_error": 0.001654533054221955,
+              "max_absolute_error": 0.00011719716712832451
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_127",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.01397705078125,
+          "mathematical_dk": 0.013847553116229098,
+          "rounded_dk": 0.014000773429870605,
+          "dv_coordinate": 0.00122833251953125,
+          "mathematical_dv": 0.001232216546255162,
+          "rounded_dv": 0.0012296944623813033,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.888461870467708,
+              "relative_error": 0.0022065389646136724,
+              "max_absolute_error": 0.0013137780500078189
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.45545737246764567,
+              "relative_error": 0.04760947587544495,
+              "max_absolute_error": 0.006774902343749653
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6125686664699492,
+              "relative_error": 0.002791230838953154,
+              "max_absolute_error": 0.0004230727135539486
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4517310039829699,
+              "relative_error": 0.00232098031360723,
+              "max_absolute_error": 8.436241735012076e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.88846948668482,
+              "relative_error": 0.002206759320678361,
+              "max_absolute_error": 0.0013115749779725183
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.456130032443705,
+              "relative_error": 0.003960794333435506,
+              "max_absolute_error": 0.0009765625
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6127590862637796,
+              "relative_error": 0.0016124318293638763,
+              "max_absolute_error": 0.00020265579223632812
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4518141252828375,
+              "relative_error": 0.0017177610068092966,
+              "max_absolute_error": 8.536386303603649e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0140380859375,
+          "mathematical_dk": 0.013847553116229098,
+          "rounded_dk": 0.014011383056640625,
+          "dv_coordinate": 0.00122833251953125,
+          "mathematical_dv": 0.001232216546255162,
+          "rounded_dv": 0.0012296944623813033,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.888461870467708,
+              "relative_error": 0.0022378497519788317,
+              "max_absolute_error": 0.0013109652325061782
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.45545737246764567,
+              "relative_error": 0.054319168976255994,
+              "max_absolute_error": 0.01159667968750066
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6125686664699492,
+              "relative_error": 0.002902783875900901,
+              "max_absolute_error": 0.0006346415054166998
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4517310039829699,
+              "relative_error": 0.002321315669560118,
+              "max_absolute_error": 8.436241735012076e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.88846948668482,
+              "relative_error": 0.0022380124251916585,
+              "max_absolute_error": 0.001312116977327138
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.4561497748712923,
+              "relative_error": 0.003960204251060797,
+              "max_absolute_error": 0.0009779930114746094
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6125920240521183,
+              "relative_error": 0.0016513986108495152,
+              "max_absolute_error": 0.00033854320645332336
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4518141252828375,
+              "relative_error": 0.0017178771658238835,
+              "max_absolute_error": 8.536386303603649e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_129",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0145263671875,
+          "mathematical_dk": 0.014713445091680316,
+          "rounded_dk": 0.014506101608276367,
+          "dv_coordinate": 0.00125885009765625,
+          "mathematical_dv": 0.0012708299795877182,
+          "rounded_dv": 0.0012580824550241232,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.821014075157068,
+              "relative_error": 0.00221008913892905,
+              "max_absolute_error": 0.001285300956402613
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.4489447741164996,
+              "relative_error": 0.051012650645875166,
+              "max_absolute_error": 0.00872802734375048
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6047140737764404,
+              "relative_error": 0.0027004953137441346,
+              "max_absolute_error": 0.00035703552028815144
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.44806809094631617,
+              "relative_error": 0.002298701395212856,
+              "max_absolute_error": 0.00014324747522118098
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.821022004045972,
+              "relative_error": 0.0022101963789116002,
+              "max_absolute_error": 0.001287252832587904
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.4495051959650068,
+              "relative_error": 0.0027695406179146795,
+              "max_absolute_error": 0.0004892349243164062
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6047290398628226,
+              "relative_error": 0.0015623140867888636,
+              "max_absolute_error": 0.0002471804618835449
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.44808079340753987,
+              "relative_error": 0.0016496721651846529,
+              "max_absolute_error": 0.00012122586485929787
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0145263671875,
+          "mathematical_dk": 0.014713445091680316,
+          "rounded_dk": 0.01450204849243164,
+          "dv_coordinate": 0.00125885009765625,
+          "mathematical_dv": 0.0012708299795877182,
+          "rounded_dv": 0.0012580824550241232,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.821014075157068,
+              "relative_error": 0.0022657017711878494,
+              "max_absolute_error": 0.001337938843826325
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.4489447741164996,
+              "relative_error": 0.05162017083045466,
+              "max_absolute_error": 0.00872802734375048
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6047140737764404,
+              "relative_error": 0.0027255863317982563,
+              "max_absolute_error": 0.00035703552028815144
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.44806809094631617,
+              "relative_error": 0.002298701395212856,
+              "max_absolute_error": 0.00014324747522118098
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.821022004045972,
+              "relative_error": 0.002265574461532623,
+              "max_absolute_error": 0.0013347239963847346
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.44951992348334874,
+              "relative_error": 0.0027651079348098616,
+              "max_absolute_error": 0.0004892349243164062
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6046861681137613,
+              "relative_error": 0.001565026143782408,
+              "max_absolute_error": 0.00028437376022338867
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.44808079340753987,
+              "relative_error": 0.0016496721651846529,
+              "max_absolute_error": 0.00012122586485929787
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_191",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.01336669921875,
+          "mathematical_dk": 0.013482115418281095,
+          "rounded_dk": 0.013344556093215942,
+          "dv_coordinate": 0.0002651214599609375,
+          "mathematical_dv": 0.00027596050333986323,
+          "rounded_dv": 0.0002652308903634548,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.334469856387804,
+              "relative_error": 0.0022739316248520662,
+              "max_absolute_error": 0.0016630608960834792
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3778365136955373,
+              "relative_error": 0.05144158480505069,
+              "max_absolute_error": 0.00561523437500144
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5280548941638197,
+              "relative_error": 0.0027804165434140034,
+              "max_absolute_error": 0.0003026530289004792
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3745779511301567,
+              "relative_error": 0.002328592375376272,
+              "max_absolute_error": 6.244947025467636e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.334480270241811,
+              "relative_error": 0.0022741562934359082,
+              "max_absolute_error": 0.001670119802610226
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.378275142217989,
+              "relative_error": 0.004503646208623042,
+              "max_absolute_error": 0.0009908676147460938
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5278865244685246,
+              "relative_error": 0.001551467475542343,
+              "max_absolute_error": 0.00022526085376739502
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3745327063229271,
+              "relative_error": 0.001674489496421742,
+              "max_absolute_error": 5.9613201301544905e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.01336669921875,
+          "mathematical_dk": 0.013482115418281095,
+          "rounded_dk": 0.013345003128051758,
+          "dv_coordinate": 0.0002651214599609375,
+          "mathematical_dv": 0.00027596050333986323,
+          "rounded_dv": 0.0002652308903634548,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.334469856387804,
+              "relative_error": 0.002301318671423992,
+              "max_absolute_error": 0.0016630608960834792
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3778365136955373,
+              "relative_error": 0.057630725169552977,
+              "max_absolute_error": 0.006652832031250113
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5280548941638197,
+              "relative_error": 0.0028011589358449764,
+              "max_absolute_error": 0.0003026530289004792
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3745779511301567,
+              "relative_error": 0.002328592375376272,
+              "max_absolute_error": 6.244947025467636e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.334480270241811,
+              "relative_error": 0.0023014692538160376,
+              "max_absolute_error": 0.001670119802610226
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3784153556273421,
+              "relative_error": 0.004528209458887767,
+              "max_absolute_error": 0.0009899139404296875
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5278774620484874,
+              "relative_error": 0.0015722586825156425,
+              "max_absolute_error": 0.0002208501100540161
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3745327063229271,
+              "relative_error": 0.001674489496421742,
+              "max_absolute_error": 5.9613201301544905e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_192",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.013427734375,
+          "mathematical_dk": 0.013648214793971963,
+          "rounded_dk": 0.013450533151626587,
+          "dv_coordinate": 0.0002593994140625,
+          "mathematical_dv": 0.0002718647590684884,
+          "rounded_dv": 0.00025986158289015293,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.346070172325622,
+              "relative_error": 0.002264341116485838,
+              "max_absolute_error": 0.001394319381719189
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37633353332132735,
+              "relative_error": 0.0502518806115616,
+              "max_absolute_error": 0.005645751953123251
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5267917073427846,
+              "relative_error": 0.0031010821312388004,
+              "max_absolute_error": 0.00039395315696502675
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37348851154193274,
+              "relative_error": 0.002328828051121094,
+              "max_absolute_error": 6.790730267351372e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.346080834599414,
+              "relative_error": 0.0022645729998880476,
+              "max_absolute_error": 0.001396881523547111
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37687845598095704,
+              "relative_error": 0.0028601952388085947,
+              "max_absolute_error": 0.0004975795745849609
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5268275265971895,
+              "relative_error": 0.0016761139084518412,
+              "max_absolute_error": 0.00023378431797027588
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37347567828121897,
+              "relative_error": 0.00168055299240585,
+              "max_absolute_error": 5.372671876102686e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.013427734375,
+          "mathematical_dk": 0.013648214793971963,
+          "rounded_dk": 0.01345282793045044,
+          "dv_coordinate": 0.0002593994140625,
+          "mathematical_dv": 0.0002718647590684884,
+          "rounded_dv": 0.00025986158289015293,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.346070172325622,
+              "relative_error": 0.0022777401120896196,
+              "max_absolute_error": 0.001394319381719189
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37633353332132735,
+              "relative_error": 0.048983268040136745,
+              "max_absolute_error": 0.006591796875001426
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5267917073427846,
+              "relative_error": 0.0030484512740905603,
+              "max_absolute_error": 0.00039532900525138595
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37348851154193274,
+              "relative_error": 0.002328828051121094,
+              "max_absolute_error": 6.790730267351372e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.346080834599414,
+              "relative_error": 0.0022778641239143845,
+              "max_absolute_error": 0.001396881523547111
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37679793784490734,
+              "relative_error": 0.0028520025590364636,
+              "max_absolute_error": 0.0004975795745849609
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.526791104818366,
+              "relative_error": 0.0015795334590427321,
+              "max_absolute_error": 0.0001866072416305542
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37347567828121897,
+              "relative_error": 0.00168055299240585,
+              "max_absolute_error": 5.372671876102686e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-bf16-kv_tail_193",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0140380859375,
+          "mathematical_dk": 0.014034974809927226,
+          "rounded_dk": 0.014010697603225708,
+          "dv_coordinate": 0.000270843505859375,
+          "mathematical_dv": 0.00027134689213340535,
+          "rounded_dv": 0.0002709123073145747,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.423289744361469,
+              "relative_error": 0.0021381525928073205,
+              "max_absolute_error": 0.001354209193746847
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.38047850409025386,
+              "relative_error": 0.0521506505347658,
+              "max_absolute_error": 0.006195068359375777
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5259351275801947,
+              "relative_error": 0.0026483112843791712,
+              "max_absolute_error": 0.0002524299191892232
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37612179746029195,
+              "relative_error": 0.0023404260361018676,
+              "max_absolute_error": 8.616301889754e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.4233019464606445,
+              "relative_error": 0.002138483931556456,
+              "max_absolute_error": 0.0013612554210371552
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.38090022528507567,
+              "relative_error": 0.0042884568672848355,
+              "max_absolute_error": 0.00096893310546875
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.525893373514279,
+              "relative_error": 0.0015357896658005651,
+              "max_absolute_error": 0.00017762184143066406
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3761053673884235,
+              "relative_error": 0.0016777455718464285,
+              "max_absolute_error": 5.992338992655277e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0140380859375,
+          "mathematical_dk": 0.014034974809927226,
+          "rounded_dk": 0.014013111591339111,
+          "dv_coordinate": 0.000270843505859375,
+          "mathematical_dv": 0.00027134689213340535,
+          "rounded_dv": 0.0002709123073145747,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.423289744361469,
+              "relative_error": 0.002172712461992151,
+              "max_absolute_error": 0.001354209193746847
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.38047850409025386,
+              "relative_error": 0.0575054087083221,
+              "max_absolute_error": 0.006134033203125777
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5259351275801947,
+              "relative_error": 0.0026865955457656293,
+              "max_absolute_error": 0.0002524299191892232
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37612179746029195,
+              "relative_error": 0.0023404260361018676,
+              "max_absolute_error": 8.616301889754e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.4233019464606445,
+              "relative_error": 0.002172949429647657,
+              "max_absolute_error": 0.0013612554210371552
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3809972106619843,
+              "relative_error": 0.004307301332805116,
+              "max_absolute_error": 0.00098419189453125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5258695305572185,
+              "relative_error": 0.0015545945928511946,
+              "max_absolute_error": 0.00019288063049316406
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3761053673884235,
+              "relative_error": 0.0016777455718464285,
+              "max_absolute_error": 5.992338992655277e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-issue160",
+      "shape": [
+        1,
+        1,
+        2,
+        16
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 8,
+      "input_strides": [
+        [
+          32,
+          32,
+          16,
+          1
+        ],
+        [
+          32,
+          32,
+          16,
+          1
+        ],
+        [
+          32,
+          32,
+          16,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.0,
+          "mathematical_dv": 0.0,
+          "rounded_dv": 0.0,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1116i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.98254478312454,
+              "relative_error": 0.0003350625603137287,
+              "max_absolute_error": 0.0004885958115217193
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.9825450183130333,
+              "relative_error": 0.0003347965546913054,
+              "max_absolute_error": 0.0004885958115217193
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0,
+          "mathematical_dk": 0.0,
+          "rounded_dk": 0.0,
+          "dv_coordinate": 0.0,
+          "mathematical_dv": 0.0,
+          "rounded_dv": 0.0,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.98254478312454,
+              "relative_error": 0.0003350625603137287,
+              "max_absolute_error": 0.0004885958115217193
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.9825450183130333,
+              "relative_error": 0.0003347965546913054,
+              "max_absolute_error": 0.0004885958115217193
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.0,
+              "relative_error": null,
+              "max_absolute_error": 0.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-issue1072",
+      "shape": [
+        1,
+        2,
+        1,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0015735626220703125,
+          "mathematical_dk": 0.0015743227319228775,
+          "rounded_dk": 0.0015735626220703125,
+          "dv_coordinate": 0.0003838539123535156,
+          "mathematical_dv": 0.00038403967053393667,
+          "rounded_dv": 0.0003839177079498768,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4208396568391333,
+              "relative_error": 0.00023259915030992884,
+              "max_absolute_error": 0.00012346199573121108
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.045426943354147216,
+              "relative_error": 0.0011898256111766855,
+              "max_absolute_error": 5.1498413086104033e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06858456608689531,
+              "relative_error": 0.0003254942865604373,
+              "max_absolute_error": 6.605575742512498e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509852026408717,
+              "relative_error": 0.00024681932688270364,
+              "max_absolute_error": 2.311785755048333e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.420837811481015,
+              "relative_error": 0.00023162357787876679,
+              "max_absolute_error": 0.00012402763986896215
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.045424221629158296,
+              "relative_error": 0.00022982391252454178,
+              "max_absolute_error": 3.681995394799742e-06
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06858541966860647,
+              "relative_error": 0.00014971355925709394,
+              "max_absolute_error": 2.2649765014648438e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509547265575534,
+              "relative_error": 0.0001992852574125637,
+              "max_absolute_error": 3.084540367126465e-06
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0015745162963867188,
+          "mathematical_dk": 0.0015743227319228775,
+          "rounded_dk": 0.0015745162963867188,
+          "dv_coordinate": 0.0003838539123535156,
+          "mathematical_dv": 0.00038403967053393667,
+          "rounded_dv": 0.0003839177079498768,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4208396568391333,
+              "relative_error": 0.00028466146123766727,
+              "max_absolute_error": 0.00018067053182635462
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.045426943354147216,
+              "relative_error": 0.02402198385897638,
+              "max_absolute_error": 0.0010910034179685835
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06858456608689531,
+              "relative_error": 0.00039624453086424316,
+              "max_absolute_error": 9.373551116406004e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509852026408717,
+              "relative_error": 0.00024681932688270364,
+              "max_absolute_error": 2.311785755048333e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.420837811481015,
+              "relative_error": 0.00028542510251287933,
+              "max_absolute_error": 0.00018096750437074371
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04543389397863905,
+              "relative_error": 0.00019625683357012868,
+              "max_absolute_error": 3.0125975172268227e-06
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06857728847901993,
+              "relative_error": 0.00015345043128614465,
+              "max_absolute_error": 2.2649765014648438e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509547265575534,
+              "relative_error": 0.0001992852574125637,
+              "max_absolute_error": 3.084540367126465e-06
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-zero_shift_control",
+      "shape": [
+        1,
+        2,
+        1,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0015735626220703125,
+          "mathematical_dk": 0.0015743227319228775,
+          "rounded_dk": 0.0015735626220703125,
+          "dv_coordinate": 0.0003838539123535156,
+          "mathematical_dv": 0.00038403967053393667,
+          "rounded_dv": 0.0003839177079498768,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4208396568391333,
+              "relative_error": 0.00023319838536538291,
+              "max_absolute_error": 0.00012346199573121108
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.045426943354147216,
+              "relative_error": 0.0003612682369231594,
+              "max_absolute_error": 6.263869847514605e-06
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06858456608689531,
+              "relative_error": 0.0003254942865604373,
+              "max_absolute_error": 6.605575742512498e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509852026408717,
+              "relative_error": 0.00024681932688270364,
+              "max_absolute_error": 2.311785755048333e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4208397664657448,
+              "relative_error": 0.00023320159215875833,
+              "max_absolute_error": 0.00012348914533205635
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04542419243672189,
+              "relative_error": 0.00022982406022380928,
+              "max_absolute_error": 3.681995394799742e-06
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06858541966860647,
+              "relative_error": 0.00014971355925709394,
+              "max_absolute_error": 2.2649765014648438e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509547265575534,
+              "relative_error": 0.0001992852574125637,
+              "max_absolute_error": 3.084540367126465e-06
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0015735626220703125,
+          "mathematical_dk": 0.0015743227319228775,
+          "rounded_dk": 0.0015735626220703125,
+          "dv_coordinate": 0.0003838539123535156,
+          "mathematical_dv": 0.00038403967053393667,
+          "rounded_dv": 0.0003839177079498768,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4208396568391333,
+              "relative_error": 0.0002575503740413715,
+              "max_absolute_error": 0.00015165599374578065
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.045426943354147216,
+              "relative_error": 0.0005019594939404252,
+              "max_absolute_error": 9.806957502809036e-06
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.06858456608689531,
+              "relative_error": 0.0003963401020809436,
+              "max_absolute_error": 9.373551116406004e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509852026408717,
+              "relative_error": 0.00024681932688270364,
+              "max_absolute_error": 2.311785755048333e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.4208397664657448,
+              "relative_error": 0.0002575492415643437,
+              "max_absolute_error": 0.00015165260481470044
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.04541875955425237,
+              "relative_error": 0.00020852433011935828,
+              "max_absolute_error": 3.337809857839602e-06
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.068575617259703,
+              "relative_error": 0.00015343652373067093,
+              "max_absolute_error": 2.2649765014648438e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.05509547265575534,
+              "relative_error": 0.0001992852574125637,
+              "max_absolute_error": 3.084540367126465e-06
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-key97_control",
+      "shape": [
+        1,
+        2,
+        1,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.00226593017578125,
+          "mathematical_dk": 0.0022657509420814003,
+          "rounded_dk": 0.00226593017578125,
+          "dv_coordinate": 0.0005674362182617188,
+          "mathematical_dv": 0.0005673962860914728,
+          "rounded_dv": 0.0005673975683748722,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tens_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_12164i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorp_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2644215525951346,
+              "relative_error": 0.000243980121243866,
+              "max_absolute_error": 0.00013692303440826503
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.054645035400544446,
+              "relative_error": 0.0033069822595296707,
+              "max_absolute_error": 0.0001802444458000041
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0708263977880357,
+              "relative_error": 0.00024190345529911204,
+              "max_absolute_error": 3.926443264266888e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04817307739241026,
+              "relative_error": 0.00028480014106953337,
+              "max_absolute_error": 1.8532447267306448e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2644200687711278,
+              "relative_error": 0.0002438106697407396,
+              "max_absolute_error": 0.00013704136106046372
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0546459729438765,
+              "relative_error": 0.0007060438553061386,
+              "max_absolute_error": 3.719329833984375e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.07082378340476003,
+              "relative_error": 0.0001601020288618753,
+              "max_absolute_error": 1.9073486328125e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04817375087635094,
+              "relative_error": 0.00021343562240235374,
+              "max_absolute_error": 1.7508864402770996e-06
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.00226593017578125,
+          "mathematical_dk": 0.0022657509420814003,
+          "rounded_dk": 0.00226593017578125,
+          "dv_coordinate": 0.0005674362182617188,
+          "mathematical_dv": 0.0005673962860914728,
+          "rounded_dv": 0.0005673975683748722,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2644215525951346,
+              "relative_error": 0.000243980121243866,
+              "max_absolute_error": 0.00013692303440826503
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.054645035400544446,
+              "relative_error": 0.0033069822595296707,
+              "max_absolute_error": 0.0001802444458000041
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.0708263977880357,
+              "relative_error": 0.00024190345529911204,
+              "max_absolute_error": 3.926443264266888e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04817307739241026,
+              "relative_error": 0.00028480014106953337,
+              "max_absolute_error": 1.8532447267306448e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 1.2644200687711278,
+              "relative_error": 0.0002438106697407396,
+              "max_absolute_error": 0.00013704136106046372
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.0546459729438765,
+              "relative_error": 0.0007060438553061386,
+              "max_absolute_error": 3.719329833984375e-05
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.07082378340476003,
+              "relative_error": 0.0001601020288618753,
+              "max_absolute_error": 1.9073486328125e-06
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.04817375087635094,
+              "relative_error": 0.00021343562240235374,
+              "max_absolute_error": 1.7508864402770996e-06
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_63",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -0.03216552734375,
+          "mathematical_dk": -0.03214135858354622,
+          "rounded_dk": -0.0321539044380188,
+          "dv_coordinate": 0.004596710205078125,
+          "mathematical_dv": 0.004599633954555607,
+          "rounded_dv": 0.004597237006237265,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.945363302253034,
+              "relative_error": 0.0002611683092328517,
+              "max_absolute_error": 0.0003102190063436483
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.593970720062803,
+              "relative_error": 0.006010835110956771,
+              "max_absolute_error": 0.001361846923828347
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.853794381717401,
+              "relative_error": 0.00032767864288937924,
+              "max_absolute_error": 6.223737778240923e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6377135564357952,
+              "relative_error": 0.0002805652056243226,
+              "max_absolute_error": 1.7540396349761955e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.945354974597455,
+              "relative_error": 0.0002613907288390209,
+              "max_absolute_error": 0.00030432013042880346
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5939857562418488,
+              "relative_error": 0.0021422761510053083,
+              "max_absolute_error": 0.00098419189453125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8538024716161803,
+              "relative_error": 0.00021482458209959177,
+              "max_absolute_error": 4.45246696472168e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6377184388349445,
+              "relative_error": 0.00023626336690511326,
+              "max_absolute_error": 2.7070891519542783e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -0.03216552734375,
+          "mathematical_dk": -0.03214135858354622,
+          "rounded_dk": -0.0321539044380188,
+          "dv_coordinate": 0.004596710205078125,
+          "mathematical_dv": 0.004599633954555607,
+          "rounded_dv": 0.004597237006237265,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.945363302253034,
+              "relative_error": 0.0002611683092328517,
+              "max_absolute_error": 0.0003102190063436483
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.593970720062803,
+              "relative_error": 0.006011205651421366,
+              "max_absolute_error": 0.001361846923828347
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.853794381717401,
+              "relative_error": 0.0003276698664600518,
+              "max_absolute_error": 6.223737778240923e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6377135564357952,
+              "relative_error": 0.0002805652056243226,
+              "max_absolute_error": 1.7540396349761955e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.945354974597455,
+              "relative_error": 0.0002613907288390209,
+              "max_absolute_error": 0.00030432013042880346
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5939857562418488,
+              "relative_error": 0.0021422472716942885,
+              "max_absolute_error": 0.00098419189453125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8538024716161803,
+              "relative_error": 0.00021482517547868874,
+              "max_absolute_error": 4.45246696472168e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6377184388349445,
+              "relative_error": 0.00023626336690511326,
+              "max_absolute_error": 2.7070891519542783e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_64",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -0.031158447265625,
+          "mathematical_dk": -0.031141663948757912,
+          "rounded_dk": -0.03115701675415039,
+          "dv_coordinate": 0.004703521728515625,
+          "mathematical_dv": 0.004706973165442325,
+          "rounded_dv": 0.004704810751718469,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.830054830788225,
+              "relative_error": 0.00025670201986861726,
+              "max_absolute_error": 0.000252206959211132
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5882926474683678,
+              "relative_error": 0.006498242919300857,
+              "max_absolute_error": 0.0011148452758796418
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8456788637350993,
+              "relative_error": 0.00034497946483987306,
+              "max_absolute_error": 8.490775119451843e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6323132888856151,
+              "relative_error": 0.0002849478200985925,
+              "max_absolute_error": 1.574418972100783e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.830046377945115,
+              "relative_error": 0.0002567341225906612,
+              "max_absolute_error": 0.0002550905399137937
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5883061078286369,
+              "relative_error": 0.0016015661695745905,
+              "max_absolute_error": 0.0003814697265625
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8456853096718169,
+              "relative_error": 0.00024160202730896875,
+              "max_absolute_error": 8.994340896606445e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.632320772721199,
+              "relative_error": 0.00023437983313448973,
+              "max_absolute_error": 1.713661549729295e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -0.031158447265625,
+          "mathematical_dk": -0.031141663948757912,
+          "rounded_dk": -0.03115701675415039,
+          "dv_coordinate": 0.004703521728515625,
+          "mathematical_dv": 0.004706973165442325,
+          "rounded_dv": 0.004704810751718469,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.830054830788225,
+              "relative_error": 0.00025673622821617586,
+              "max_absolute_error": 0.000252206959211132
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5882926474683678,
+              "relative_error": 0.006498487934843853,
+              "max_absolute_error": 0.0011148452758796418
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8456788637350993,
+              "relative_error": 0.00034497946483987306,
+              "max_absolute_error": 8.490775119451843e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6323132888856151,
+              "relative_error": 0.0002849478200985925,
+              "max_absolute_error": 1.574418972100783e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.830046377945115,
+              "relative_error": 0.00025677231231317706,
+              "max_absolute_error": 0.0002550905399137937
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5883061087991112,
+              "relative_error": 0.0016015671944481903,
+              "max_absolute_error": 0.0003814697265625
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8456853019037273,
+              "relative_error": 0.00024161051454753252,
+              "max_absolute_error": 8.994340896606445e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.632320772721199,
+              "relative_error": 0.00023437983313448973,
+              "max_absolute_error": 1.713661549729295e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_65",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": -0.0261993408203125,
+          "mathematical_dk": -0.026233833071215323,
+          "rounded_dk": -0.026231110095977783,
+          "dv_coordinate": 0.004039764404296875,
+          "mathematical_dv": 0.004040544606058428,
+          "rounded_dv": 0.0040346902642340865,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.755586709570753,
+              "relative_error": 0.0002578411382795562,
+              "max_absolute_error": 0.00023977695191057524
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5876859436776313,
+              "relative_error": 0.006271504294438488,
+              "max_absolute_error": 0.001147270202636056
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8378875977852642,
+              "relative_error": 0.00033268115805943596,
+              "max_absolute_error": 9.342406947748794e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6274601281519642,
+              "relative_error": 0.0002934470406066825,
+              "max_absolute_error": 2.2535710169267753e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.755577958352294,
+              "relative_error": 0.0002583988333372234,
+              "max_absolute_error": 0.00023930917433412358
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5876999310356495,
+              "relative_error": 0.0015353960977713065,
+              "max_absolute_error": 0.0005340576171875
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8378857321018016,
+              "relative_error": 0.000248983624544171,
+              "max_absolute_error": 0.00011748075485229492
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6274584076428336,
+              "relative_error": 0.00022127829001942478,
+              "max_absolute_error": 1.5322930266847834e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": -0.0261993408203125,
+          "mathematical_dk": -0.026233833071215323,
+          "rounded_dk": -0.026231110095977783,
+          "dv_coordinate": 0.004039764404296875,
+          "mathematical_dv": 0.004040544606058428,
+          "rounded_dv": 0.0040346902642340865,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.755586709570753,
+              "relative_error": 0.0002578411382795562,
+              "max_absolute_error": 0.00023977695191057524
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5876859436776313,
+              "relative_error": 0.006269982652349346,
+              "max_absolute_error": 0.001147270202636056
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8378875977852642,
+              "relative_error": 0.0003326927759509248,
+              "max_absolute_error": 9.342406947748794e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6274601281519642,
+              "relative_error": 0.00029354100252662596,
+              "max_absolute_error": 2.2535710169267753e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 12.755577958352294,
+              "relative_error": 0.0002583988333372234,
+              "max_absolute_error": 0.00023930917433412358
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.5876999310356495,
+              "relative_error": 0.0015363245143517493,
+              "max_absolute_error": 0.0005340576171875
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.8378857321018016,
+              "relative_error": 0.00024898045338774786,
+              "max_absolute_error": 0.00011748075485229492
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.6274584076428336,
+              "relative_error": 0.00022123316832452862,
+              "max_absolute_error": 1.5322930266847834e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_127",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0134429931640625,
+          "mathematical_dk": 0.013456641820876353,
+          "rounded_dk": 0.013445913791656494,
+          "dv_coordinate": 0.0012636184692382812,
+          "mathematical_dv": 0.0012618499243904047,
+          "rounded_dv": 0.0012638864045584342,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.890569292205447,
+              "relative_error": 0.00026307787494155396,
+              "max_absolute_error": 0.00017947090980935387
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.45561791856136696,
+              "relative_error": 0.006436042088697027,
+              "max_absolute_error": 0.0010442733764648021
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6127127608389913,
+              "relative_error": 0.00036018470732436265,
+              "max_absolute_error": 5.085775010163496e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4520979706416999,
+              "relative_error": 0.0002859524251845858,
+              "max_absolute_error": 1.1525870374472225e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.890567468430312,
+              "relative_error": 0.0002632067853898264,
+              "max_absolute_error": 0.0001778886295681903
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.4556121036568029,
+              "relative_error": 0.0017883825205210675,
+              "max_absolute_error": 0.000514984130859375
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6126900341973004,
+              "relative_error": 0.0002527986913476582,
+              "max_absolute_error": 5.698204040527344e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.45209138903368945,
+              "relative_error": 0.00023201373856866534,
+              "max_absolute_error": 9.575369858794147e-06
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0134429931640625,
+          "mathematical_dk": 0.013456641820876353,
+          "rounded_dk": 0.01344597339630127,
+          "dv_coordinate": 0.0012636184692382812,
+          "mathematical_dv": 0.0012618499243904047,
+          "rounded_dv": 0.0012638864045584342,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.890569292205447,
+              "relative_error": 0.0002649145265579257,
+              "max_absolute_error": 0.00016752220069221613
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.45561791856136696,
+              "relative_error": 0.007024692600472227,
+              "max_absolute_error": 0.0010442733764648021
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6127127608389913,
+              "relative_error": 0.00035961220102655915,
+              "max_absolute_error": 5.085775010163496e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4520979706416999,
+              "relative_error": 0.0002859290099368912,
+              "max_absolute_error": 1.1525870374472225e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.890567468430312,
+              "relative_error": 0.00026540601812204183,
+              "max_absolute_error": 0.00016260739369872157
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.4556130157329728,
+              "relative_error": 0.0018154032843128347,
+              "max_absolute_error": 0.000514984130859375
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6126901009710366,
+              "relative_error": 0.00025094445347205723,
+              "max_absolute_error": 5.5789947509765625e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.45209138903368945,
+              "relative_error": 0.00023198864527941047,
+              "max_absolute_error": 9.575369858794147e-06
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_129",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.01434326171875,
+          "mathematical_dk": 0.014322762054719915,
+          "rounded_dk": 0.014350712299346924,
+          "dv_coordinate": 0.0012998580932617188,
+          "mathematical_dv": 0.0012993412831473826,
+          "rounded_dv": 0.0012997212306800066,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.82320552007403,
+              "relative_error": 0.0002720071907304321,
+              "max_absolute_error": 0.00017932978324902704
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.44908614241512185,
+              "relative_error": 0.006554207529943676,
+              "max_absolute_error": 0.0010910034179687708
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6048432646190226,
+              "relative_error": 0.0003630004919984668,
+              "max_absolute_error": 4.247375166884643e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.44842016711307087,
+              "relative_error": 0.00028786484796589935,
+              "max_absolute_error": 1.0838644973872047e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.823203251828337,
+              "relative_error": 0.00027239584988456776,
+              "max_absolute_error": 0.00017589690022495885
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.44911864543301677,
+              "relative_error": 0.001497453015751175,
+              "max_absolute_error": 0.00030517578125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6048820598049962,
+              "relative_error": 0.0002167618584466167,
+              "max_absolute_error": 3.039836883544922e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4484256086484261,
+              "relative_error": 0.00022582630362077838,
+              "max_absolute_error": 1.2128584330639569e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.01434326171875,
+          "mathematical_dk": 0.014322762054719915,
+          "rounded_dk": 0.01435244083404541,
+          "dv_coordinate": 0.0012998580932617188,
+          "mathematical_dv": 0.0012993412831473826,
+          "rounded_dv": 0.0012997212306800066,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.82320552007403,
+              "relative_error": 0.0002712043750596824,
+              "max_absolute_error": 0.00017932978324902704
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.44908614241512185,
+              "relative_error": 0.006333934359056868,
+              "max_absolute_error": 0.0010013580322255355
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.6048432646190226,
+              "relative_error": 0.00035245828924370987,
+              "max_absolute_error": 4.247375166884643e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.44842016711307087,
+              "relative_error": 0.0002878403374824227,
+              "max_absolute_error": 1.0838644973872047e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 8.823203251828337,
+              "relative_error": 0.00027168686607524384,
+              "max_absolute_error": 0.00017589690022495885
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.4491011628132569,
+              "relative_error": 0.001546315817612096,
+              "max_absolute_error": 0.00030517578125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.604863476814924,
+              "relative_error": 0.0002196713658733404,
+              "max_absolute_error": 3.2067298889160156e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.4484256086484261,
+              "relative_error": 0.0002257961548076866,
+              "max_absolute_error": 1.2128584330639569e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_191",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.01325225830078125,
+          "mathematical_dk": 0.013250550082806133,
+          "rounded_dk": 0.013255834579467773,
+          "dv_coordinate": 0.00029087066650390625,
+          "mathematical_dv": 0.00029138090762551906,
+          "rounded_dv": 0.0002908688929892378,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.336766555825254,
+              "relative_error": 0.00027082661048949327,
+              "max_absolute_error": 0.00015922368568482836
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37801734129721554,
+              "relative_error": 0.006407704087420735,
+              "max_absolute_error": 0.0006666183471687043
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5282862761361277,
+              "relative_error": 0.0003599858749629874,
+              "max_absolute_error": 4.669774660907844e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37486468405774115,
+              "relative_error": 0.000285592918167775,
+              "max_absolute_error": 8.27505630266595e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.336769554496411,
+              "relative_error": 0.00027154713575331725,
+              "max_absolute_error": 0.0001557391971539479
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37802001575374594,
+              "relative_error": 0.0018543947787124917,
+              "max_absolute_error": 0.000335693359375
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5282806235894143,
+              "relative_error": 0.0002446776637417193,
+              "max_absolute_error": 3.355741500854492e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37486242580253487,
+              "relative_error": 0.00022966284191960933,
+              "max_absolute_error": 6.651836883975193e-06
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0132598876953125,
+          "mathematical_dk": 0.013250550082806133,
+          "rounded_dk": 0.013258397579193115,
+          "dv_coordinate": 0.00029087066650390625,
+          "mathematical_dv": 0.00029138090762551906,
+          "rounded_dv": 0.0002908688929892378,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.336766555825254,
+              "relative_error": 0.0002712329397917439,
+              "max_absolute_error": 0.00015922368568482836
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37801734129721554,
+              "relative_error": 0.006735032546164684,
+              "max_absolute_error": 0.000722885131836673
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5282862761361277,
+              "relative_error": 0.00035118094868755276,
+              "max_absolute_error": 4.669774660907844e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37486468405774115,
+              "relative_error": 0.00028560471251454114,
+              "max_absolute_error": 8.27505630266595e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.336769554496411,
+              "relative_error": 0.0002720428389079124,
+              "max_absolute_error": 0.0001557391971539479
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3780216546787641,
+              "relative_error": 0.001859984142960364,
+              "max_absolute_error": 0.000335693359375
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5282793140204248,
+              "relative_error": 0.00024261495849584846,
+              "max_absolute_error": 3.3795833587646484e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37486242580253487,
+              "relative_error": 0.00022970702311213786,
+              "max_absolute_error": 6.651836883975193e-06
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_192",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.0134429931640625,
+          "mathematical_dk": 0.013418337530707505,
+          "rounded_dk": 0.013452112674713135,
+          "dv_coordinate": 0.000286102294921875,
+          "mathematical_dv": 0.00028721895021596456,
+          "rounded_dv": 0.0002863176050595939,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.348327977651989,
+              "relative_error": 0.00027281237386591207,
+              "max_absolute_error": 0.00016300811337915944
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37651032311518323,
+              "relative_error": 0.006513870158277165,
+              "max_absolute_error": 0.0008049011230459105
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5270202861906002,
+              "relative_error": 0.0003779753848442275,
+              "max_absolute_error": 5.010322642562404e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3737743780956809,
+              "relative_error": 0.0002929128477775302,
+              "max_absolute_error": 1.0219390557193037e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.348330910167446,
+              "relative_error": 0.00027333582391392736,
+              "max_absolute_error": 0.0001595100240765479
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3765277478341389,
+              "relative_error": 0.001834036846823533,
+              "max_absolute_error": 0.000293731689453125
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.527040973874024,
+              "relative_error": 0.00022406093131301056,
+              "max_absolute_error": 2.8014183044433594e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37377657222816607,
+              "relative_error": 0.00023770229204312892,
+              "max_absolute_error": 1.1663070836220868e-05
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.0134429931640625,
+          "mathematical_dk": 0.013418337530707505,
+          "rounded_dk": 0.013452649116516113,
+          "dv_coordinate": 0.000286102294921875,
+          "mathematical_dv": 0.00028721895021596456,
+          "rounded_dv": 0.0002863176050595939,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.348327977651989,
+              "relative_error": 0.000276677291279918,
+              "max_absolute_error": 0.00016300811337915944
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.37651032311518323,
+              "relative_error": 0.006961893864150783,
+              "max_absolute_error": 0.0008049011230459105
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5270202861906002,
+              "relative_error": 0.0003801594609183159,
+              "max_absolute_error": 5.010322642562404e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3737743780956809,
+              "relative_error": 0.0002929539534476912,
+              "max_absolute_error": 1.0219390557193037e-05
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.348330910167446,
+              "relative_error": 0.0002772563999835229,
+              "max_absolute_error": 0.0001595100240765479
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3765265944419097,
+              "relative_error": 0.001933926851866902,
+              "max_absolute_error": 0.00029754638671875
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5270371058029188,
+              "relative_error": 0.00022427283164016198,
+              "max_absolute_error": 2.8192996978759766e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37377657222816607,
+              "relative_error": 0.00023767594234714795,
+              "max_absolute_error": 1.1663070836220868e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "tracker-fp16-kv_tail_193",
+      "shape": [
+        1,
+        2,
+        65,
+        64
+      ],
+      "causal": false,
+      "evaluated_head": 0,
+      "logical_dimension": 64,
+      "input_strides": [
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ],
+        [
+          128,
+          64,
+          128,
+          1
+        ]
+      ],
+      "backends": {
+        "cute": {
+          "dk_coordinate": 0.01380157470703125,
+          "mathematical_dk": 0.013805145406247993,
+          "rounded_dk": 0.013799428939819336,
+          "dv_coordinate": 0.0002849102020263672,
+          "mathematical_dv": 0.00028656486943053717,
+          "rounded_dv": 0.0002849576576409163,
+          "launched_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensor_0",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_1",
+            "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorptrf16_gmem_align16_o_1264i64_div8i64_div8i64_div81_tensorpt_2"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.425214706380996,
+              "relative_error": 0.0002761823744594525,
+              "max_absolute_error": 0.00015789714214770045
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3805998418948701,
+              "relative_error": 0.0069192470960830095,
+              "max_absolute_error": 0.0007333755493165034
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5261243152771946,
+              "relative_error": 0.0003458624129344811,
+              "max_absolute_error": 3.453524207340519e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3763794441266178,
+              "relative_error": 0.0002938720548466042,
+              "max_absolute_error": 8.915359960278563e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.42521954326773,
+              "relative_error": 0.00027635723634882183,
+              "max_absolute_error": 0.0001640861299299079
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.38059758464582427,
+              "relative_error": 0.001587624330771576,
+              "max_absolute_error": 0.000247955322265625
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5261059325619659,
+              "relative_error": 0.00023777974968147822,
+              "max_absolute_error": 2.777576446533203e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37637900920334755,
+              "relative_error": 0.00023192814860658188,
+              "max_absolute_error": 6.8737172114197165e-06
+            }
+          }
+        },
+        "upstream": {
+          "dk_coordinate": 0.01380157470703125,
+          "mathematical_dk": 0.013805145406247993,
+          "rounded_dk": 0.013799309730529785,
+          "dv_coordinate": 0.0002849102020263672,
+          "mathematical_dv": 0.00028656486943053717,
+          "rounded_dv": 0.0002849576576409163,
+          "launched_kernels": [
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_fwd_kernel",
+            "Memset (Device)",
+            "_prepare_kernel",
+            "Memset (Device)",
+            "Memset (Device)",
+            "Memset (Device)",
+            "attention_bwd_kernel",
+            "_dq_convert_kernel"
+          ],
+          "fp64": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.425214706380996,
+              "relative_error": 0.0002801916494173438,
+              "max_absolute_error": 0.00015789714214770045
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3805998418948701,
+              "relative_error": 0.006621684783621198,
+              "max_absolute_error": 0.0007333755493165034
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5261243152771946,
+              "relative_error": 0.0003498080423269276,
+              "max_absolute_error": 3.453524207340519e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.3763794441266178,
+              "relative_error": 0.0002939291721490084,
+              "max_absolute_error": 8.915359960278563e-06
+            }
+          },
+          "rounded": {
+            "out": {
+              "finite": true,
+              "reference_norm": 7.42521954326773,
+              "relative_error": 0.00028054321105459016,
+              "max_absolute_error": 0.0001640861299299079
+            },
+            "dq": {
+              "finite": true,
+              "reference_norm": 0.3805966336030064,
+              "relative_error": 0.0016259460402276152,
+              "max_absolute_error": 0.000247955322265625
+            },
+            "dk": {
+              "finite": true,
+              "reference_norm": 0.5261079530360014,
+              "relative_error": 0.0002355837320542286,
+              "max_absolute_error": 2.485513687133789e-05
+            },
+            "dv": {
+              "finite": true,
+              "reference_norm": 0.37637900920334755,
+              "relative_error": 0.00023194185805885907,
+              "max_absolute_error": 6.8737172114197165e-06
+            }
+          }
+        }
+      }
+    }
+  ],
+  "h100_quick_regression_control": {
+    "cases": 24,
+    "declared_contract_failures": 0,
+    "mathematical_or_edge_row_failures": 10,
+    "scope": "Full tensors and first/last rows; distinct from the selected-head original-Gluon controls."
+  },
+  "b300_racecheck": {
+    "status": "Unresolved reports reproduced on the preceding checkout",
+    "before_grouped_backward_reports": 33,
+    "after_grouped_backward_reports": 24,
+    "before_grouped_forward_reports": 3,
+    "device_memcheck": "pass",
+    "synccheck": "pass",
+    "false_positive_claim": false
+  },
+  "fixture_definition_sha256": {
+    "tests/test_key_precision.py:key_cancellation": "e0103d59d3b6da50acb7093df7203154df691d177b0b929dbc8855c8211d7585",
+    "tests/test_key_precision.py:key_coordinate": "fc0b97b628ddc6af6badbec1b577ee42aa65ff6c6ae96390b1f89d501110d268",
+    "tests/test_value_precision.py:square_value_cancellation": "fcbdde8b67744713398811b95c07ef898c7a69ce0dd3b2f8d3dd2cea0ad7b166",
+    "tests/test_value_precision.py:value_residual_underflow": "7c99c53c165fe7e6e4006d0faa4648c0359e2a6db9387ee8e883db9fd82eaac0"
+  },
+  "hash_scope": "File hashes identify the measured source snapshot; fixture-definition hashes identify the executable fixture functions independently of accompanying CPU tests."
+}

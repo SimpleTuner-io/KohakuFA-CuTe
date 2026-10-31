@@ -34,8 +34,8 @@ class AdaScheduleTests(unittest.TestCase):
                     self.assertEqual(got.count_nonzero().item(), 0)
 
     def test_long_graphs_read_changed_inputs_and_partial_tiles(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         for dtype, dimension, causal, (queries, keys) in itertools.product(
             (torch.float16, torch.bfloat16), (16, 64, 128, 256), (False, True), ((1024, 1024), (1025, 1031))
@@ -67,7 +67,7 @@ class AdaScheduleTests(unittest.TestCase):
                             for tensor in (q, k, v):
                                 tensor.copy_(torch.randn_like(tensor) * 0.75)
                     graph.replay()
-                    expected = fp64_reference((q, k, v), dout, causal=causal)
+                    expected = attention_reference((q, k, v), dout, causal=causal)
                     self.assert_reference(actual, expected, dtype)
 
     def test_runtime_length_boundaries_preserve_cache_and_exact_results(self):
@@ -101,16 +101,16 @@ class AdaScheduleTests(unittest.TestCase):
                     control_out = attention(q, k, v, causal=causal)
                     expected = (control_out, *torch.autograd.grad(control_out, (q, k, v), dout))
                     if dimension == 16:
-                        from benchmarks.reference import fp64_reference
+                        from tests.attention_reference import attention_reference
 
-                        self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=causal), q.dtype)
+                        self.assert_reference(actual, attention_reference((q, k, v), dout, causal=causal), q.dtype)
                     else:
                         for got, want in zip(actual, expected):
                             self.assertTrue(torch.equal(got.view(torch.uint8), want.view(torch.uint8)))
 
     def test_signed_scales_and_saturated_gradients(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         for dtype, dimension, causal, scale in itertools.product(
             (torch.float16, torch.bfloat16), (16, 64, 128, 256), (False, True), (-0.25, 0.0)
@@ -122,7 +122,7 @@ class AdaScheduleTests(unittest.TestCase):
                 dout = torch.randn_like(q)
                 out = attention(q, k, v, causal=causal, scale=scale)
                 actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-                self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=causal, scale=scale), dtype)
+                self.assert_reference(actual, attention_reference((q, k, v), dout, causal=causal, scale=scale), dtype)
         for dtype, dimension in itertools.product((torch.float16, torch.bfloat16), (16, 64)):
             q = torch.zeros(1, 16, 1025, dimension, device="cuda", dtype=dtype)
             k, v = torch.zeros_like(q), torch.zeros_like(q)
@@ -132,11 +132,11 @@ class AdaScheduleTests(unittest.TestCase):
             q, k, v = [tensor.requires_grad_() for tensor in (q, k, v)]
             out = attention(q, k, v, scale=1.0)
             actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-            self.assert_reference(actual, fp64_reference((q, k, v), dout, scale=1.0), dtype)
+            self.assert_reference(actual, attention_reference((q, k, v), dout, scale=1.0), dtype)
 
     def test_negative_maximum_and_lse_on_partial_tiles(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
+        from tests.attention_reference import attention_reference
 
         for dtype, dimension, causal in itertools.product(
             (torch.float16, torch.bfloat16), (16, 64, 128, 256), (False, True)
@@ -154,11 +154,11 @@ class AdaScheduleTests(unittest.TestCase):
                 self.assertTrue((maximum * scale + logsum * math.log(2) < 0).all())
                 out = attention(q, k, v, causal=causal)
                 actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-                self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=causal), dtype)
+                self.assert_reference(actual, attention_reference((q, k, v), dout, causal=causal), dtype)
 
     def test_compiled_calls_cross_the_runtime_boundary(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         torch.compiler.reset()
         self.addCleanup(torch.compiler.reset)
@@ -172,11 +172,11 @@ class AdaScheduleTests(unittest.TestCase):
                 inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                 output = function(*inputs, causal=True)
                 actual = (output, *torch.autograd.grad(output, inputs, dout))
-                self.assert_reference(actual, fp64_reference(inputs, dout, causal=True), q.dtype)
+                self.assert_reference(actual, attention_reference(inputs, dout, causal=True), q.dtype)
 
     def test_complete_tile_guards_survive_native_and_compiled_cache_reuse(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, kernels, native
+        from tests.attention_reference import attention_reference
 
         torch.compiler.reset()
         self.addCleanup(torch.compiler.reset)
@@ -199,12 +199,12 @@ class AdaScheduleTests(unittest.TestCase):
                         function = compiled if index % 2 else attention
                         out = function(q, k, v, causal=causal)
                         actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-                        self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=causal), q.dtype)
+                        self.assert_reference(actual, attention_reference((q, k, v), dout, causal=causal), q.dtype)
                 self.assertEqual(compiler.call_count, 2)
 
     def test_packed_statistics_preserve_signed_scales_negative_maxima_and_tiny_gradients(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
+        from tests.attention_reference import attention_reference
 
         for dtype, case in itertools.product((torch.float16, torch.bfloat16), ("negative", "zero", "maxima", "sharp")):
             with self.subTest(dtype=dtype, case=case):
@@ -227,14 +227,14 @@ class AdaScheduleTests(unittest.TestCase):
                 inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                 out = attention(*inputs, causal=True, scale=scale)
                 actual = (out, *torch.autograd.grad(out, inputs, dout))
-                self.assert_reference(actual, fp64_reference(inputs, dout, causal=True, scale=scale), dtype)
+                self.assert_reference(actual, attention_reference(inputs, dout, causal=True, scale=scale), dtype)
                 if case == "sharp":
                     self.assertGreater(actual[1].double().norm().item(), 0.0)
                     self.assertGreater(actual[2].double().norm().item(), 0.0)
 
     def test_short_graphs_read_changed_inputs_and_strided_partial_tiles(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         for dtype, dimension, causal in itertools.product((torch.float16, torch.bfloat16), (128, 256, 512), (False, True)):
             with self.subTest(dtype=dtype, dimension=dimension, causal=causal):
@@ -266,11 +266,11 @@ class AdaScheduleTests(unittest.TestCase):
                             for tensor in (q, k, v):
                                 tensor.copy_(torch.randn_like(tensor) * 0.75)
                     graph.replay()
-                    self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=causal), dtype)
+                    self.assert_reference(actual, attention_reference((q, k, v), dout, causal=causal), dtype)
 
     def test_short_runtime_boundaries_and_compiled_calls(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         torch.compiler.reset()
         self.addCleanup(torch.compiler.reset)
@@ -288,11 +288,11 @@ class AdaScheduleTests(unittest.TestCase):
                     function = compiled if dimension == 128 and causal else attention
                     out = function(q, k, v, causal=causal)
                     actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-                    self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=causal), q.dtype)
+                    self.assert_reference(actual, attention_reference((q, k, v), dout, causal=causal), q.dtype)
 
     def test_short_signed_scales_negative_statistics_and_tiny_gradients(self):
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
+        from tests.attention_reference import attention_reference
 
         for dtype, dimension, causal, scale in itertools.product(
             (torch.float16, torch.bfloat16), (128, 256, 512), (False, True), (-0.25, 0.0)
@@ -304,7 +304,7 @@ class AdaScheduleTests(unittest.TestCase):
                 dout = torch.randn_like(q)
                 out = attention(q, k, v, causal=causal, scale=scale)
                 actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-                self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=causal, scale=scale), dtype)
+                self.assert_reference(actual, attention_reference((q, k, v), dout, causal=causal, scale=scale), dtype)
         for dtype, dimension in itertools.product((torch.float16, torch.bfloat16), (128, 256, 512)):
             with self.subTest(dtype=dtype, dimension=dimension):
                 torch.manual_seed(900)
@@ -318,7 +318,7 @@ class AdaScheduleTests(unittest.TestCase):
                 self.assertTrue((maximum * dimension**-0.5 + logsum * math.log(2) < 0).all())
                 out = attention(q, k, v, causal=True)
                 actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-                self.assert_reference(actual, fp64_reference((q, k, v), dout, causal=True), dtype)
+                self.assert_reference(actual, attention_reference((q, k, v), dout, causal=True), dtype)
 
                 q = torch.zeros(1, 16, 128, dimension, device="cuda", dtype=dtype)
                 k, v, dout = [torch.zeros_like(q) for _ in range(3)]
@@ -327,7 +327,7 @@ class AdaScheduleTests(unittest.TestCase):
                 q, k, v = [tensor.requires_grad_() for tensor in (q, k, v)]
                 out = attention(q, k, v, scale=1.0)
                 actual = (out, *torch.autograd.grad(out, (q, k, v), dout))
-                self.assert_reference(actual, fp64_reference((q, k, v), dout, scale=1.0), dtype)
+                self.assert_reference(actual, attention_reference((q, k, v), dout, scale=1.0), dtype)
 
 
 if __name__ == "__main__":

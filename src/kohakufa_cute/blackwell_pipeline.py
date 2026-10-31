@@ -553,7 +553,8 @@ class Backward(Forward):
                 source = (maximum, logsum, delta_base, delta)[field]
                 value = cutlass.Float32(0)
                 if block * self.columns + col < maximum.shape[2]:
-                    value = source[batch, head, block * self.columns + col]
+                    if cutlass.const_expr(not self.baseline_precision or field != 3):
+                        value = source[batch, head, block * self.columns + col]
                 stats[field, col, slot] = value
         cute.arch.sync_warp()
         # Score completion does not imply that this independent producer is
@@ -984,7 +985,8 @@ class Backward(Forward):
                                 source = (maximum, logsum, delta_base, delta)[field]
                                 value = cutlass.Float32(0)
                                 if block * self.columns + col < q.shape[2]:
-                                    value = source[batch, right_head, block * self.columns + col]
+                                    if cutlass.const_expr(not self.baseline_precision or field != 3):
+                                        value = source[batch, right_head, block * self.columns + col]
                                 stats[field, col, slot] = value
                         cute.arch.sync_warp()
                     with cute.arch.elect_one():
@@ -1065,13 +1067,14 @@ class Backward(Forward):
                         slot = cursor % self.stream_slots
                         cute.arch.mbarrier_wait(right_ready + slot, (cursor // self.stream_slots) % 2)
                         cute.arch.fence_view_async_shared()
-                        self.issue_pv(
-                            q.element_type,
-                            probability_pointer,
-                            b_ring[None, None, slot],
-                            aux_pointer + c * self.dc,
-                            step > 0,
-                        )
+                        if cutlass.const_expr(self.mode == "kv" or not self.baseline_precision):
+                            self.issue_pv(
+                                q.element_type,
+                                probability_pointer,
+                                b_ring[None, None, slot],
+                                aux_pointer + c * self.dc,
+                                step > 0,
+                            )
                         with cute.arch.elect_one():
                             tcgen05.commit(right_free + slot)
                         cursor += 1
@@ -1173,7 +1176,8 @@ class Backward(Forward):
                             if cutlass.const_expr(self.mode == "q")
                             else other_right[None, None, offset // self.dc + c, other_slot]
                         )
-                        self.issue_pv(q.element_type, probability_pointer, source, aux_pointer + c * self.dc, step > 0)
+                        if cutlass.const_expr(self.mode == "kv" or not self.baseline_precision):
+                            self.issue_pv(q.element_type, probability_pointer, source, aux_pointer + c * self.dc, step > 0)
                     with cute.arch.elect_one():
                         tcgen05.commit(p_free)
                         tcgen05.commit(other_free + other_slot)
@@ -1280,8 +1284,13 @@ class Backward(Forward):
                         if cutlass.const_expr(self.mode == "kv"):
                             corrections = (stats[2, col, slot], stats[2, col + 1, slot])
                         pair = cute.arch.sub_packed_f32x2((dps[2 * i], dps[2 * i + 1]), corrections)
-                        if cutlass.const_expr(self.mode == "kv"):
+                        if cutlass.const_expr(self.mode == "kv" and not self.baseline_precision):
                             pair = cute.arch.sub_packed_f32x2(pair, (stats[3, col, slot], stats[3, col + 1, slot]))
+                        if cutlass.const_expr(self.baseline_precision):
+                            values[chunk * 32 + 2 * i] = values[chunk * 32 + 2 * i].to(q.element_type).to(cutlass.Float32)
+                            values[chunk * 32 + 2 * i + 1] = (
+                                values[chunk * 32 + 2 * i + 1].to(q.element_type).to(cutlass.Float32)
+                            )
                         pair = cute.arch.mul_packed_f32x2(pair, (values[chunk * 32 + 2 * i], values[chunk * 32 + 2 * i + 1]))
                         dps[2 * i], dps[2 * i + 1] = pair
                     if cutlass.const_expr(self.mode == "q"):
@@ -1314,17 +1323,18 @@ class Backward(Forward):
                     total = stats[0, local, 0] + stats[0, local, 1]
                     rounded_total = stats[1, local, 0] + stats[1, local, 1]
                     if start + local < q.shape[2] and wi == 0:
-                        delta[batch, own_head, start + local] = total
+                        if cutlass.const_expr(not self.baseline_precision):
+                            delta[batch, own_head, start + local] = total
                 # Keep the FP32 correction in 32-column register windows.
                 # Loading both 64-column accumulators spills at this CTA size.
                 for c in cutlass.range(self.width // 64, unroll_full=True):
                     for part in cutlass.range_constexpr(2):
                         result = self.read_matrix(grad_pointer + c * 64 + part * 32, 32, local)
-                        if cutlass.const_expr(self.mode == "q"):
+                        if cutlass.const_expr(self.mode == "q" and not self.baseline_precision):
                             auxiliary = self.read_matrix(aux_pointer + c * 64 + part * 32, 32, local)
                         for i in cutlass.range_constexpr(32):
                             value = result[i]
-                            if cutlass.const_expr(self.mode == "q"):
+                            if cutlass.const_expr(self.mode == "q" and not self.baseline_precision):
                                 value -= rounded_total * auxiliary[i]
                             epilogue_staging[local, part * 32 + i] = (value * scale).to(q.element_type)
                     cute.arch.barrier(barrier_id=2, number_of_threads=128)
@@ -1400,9 +1410,12 @@ class Backward(Forward):
                         if cutlass.const_expr(self.mode == "kv"):
                             correction = stats[2, i, slot]
                         value = dps[i] - correction
-                        if cutlass.const_expr(self.mode == "kv"):
+                        if cutlass.const_expr(self.mode == "kv" and not self.baseline_precision):
                             value -= stats[3, i, slot]
-                        value = probabilities[i] * value
+                        probability = probabilities[i]
+                        if cutlass.const_expr(self.baseline_precision):
+                            probability = probability.to(q.element_type).to(cutlass.Float32)
+                        value = probability * value
                         probabilities[i] = value
                         dps[i] = value.to(q.element_type).to(cutlass.Float32)
                     if cutlass.const_expr(self.mode == "q"):
@@ -1418,13 +1431,15 @@ class Backward(Forward):
                 cute.arch.mbarrier_wait(output_ready, 0)
                 if cutlass.const_expr(self.mode == "q"):
                     if start + tid < q.shape[2] and wi == 0:
-                        delta[batch, own_head, start + tid] = total
+                        if cutlass.const_expr(not self.baseline_precision):
+                            delta[batch, own_head, start + tid] = total
                 for c in cutlass.range(self.width // 64, unroll_full=True):
                     result = self.read_matrix(grad_pointer + c * 64, 64, tid)
-                    auxiliary = self.read_matrix(aux_pointer + c * 64, 64, tid)
+                    if cutlass.const_expr(self.mode == "kv" or not self.baseline_precision):
+                        auxiliary = self.read_matrix(aux_pointer + c * 64, 64, tid)
                     for i in cutlass.range_constexpr(64):
                         value = result[i]
-                        if cutlass.const_expr(self.mode == "q"):
+                        if cutlass.const_expr(self.mode == "q" and not self.baseline_precision):
                             value -= rounded_total * auxiliary[i]
                         epilogue_staging[tid, i] = (value * scale).to(q.element_type)
                     cute.arch.barrier(barrier_id=2, number_of_threads=128)

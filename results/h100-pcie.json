@@ -1,0 +1,6229 @@
+{
+  "label": "candidate",
+  "schema_version": 4,
+  "date": "2026-10-31",
+  "base_revision": "183f4f5d49267ffc4add88075364842bafe91373",
+  "device": {
+    "name": "NVIDIA H100 PCIe",
+    "multiprocessors": 114,
+    "capability": [
+      9,
+      0
+    ],
+    "memory_bytes": 85019590656,
+    "board_before": {
+      "name": "NVIDIA H100 PCIe",
+      "driver_version": "595.71.05",
+      "memory.total": "81559",
+      "memory.used": "4",
+      "power.limit": "350.00",
+      "power.draw": "46.23",
+      "clocks.sm": "345",
+      "temperature.gpu": "28"
+    },
+    "board_after": {
+      "name": "NVIDIA H100 PCIe",
+      "driver_version": "595.71.05",
+      "memory.total": "81559",
+      "memory.used": "1471",
+      "power.limit": "350.00",
+      "power.draw": "244.86",
+      "clocks.sm": "1395",
+      "temperature.gpu": "49"
+    }
+  },
+  "stack": {
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cuda": "13.2"
+  },
+  "packages": {
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15.post0",
+    "triton": "3.9.0"
+  },
+  "source_sha256": {
+    "src/kohakufa_cute/__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "src/kohakufa_cute/_ops.py": "2db8bea488b0638d8313580a4f49b0f0e45df8e1727630e90c51cda18773c160",
+    "src/kohakufa_cute/ada.py": "b875706983267097f1ec335d077438888037aa88146213363b641b5b47498a91",
+    "src/kohakufa_cute/api.py": "02bc8e537e7d3894ea1e723de70e38fba92ba1d95c10e0d9d74c04902d94af03",
+    "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "src/kohakufa_cute/blackwell_pipeline.py": "93c0df74a609af7702284a2ee9e1a5aee49a58bfb287ae74bcc4bc3db9c27387",
+    "src/kohakufa_cute/blackwell_register_aux.py": "6a1912574c50a75d632444837a997cb39edae6aea80e1846972a176340a14059",
+    "src/kohakufa_cute/hopper_forward.py": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+    "src/kohakufa_cute/kernels.py": "6ef95996616e45c6f0763daac976813a6fe6b3846eefda8a02744751e7df74f5",
+    "src/kohakufa_cute/l40s.py": "97b34f5bc2e7020fb1a7545d373b916c80f55bfa6487669eff0499848bace406",
+    "src/kohakufa_cute/launch.py": "450b6d27ed26346e2174c49fe40a652d7b78076bf116970bd4b7ddcbd2982a70",
+    "src/kohakufa_cute/medium_backward.py": "4df4b7b1c369c7ddf4cafafb9e2afecad2ebb5241ebcaab76bdff0d9d74cbd48",
+    "src/kohakufa_cute/native.cpp": "3c94eefc4143b2c63523edc771f15b2dbb1bc2268112a7e655a943e01977074c",
+    "src/kohakufa_cute/native.py": "5b29cfdf71c45468b271c8497495d7dd20ca2c2e2ce4e2625cc58f066d5da04f",
+    "src/kohakufa_cute/precision.py": "c60f4a0430567865a454c849799966bc01f45a5536f040a52dc170046ff038a9",
+    "src/kohakufa_cute/short_forward.py": "4b08931d4978d3b70be4f419db50661695c937944e9ad3b9b854fa3a9c219fdb",
+    "src/kohakufa_cute/sm103.py": "0c310638eda9c17a157091ca3dcf51ea08cd83baf34778c415e080d9d77a57e6",
+    "src/kohakufa_cute/sm120_backward.py": "34bc6d05dd40eaeaec73f867ff3b03073b5cd5ae67d649e17bde1e6b7f5492fd",
+    "src/kohakufa_cute/sm120_schedule.py": "e5c2ecd79a80582203a9913d0c4bfb2b5323229699920c661b23e44374fe9244",
+    "src/kohakufa_cute/sm86.py": "49f8b8b50809315f77978425420d65fa76729f20ace0f1a118b1e31574fc5d37",
+    "src/kohakufa_cute/sm86_backward.py": "2381cb376b2a1490e2ef488c8f768f0283e9b2f21fa83834b2627ea591c5ef35",
+    "src/kohakufa_cute/split_forward.py": "75f7d43144b200d9caedb6fbf713aed6335ec4005d1a3ba8b801dafa74818578",
+    "src/kohakufa_cute/weight_precision.py": "e33312450a22d65a3752522483e3910f2f38042b6e3a27aa73cc778e89d90884",
+    "src/kohakufa_cute/wide_backward.py": "5ce2d2b9039b5b33253b28c1e72f57a239e3540c09b6b343ae2af2f57d2d6b47"
+  },
+  "protocol": "Independent out/dQ/dK/dV versus FP64 mathematical and single-rounded-P/dS equations. Backward rounded reference uses actual O for delta. CUDA graph changed-input checks; rotate CuTe and default SDPA timing order. Device-event graph replay; compilation excluded.",
+  "measurements": [
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021966048384293078,
+            "max_absolute_error": 0.0025789262959189374
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.003155063216782335,
+            "max_absolute_error": 0.005029800912741411
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003125637654999508,
+            "max_absolute_error": 0.0077771573714602305
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002500092193529092,
+            "max_absolute_error": 0.004155587138953032
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002196604558460737,
+            "max_absolute_error": 0.0025789294649130046
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0017107943061097305,
+            "max_absolute_error": 0.0027691592695191503
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0017196366709081947,
+            "max_absolute_error": 0.003790277987718582
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001686425394117739,
+            "max_absolute_error": 0.0019503117073327303
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "60ea22512ba6b315",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "872a6446e07e8798",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "60ea22512ba6b315",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "872a6446e07e8798",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "6d0a16791f57f7a4",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              4,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "6d0a16791f57f7a4",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              4,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "03526ff24e6a116b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "a5bd09cc18416d61",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "03526ff24e6a116b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "a5bd09cc18416d61",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.007465925998985767,
+            0.007190015632659197,
+            0.007235621102154255,
+            0.007416621316224337,
+            0.007199991960078478
+          ],
+          "backward": [
+            0.017019578760630844,
+            0.016693249106427673,
+            0.016663424358716726,
+            0.016869415426527982,
+            0.01667945897253126
+          ],
+          "joint": [
+            0.023375242373197696,
+            0.02295728507806565,
+            0.0230345261517693,
+            0.023351477345524296,
+            0.02332624226751346
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.0072304257191717625,
+            0.00717108603566885,
+            0.007224144414067268,
+            0.007235703058540821,
+            0.00728493370115757
+          ],
+          "backward": [
+            0.01699892491977691,
+            0.017063817839882114,
+            0.017116139528779644,
+            0.016930753135778614,
+            0.016945951957522857
+          ],
+          "joint": [
+            0.025180119697000743,
+            0.024978104198253817,
+            0.024939299726218184,
+            0.025220271188641463,
+            0.02528721504365867
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.0074249920435249805,
+            0.0074257575906813145,
+            0.007162988185882568,
+            0.007425093557685614,
+            0.0074247498996555805
+          ],
+          "backward": [
+            0.01749300220063798,
+            0.01746845245361328,
+            0.017228088165421967,
+            0.017493098548711283,
+            0.017462037530079345
+          ],
+          "joint": [
+            0.02392476785439568,
+            0.024046244182643266,
+            0.023865143497101504,
+            0.02406316483381845,
+            0.02407758238907908
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.007235621102154255,
+          "backward": 0.016693249106427673,
+          "joint": 0.02332624226751346
+        },
+        "sdpa": {
+          "forward": 0.0072304257191717625,
+          "backward": 0.01699892491977691,
+          "joint": 0.025180119697000743
+        },
+        "previous": {
+          "forward": 0.0074249920435249805,
+          "backward": 0.01746845245361328,
+          "joint": 0.024046244182643266
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019544160299339542,
+            "max_absolute_error": 0.008022813643555171
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0035468645377579413,
+            "max_absolute_error": 0.011592046726836135
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.00338922909600639,
+            "max_absolute_error": 0.017160685698027978
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.00246021806351334,
+            "max_absolute_error": 0.014698782341164396
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.001954417366344444,
+            "max_absolute_error": 0.008022870942209881
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.00169640217868275,
+            "max_absolute_error": 0.006744384765625
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016891479084810148,
+            "max_absolute_error": 0.007595704519189894
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0017012814497161298,
+            "max_absolute_error": 0.014438215643167496
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "868404d193fd3a6d",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c985e4b5f4ec7847",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "868404d193fd3a6d",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c985e4b5f4ec7847",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "d9980cd3f8a2d5ee",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              4,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "d9980cd3f8a2d5ee",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              4,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "70fb6e3232a8a225",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "639145254db6ea7b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "70fb6e3232a8a225",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "639145254db6ea7b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.008694632910192013,
+            0.008419101126492023,
+            0.008451218716800213,
+            0.008715605363249779,
+            0.00842022243887186
+          ],
+          "backward": [
+            0.016566536400692576,
+            0.016273313293661437,
+            0.016038673802425987,
+            0.01636467090325634,
+            0.016064713110404787
+          ],
+          "joint": [
+            0.023740966505281343,
+            0.023749883273779523,
+            0.023688093721651222,
+            0.02369037317621317,
+            0.02366953606425042
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.007916410453617573,
+            0.007884535007178783,
+            0.007918878458440304,
+            0.007981800474226475,
+            0.007882589474320412
+          ],
+          "backward": [
+            0.017536404766613924,
+            0.01759153386817224,
+            0.017370696783741202,
+            0.01755299052885889,
+            0.017496142171151023
+          ],
+          "joint": [
+            0.026291719850305907,
+            0.026472485270721234,
+            0.026436603874560222,
+            0.026307500641921472,
+            0.026395461138556984
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.008657761849462986,
+            0.008693906478583813,
+            0.008450531400740147,
+            0.008558289147913456,
+            0.008656902238726616
+          ],
+          "backward": [
+            0.01649055206518379,
+            0.01645126238368449,
+            0.016264142781278513,
+            0.016553142205119522,
+            0.016490307311855936
+          ],
+          "joint": [
+            0.023865081920697997,
+            0.023889432275664604,
+            0.023693873425013192,
+            0.02372149141391453,
+            0.023862847543277912
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.008451218716800213,
+          "backward": 0.016273313293661437,
+          "joint": 0.02369037317621317
+        },
+        "sdpa": {
+          "forward": 0.007916410453617573,
+          "backward": 0.017536404766613924,
+          "joint": 0.026395461138556984
+        },
+        "previous": {
+          "forward": 0.008656902238726616,
+          "backward": 0.016490307311855936,
+          "joint": 0.023862847543277912
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.00216140373440984,
+            "max_absolute_error": 0.002506301708302794
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030095220753535695,
+            "max_absolute_error": 0.00545191427970404
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0029993327315880167,
+            "max_absolute_error": 0.006287986437637949
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0024224222919222273,
+            "max_absolute_error": 0.0040654060273861425
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021614004440662416,
+            "max_absolute_error": 0.002506287413167385
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016814768058891363,
+            "max_absolute_error": 0.0038712338054307516
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.00169919415796537,
+            "max_absolute_error": 0.0038005783608541233
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016858871061925268,
+            "max_absolute_error": 0.0031313933432102203
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "5fbfda2b1efe3a9c",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "d14a2f0b8907ac52",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2b43ccff74aebd70",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "5fbfda2b1efe3a9c",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d14a2f0b8907ac52",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2b43ccff74aebd70",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "51e7d262fdb6de82",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "51e7d262fdb6de82",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "5fbfda2b1efe3a9c",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "2517dd9c83b6d55a",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "886b87ae6dcdcef6",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "5fbfda2b1efe3a9c",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2517dd9c83b6d55a",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "886b87ae6dcdcef6",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.010148855857551098,
+            0.009903253987431526,
+            0.00990214478224516,
+            0.009903136640787125,
+            0.009904792532324791
+          ],
+          "backward": [
+            0.019147165652492314,
+            0.018827920838528016,
+            0.018829923285716012,
+            0.01882815982504088,
+            0.018832182119934704
+          ],
+          "joint": [
+            0.028304648294936133,
+            0.028198930389132522,
+            0.02819643891590344,
+            0.02819220124735065,
+            0.028143187549626716
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.008492023684084415,
+            0.008449922315776348,
+            0.00849783606827259,
+            0.008471991866827011,
+            0.008478484116494656
+          ],
+          "backward": [
+            0.02036484239680154,
+            0.020322717513799916,
+            0.02027598147308444,
+            0.02034481557420985,
+            0.020356628392532137
+          ],
+          "joint": [
+            0.029653945748438465,
+            0.029565141192473818,
+            0.02940117003353225,
+            0.02965104731738459,
+            0.029703001710462223
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.009908863343298435,
+            0.010047679767012596,
+            0.009900929406285286,
+            0.01003290619701147,
+            0.010083863511681557
+          ],
+          "backward": [
+            0.019048932699853843,
+            0.019089147616365498,
+            0.018977929051519366,
+            0.019180711613002957,
+            0.01916025867612343
+          ],
+          "joint": [
+            0.028283441539133067,
+            0.028272049855488902,
+            0.028269807840807383,
+            0.02838531958014949,
+            0.02803220223943028
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.009903253987431526,
+          "backward": 0.018829923285716012,
+          "joint": 0.02819643891590344
+        },
+        "sdpa": {
+          "forward": 0.008478484116494656,
+          "backward": 0.02034481557420985,
+          "joint": 0.02965104731738459
+        },
+        "previous": {
+          "forward": 0.01003290619701147,
+          "backward": 0.019089147616365498,
+          "joint": 0.028272049855488902
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.00194555620591094,
+            "max_absolute_error": 0.008860758711099592
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0033316108846427666,
+            "max_absolute_error": 0.01133095212141555
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0033411848052269017,
+            "max_absolute_error": 0.015460812214246111
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.00241290386863297,
+            "max_absolute_error": 0.015666210417446536
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019455586884320978,
+            "max_absolute_error": 0.008860755933468578
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0017080959688785112,
+            "max_absolute_error": 0.007306696200050755
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016958526486402588,
+            "max_absolute_error": 0.007753723435603099
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0017336934963483406,
+            "max_absolute_error": 0.014680901542305946
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "70b4fd0f6fc5a5ac",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "44fa1d83d66db3e2",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e585ca714e56433e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "70b4fd0f6fc5a5ac",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "44fa1d83d66db3e2",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e585ca714e56433e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "88c825de4c89f5ac",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "88c825de4c89f5ac",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "70b4fd0f6fc5a5ac",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "35c8b8145f7faba9",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b530fae7c85f7db5",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "70b4fd0f6fc5a5ac",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "35c8b8145f7faba9",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b530fae7c85f7db5",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.010489851236343384,
+            0.010314937680959702,
+            0.010313273407518864,
+            0.010285589843988419,
+            0.010314812883734703
+          ],
+          "backward": [
+            0.019346657173830863,
+            0.019116720061771834,
+            0.019117963027282633,
+            0.019114126353078846,
+            0.019118743932261137
+          ],
+          "joint": [
+            0.028297167717459996,
+            0.028338834383761842,
+            0.028440807683067844,
+            0.028309871926124917,
+            0.02800450966615242
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.008885296992957592,
+            0.008990597911179066,
+            0.008914492093026638,
+            0.008905550464987755,
+            0.00901632010936737
+          ],
+          "backward": [
+            0.021458003424618708,
+            0.021415805152068985,
+            0.02145279862807883,
+            0.021396866663295277,
+            0.021506099630484703
+          ],
+          "joint": [
+            0.03132622421557994,
+            0.031034778481996053,
+            0.031109485951953866,
+            0.03111764210932591,
+            0.03116999263257052
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.010188273154199123,
+            0.010095628909766674,
+            0.010089335963129997,
+            0.010206039063632488,
+            0.010087504051625729
+          ],
+          "backward": [
+            0.019929151669409364,
+            0.019816581960255958,
+            0.01975905562246312,
+            0.019846743285153033,
+            0.019834010554143272
+          ],
+          "joint": [
+            0.02952812552882446,
+            0.02937305768330892,
+            0.029380027417466602,
+            0.029379143937086974,
+            0.02938092348648831
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.010314812883734703,
+          "backward": 0.019117963027282633,
+          "joint": 0.028309871926124917
+        },
+        "sdpa": {
+          "forward": 0.008914492093026638,
+          "backward": 0.02145279862807883,
+          "joint": 0.03111764210932591
+        },
+        "previous": {
+          "forward": 0.010095628909766674,
+          "backward": 0.019834010554143272,
+          "joint": 0.029380027417466602
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002157613595154886,
+            "max_absolute_error": 0.0035624851203903685
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030188453381968516,
+            "max_absolute_error": 0.007614489299183846
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0029977096071760693,
+            "max_absolute_error": 0.006754428687473446
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002491266203818381,
+            "max_absolute_error": 0.005463123875623532
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021576141887468454,
+            "max_absolute_error": 0.003562452137612082
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016784902578388925,
+            "max_absolute_error": 0.0031790630891919136
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016736432401756797,
+            "max_absolute_error": 0.003505667089484632
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016676289382068013,
+            "max_absolute_error": 0.0032524573616683483
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "6d231e38b272772b",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "310920451fc7b772",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "6d231e38b272772b",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "310920451fc7b772",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "022511ab92612681",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "022511ab92612681",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcdae95c0ccbbbd4",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "3f6ed9c02c2677af",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcdae95c0ccbbbd4",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "3f6ed9c02c2677af",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.01632916586739676,
+            0.016163484455153372,
+            0.015968005764211892,
+            0.01621602316373046,
+            0.016166044265759925
+          ],
+          "backward": [
+            0.035296885357750475,
+            0.035021506156001025,
+            0.03486173305178046,
+            0.03534888944362868,
+            0.03518723944287127
+          ],
+          "joint": [
+            0.049863870026635344,
+            0.04976768010779272,
+            0.049791448823486455,
+            0.049944858319363614,
+            0.0498795752127156
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.011212367564439774,
+            0.011189570650458336,
+            0.011167722754180431,
+            0.01117032766342163,
+            0.011218316853046417
+          ],
+          "backward": [
+            0.025301941745779946,
+            0.02533154737269329,
+            0.02524745007620089,
+            0.025185128228306833,
+            0.02534992362249939
+          ],
+          "joint": [
+            0.03703435405077539,
+            0.03696673451199714,
+            0.03702640316538778,
+            0.036959564829447185,
+            0.03695353957841981
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.016176144896435138,
+            0.01616863188404924,
+            0.01602401238559943,
+            0.016172752921280228,
+            0.01617292773657851
+          ],
+          "backward": [
+            0.03409839333413493,
+            0.034209034004921576,
+            0.03380284380066276,
+            0.034083121392077725,
+            0.034091079164489724
+          ],
+          "joint": [
+            0.04884016307580017,
+            0.048915339154539925,
+            0.04842976482920239,
+            0.048836751503519495,
+            0.04884221876500914
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.016166044265759925,
+          "backward": 0.03518723944287127,
+          "joint": 0.049863870026635344
+        },
+        "sdpa": {
+          "forward": 0.011189570650458336,
+          "backward": 0.025301941745779946,
+          "joint": 0.03696673451199714
+        },
+        "previous": {
+          "forward": 0.016172752921280228,
+          "backward": 0.034091079164489724,
+          "joint": 0.04884016307580017
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.001976306261291431,
+            "max_absolute_error": 0.009386282909070065
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0035417855627273495,
+            "max_absolute_error": 0.015506689736017432
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0035152272148600257,
+            "max_absolute_error": 0.016159604903171587
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0024424733330595666,
+            "max_absolute_error": 0.017610480719591592
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019763077293971985,
+            "max_absolute_error": 0.009386283666810158
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.001683825764454645,
+            "max_absolute_error": 0.006898164749145508
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.001691122239246336,
+            "max_absolute_error": 0.007812841795384884
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001707761233201833,
+            "max_absolute_error": 0.015506937052123249
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "61cc8a5bb8d198d1",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "61cc8a5bb8d198d1",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "f21267fbd89a6319",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              16,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "f21267fbd89a6319",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e1d67dd4316d325c",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e1d67dd4316d325c",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.017186629705089117,
+            0.016765351638727777,
+            0.016764804346995857,
+            0.017049734933035715,
+            0.01676534034575463
+          ],
+          "backward": [
+            0.03510618727015828,
+            0.034525953135866025,
+            0.03452160009421158,
+            0.03485823990320963,
+            0.03452439545658695
+          ],
+          "joint": [
+            0.050273042287885775,
+            0.049837116287787434,
+            0.049855709558068444,
+            0.05027566380779858,
+            0.04985585612884306
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.011682725648570595,
+            0.011713016830465163,
+            0.01164070028026291,
+            0.011708689332673015,
+            0.01163999269791874
+          ],
+          "backward": [
+            0.027613630635590965,
+            0.02750437661503138,
+            0.027412033404060385,
+            0.027675133625059637,
+            0.02741225854355414
+          ],
+          "joint": [
+            0.03931017173565835,
+            0.03943550720214844,
+            0.03924188912742339,
+            0.03944917516731099,
+            0.039103366360806004
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.017161414345512056,
+            0.01710346814843681,
+            0.016802861957274585,
+            0.017164378316030397,
+            0.017186261625105836
+          ],
+          "backward": [
+            0.0357051609124016,
+            0.03552280647167261,
+            0.03551933527513742,
+            0.03584925473853535,
+            0.03584685832152873
+          ],
+          "joint": [
+            0.05162435598488194,
+            0.05119122415703773,
+            0.0511898376369526,
+            0.051337100748868436,
+            0.05139418369496959
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.016765351638727777,
+          "backward": 0.034525953135866025,
+          "joint": 0.04985585612884306
+        },
+        "sdpa": {
+          "forward": 0.011682725648570595,
+          "backward": 0.02750437661503138,
+          "joint": 0.03931017173565835
+        },
+        "previous": {
+          "forward": 0.017161414345512056,
+          "backward": 0.0357051609124016,
+          "joint": 0.051337100748868436
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002134266954480312,
+            "max_absolute_error": 0.0028329130464792573
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030412987048329225,
+            "max_absolute_error": 0.0044329510485247026
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0030474313973968413,
+            "max_absolute_error": 0.005261824710158458
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023969793139897843,
+            "max_absolute_error": 0.0036011393921959733
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002134266516426493,
+            "max_absolute_error": 0.002832686506539117
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016705673272050814,
+            "max_absolute_error": 0.0038121545216545094
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016637823222702614,
+            "max_absolute_error": 0.0035622932193328793
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016711862830296328,
+            "max_absolute_error": 0.00246577151119709
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9d5a3a419f3a2892",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9d5a3a419f3a2892",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fb471db2bd68ef2b",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "f0b66a647e1f7395",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fb471db2bd68ef2b",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "f0b66a647e1f7395",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.05165869401567795,
+            0.05185246580110899,
+            0.05188568943045571,
+            0.052079841033054464,
+            0.05191026253372846
+          ],
+          "backward": [
+            0.11867566893948575,
+            0.12200712283258042,
+            0.12207679748535157,
+            0.12209735790595211,
+            0.12206320927060883
+          ],
+          "joint": [
+            0.1747020922209087,
+            0.17389934606719434,
+            0.17378698268406828,
+            0.17472922487711445,
+            0.17462946663440113
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.01995222312045762,
+            0.01984661007609546,
+            0.019972235007571445,
+            0.019893148671025814,
+            0.019919185618115183
+          ],
+          "backward": [
+            0.22969482351558,
+            0.22317599375313574,
+            0.22012497862363192,
+            0.21971496649548017,
+            0.2203352167742893
+          ],
+          "joint": [
+            0.24795842349083347,
+            0.2468822433287839,
+            0.24744424387492542,
+            0.2468492683050946,
+            0.24775509346750313
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.05216312258419843,
+            0.05217344201827024,
+            0.05214763175272229,
+            0.05216447165685144,
+            0.05216221060717696
+          ],
+          "backward": [
+            0.13867477331747555,
+            0.1386462308705435,
+            0.13865304659198782,
+            0.13857740922407671,
+            0.1385367348333587
+          ],
+          "joint": [
+            0.18972506468323455,
+            0.18968092527426067,
+            0.18958314502512225,
+            0.1895954190319731,
+            0.1895305212912904
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.05188568943045571,
+          "backward": 0.12206320927060883,
+          "joint": 0.17462946663440113
+        },
+        "sdpa": {
+          "forward": 0.019919185618115183,
+          "backward": 0.2203352167742893,
+          "joint": 0.24744424387492542
+        },
+        "previous": {
+          "forward": 0.05216312258419843,
+          "backward": 0.1386462308705435,
+          "joint": 0.1895954190319731
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019206872992461057,
+            "max_absolute_error": 0.0080576832246666
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.003246080574665646,
+            "max_absolute_error": 0.018511384295535116
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0031987517549900953,
+            "max_absolute_error": 0.017998224685646047
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002389027073143247,
+            "max_absolute_error": 0.017749591454398583
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.00192068626972424,
+            "max_absolute_error": 0.008057693944536926
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016689741301779992,
+            "max_absolute_error": 0.007780206387947963
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016710616861730944,
+            "max_absolute_error": 0.00777252955150054
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016800369048418928,
+            "max_absolute_error": 0.015455691143870354
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "3cefb0510319bc74",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "ffeb24b1e8afcba7",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "3cefb0510319bc74",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "ffeb24b1e8afcba7",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9c271d762757c503",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9c271d762757c503",
+            "grid": [
+              8,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              8,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.03624578390398252,
+            0.036614314901124406,
+            0.036597124257482086,
+            0.03579782872180806,
+            0.0366137955716984
+          ],
+          "backward": [
+            0.08025202131194824,
+            0.08109229710334447,
+            0.08100708182626777,
+            0.08015227757555633,
+            0.08105744533851499
+          ],
+          "joint": [
+            0.11748700380894335,
+            0.11749893602823845,
+            0.11739044731827143,
+            0.11754118789582563,
+            0.11746680807079789
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.01998596511632673,
+            0.019768708764825903,
+            0.019812675338751504,
+            0.019812215211401817,
+            0.019772939171287314
+          ],
+          "backward": [
+            0.2268033181467364,
+            0.22656014979570763,
+            0.22671286045819863,
+            0.226348947108477,
+            0.22618373125448996
+          ],
+          "joint": [
+            0.24245798994855183,
+            0.24207463693734793,
+            0.24274568952203088,
+            0.2420572619658607,
+            0.24207868367216012
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.036303952303799715,
+            0.035926099934658055,
+            0.0367515541002031,
+            0.03592460015240838,
+            0.03591484997536439
+          ],
+          "backward": [
+            0.0863045024788681,
+            0.0853431539332613,
+            0.0862990123469655,
+            0.08546456202128473,
+            0.08549825927317398
+          ],
+          "joint": [
+            0.12301025390625,
+            0.12301006435607531,
+            0.12307132525688105,
+            0.1229484739077374,
+            0.1229618388436486
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.036597124257482086,
+          "backward": 0.08100708182626777,
+          "joint": 0.11748700380894335
+        },
+        "sdpa": {
+          "forward": 0.019812215211401817,
+          "backward": 0.22656014979570763,
+          "joint": 0.24207868367216012
+        },
+        "previous": {
+          "forward": 0.035926099934658055,
+          "backward": 0.08549825927317398,
+          "joint": 0.12301006435607531
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0023261116282824673,
+            "max_absolute_error": 0.0006087787104414599
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0029509289276614314,
+            "max_absolute_error": 0.001268644889293763
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.002893697068083453,
+            "max_absolute_error": 0.0013154950704361568
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002404839650077812,
+            "max_absolute_error": 0.0006537983111995493
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0023261117607147807,
+            "max_absolute_error": 0.0006087802458555058
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016658683761154533,
+            "max_absolute_error": 0.0006871233683796163
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.001664327611624482,
+            "max_absolute_error": 0.0007209949959587902
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001664903312466471,
+            "max_absolute_error": 0.0005593853184109321
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "60ea22512ba6b315",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "872a6446e07e8798",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "60ea22512ba6b315",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "872a6446e07e8798",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "6d0a16791f57f7a4",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              128,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "6d0a16791f57f7a4",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              128,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "03526ff24e6a116b",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "a5bd09cc18416d61",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "65c23ef9bde6fb37",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "03526ff24e6a116b",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "a5bd09cc18416d61",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.3395791772293718,
+            0.3419862989707501,
+            0.3420264385000537,
+            0.34184632186627467,
+            0.3418160926845066
+          ],
+          "backward": [
+            1.4996060044018191,
+            1.5036722819010417,
+            1.5032082759972774,
+            1.501481258507931,
+            1.5020023692737927
+          ],
+          "joint": [
+            1.9003865168644831,
+            1.8981901315542369,
+            1.898124254666842,
+            1.8976842440091646,
+            1.8996080251840444
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.24391969045003256,
+            0.24371074227725759,
+            0.24361780578014897,
+            0.24362910027597465,
+            0.24404744540943818
+          ],
+          "backward": [
+            0.6328083694360818,
+            0.6334323158747033,
+            0.6292982463595234,
+            0.6289755905730815,
+            0.6312507580799661
+          ],
+          "joint": [
+            0.8739974707887884,
+            0.8741600304319147,
+            0.8698869002492804,
+            0.8697201243618078,
+            0.8710402773137678
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.342370521571628,
+            0.34216906360744204,
+            0.34163873606714706,
+            0.3432464075252363,
+            0.3420689196735105
+          ],
+          "backward": [
+            1.602781972577495,
+            1.6017320694461945,
+            1.5970611572265625,
+            1.5963731581164944,
+            1.5972980376212829
+          ],
+          "joint": [
+            1.9974847412109376,
+            1.9952447509765625,
+            1.9942413330078126,
+            1.9969369506835937,
+            1.9958578491210937
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.34184632186627467,
+          "backward": 1.5020023692737927,
+          "joint": 1.8981901315542369
+        },
+        "sdpa": {
+          "forward": 0.24371074227725759,
+          "backward": 0.6312507580799661,
+          "joint": 0.8710402773137678
+        },
+        "previous": {
+          "forward": 0.34216906360744204,
+          "backward": 1.5972980376212829,
+          "joint": 1.9958578491210937
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002110935266555451,
+            "max_absolute_error": 0.006892316230151518
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0031167323704293713,
+            "max_absolute_error": 0.012949318753629813
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003081630046979263,
+            "max_absolute_error": 0.012774144921357866
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023708822958045934,
+            "max_absolute_error": 0.012899278620627008
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021109344979228337,
+            "max_absolute_error": 0.006892348348483068
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.001687400931334902,
+            "max_absolute_error": 0.0072021484375
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0017046106896064193,
+            "max_absolute_error": 0.007784897443542604
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001757470305403423,
+            "max_absolute_error": 0.015009208298579324
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "868404d193fd3a6d",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c985e4b5f4ec7847",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "868404d193fd3a6d",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c985e4b5f4ec7847",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "d9980cd3f8a2d5ee",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              128,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2e407a6e1daed4ef",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "fcc2462ce9f54bec",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "d9980cd3f8a2d5ee",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              128,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "70fb6e3232a8a225",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "639145254db6ea7b",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "d0810f9184f1cc4a",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "70fb6e3232a8a225",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "639145254db6ea7b",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.31153883889456774,
+            0.31769121984008014,
+            0.31770730474192627,
+            0.31726837158203125,
+            0.3171166528629351
+          ],
+          "backward": [
+            0.7846608237614707,
+            0.8153862249655802,
+            0.8148609508167614,
+            0.8056508673996222,
+            0.8092607327593051
+          ],
+          "joint": [
+            1.0858271225639011,
+            1.1336397192944054,
+            1.1294450759887695,
+            1.128574544733221,
+            1.1261294971812854
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.1533000820033901,
+            0.15695979927159562,
+            0.15543856025683747,
+            0.15691096108483288,
+            0.15569255925432035
+          ],
+          "backward": [
+            0.419332061638812,
+            0.42063446688752637,
+            0.41754732131958006,
+            0.4191383007709487,
+            0.4191621462504069
+          ],
+          "joint": [
+            0.5733044503749102,
+            0.5770019795853278,
+            0.573278712130141,
+            0.5737375719793911,
+            0.5775948232308977
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.31612599531311225,
+            0.3152089436848958,
+            0.316999447420708,
+            0.31573418725894975,
+            0.31529280139553933
+          ],
+          "backward": [
+            0.8281207685711003,
+            0.835916663418297,
+            0.8294667015390947,
+            0.8312258039202008,
+            0.8289818445841471
+          ],
+          "joint": [
+            1.144674908031117,
+            1.1498688445694145,
+            1.1453406673738327,
+            1.1489092070480873,
+            1.1492118835449219
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.31726837158203125,
+          "backward": 0.8092607327593051,
+          "joint": 1.128574544733221
+        },
+        "sdpa": {
+          "forward": 0.15569255925432035,
+          "backward": 0.4191621462504069,
+          "joint": 0.5737375719793911
+        },
+        "previous": {
+          "forward": 0.31573418725894975,
+          "backward": 0.8294667015390947,
+          "joint": 1.1489092070480873
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0023175475695762057,
+            "max_absolute_error": 0.0005591107714212062
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0029184522583649386,
+            "max_absolute_error": 0.0010409429474162735
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0028800008595160293,
+            "max_absolute_error": 0.0011668202555539242
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0024112430878976856,
+            "max_absolute_error": 0.0006074574347150474
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.00231754692943861,
+            "max_absolute_error": 0.0005591076488223878
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016618919164342826,
+            "max_absolute_error": 0.0007336231981588393
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016618460457466365,
+            "max_absolute_error": 0.0009461189115967383
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001663121807836156,
+            "max_absolute_error": 0.00047939776777639054
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "92dc1609b93ac3f1",
+            "grid": [
+              22,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "d14a2f0b8907ac52",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2b43ccff74aebd70",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "92dc1609b93ac3f1",
+            "grid": [
+              22,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d14a2f0b8907ac52",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2b43ccff74aebd70",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "51e7d262fdb6de82",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "51e7d262fdb6de82",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "92dc1609b93ac3f1",
+            "grid": [
+              22,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "2517dd9c83b6d55a",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "886b87ae6dcdcef6",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "92dc1609b93ac3f1",
+            "grid": [
+              22,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2517dd9c83b6d55a",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "886b87ae6dcdcef6",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.5477980295817058,
+            0.5579489596063198,
+            0.5586313428825507,
+            0.5651589125216364,
+            0.5547416426918723
+          ],
+          "backward": [
+            1.5218885017163826,
+            1.5327857384314905,
+            1.5327468872070313,
+            1.539873480796814,
+            1.5264330350435698
+          ],
+          "joint": [
+            2.08320958563622,
+            2.0835165470204453,
+            2.0923377503740026,
+            2.0930409532912235,
+            2.0830060268970247
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.34905503186892506,
+            0.36798462345406363,
+            0.3542335330436527,
+            0.356032319971033,
+            0.3671305023927459
+          ],
+          "backward": [
+            1.039828638876638,
+            1.0739944115113675,
+            1.0611041561587826,
+            1.065418029099368,
+            1.075610985916652
+          ],
+          "joint": [
+            1.3759258058336046,
+            1.396755379690251,
+            1.4479930711829143,
+            1.4001613193088107,
+            1.4163371341329225
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.5598035026999081,
+            0.5602881936465993,
+            0.5571948855948847,
+            0.5657713199090101,
+            0.5683691645243082
+          ],
+          "backward": [
+            1.6461385488510132,
+            1.5785239934921265,
+            1.5869765281677246,
+            1.5911070108413696,
+            1.5687254667282104
+          ],
+          "joint": [
+            2.2451906426008357,
+            2.1127130259638247,
+            2.114247131347656,
+            2.21198186007413,
+            2.158891296386719
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.5579489596063198,
+          "backward": 1.5327468872070313,
+          "joint": 2.0835165470204453
+        },
+        "sdpa": {
+          "forward": 0.356032319971033,
+          "backward": 1.065418029099368,
+          "joint": 1.4001613193088107
+        },
+        "previous": {
+          "forward": 0.5602881936465993,
+          "backward": 1.5869765281677246,
+          "joint": 2.158891296386719
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0020697494477435775,
+            "max_absolute_error": 0.009477943170950631
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030021249777061844,
+            "max_absolute_error": 0.008729845987400342
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.002976210438781364,
+            "max_absolute_error": 0.013411085633409314
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023632542979557377,
+            "max_absolute_error": 0.013301249181927766
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0020697489046358005,
+            "max_absolute_error": 0.009477943170950631
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016726854027801794,
+            "max_absolute_error": 0.006212766349522614
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016820905052899171,
+            "max_absolute_error": 0.007557767997392606
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016983510045350295,
+            "max_absolute_error": 0.009984807191358414
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "821d4d86c7b4f820",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "44fa1d83d66db3e2",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e585ca714e56433e",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "821d4d86c7b4f820",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "44fa1d83d66db3e2",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e585ca714e56433e",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "88c825de4c89f5ac",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "2d09a4645ba0dfbb",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "50fdce07b4d7f6eb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "88c825de4c89f5ac",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "821d4d86c7b4f820",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "35c8b8145f7faba9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b530fae7c85f7db5",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "821d4d86c7b4f820",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "35c8b8145f7faba9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b530fae7c85f7db5",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.42373594201129416,
+            0.43312858812736743,
+            0.43370203501165167,
+            0.43541286302649457,
+            0.4324456256368886
+          ],
+          "backward": [
+            0.9067839882590554,
+            0.9259630720192027,
+            0.9250989843297888,
+            0.931226641218239,
+            0.9239419301350912
+          ],
+          "joint": [
+            1.358555205880779,
+            1.3576854549042165,
+            1.355226699620077,
+            1.3673139598271618,
+            1.3551105865060467
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.2194457106308551,
+            0.2204524067350759,
+            0.22030794252908178,
+            0.22034888867510866,
+            0.2195123050614572
+          ],
+          "backward": [
+            0.6338955805851862,
+            0.6353401922410534,
+            0.6345870479460686,
+            0.6360471676557492,
+            0.6338982704358224
+          ],
+          "joint": [
+            0.8643748407778533,
+            0.8578993040939857,
+            0.8579848059292497,
+            0.8582761681598166,
+            0.8619063667629077
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.43333739565129864,
+            0.4353981349779212,
+            0.43370906093664335,
+            0.4322478172537514,
+            0.43249924564774417
+          ],
+          "backward": [
+            0.9384091331845238,
+            0.9483007035165463,
+            0.9410297465774248,
+            0.9389835573592276,
+            0.9393301190070387
+          ],
+          "joint": [
+            1.3718386756049261,
+            1.3679676055908203,
+            1.373327996995714,
+            1.3717226452297635,
+            1.372153399741813
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.43312858812736743,
+          "backward": 0.9250989843297888,
+          "joint": 1.3576854549042165
+        },
+        "sdpa": {
+          "forward": 0.22030794252908178,
+          "backward": 0.6345870479460686,
+          "joint": 0.8582761681598166
+        },
+        "previous": {
+          "forward": 0.43333739565129864,
+          "backward": 0.9393301190070387,
+          "joint": 1.3718386756049261
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0022900394099004077,
+            "max_absolute_error": 0.0005612686621704055
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0028927555244490084,
+            "max_absolute_error": 0.0011676578134839632
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0028841961316226497,
+            "max_absolute_error": 0.0011330568300856603
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002384950339833135,
+            "max_absolute_error": 0.000729278186615695
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0022900390998235503,
+            "max_absolute_error": 0.0005612602079785589
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016591237966901307,
+            "max_absolute_error": 0.0006504221937859711
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.001660198166261325,
+            "max_absolute_error": 0.000735141021777963
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016631824768998256,
+            "max_absolute_error": 0.0004872836334470776
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "6d231e38b272772b",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "310920451fc7b772",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "6d231e38b272772b",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "310920451fc7b772",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "022511ab92612681",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "022511ab92612681",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcdae95c0ccbbbd4",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "3f6ed9c02c2677af",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcdae95c0ccbbbd4",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "3f6ed9c02c2677af",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.8958899008261191,
+            0.9239994331642434,
+            0.9232462423819082,
+            0.930937353170143,
+            0.9240396994131582
+          ],
+          "backward": [
+            6.825257778167725,
+            6.861392021179199,
+            6.894678115844727,
+            6.906065940856934,
+            6.95465612411499
+          ],
+          "joint": [
+            7.838143825531006,
+            8.025732040405273,
+            7.893789768218994,
+            7.927177906036377,
+            7.9883880615234375
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.6213934954474954,
+            0.6329586463060207,
+            0.6216613498665172,
+            0.6327999988234186,
+            0.6289831835352732
+          ],
+          "backward": [
+            2.761499292710248,
+            2.762286017922794,
+            2.783984015969669,
+            2.7635962542365577,
+            2.7623623118681064
+          ],
+          "joint": [
+            3.3957727366480333,
+            3.4017070901804956,
+            3.397692713244208,
+            3.40155029296875,
+            3.3934299863617996
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.9342165265764509,
+            0.9337099183280513,
+            0.9237259052417897,
+            0.9363289990471405,
+            0.9349763258448187
+          ],
+          "backward": [
+            6.657969951629639,
+            6.657423973083496,
+            6.652510166168213,
+            6.659780025482178,
+            6.662161827087402
+          ],
+          "joint": [
+            7.718716144561768,
+            7.719600200653076,
+            7.722949981689453,
+            7.725567817687988,
+            7.7188639640808105
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.9239994331642434,
+          "backward": 6.894678115844727,
+          "joint": 7.927177906036377
+        },
+        "sdpa": {
+          "forward": 0.6289831835352732,
+          "backward": 2.7623623118681064,
+          "joint": 3.397692713244208
+        },
+        "previous": {
+          "forward": 0.9342165265764509,
+          "backward": 6.657969951629639,
+          "joint": 7.719600200653076
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0020740712346146027,
+            "max_absolute_error": 0.008532178710582539
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.003114332196110874,
+            "max_absolute_error": 0.0161580686781031
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0031228744163057424,
+            "max_absolute_error": 0.01304843698185909
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0024297141891502978,
+            "max_absolute_error": 0.015413815131970487
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002074070695858068,
+            "max_absolute_error": 0.008532177237701166
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016655354447812328,
+            "max_absolute_error": 0.0138397216796875
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016741474530888284,
+            "max_absolute_error": 0.007483434681944345
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016847309951592115,
+            "max_absolute_error": 0.015433146450959612
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "61cc8a5bb8d198d1",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "61cc8a5bb8d198d1",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "f21267fbd89a6319",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "9b2fe79b5cd53d77",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "0273e6c8548018fa",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "f21267fbd89a6319",
+            "grid": [
+              114,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "dc4a0ee3ebfa1f3f",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e1d67dd4316d325c",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "68dc75b731e27547",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d0456c6834d93822",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e1d67dd4316d325c",
+            "grid": [
+              64,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "b3898389ccbb6d9e",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.6447791314894153,
+            0.6515336965585684,
+            0.6500697416417739,
+            0.6545305379231771,
+            0.6507229275173612
+          ],
+          "backward": [
+            3.407922678980334,
+            3.442248903471848,
+            3.440728286216999,
+            3.4561873844691684,
+            3.4415625210466056
+          ],
+          "joint": [
+            4.094728151957194,
+            4.09036127726237,
+            4.091502825419108,
+            4.089690526326497,
+            4.090821266174316
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.3844588247088878,
+            0.3877789167396922,
+            0.38589056907044617,
+            0.385989606153829,
+            0.3882974834949798
+          ],
+          "backward": [
+            1.5641538558467742,
+            1.5690369144562752,
+            1.561766609312996,
+            1.5496010318879159,
+            1.5606012651997228
+          ],
+          "joint": [
+            1.9200972043550932,
+            1.9236005636361928,
+            1.9197421440711389,
+            1.928106454702524,
+            1.919316365168645
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.6501934814453125,
+            0.6548503389294515,
+            0.6516122257008272,
+            0.6541523773398176,
+            0.6531780497233073
+          ],
+          "backward": [
+            3.554367882864816,
+            3.5480458395821706,
+            3.5377930232456754,
+            3.5394881112234935,
+            3.5491256713867188
+          ],
+          "joint": [
+            4.201805778171705,
+            4.202529243800951,
+            4.195222274116848,
+            4.196537183678669,
+            4.194676938264267
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.6507229275173612,
+          "backward": 3.4415625210466056,
+          "joint": 4.090821266174316
+        },
+        "sdpa": {
+          "forward": 0.385989606153829,
+          "backward": 1.561766609312996,
+          "joint": 1.9200972043550932
+        },
+        "previous": {
+          "forward": 0.6531780497233073,
+          "backward": 3.5480458395821706,
+          "joint": 4.196537183678669
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002295270391628042,
+            "max_absolute_error": 0.0005548560684176529
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.002891580354778027,
+            "max_absolute_error": 0.001719807483180652
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0028787653306183896,
+            "max_absolute_error": 0.0021415905041320404
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023686856726836086,
+            "max_absolute_error": 0.0007946488990004108
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002295269848014556,
+            "max_absolute_error": 0.0005548845602114938
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.001661115110235533,
+            "max_absolute_error": 0.0008065909100643531
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016606318184188783,
+            "max_absolute_error": 0.000930005700953418
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016592086962923587,
+            "max_absolute_error": 0.0005397506720328238
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9d5a3a419f3a2892",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9d5a3a419f3a2892",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fb471db2bd68ef2b",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "f0b66a647e1f7395",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "9d17670acac978e6",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fb471db2bd68ef2b",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "f0b66a647e1f7395",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            18.060815811157227,
+            18.072969436645508,
+            17.987852096557617,
+            18.063154220581055,
+            17.986452102661133
+          ],
+          "backward": [
+            61.75282669067383,
+            61.96729278564453,
+            62.013492584228516,
+            61.79254150390625,
+            61.56599807739258
+          ],
+          "joint": [
+            80.19512176513672,
+            79.95064544677734,
+            79.92024993896484,
+            80.12184143066406,
+            80.03189086914062
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            6.744349956512451,
+            6.749611854553223,
+            6.7546000480651855,
+            6.741916179656982,
+            6.7862420082092285
+          ],
+          "backward": [
+            56.90628433227539,
+            56.779640197753906,
+            56.818119049072266,
+            56.925209045410156,
+            57.024208068847656
+          ],
+          "joint": [
+            63.46784210205078,
+            63.57426071166992,
+            63.28019332885742,
+            63.55860900878906,
+            63.69358825683594
+          ]
+        },
+        "previous": {
+          "forward": [
+            18.2363338470459,
+            18.055744171142578,
+            18.15324592590332,
+            18.1534366607666,
+            18.075727462768555
+          ],
+          "backward": [
+            72.4443588256836,
+            72.57798767089844,
+            72.38619995117188,
+            71.94686889648438,
+            72.47906494140625
+          ],
+          "joint": [
+            90.11329650878906,
+            90.30082702636719,
+            90.30586242675781,
+            90.35077667236328,
+            90.75212860107422
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 18.060815811157227,
+          "backward": 61.79254150390625,
+          "joint": 80.03189086914062
+        },
+        "sdpa": {
+          "forward": 6.749611854553223,
+          "backward": 56.90628433227539,
+          "joint": 63.55860900878906
+        },
+        "previous": {
+          "forward": 18.15324592590332,
+          "backward": 72.4443588256836,
+          "joint": 90.30586242675781
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0020789051346909635,
+            "max_absolute_error": 0.008375668029894534
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030400604411769065,
+            "max_absolute_error": 0.01739928503314747
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003039121859310595,
+            "max_absolute_error": 0.01826393390464265
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023629376726270355,
+            "max_absolute_error": 0.020622540105212472
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002078906500625523,
+            "max_absolute_error": 0.00837543868264623
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0018083523270208642,
+            "max_absolute_error": 0.011052740966729813
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0017882725654236255,
+            "max_absolute_error": 0.009789088291312531
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001735735522016602,
+            "max_absolute_error": 0.015485393772905809
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "3cefb0510319bc74",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "ffeb24b1e8afcba7",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "3cefb0510319bc74",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "ffeb24b1e8afcba7",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "3c2d3a730fd13137",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c82d5bfc23e6937f",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "ef180b33c58f0d22",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9c271d762757c503",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "c91adb95c2dc609a",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "e89806bc78a1026f",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9c271d762757c503",
+            "grid": [
+              256,
+              16,
+              4
+            ]
+          },
+          {
+            "kernel": "fe503b035bf68ae9",
+            "grid": [
+              256,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            9.09147834777832,
+            9.074501991271973,
+            9.087311744689941,
+            9.097135543823242,
+            9.091106414794922
+          ],
+          "backward": [
+            31.649005889892578,
+            31.6546630859375,
+            31.653305053710938,
+            31.636737823486328,
+            31.645389556884766
+          ],
+          "joint": [
+            40.6713752746582,
+            40.67415237426758,
+            40.67771911621094,
+            40.6785774230957,
+            40.660518646240234
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            3.6359786987304688,
+            3.6141286779333046,
+            3.6286756727430554,
+            3.6223845305266202,
+            3.6189487598560475
+          ],
+          "backward": [
+            34.973445892333984,
+            34.91758728027344,
+            34.880672454833984,
+            34.8681755065918,
+            34.897220611572266
+          ],
+          "joint": [
+            38.48001480102539,
+            38.52744674682617,
+            38.699886322021484,
+            38.40681457519531,
+            38.593936920166016
+          ]
+        },
+        "previous": {
+          "forward": [
+            9.10279369354248,
+            9.107385635375977,
+            9.090649604797363,
+            9.103425979614258,
+            9.08963394165039
+          ],
+          "backward": [
+            34.1917610168457,
+            34.19432067871094,
+            34.20922088623047,
+            34.19688415527344,
+            34.19877243041992
+          ],
+          "joint": [
+            43.23366928100586,
+            43.220680236816406,
+            43.226402282714844,
+            43.221927642822266,
+            43.2264404296875
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 9.091106414794922,
+          "backward": 31.649005889892578,
+          "joint": 40.67415237426758
+        },
+        "sdpa": {
+          "forward": 3.6223845305266202,
+          "backward": 34.897220611572266,
+          "joint": 38.52744674682617
+        },
+        "previous": {
+          "forward": 9.10279369354248,
+          "backward": 34.19688415527344,
+          "joint": 43.226402282714844
+        }
+      }
+    }
+  ],
+  "kernels": {
+    "65c23ef9bde6fb37": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 41984,
+      "NUM_REGS": 95,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "60ea22512ba6b315": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "872a6446e07e8798": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 211,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "2e407a6e1daed4ef": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_1_64x128x64_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 134144,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "fcc2462ce9f54bec": {
+      "symbol": "_ZN5cudnn6fusion28compute_dot_do_o_specializedILb1ELi64EEEvPKvS3_PvS4_jjjjjjjjjjjjjjjjjfS3_S3_S3_S3_S3_bS3_S4_S3_S3_iiiiiiiiiPfS5_S5_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 26,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "6d0a16791f57f7a4": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_bprop_wgmma_f16_knob_2_64x64x64_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 152576,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 24,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "dc4a0ee3ebfa1f3f": {
+      "symbol": "_ZN5cudnn6fusion20convert_dq_to_16bitsILb1EEEvPKvPvjjjjjjjjjjPKfS6_S6_PfS3_S4_S4_bb",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 28,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "03526ff24e6a116b": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 165,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "a5bd09cc18416d61": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 246,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "d0810f9184f1cc4a": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 41984,
+      "NUM_REGS": 105,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "868404d193fd3a6d": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 126,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "c985e4b5f4ec7847": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 191,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "d9980cd3f8a2d5ee": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_bprop_wgmma_f16_knob_2_64x64x64_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 152576,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 32,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "70fb6e3232a8a225": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "639145254db6ea7b": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 223,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "5fbfda2b1efe3a9c": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 82944,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "d14a2f0b8907ac52": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 185,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "2b43ccff74aebd70": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 100352,
+      "NUM_REGS": 243,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "2d09a4645ba0dfbb": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_1_64x128x128_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "50fdce07b4d7f6eb": {
+      "symbol": "_ZN5cudnn6fusion28compute_dot_do_o_specializedILb1ELi128EEEvPKvS3_PvS4_jjjjjjjjjjjjjjjjjfS3_S3_S3_S3_S3_bS3_S4_S3_S3_iiiiiiiiiPfS5_S5_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 26,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "51e7d262fdb6de82": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_bprop_wgmma_f16_knob_2_64x64x128_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 216064,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 24,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "2517dd9c83b6d55a": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 245,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "886b87ae6dcdcef6": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 100352,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "70b4fd0f6fc5a5ac": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 82944,
+      "NUM_REGS": 160,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "44fa1d83d66db3e2": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 178,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "e585ca714e56433e": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 100352,
+      "NUM_REGS": 250,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "88c825de4c89f5ac": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_bprop_wgmma_f16_knob_2_64x64x128_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 216064,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 40,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "35c8b8145f7faba9": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 244,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "b530fae7c85f7db5": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 100352,
+      "NUM_REGS": 254,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "68dc75b731e27547": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 243,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "d0456c6834d93822": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81__0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 16384,
+      "NUM_REGS": 60,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "6d231e38b272772b": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 224,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "310920451fc7b772": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 107520,
+      "NUM_REGS": 249,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "9b2fe79b5cd53d77": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_1_64x128x256_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "0273e6c8548018fa": {
+      "symbol": "_ZN5cudnn6fusion28compute_dot_do_o_specializedILb1ELi256EEEvPKvS3_PvS4_jjjjjjjjjjjjjjjjjfS3_S3_S3_S3_S3_bS3_S4_S3_S3_iiiiiiiiiPfS5_S5_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 26,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "022511ab92612681": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_bprop_wgmma_f16_knob_2_64x64x256_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "bcdae95c0ccbbbd4": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 221,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "3f6ed9c02c2677af": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 107520,
+      "NUM_REGS": 254,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "61cc8a5bb8d198d1": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 194,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "b3898389ccbb6d9e": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 107520,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "f21267fbd89a6319": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm90_flash_bprop_wgmma_f16_knob_2_64x64x256_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 24,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "e1d67dd4316d325c": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 216,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "9d17670acac978e6": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 81920,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "e89806bc78a1026f": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 32768,
+      "NUM_REGS": 60,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "9d5a3a419f3a2892": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 98304,
+      "NUM_REGS": 251,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "fe503b035bf68ae9": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 100352,
+      "NUM_REGS": 254,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "3c2d3a730fd13137": {
+      "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+      "block": [
+        32,
+        4,
+        1
+      ],
+      "shared_bytes": 51200,
+      "NUM_REGS": 124,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "c82d5bfc23e6937f": {
+      "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 18,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "ef180b33c58f0d22": {
+      "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 60928,
+      "NUM_REGS": 161,
+      "LOCAL_SIZE_BYTES": 64,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "fb471db2bd68ef2b": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 98304,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 120,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "f0b66a647e1f7395": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 100352,
+      "NUM_REGS": 252,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "c91adb95c2dc609a": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 81920,
+      "NUM_REGS": 244,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "3cefb0510319bc74": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 98304,
+      "NUM_REGS": 227,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "ffeb24b1e8afcba7": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 100352,
+      "NUM_REGS": 251,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "9c271d762757c503": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_1",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 98304,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "92dc1609b93ac3f1": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsForwardLoadSpecialized_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 181248,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    },
+    "821d4d86c7b4f820": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 50176,
+      "NUM_REGS": 123,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 90,
+      "PTX_VERSION": 90
+    }
+  },
+  "benchmark_sha256": {
+    "benchmarks/qualify_baseline_precision.py": "a6a8d98ae5da49462d558202e8d31768119767fb864afae193085587df063647",
+    "benchmarks/experimental_precision_control.py": "62d8aa5689ca4e5f7e15eea71e3f360450b826365a9d161f87b39c1fe36cb179",
+    "benchmarks/reference.py": "6edbefe2bea7afff3cd5f024b1a4da70bc3f8d5af6b9e0e22b6360a7fcb541a7",
+    "benchmarks/compare_ada.py": "ba4cce427328ed6e1b1e24fe0e2627b5a7fdb5fe0808df6f2e61ac8fbc256a66",
+    "benchmarks/compare_l40s.py": "314ace8fa0205cfe82f1aa4db23b4ffca3a6290a6d8956854c5f74034a894b56"
+  },
+  "precision_contract": "Single rounded FP16/BF16 P; dS formed from rounded P and actual O/dO FP32 delta, rounded once; FP32 accumulation followed by gradient scaling.",
+  "controls": {
+    "cute": "Current default arithmetic and schedules.",
+    "previous": "Pre-change arithmetic reconstructed on this compiler; separately verified against the preceding checkout.",
+    "sdpa": "Default PyTorch SDPA; actual graph symbols identify the selected kernels."
+  },
+  "repeats": 5,
+  "target_window_ms": 100,
+  "loaded_libraries": [
+    "kohakufa_cute_native_3c94eefc4143b2c6.so",
+    "libc10_cuda.so",
+    "libcublas.so.13",
+    "libcublasLt.so.13",
+    "libcuda.so.595.71.05",
+    "libcudart.so.13",
+    "libcudnn.so.9",
+    "libcudnn_engines_precompiled.so.9",
+    "libcudnn_engines_runtime_compiled.so.9",
+    "libcudnn_engines_tensor_ir.so.9",
+    "libcudnn_graph.so.9",
+    "libcudnn_heuristic.so.9",
+    "libnvidia-ptxjitcompiler.so.595.71.05",
+    "libtorch.so",
+    "libtorch_cpu.so",
+    "libtorch_cuda.so",
+    "libtorch_global_deps.so",
+    "libtorch_nvshmem.so",
+    "libtorch_python.so"
+  ]
+}

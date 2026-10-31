@@ -43,6 +43,7 @@ def schedule(program, dimension):
                 full_copies=owner.full_copies,
                 packed_statistics=owner.packed_statistics,
             )
+            replacement.baseline_precision = False
             replacement.compensated_keys = replacement.compensated_values = True
             replacement.scaled_key_residual = replacement.scaled_value_residual = True
             replacement.combined_key_products = replacement.combined_value_products = column_warps != 2

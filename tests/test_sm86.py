@@ -74,6 +74,7 @@ class AmpereScheduleTests(unittest.TestCase):
                         actual = self.run_attention(q, k, v, dout, causal=causal)
                         self.compare(actual, q, k, v, dout, causal=causal)
                 self.assertEqual(compiler.call_count, 2)
+            q, k, v = [tensor.detach().requires_grad_() for tensor in (q, k, v)]
             stream = torch.cuda.Stream()
             stream.wait_stream(torch.cuda.current_stream())
             with torch.cuda.stream(stream):
@@ -189,6 +190,7 @@ class AmpereScheduleTests(unittest.TestCase):
                         actual = self.run_attention(q, k, v, dout, causal=causal)
                         self.compare(actual, q, k, v, dout, causal=causal)
                         if queries in (1024, 1025, 4097):
+                            q, k, v = [tensor.detach().requires_grad_() for tensor in (q, k, v)]
                             stream = torch.cuda.Stream()
                             stream.wait_stream(torch.cuda.current_stream())
                             with torch.cuda.stream(stream):

@@ -28,6 +28,24 @@ dV = Pᵀ @ dO
 
 The centered backward uses the output/dO dot product as a base, then recomputes the residual softmax correction with FP32 probabilities. It retains the full P-weighted-key correction; the rounded output is not the final softmax correction. These choices apply across the supported GPU architectures.
 
+## Rectangular value gradients
+
+Value gradients can also lose accuracy when probability rounding errors accumulate across many query rows. On the qualified RTX 3090 Ti, L40S and RTX 5090 generic D128 paths, FP16 and BF16 calls with more queries than keys retain two probability components in the input dtype:
+
+```text
+P_hi = round_input(P)
+P_lo = round_input(P - FP32(P_hi))
+dV_hi = accumulate_FP32(P_hiᵀ @ dO)
+dV_lo = accumulate_FP32(P_loᵀ @ dO)
+dV = round_input(dV_hi + dV_lo)
+```
+
+The two accumulators remain separate until the final conversion. Adding each low-component product directly into the larger running accumulator can lose the correction through FP32 accumulation rounding. The query and key gradient equations are unchanged. Runtime dispatch checks both sequence lengths, including when a cached program is reused for square and rectangular calls.
+
+The [value-gradient regressions](../tests/test_value_precision.py) include a 1,023-query, 17-key cancellation case whose FP64 coordinate is approximately **−0.01824**. A single rounded probability operand produces **+0.37109 in BF16** or **+0.008705 in FP16**, despite passing the whole-tensor norm gate. On L40S, separate accumulation returns approximately **−0.01819 in BF16** and **−0.018234 in FP16**. The regression checks that coordinate's sign and relative error as well as the full tensors. The extra probability product and accumulator belong to the rectangular backward cost. The selected kernel uses 32-key-row tiles and two warps along the output-column dimension to reduce the accumulator footprint.
+
+In a matched L40S BF16 B1/H16 run with three alternating 100 ms timing windows, the corrected 1,023-query/17-key complete call took 58.88 µs versus 69.98 µs for the preceding implementation. For 1,537 queries/1,031 keys it took 454.97 µs versus 387.90 µs: the added probability product has a measurable cost on this shape. Square calls keep their preceding fallback. The selected rectangular kernel uses 208 registers per thread, no local memory and 38,912 bytes of dynamic shared memory. An initial full-width accumulator layout was rejected after the loaded SASS and CUDA function attributes showed heavy local-memory spilling; the smaller tile removes that allocation failure without discarding the low component.
+
 ## Check gradients, including their magnitude
 
 The saturated BF16 regression has an FP64 query derivative of `1.92874984796e-21`; CuTe returns `1.93229391092e-21`. A separate 100-digit decimal finite difference checks the reference. See the [GPU regressions](../tests/test_kernels.py) and [reference tests](../tests/test_reference.py).

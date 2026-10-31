@@ -16,7 +16,7 @@ from benchmarks.reference import fp64_reference, metrics
 from kohakufa_cute import ada, kernels, native, scaled_dot_product_attention
 
 
-def capture(function, inputs, dout, causal, phase):
+def capture(function, inputs, dout, causal, phase, *, keep_graph=False):
     operands = [tensor.clone().requires_grad_(True) for tensor in inputs]
     stream = torch.cuda.Stream()
     stream.wait_stream(torch.cuda.current_stream())
@@ -31,7 +31,7 @@ def capture(function, inputs, dout, causal, phase):
 
         for _ in range(3):
             expected = run()
-        graph = torch.cuda.CUDAGraph()
+        graph = torch.cuda.CUDAGraph(keep_graph=keep_graph)
         with torch.cuda.graph(graph, stream=stream):
             actual = run()
     torch.cuda.current_stream().wait_stream(stream)

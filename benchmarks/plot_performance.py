@@ -86,7 +86,14 @@ def main():
             )
             axis.invert_yaxis()
             for (i, j), value in np.ndenumerate(ratios):
-                axis.text(j, i, f"{value:.2f}×", ha="center", va="center", color="white" if value > 2 else "#172b34")
+                axis.text(
+                    j,
+                    i,
+                    f"{value:.2f}×",
+                    ha="center",
+                    va="center",
+                    color="white" if value < 0.64 or value > 2.4 else "#172b34",
+                )
             axis.set_xticks(range(len(dimensions)), [f"D{dim}" for dim in dimensions])
             axis.set_yticks(
                 range(len(keys)), [f"{dtype.upper()} · S{seq} · {mask}" for dtype, seq, mask in keys], fontsize=9
@@ -103,7 +110,8 @@ def main():
     figure.supxlabel(
         "Above 1×: CuTe faster (teal). Below 1×: SDPA faster (brown).\n"
         "All panels include D16 and S128. Actual SDPA kernel names are retained in the reports.\n"
-        "Each cell compares backends on the same GPU and stack; hardware and compiler stacks differ between GPUs.",
+        "Each cell compares backends on the same GPU and stack; hardware and compiler stacks differ between GPUs.\n"
+        "CUDA-event spans cover repeated graph replays; short calls can include submission gaps.",
         fontsize=10,
     )
     output = args.results / "performance.svg"

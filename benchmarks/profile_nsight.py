@@ -5,16 +5,18 @@ forward path. Keep profiler reports outside the checkout.
 """
 
 import argparse
+import importlib
 import json
+from contextlib import nullcontext
 
 import torch
 
-from kohakufa_cute import scaled_dot_product_attention
+from benchmarks.flashattention_backends import load_backend
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--backend", choices=("sdpa", "cute"), required=True)
+    parser.add_argument("--backend", choices=("sdpa", "cute", "fa2", "fa3", "fa4", "candidate"), required=True)
     parser.add_argument("--phase", choices=("forward", "backward", "joint"), default="joint")
     parser.add_argument("--seq", type=int, default=1024)
     parser.add_argument("--dim", type=int, default=512)
@@ -24,16 +26,39 @@ def main():
     parser.add_argument("--dtype", choices=("fp16", "bf16"), default="bf16")
     parser.add_argument("--causal", action="store_true")
     parser.add_argument("--eager", action="store_true", help="Profile ordinary launches instead of CUDA graph replay")
+    parser.add_argument("--candidate", help="Explicit module:factory returning an SDPA-shaped callable")
+    parser.add_argument("--candidate-kwargs", default="{}")
+    parser.add_argument("--context", help="Explicit module:context_factory[:string_argument]")
     args = parser.parse_args()
     if min(args.seq, args.dim, args.heads, args.iterations, args.warmup) < 1:
         parser.error("Shapes and iteration counts must be positive")
+    if args.candidate and args.context:
+        parser.error("Select a candidate callable or a dispatch context")
+    if (args.backend == "candidate") != bool(args.candidate):
+        parser.error("--backend candidate requires --candidate, and conversely")
+    if args.context and args.backend != "cute":
+        parser.error("A dispatch context requires --backend cute")
+    context = nullcontext()
+    if args.context:
+        module_name, factory_name, *argument = args.context.split(":", 2)
+        context = getattr(importlib.import_module(module_name), factory_name)(*argument)
+    if args.candidate:
+        module_name, factory_name = args.candidate.split(":")
+        operation = getattr(importlib.import_module(module_name), factory_name)(**json.loads(args.candidate_kwargs))
+    else:
+        operation = load_backend(args.backend)
+    # Keep dispatch contexts and their compiled-function owners alive through replay.
+    with context:
+        profile(args, operation)
+
+
+def profile(args, operation):
     torch.manual_seed(21)
     dtype = torch.bfloat16 if args.dtype == "bf16" else torch.float16
     inputs = [
         torch.randn(1, args.heads, args.seq, args.dim, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)
     ]
     dout = torch.randn_like(inputs[0])
-    operation = scaled_dot_product_attention if args.backend == "cute" else torch.nn.functional.scaled_dot_product_attention
     stream = torch.cuda.Stream()
     stream.wait_stream(torch.cuda.current_stream())
     with torch.cuda.stream(stream):

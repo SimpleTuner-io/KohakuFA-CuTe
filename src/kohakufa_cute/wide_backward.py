@@ -6,14 +6,14 @@ from cuda.bindings import driver as cuda
 from cutlass.cute.nvgpu import warp
 from cutlass.memory import SmemAllocator
 
-from .kernels import Attention
+from .kernels import Attention, packed_half_conversion
 from .launch import block_indices, launch_grid
 
 
 class WideKeyValue(Attention):
     """Use 16 key rows, 32 query columns and 99 KiB of shared memory."""
 
-    def __init__(self, causal, *, vector, copy_cache_global):
+    def __init__(self, causal, *, vector, copy_cache_global, packed_bf16_causal=False):
         super().__init__(
             "kv",
             causal,
@@ -31,6 +31,7 @@ class WideKeyValue(Attention):
         self.compensated_keys = True
         self.scaled_key_residual = True
         self.scaled_value_residual = True
+        self.packed_bf16_causal = packed_bf16_causal
         self.compensated_values = True
         self.score = Attention(
             "kv",
@@ -132,18 +133,32 @@ class WideKeyValue(Attention):
                     )
                     coords = st.partition_C(cute.make_identity_tensor((16, 32)))
                     assert cute.size(coords) == 4
-                    for i in cutlass.range_constexpr(cute.size(coords)):
-                        r, c = coords[i]
-                        rounded = scores[i].to(q.element_type)
-                        ds[r, c] = rounded
-                        p[r, c] = prob[i].to(q.element_type)
-                        if cutlass.const_expr(self.compensated_values):
-                            probability_low[i] = prob[i] - prob[i].to(q.element_type).to(cutlass.Float32)
-                        residual = scores[i] - rounded.to(cutlass.Float32)
-                        if cutlass.const_expr(self.scaled_key_residual and q.element_type == cutlass.Float16):
-                            # Preserve small FP16 residuals without changing their significand.
-                            residual *= 1024.0
-                        low[r, c] = residual.to(q.element_type)
+                    if cutlass.const_expr(self.packed_bf16_causal and self.causal and q.element_type == cutlass.BFloat16):
+                        rounded_scores = cute.make_fragment_like(scores, q.element_type)
+                        rounded_probabilities = cute.make_fragment_like(prob, q.element_type)
+                        packed_half_conversion(scores, rounded_scores)
+                        packed_half_conversion(prob, rounded_probabilities)
+                        self.score.store_packed_weights(rounded_scores, ds, coords)
+                        self.score.store_packed_weights(rounded_probabilities, p, coords)
+                        probability_low.store(prob.load() - rounded_probabilities.load().to(cutlass.Float32))
+                        residual = cute.make_fragment_like(scores)
+                        residual.store(scores.load() - rounded_scores.load().to(cutlass.Float32))
+                        rounded_residual = cute.make_fragment_like(rounded_scores)
+                        packed_half_conversion(residual, rounded_residual)
+                        self.score.store_packed_weights(rounded_residual, low, coords)
+                    else:
+                        for i in cutlass.range_constexpr(cute.size(coords)):
+                            r, c = coords[i]
+                            rounded = scores[i].to(q.element_type)
+                            ds[r, c] = rounded
+                            p[r, c] = prob[i].to(q.element_type)
+                            if cutlass.const_expr(self.compensated_values):
+                                probability_low[i] = prob[i] - prob[i].to(q.element_type).to(cutlass.Float32)
+                            residual = scores[i] - rounded.to(cutlass.Float32)
+                            if cutlass.const_expr(self.scaled_key_residual and q.element_type == cutlass.Float16):
+                                # Preserve small FP16 residuals without changing their significand.
+                                residual *= 1024.0
+                            low[r, c] = residual.to(q.element_type)
                 cute.arch.sync_threads()
                 self.dual_product(ds, low, right, 0, mma, thread, tid, hi_acc, lo_acc)
                 if cutlass.const_expr(not self.compensated_values or not self.causal and q.element_type == cutlass.Float16):
@@ -153,14 +168,21 @@ class WideKeyValue(Attention):
                 if cutlass.const_expr(self.compensated_values):
                     if tid < 128:
                         coords = st.partition_C(cute.make_identity_tensor((16, 32)))
-                        for i in cutlass.range_constexpr(cute.size(coords)):
-                            r, c = coords[i]
-                            value_residual = probability_low[i]
-                            if cutlass.const_expr(self.scaled_value_residual and q.element_type == cutlass.Float16):
-                                # P is bounded by one: its half residual times 2**24
-                                # stays in range while retaining subnormal-sized weights.
-                                value_residual *= 16777216.0
-                            low[r, c] = value_residual.to(q.element_type)
+                        if cutlass.const_expr(
+                            self.packed_bf16_causal and self.causal and q.element_type == cutlass.BFloat16
+                        ):
+                            rounded_values = cute.make_fragment_like(probability_low, q.element_type)
+                            packed_half_conversion(probability_low, rounded_values)
+                            self.score.store_packed_weights(rounded_values, low, coords)
+                        else:
+                            for i in cutlass.range_constexpr(cute.size(coords)):
+                                r, c = coords[i]
+                                value_residual = probability_low[i]
+                                if cutlass.const_expr(self.scaled_value_residual and q.element_type == cutlass.Float16):
+                                    # P is bounded by one: its half residual times 2**24
+                                    # stays in range while retaining subnormal-sized weights.
+                                    value_residual *= 16777216.0
+                                low[r, c] = value_residual.to(q.element_type)
                     # Publish P_low into the released DS_low plane.
                     cute.arch.sync_threads()
                     if cutlass.const_expr(self.causal or q.element_type == cutlass.BFloat16):

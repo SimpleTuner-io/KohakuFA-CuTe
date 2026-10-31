@@ -33,14 +33,14 @@ class WidePrecisionPolicyTests(unittest.TestCase):
         cls.policy = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cls.policy)
 
-    def replace(self, program, dimension):
+    def replace(self, program, dimension, **options):
         modules = {
             "kohakufa_cute.kernels": types.SimpleNamespace(Attention=Owner),
             "kohakufa_cute.medium_backward": types.SimpleNamespace(MediumKeyValue=Replacement),
             "kohakufa_cute.wide_backward": types.SimpleNamespace(WideKeyValue=Replacement),
         }
         with patch.dict(sys.modules, modules):
-            return self.policy.schedule(program, dimension)
+            return self.policy.schedule(program, dimension, **options)
 
     def test_all_length_branches_receive_one_shared_kv_replacement(self):
         for dimension in (256, 512):
@@ -71,6 +71,18 @@ class WidePrecisionPolicyTests(unittest.TestCase):
         for dimension in (0, 32, 96, 257, 513):
             with self.subTest(dimension=dimension), self.assertRaises(ValueError):
                 self.policy.schedule(Owner(), dimension)
+
+    def test_packed_wide_selection_uses_the_explicit_compile_device(self):
+        capabilities = {0: (8, 9), 1: (12, 0)}
+        names = {0: "NVIDIA L40S", 1: "NVIDIA GeForce RTX 5090"}
+        with (
+            patch("torch.cuda.get_device_capability", side_effect=lambda device: capabilities[device]),
+            patch("torch.cuda.get_device_name", side_effect=lambda device: names[device]),
+        ):
+            packed = self.replace(Owner(), 512, device=1)
+            scalar = self.replace(Owner(), 512, device=0)
+        self.assertTrue(packed.options["packed_bf16_causal"])
+        self.assertNotIn("packed_bf16_causal", scalar.options)
 
     def test_full_cta_barriers_stay_outside_partial_thread_guards(self):
         # The wide kernel's 128 score producers share a CTA with 128 other

@@ -16,6 +16,16 @@ def schedule(program, dimension, *, device=None):
     else:
         from .wide_backward import WideKeyValue as KeyValue
 
+    options = {}
+    if dimension == 512 and device is not None:
+        import torch
+
+        if (
+            torch.cuda.get_device_capability(device) == (12, 0)
+            and torch.cuda.get_device_name(device) == "NVIDIA GeForce RTX 5090"
+        ):
+            options["packed_bf16_causal"] = True
+
     memo = {}
 
     def visit(owner):
@@ -25,7 +35,7 @@ def schedule(program, dimension, *, device=None):
         memo[identity] = owner
         if type(owner) is Attention and owner.mode == "kv" and not owner.masked:
             assert owner.centered
-            replacement = KeyValue(owner.causal, vector=owner.vector, copy_cache_global=owner.copy_cache_global)
+            replacement = KeyValue(owner.causal, vector=owner.vector, copy_cache_global=owner.copy_cache_global, **options)
             memo[identity] = replacement
             return replacement
         for attribute in (

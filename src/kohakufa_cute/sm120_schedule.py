@@ -96,7 +96,6 @@ class ShortBackwardOnly:
             copy_cache_global=fallback_kv.copy_cache_global,
             kv_column_warps=4,
         )
-        short.keyvalue.compensated_keys = dimension == 128
         short.base_dot = False
         self.short = short if causal else complete_tiles(short)
 

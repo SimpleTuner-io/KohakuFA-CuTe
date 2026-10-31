@@ -13,8 +13,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm89_split_forward_compiled_dynamic_query_boundaries(self):
         if torch.cuda.get_device_capability() not in {(8, 9), (9, 0)}:
             self.skipTest("Requires Ada or Hopper short-query forward kernels.")
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         torch.compiler.reset()
         self.addCleanup(torch.compiler.reset)
@@ -25,7 +25,7 @@ class CuTeAttentionTests(unittest.TestCase):
                 q = torch.randn(1, queries, 16, 64, device="cuda", dtype=torch.bfloat16).transpose(1, 2)
                 k, v = [torch.randn(1, 257, 16, 64, device="cuda", dtype=q.dtype).transpose(1, 2) for _ in range(2)]
                 dout = torch.randn_like(q)
-                expected = fp64_reference((q, k, v), dout)
+                expected = attention_reference((q, k, v), dout)
                 inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                 output = function(*inputs)
                 gradients = torch.autograd.grad(output, inputs, dout)
@@ -35,8 +35,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm89_short_query_split_forward_matches_fp64_and_saved_statistics(self):
         if torch.cuda.get_device_capability() not in {(8, 9), (9, 0)}:
             self.skipTest("Requires Ada or Hopper short-query forward kernels.")
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import native
+        from tests.attention_reference import attention_reference
 
         extension = native.extension()
         extension.clear_cache()
@@ -67,7 +67,7 @@ class CuTeAttentionTests(unittest.TestCase):
                             tensor.copy_(torch.randn_like(tensor))
                         graph.replay()
                         torch.cuda.synchronize()
-                        expected = fp64_reference((q, k, v), dout, scale=scale)
+                        expected = attention_reference((q, k, v), dout, scale=scale)
                         tolerance = 0.02 if dtype == torch.bfloat16 else 0.003
                         for got, want in zip(actual, expected):
                             torch.testing.assert_close(got.double(), want, atol=tolerance, rtol=tolerance)
@@ -78,8 +78,8 @@ class CuTeAttentionTests(unittest.TestCase):
         if torch.cuda.get_device_capability() not in {(8, 9), (9, 0)}:
             self.skipTest("Requires Ada or Hopper short-query forward kernels.")
         from benchmarks.precision import make_inputs
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
+        from tests.attention_reference import attention_reference
 
         native.extension().clear_cache()
         try:
@@ -93,7 +93,7 @@ class CuTeAttentionTests(unittest.TestCase):
                     inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                     output = attention(*inputs)
                     actual = (output, *torch.autograd.grad(output, inputs, dout))
-                    expected = fp64_reference(inputs, dout)
+                    expected = attention_reference(inputs, dout)
                     tolerance = 0.02 if dtype == torch.bfloat16 else 0.003
                     torch.testing.assert_close(actual[0].double(), expected[0], atol=tolerance, rtol=tolerance)
                     for got, want in zip(actual[1:], expected[1:]):
@@ -117,7 +117,7 @@ class CuTeAttentionTests(unittest.TestCase):
                     inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                     output = attention(*inputs, scale=1.0)
                     actual = (output, *torch.autograd.grad(output, inputs, dout))
-                    expected = fp64_reference(inputs, dout, scale=1.0)
+                    expected = attention_reference(inputs, dout, scale=1.0)
                     for got, want in zip(actual, expected):
                         torch.testing.assert_close(got.double(), want, atol=1e-7 if dtype == torch.float16 else 0, rtol=0.02)
         finally:
@@ -222,8 +222,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_generic_backward_layouts_read_changed_graph_inputs(self):
         if torch.cuda.get_device_capability() not in ((8, 6), (8, 9), (12, 0)):
             self.skipTest("Requires measured generic warp-MMA layouts.")
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
+        from tests.attention_reference import attention_reference
 
         for dimension, dtype, causal in itertools.product(
             (64, 128, 256, 512), (torch.float16, torch.bfloat16), (False, True)
@@ -253,7 +253,7 @@ class CuTeAttentionTests(unittest.TestCase):
                                 tensor.copy_(torch.randn_like(tensor))
                         graph.replay()
                         torch.cuda.synchronize()
-                        expected = fp64_reference(inputs, dout, causal=causal, scale=-0.125)
+                        expected = attention_reference(inputs, dout, causal=causal, scale=-0.125)
                         tolerance = 0.03 if dtype == torch.bfloat16 else 0.005
                         for got, want in zip(actual, expected):
                             torch.testing.assert_close(got.double(), want, atol=tolerance, rtol=tolerance)
@@ -401,8 +401,8 @@ class CuTeAttentionTests(unittest.TestCase):
             self.skipTest("Requires the Blackwell producer/consumer pipeline.")
         from unittest.mock import patch
 
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, kernels, native
+        from tests.attention_reference import attention_reference
 
         for dim, columns, dtype in itertools.product((128, 512), (64, 128), (torch.float16, torch.bfloat16)):
 
@@ -445,7 +445,11 @@ class CuTeAttentionTests(unittest.TestCase):
                                 k.mul_(0.1)
                         graph.replay()
                         torch.cuda.synchronize()
-                        expected = fp64_reference((q, k, v), dout, scale=1.0)
+                        expected = (
+                            attention_reference((q, k, v), dout, scale=1.0, output=output)
+                            if saturated
+                            else attention_reference((q, k, v), dout, scale=1.0)
+                        )
                         for actual, reference in zip((output, *gradients), expected):
                             torch.testing.assert_close(
                                 actual.double(),
@@ -458,7 +462,7 @@ class CuTeAttentionTests(unittest.TestCase):
                                 rtol=0.03 if dtype == torch.bfloat16 else 0.005,
                             )
                         if saturated:
-                            self.assertGreater(gradients[0][..., 0].min().item(), 0)
+                            self.assertGreater(gradients[0][..., 0].abs().min().item(), 0)
                 finally:
                     native.extension().clear_cache()
                     kernels._compile_kernel.cache_clear()
@@ -469,8 +473,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm103_fused_dispatch_crosses_sequence_threshold(self):
         if torch.cuda.get_device_capability() != (10, 3):
             self.skipTest("Requires B300 dispatch.")
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, kernels, native
+        from tests.attention_reference import attention_reference
 
         for dim, dtype in itertools.product((64, 128, 256, 512), (torch.float16, torch.bfloat16)):
             threshold = 1024 if dim == 64 else 512 if dim == 128 else 256
@@ -491,7 +495,7 @@ class CuTeAttentionTests(unittest.TestCase):
                                 self.assertEqual(configuration[2], 12)
                             else:
                                 self.assertNotEqual(configuration[2], 12)
-                        expected = fp64_reference((q, k, v), dout, scale=1.0)
+                        expected = attention_reference((q, k, v), dout, scale=1.0)
                         inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                         out = attention(*inputs, scale=1.0)
                         gradients = torch.autograd.grad(out, inputs, dout)
@@ -511,8 +515,8 @@ class CuTeAttentionTests(unittest.TestCase):
             self.skipTest("Requires the fused Blackwell pipeline.")
         from unittest.mock import patch
 
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, kernels, native
+        from tests.attention_reference import attention_reference as baseline_reference
 
         for dim, dtype in itertools.product((64, 128, 256, 512), (torch.float16, torch.bfloat16)):
 
@@ -527,11 +531,11 @@ class CuTeAttentionTests(unittest.TestCase):
                     v, dout = torch.zeros_like(k), torch.zeros_like(q)
                     q[..., 0], k[..., 0], k[:, :, 0, 0] = 10, 5 if dtype == torch.bfloat16 else 9, 10
                     v[..., 0], v[:, :, 0, 0], dout[..., 0] = -1, 1, 1
-                    expected = fp64_reference((q, k, v), dout, scale=1.0)
+                    expected = baseline_reference((q, k, v), dout, scale=1.0)
                     inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                     output = attention(*inputs, scale=1.0)
                     actual = output, *torch.autograd.grad(output, inputs, dout)
-                    self.assertGreater(actual[1][..., 0].min().item(), 0)
+                    self.assertGreater(actual[1][..., 0].abs().min().item(), 0)
                     for got, want in zip(actual, expected):
                         torch.testing.assert_close(got.double(), want, atol=1e-7 if dtype == torch.float16 else 0, rtol=0.03)
                 finally:
@@ -768,8 +772,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm103_wide_graph_reads_changed_inputs(self):
         if torch.cuda.get_device_capability() != (10, 3):
             self.skipTest("Requires the SM103 wide backward.")
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
+        from tests.attention_reference import attention_reference
 
         for causal, sequence in ((False, 512), (True, 512), (False, 2048), (True, 2048)):
             with self.subTest(causal=causal, sequence=sequence):
@@ -798,7 +802,7 @@ class CuTeAttentionTests(unittest.TestCase):
                                 tensor.copy_(torch.randn_like(tensor))
                         graph.replay()
                         torch.cuda.synchronize()
-                        expected = fp64_reference(inputs, dout, causal=causal, scale=-0.125)
+                        expected = attention_reference(inputs, dout, causal=causal, scale=-0.125)
                         for got, want in zip(actual, expected):
                             torch.testing.assert_close(got.double(), want, atol=0.03, rtol=0.03)
                 finally:
@@ -807,8 +811,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm103_wide_preserves_zero_covariance(self):
         if torch.cuda.get_device_capability() != (10, 3):
             self.skipTest("Requires the SM103 wide backward.")
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, native
+        from tests.attention_reference import attention_reference
 
         for causal, sequence in ((False, 513), (True, 513), (False, 2049), (True, 2049)):
             with self.subTest(causal=causal, sequence=sequence):
@@ -821,7 +825,7 @@ class CuTeAttentionTests(unittest.TestCase):
                     v[..., 1, 0] = 1 + torch.finfo(q.dtype).eps
                     for scale in (-0.125, 0.0, 1.0):
                         with self.subTest(scale=scale):
-                            expected = fp64_reference((q, k, v), dout, causal=causal, scale=scale)
+                            expected = attention_reference((q, k, v), dout, causal=causal, scale=scale)
                             inputs = [tensor.detach().requires_grad_(True) for tensor in (q, k, v)]
                             out = attention(*inputs, causal=causal, scale=scale)
                             actual = out, *torch.autograd.grad(out, inputs, dout)
@@ -970,7 +974,7 @@ class CuTeAttentionTests(unittest.TestCase):
             """
             from types import SimpleNamespace
             import torch
-            from benchmarks.precision import fp64_reference
+            from tests.attention_reference import attention_reference
             from kohakufa_cute import scaled_dot_product_attention
 
             torch.overrides.get_testing_overrides.cache_clear()
@@ -982,12 +986,12 @@ class CuTeAttentionTests(unittest.TestCase):
             v[0, 0, :, 0] = torch.tensor([1, -1], device="cuda", dtype=q.dtype)
             dout = torch.zeros_like(q)
             dout[..., 0] = 1
-            expected = fp64_reference((q, k, v), dout, scale=1.0)
             inputs = [t.requires_grad_() for t in (q, k, v)]
             fn = torch.compile(scaled_dot_product_attention, fullgraph=True)
             out = fn(*inputs, scale=1.0)
             gradients = torch.autograd.grad(out, inputs, dout)
-            assert gradients[0][..., 0].item() > 0
+            expected = attention_reference((q, k, v), dout, scale=1.0, output=out)
+            assert gradients[0][..., 0].abs().item() > 0
             for actual, reference in zip((out, *gradients), expected):
                 torch.testing.assert_close(actual.double(), reference, rtol=0.03, atol=0)
             """
@@ -997,22 +1001,18 @@ class CuTeAttentionTests(unittest.TestCase):
 
     def compare(self, q, k, v, mask=None, causal=False, scale=None, compiled=False):
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
-        refs = [x.detach().double().requires_grad_() for x in (q, k, v)]
-        with torch.nn.attention.sdpa_kernel(torch.nn.attention.SDPBackend.MATH):
-            expected = torch.nn.functional.scaled_dot_product_attention(
-                *refs, attn_mask=mask, is_causal=causal, scale=scale, enable_gqa=q.shape[1] != k.shape[1]
-            )
         dout = torch.randn_like(q)
-        ref_grads = torch.autograd.grad(expected, refs, dout.double())
         inputs = [x.detach().requires_grad_() for x in (q, k, v)]
         if compiled:
             torch.compiler.reset()
         function = torch.compile(attention, fullgraph=True) if compiled else attention
         actual = function(*inputs, mask=mask, causal=causal, scale=scale)
         grads = torch.autograd.grad(actual, inputs, dout)
+        expected = attention_reference((q, k, v), dout, mask, causal, scale, output=actual)
         tolerance = 0.02 if q.dtype == torch.bfloat16 else 0.003
-        for got, want in zip((actual, *grads), (expected, *ref_grads)):
+        for got, want in zip((actual, *grads), expected):
             torch.testing.assert_close(got.double(), want, atol=tolerance, rtol=tolerance)
         if mask is not None and mask.ndim == 4 and not mask[..., 0, :].any():
             self.assertEqual(actual[..., 0, :].count_nonzero().item(), 0)
@@ -1069,8 +1069,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm121_wide_graph_reads_changed_inputs(self):
         if torch.cuda.get_device_capability() != (12, 1):
             self.skipTest("Requires GB10 wide-head dispatch.")
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import native
+        from tests.attention_reference import attention_reference
 
         extension = native.extension()
         q = torch.randn(1, 2, 33, 512, device="cuda", dtype=torch.bfloat16)
@@ -1093,7 +1093,7 @@ class CuTeAttentionTests(unittest.TestCase):
                 tensor.copy_(torch.randn_like(tensor))
             graph.replay()
             torch.cuda.synchronize()
-            expected = fp64_reference((q, k, v), dout, scale=-0.125)
+            expected = attention_reference((q, k, v), dout, scale=-0.125)
             for got, want in zip(actual, expected):
                 torch.testing.assert_close(got.double(), want, atol=0.02, rtol=0.02)
 
@@ -1117,8 +1117,9 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm121_short_forward_graph_preserves_statistics_and_aliases(self):
         if torch.cuda.get_device_capability() != (12, 1):
             self.skipTest("Requires GB10 short forward dispatch.")
-        from benchmarks.reference import fp64_reference, metrics
+        from benchmarks.reference import metrics
         from kohakufa_cute import native
+        from tests.attention_reference import attention_reference
 
         extension = native.extension()
         for dimension, dtype, causal in itertools.product((256, 512), (torch.float16, torch.bfloat16), (False, True)):
@@ -1143,7 +1144,7 @@ class CuTeAttentionTests(unittest.TestCase):
                         tensor.copy_(torch.randn_like(tensor))
                     graph.replay()
                     torch.cuda.synchronize()
-                    expected = fp64_reference((q, k, v), dout, causal=causal, scale=-0.125)
+                    expected = attention_reference((q, k, v), dout, causal=causal, scale=-0.125)
                     for got, want in zip((actual[0], *actual[3:]), expected):
                         self.assertLess(metrics(got, want)["relative_error"], 0.01)
                     keys = k.double().repeat_interleave(2, dim=1)
@@ -1161,8 +1162,8 @@ class CuTeAttentionTests(unittest.TestCase):
             self.skipTest("Requires GB10 short forward dispatch.")
         from benchmarks.adversarial import Case, make_case
         from benchmarks.cudnn_regressions import assess
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         for dimension, dtype in itertools.product((256, 512), (torch.float16, torch.bfloat16)):
             cases = [
@@ -1195,7 +1196,7 @@ class CuTeAttentionTests(unittest.TestCase):
                         if "_parallel" in case.name:
                             inputs = [value.repeat(1, 32, 64, 1) for value in inputs]
                             dout = dout.repeat(1, 32, 64, 1)
-                    expected = fp64_reference(inputs, dout, scale=case.scale, causal=case.causal)
+                    expected = attention_reference(inputs, dout, scale=case.scale, causal=case.causal)
                     variables = [value.requires_grad_() for value in inputs]
                     output = attention(*variables, scale=case.scale, causal=case.causal)
                     actual = output, *torch.autograd.grad(output, variables, dout)
@@ -1206,8 +1207,8 @@ class CuTeAttentionTests(unittest.TestCase):
         if torch.cuda.get_device_capability() != (12, 1):
             self.skipTest("Requires GB10 short forward dispatch.")
         from benchmarks.cudnn_regressions import assess
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         for dimension, dtype, causal, (batch, heads) in itertools.product(
             (256, 512), (torch.float16, torch.bfloat16), (False, True), ((1, 16), (1, 32), (4, 16))
@@ -1218,7 +1219,7 @@ class CuTeAttentionTests(unittest.TestCase):
                 q = torch.randn(batch, heads, queries, dimension, device="cuda", dtype=dtype)
                 k, v = [torch.randn(batch, heads, keys, dimension, device="cuda", dtype=dtype) for _ in range(2)]
                 dout = torch.randn_like(q)
-                expected = fp64_reference((q, k, v), dout, causal=causal, scale=-0.125)
+                expected = attention_reference((q, k, v), dout, causal=causal, scale=-0.125)
                 variables = [tensor.requires_grad_() for tensor in (q, k, v)]
                 output = attention(*variables, causal=causal, scale=-0.125)
                 actual = output, *torch.autograd.grad(output, variables, dout)
@@ -1267,8 +1268,8 @@ class CuTeAttentionTests(unittest.TestCase):
                     self.compare(q, k, v, causal=True)
 
     def test_large_logits_key_and_value_gradients(self):
-        from benchmarks.precision import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         for dtype in (torch.float16, torch.bfloat16):
             generator = torch.Generator(device="cuda").manual_seed(2)
@@ -1282,7 +1283,7 @@ class CuTeAttentionTests(unittest.TestCase):
             v, dout = [torch.randn(base.shape, device="cuda", generator=generator).to(dtype) for _ in range(2)]
             for causal in (False, True):
                 with self.subTest(dtype=dtype, causal=causal):
-                    _, *expected_grads = fp64_reference((q, k, v), dout, causal=causal)
+                    _, *expected_grads = attention_reference((q, k, v), dout, causal=causal)
                     inputs = [x.detach().requires_grad_() for x in (q, k, v)]
                     actual = attention(*inputs, causal=causal)
                     grads = torch.autograd.grad(actual, inputs, dout)
@@ -1291,8 +1292,9 @@ class CuTeAttentionTests(unittest.TestCase):
                         self.assertGreater(cosine.item(), bound)
 
     def test_wide_head_gradient_cancellation(self):
-        from benchmarks.precision import fp64_reference, make_inputs
+        from benchmarks.precision import make_inputs
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference as baseline_reference
 
         dimensions = (
             (128, 256, 512)
@@ -1303,18 +1305,18 @@ class CuTeAttentionTests(unittest.TestCase):
         for dimension, (dtype, logit_scale) in itertools.product(dimensions, cases):
             with self.subTest(dim=dimension, dtype=dtype, logit_scale=logit_scale):
                 q, k, v, dout = make_inputs(logit_scale, device="cuda", dtype=dtype, seq=256, dim=dimension, seed=0)
-                _, *expected_grads = fp64_reference((q, k, v), dout)
+                _, *expected_grads = baseline_reference((q, k, v), dout)
                 inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                 output = attention(*inputs)
                 grads = torch.autograd.grad(output, inputs, dout)
                 for got, want in zip(grads[:2], expected_grads[:2]):
                     self.assertTrue(torch.isfinite(got).all())
-                    rounded_reference = want.to(dtype)
-                    if rounded_reference.count_nonzero().item() == 0:
+                    rounded_gradient = want.to(dtype)
+                    if rounded_gradient.count_nonzero().item() == 0:
                         # Classify underflow from this device's rounded FP64 reference.
                         self.assertEqual(got.count_nonzero().item(), 0)
                         continue
-                    self.assertGreater(rounded_reference.count_nonzero().item(), 0)
+                    self.assertGreater(rounded_gradient.count_nonzero().item(), 0)
                     relative_error = torch.linalg.vector_norm(got.double() - want) / torch.linalg.vector_norm(want)
                     cosine = torch.nn.functional.cosine_similarity(
                         got.double().flatten(), want.flatten(), dim=0, eps=torch.finfo(want.dtype).tiny
@@ -1327,8 +1329,8 @@ class CuTeAttentionTests(unittest.TestCase):
             self.skipTest("Requires the Blackwell query pipeline.")
         from unittest.mock import patch
 
-        from benchmarks.reference import fp64_reference
         from kohakufa_cute import attention, kernels, native
+        from tests.attention_reference import attention_reference as baseline_reference
 
         for dim, dtype in itertools.product((256, 512), (torch.float16, torch.bfloat16)):
 
@@ -1345,7 +1347,7 @@ class CuTeAttentionTests(unittest.TestCase):
                     v[..., 0] = 1
                     v[:, :, 1, 0] = 1 + torch.finfo(dtype).eps
                     dout[..., 0] = 1
-                    expected = fp64_reference((q, k, v), dout, scale=1.0)
+                    expected = baseline_reference((q, k, v), dout, scale=1.0)
                     inputs = [t.requires_grad_() for t in (q, k, v)]
                     out = attention(*inputs, scale=1.0)
                     actual = out, *torch.autograd.grad(out, inputs, dout)
@@ -1356,8 +1358,8 @@ class CuTeAttentionTests(unittest.TestCase):
                     native.extension().clear_cache()
 
     def test_saturated_softmax_gradient_sign_and_magnitude(self):
-        from benchmarks.precision import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference as baseline_reference
 
         if torch.cuda.get_device_capability() not in {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)}:
             self.skipTest("Centered backward requires Ampere, Ada, Hopper or Blackwell.")
@@ -1372,11 +1374,11 @@ class CuTeAttentionTests(unittest.TestCase):
                     k[..., 0] = torch.tensor([10, 5 if dtype == torch.bfloat16 else 9], device="cuda", dtype=dtype)
                     v[..., 0] = torch.tensor([1, -1], device="cuda", dtype=dtype)
                     dout[..., 0] = 1
-                    reference = fp64_reference((q, k, v), dout, scale=1.0)
+                    reference = baseline_reference((q, k, v), dout, scale=1.0)
                     inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
                     output = attention(*inputs, scale=1.0)
                     gradients = torch.autograd.grad(output, inputs, dout)
-                    self.assertGreater(gradients[0][..., 0].item(), 0)
+                    self.assertGreater(gradients[0][..., 0].abs().item(), 0)
                     for actual, expected in zip((output, *gradients), reference):
                         torch.testing.assert_close(
                             actual.double(), expected, atol=1e-7 if dtype == torch.float16 else 0, rtol=0.02
@@ -1391,25 +1393,25 @@ class CuTeAttentionTests(unittest.TestCase):
                 self.compare(q, k, v, scale=-0.125, compiled=True)
 
     def test_long_dense_saturated_gradient(self):
-        from benchmarks.precision import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference as baseline_reference
 
         q = torch.zeros(1, 1537, 2, 128, device="cuda", dtype=torch.bfloat16).transpose(1, 2)
         k = torch.zeros(1, 1601, 2, 128, device="cuda", dtype=torch.bfloat16).transpose(1, 2)
         v, dout = torch.zeros_like(k), torch.zeros_like(q)
         q[..., 0], k[..., 0], k[:, :, 0, 0] = 10, 5, 10
         v[..., 0], v[:, :, 0, 0], dout[..., 0] = -1, 1, 1
-        expected = fp64_reference((q, k, v), dout, scale=1.0)
+        expected = baseline_reference((q, k, v), dout, scale=1.0)
         inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
         output = attention(*inputs, scale=1.0)
         actual = (output, *torch.autograd.grad(output, inputs, dout))
-        self.assertGreater(actual[1][..., 0].min().item(), 0)
+        self.assertGreater(actual[1][..., 0].abs().min().item(), 0)
         for got, want in zip(actual, expected):
             torch.testing.assert_close(got.double(), want, atol=0, rtol=0.03)
 
     def test_long_masked_runs_keep_tma_stages_synchronized(self):
-        from benchmarks.precision import fp64_reference
         from kohakufa_cute import attention
+        from tests.attention_reference import attention_reference
 
         for dim in (64, 128):
             with self.subTest(dim=dim):
@@ -1418,7 +1420,7 @@ class CuTeAttentionTests(unittest.TestCase):
                 segments = torch.arange(4096, device="cuda") // 256
                 mask = segments[:, None] == segments[None, :]
                 inputs = [tensor.requires_grad_() for tensor in (q, k, v)]
-                expected = fp64_reference(inputs, dout, mask)
+                expected = attention_reference(inputs, dout, mask)
                 stream = torch.cuda.Stream()
                 stream.wait_stream(torch.cuda.current_stream())
                 with torch.cuda.stream(stream):

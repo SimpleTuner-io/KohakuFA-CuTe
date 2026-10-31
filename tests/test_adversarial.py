@@ -6,6 +6,7 @@ import torch
 
 from benchmarks.adversarial import cases, logits_statistics, make_case
 from benchmarks.reference import fp64_reference, metrics
+from tests.attention_reference import attention_reference
 
 
 class AdversarialFixtureTests(unittest.TestCase):
@@ -81,7 +82,7 @@ class AdversarialKernelTests(unittest.TestCase):
             for case in cases(extended=False):
                 with self.subTest(dtype=dtype, case=case.name):
                     inputs, dout, mask = make_case(case, device="cuda", dtype=dtype)
-                    expected = fp64_reference(inputs, dout, mask, scale=case.scale)
+                    expected = attention_reference(inputs, dout, mask, scale=case.scale)
                     variables = [value.detach().requires_grad_() for value in inputs]
                     output = attention(*variables, mask=mask, scale=case.scale)
                     actual = output, *torch.autograd.grad(output, variables, dout)
@@ -120,7 +121,7 @@ class AdversarialKernelTests(unittest.TestCase):
                     return output, *torch.autograd.grad(output, variables, dout)
 
                 compiled = torch.compile(attention, fullgraph=True)
-                expected = fp64_reference(variables, dout)
+                expected = attention_reference(variables, dout)
                 self.assert_reference(run(compiled), expected, dtype, case.name)
                 stream = torch.cuda.Stream()
                 stream.wait_stream(torch.cuda.current_stream())
@@ -138,7 +139,7 @@ class AdversarialKernelTests(unittest.TestCase):
                             target.copy_(source)
                     graph.replay()
                     torch.cuda.synchronize()
-                    self.assert_reference(actual, fp64_reference(variables, dout), dtype, case.name)
+                    self.assert_reference(actual, attention_reference(variables, dout), dtype, case.name)
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ class D64Values(Attention):
             kv_column_warps=2,
             kv_column_statistics=True,
         )
-        self.compensated_keys = self.compensated_values = True
+        self.compensated_keys = self.compensated_values = False
         self.scaled_key_residual = self.scaled_value_residual = True
         self.combined_key_products = self.combined_value_products = False
 

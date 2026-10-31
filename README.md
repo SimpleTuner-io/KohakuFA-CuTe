@@ -1,38 +1,40 @@
 # KohakuFA-CuTe
 
-CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, with stable backward gradients when attention becomes sharp. It brings [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) precision approach to Ampere, Ada, Hopper, and Blackwell, and adds a centered FP32 correction that retains tiny saturated gradients.
+CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
 
 ## When to use it
 
-- **Training with sharp attention or large logits:** forward outputs can look correct while query/key gradients are wrong. The kernels preserve separate softmax statistics and a centered backward correction. See [precision](docs/precision.md).
-- **RTX cards with 512-wide heads:** forward plus backward beats default PyTorch SDPA across all eight tested FP16/BF16, dense/causal, S1024/S4096 cases per card: **1.72–4.15× on RTX 5090**, **2.09–4.32× on RTX 4090**, and **1.53–2.64× on RTX 3090 Ti** (450 W).
-- **Short D128 attention:** BF16 B1/H16/S128 dense forward plus backward is faster than default SDPA: 1.87× on RTX 5090, 1.89× on RTX 4090, 1.41× on RTX 3090 Ti, 1.63× on L40S. RTX 4090 also wins all eight tested long D16 cases; see the [full comparison](results/README.md#rtx-cards-and-l40s).
-- **L40S with 512-wide heads:** forward plus backward is **2.45–4.35× faster than default SDPA** across the same eight tested FP16/BF16, dense/causal, S1024/S4096 cases.
-- **H100 text inference with Clef 27B:** captured BF16 D256 backbone calls beat cuDNN SDPA by **1.24× at 787 tokens and 1.03× at 9,835 tokens**; schema calls beat it by **1.61–4.28×**. Small shapes and whole-model numerical compatibility still need work; see the [27B comparison](results/README.md#clef-27b-text-inference).
-- **Other workloads:** choose it for its gradient calculation, then benchmark your shapes. Long D64/D128/D256 complete calls still trail SDPA on RTX 4090; smaller heads on the other RTX cards also have gaps. The measured H100 training cases trade throughput for precision; L40S comparisons are below.
+- **Sharp attention or large logits:** separate unscaled softmax statistics, shifted-score reconstruction and gradient scaling after accumulation address lost normalization information and premature underflow. The default uses single-rounded FP16/BF16 operands; see the [precision contract](docs/precision.md).
+- **512-wide heads:** forward plus backward beats default SDPA in all eight tested long FP16/BF16 dense/causal calls per card: RTX 5090 **1.96–4.71×**, RTX 4090 **2.17–4.57×**, RTX 3090 Ti **1.69–2.85×**, L40S **2.80–4.80×**.
+- **Other attention shapes:** benchmark the complete call. Short shapes can benefit; long smaller-head calls still have substantial gaps against SDPA. The [full grid](results/README.md#rtx-cards-and-l40s) shows both wins and losses.
+- **H100 Clef 27B text inference:** retained D256 backbone measurements beat cuDNN SDPA by 1.24× at 787 tokens and 1.03× at 9,835 tokens. Those forward-only measurements and their model-compatibility limits are [documented separately](results/README.md#clef-27b-text-inference).
 
-Automatic selection checks compatibility; it does **not** choose whichever backend is fastest for a shape.
+Automatic selection checks compatibility; it does **not** predict the fastest backend.
 
 ## Performance
 
-Attention-call latency, **forward + backward**, in milliseconds; lower is better. B=1, H=16, BF16, S=4096. These are matched comparisons within each row, with compilation excluded. RTX 5090, RTX 3090 Ti and L40S were refreshed October 31. RTX 4090 (October 30) and H100 retain their preceding measurements. Hardware and stack details are in the performance guide.
+**Forward + backward**, milliseconds; lower is better. B1/H16, BF16, S4096,
+dense attention. All rows below were refreshed after removing the automatic
+compensated arithmetic policy. Compilation is excluded.
 
-| GPU | Head dim | Visibility | CuTe | Default SDPA | SDPA / CuTe |
-| --- | ---: | --- | ---: | ---: | ---: |
-| RTX 5090 | 512 | Dense | 24.557 | 50.045 | 2.04× |
-| RTX 4090 | 512 | Dense | 32.045 | 67.136 | 2.10× |
-| RTX 4090 | 16 | Dense | 0.718 | 0.877 | 1.22× |
-| RTX 3090 Ti | 512 | Dense | 71.325 | 109.729 | 1.54× |
-| L40S | 512 | Dense | 28.068 | 70.866 | 2.52× |
-| RTX 5090 | 128 | Dense | 4.408 | 2.646 | 0.60× |
-| L40S | 128 | Dense | 4.284 | 2.666 | 0.62× |
-| H100 | 128 | Dense | 1.300 | 0.927 | 0.71× |
+| GPU | Head dim | CuTe | Default SDPA | SDPA / CuTe |
+| --- | ---: | ---: | ---: | ---: |
+| RTX 5090 | 512 | 22.354 | 50.147 | 2.24× |
+| RTX 4090 | 512 | 31.159 | 67.562 | 2.17× |
+| RTX 3090 Ti | 512 | 61.916 | 104.654 | 1.69× |
+| L40S | 512 | 24.781 | 71.017 | 2.87× |
+| RTX 5090 | 128 | 3.320 | 2.674 | 0.81× |
+| L40S | 128 | 3.132 | 2.663 | 0.85× |
 
-On the **B300 MIG 1g.34gb (18 SMs)**, BF16 D512 causal forward + backward is approximately tied with upstream Gluon at S4096 (**13.649 vs 13.703 ms**) and slightly faster at S8192 (**50.766 vs 51.276 ms**). Smaller cases still favor Gluon. These timings describe the partition; current full-device B200/B300 performance has not been remeasured.
+[Performance details and charts](results/README.md) cover both dtypes, dense/causal
+visibility, all five head widths, forward/backward phases and actual SDPA kernels.
+The [precision-removal report](docs/baseline-precision.md) includes the full H100
+PCIe/B300 checks, previous-policy comparison and model-shape audit. These are
+attention benchmarks, not end-to-end training speedups.
 
-**GB10 (DGX / RTX Spark, SM121)** has tuned D512 forward/backward and D256/D512 short-sequence forward paths. See the [GB10 comparison](results/README.md#gb10-dgx--rtx-spark) for all tested head dimensions, dense/causal results, and remaining limitations.
-
-[Performance details and charts](results/README.md) cover both dtypes, forward-only results, actual SDPA backends, measurement conditions, and reproduction. Machine-readable [RTX and L40S reports](results/README.md#rtx-cards-and-l40s) retain the current timing samples, software stacks, and hardware limits; [other device comparisons](results/performance.json) are retained separately. These are attention benchmarks, not end-to-end training speedups.
+**GB10 (DGX / RTX Spark, SM121)** has D512 and short-forward schedules; its
+[recorded comparison](results/README.md#gb10-dgx--rtx-spark) predates this arithmetic
+change and was not requalified in this campaign.
 
 ## Install
 
@@ -94,7 +96,7 @@ Supported CuTe inputs:
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
 
-`attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the centered backward calculation.
+`attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 
 ## Validate and benchmark
 
@@ -106,7 +108,7 @@ python -m benchmarks.precision --dtype bf16 --seq 256 --dim 128 \
   --backends auto kohakufa-cute --output precision.json
 ```
 
-Tests cover FP64 gradient comparisons, tiny gradients, masks, GQA, head tails, strides, compiled backward, checkpointed LoRA updates, streams, and changed-input graph replay. The [benchmark guide](results/README.md#reproduce) includes causal and upstream comparisons.
+Tests cover FP64 and declared-operand gradient comparisons, tiny gradients, masks, GQA, head tails, strides, compiled backward, checkpointed LoRA updates, streams, and changed-input graph replay. The [benchmark guide](results/README.md#reproduce) includes causal and upstream comparisons.
 
 Directed [cuDNN regression cases](benchmarks/adversarial.py) cover negative row
 maxima/LSE, partial query/key tiles, the reported single-query and tiny-gradient
@@ -115,12 +117,13 @@ with centered FP64 equations on identical rounded inputs:
 
 ```bash
 python -m unittest tests.test_adversarial -v
-python -m benchmarks.cudnn_regressions --backends kohakufa-cute cudnn flash math \
+python -m benchmarks.cudnn_regressions --reference fp64 --backends kohakufa-cute cudnn flash math \
   --output adversarial.json
 ```
 
 The comparator checks first/last rows separately and uses norm-relative gradient
 errors so small gradients cannot disappear under a loose absolute tolerance.
+`--reference rounded` checks the default operand contract instead; reports retain both assessments. The [precision report](docs/baseline-precision.md) documents synthetic cases that fail mathematical checks after removing compensation.
 Optional `--backends frontend frontend-padding` additionally tests cuDNN Frontend
 directly and its full-length padding-mask control; install `nvidia-cudnn-frontend`
 for those modes. Backend execution/support errors are recorded separately from

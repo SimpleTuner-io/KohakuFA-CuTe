@@ -26,6 +26,7 @@ class MediumKeyValue(Attention):
             kv_column_warps=8,
             copy_cache_global=copy_cache_global,
         )
+        self.baseline_precision = False
         self.compensated_keys = self.compensated_values = True
         self.scaled_key_residual = False
         self.scaled_value_residual = True

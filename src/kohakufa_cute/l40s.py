@@ -139,7 +139,6 @@ def schedule(program, mode, dimension, causal):
             reload_center=keyvalue.reload_center,
             kv_column_warps=4,
         )
-        compact.keyvalue.compensated_keys = True
         compact.base_dot = False
         if not causal:
             compact = complete_tiles(compact)

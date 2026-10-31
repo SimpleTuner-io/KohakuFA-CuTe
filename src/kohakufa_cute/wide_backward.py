@@ -28,6 +28,7 @@ class WideKeyValue(Attention):
         )
         self.rows = self.grid_rows = 16
         self.product_width = 512
+        self.baseline_precision = False
         self.compensated_keys = True
         self.scaled_key_residual = True
         self.scaled_value_residual = True
@@ -50,6 +51,7 @@ class WideKeyValue(Attention):
         self.score.split_kv = False
         self.score.score_warps = self.score.score_column_warps = 4
         self.score.score_b_matrices = 2
+        self.score.baseline_precision = False
 
     @cute.jit
     def __call__(

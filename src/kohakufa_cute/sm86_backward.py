@@ -115,6 +115,8 @@ class QueryMajorQueries(Attention):
                         probability = cute.math.exp2(
                             (sv[r, c] * sign - row_max[r]) * magnitude * 1.4426950408889634 - row_logsum[r], fastmath=True
                         )
+                    if cutlass.const_expr(self.baseline_precision):
+                        probability = probability.to(q.element_type).to(cutlass.Float32)
                     sv[r, c] = probability * (pv[r, c] - center[r])
                     pv[r, c] = probability
                 totals[r] += quad_sum(sv[r, None].load().reduce(cute.ReductionOp.ADD, 0.0, 0))
@@ -128,25 +130,30 @@ class QueryMajorQueries(Attention):
             # Release every V reader before any score warp packs P/dS there.
             cute.arch.sync_threads()
             self.store_packed_weights(rounded_scores, derivatives, score_coords)
-            self.store_packed_weights(rounded_probabilities, probabilities, score_coords)
+            if cutlass.const_expr(not self.baseline_precision):
+                self.store_packed_weights(rounded_probabilities, probabilities, score_coords)
             cute.arch.sync_threads()
-            self.dual_product(derivatives, probabilities, keys, 0, gradient_mma, gradient_thread, tid, accum, mean)
+            if cutlass.const_expr(self.baseline_precision):
+                self.product(derivatives, keys, 0, gradient_mma, gradient_thread, tid, accum)
+            else:
+                self.dual_product(derivatives, probabilities, keys, 0, gradient_mma, gradient_thread, tid, accum, mean)
             cute.arch.sync_threads()
-        if tid % 4 == 0:
-            for r in cutlass.range_constexpr(cute.size(score_rows.shape[0])):
-                row = score_rows[r, 0][0]
-                shared_rows[0, tid // 128, row] = totals[r]
-                shared_rows[1, tid // 128, row] = rounded[r]
-        cute.arch.sync_threads()
-        if tid < 128 and tid % 4 == 0:
-            for r in cutlass.range_constexpr(cute.size(score_rows.shape[0])):
-                row = score_rows[r, 0][0]
-                if start + row < q.shape[2]:
-                    delta[batch, head, start + row] = shared_rows[0, 0, row] + shared_rows[0, 1, row]
-        gradient_rows = row_view(gradient_thread.partition_C(cute.make_identity_tensor((64, 256))))
-        av, mv = row_view(accum), row_view(mean)
-        for r in cutlass.range_constexpr(cute.size(gradient_rows.shape[0])):
-            row = gradient_rows[r, 0][0]
-            mass = shared_rows[1, 0, row] + shared_rows[1, 1, row]
-            av[r, None] = av[r, None].load() - mass * mv[r, None].load()
+        if cutlass.const_expr(not self.baseline_precision):
+            if tid % 4 == 0:
+                for r in cutlass.range_constexpr(cute.size(score_rows.shape[0])):
+                    row = score_rows[r, 0][0]
+                    shared_rows[0, tid // 128, row] = totals[r]
+                    shared_rows[1, tid // 128, row] = rounded[r]
+            cute.arch.sync_threads()
+            if tid < 128 and tid % 4 == 0:
+                for r in cutlass.range_constexpr(cute.size(score_rows.shape[0])):
+                    row = score_rows[r, 0][0]
+                    if start + row < q.shape[2]:
+                        delta[batch, head, start + row] = shared_rows[0, 0, row] + shared_rows[0, 1, row]
+            gradient_rows = row_view(gradient_thread.partition_C(cute.make_identity_tensor((64, 256))))
+            av, mv = row_view(accum), row_view(mean)
+            for r in cutlass.range_constexpr(cute.size(gradient_rows.shape[0])):
+                row = gradient_rows[r, 0][0]
+                mass = shared_rows[1, 0, row] + shared_rows[1, 1, row]
+                av[r, None] = av[r, None].load() - mass * mv[r, None].load()
         self.store_result(accum, dq, queries, batch, head, start, 0, gradient_thread, tid, scale)

@@ -233,7 +233,8 @@ class RegisterAux(Backward):
                             source = (maximum, logsum, base, delta)[field]
                             value = cutlass.Float32(0)
                             if block * 128 + col < q.shape[2]:
-                                value = source[batch, right_head, block * 128 + col]
+                                if cutlass.const_expr(not self.baseline_precision or field != 3):
+                                    value = source[batch, right_head, block * 128 + col]
                             stats[field, col] = value
                     cute.arch.sync_warp()
                     with cute.arch.elect_one():
@@ -269,7 +270,8 @@ class RegisterAux(Backward):
                         slot = cursor % 5
                         cute.arch.mbarrier_wait(ready + slot, cursor // 5 % 2)
                         cute.arch.fence_view_async_shared()
-                        self.product(prod_mma, probabilities, b[None, None, slot], pointer + c * 64, False)
+                        if cutlass.const_expr(self.mode == "kv" or not self.baseline_precision):
+                            self.product(prod_mma, probabilities, b[None, None, slot], pointer + c * 64, False)
                         if cutlass.const_expr(self.mode == "q"):
                             self.product(prod_mma, derivatives, b[None, None, slot], pointer + 256 + c * 64, step > 0)
                         with cute.arch.elect_one():
@@ -324,6 +326,8 @@ class RegisterAux(Backward):
                         values, col, stats, local, start, block, q.shape[2], k.shape[2], row_max, row_log, magnitude, sign
                     )
                     self.store_ds(values, cute.local_tile(probabilities, (128, 16), (0, early)), local)
+                    if cutlass.const_expr(self.baseline_precision):
+                        values.store(values.load().to(q.element_type).to(cutlass.Float32))
                     self.write_matrix(pointer + col, values, 16, local)
                 cute.arch.mbarrier_wait(dr, step % 2)
                 for chunk in cutlass.range_constexpr(8):
@@ -335,7 +339,7 @@ class RegisterAux(Backward):
                         if cutlass.const_expr(self.mode == "kv"):
                             corrections = (stats[2, col + 2 * i], stats[2, col + 2 * i + 1])
                         pair = cute.arch.sub_packed_f32x2((dps[2 * i], dps[2 * i + 1]), corrections)
-                        if cutlass.const_expr(self.mode == "kv"):
+                        if cutlass.const_expr(self.mode == "kv" and not self.baseline_precision):
                             pair = cute.arch.sub_packed_f32x2(pair, (stats[3, col + 2 * i], stats[3, col + 2 * i + 1]))
                         pair = cute.arch.mul_packed_f32x2(pair, (values[2 * i], values[2 * i + 1]))
                         dps[2 * i], dps[2 * i + 1] = pair
@@ -354,7 +358,8 @@ class RegisterAux(Backward):
             if cutlass.const_expr(self.mode == "q"):
                 stats[0, local] = rounded
                 if start + local < q.shape[2] and wi == 0:
-                    delta[batch, own_head, start + local] = total
+                    if cutlass.const_expr(not self.baseline_precision):
+                        delta[batch, own_head, start + local] = total
             cute.arch.barrier(barrier_id=2, number_of_threads=128)
             if local == 0:
                 cute.arch.mbarrier_arrive(tr)
@@ -368,10 +373,11 @@ class RegisterAux(Backward):
             acc.fill(0)
             for step in range(steps):
                 cute.arch.mbarrier_wait(ar, step % 2)
-                for c in cutlass.range_constexpr(8):
-                    result = self.read_matrix(pointer + half * 128 + c * 16, 16, local)
-                    for i in cutlass.range_constexpr(16):
-                        acc[c * 16 + i] += result[i]
+                if cutlass.const_expr(self.mode == "kv" or not self.baseline_precision):
+                    for c in cutlass.range_constexpr(8):
+                        result = self.read_matrix(pointer + half * 128 + c * 16, 16, local)
+                        for i in cutlass.range_constexpr(16):
+                            acc[c * 16 + i] += result[i]
                 self.subgroup_sync(half)
                 if local == 0:
                     cute.arch.mbarrier_arrive(af)
@@ -399,7 +405,7 @@ class RegisterAux(Backward):
                     result = self.read_matrix(pointer + 256 + half * 128 + c * 64 + part * 16, 16, local)
                     for i in cutlass.range_constexpr(16):
                         value = result[i]
-                        if cutlass.const_expr(self.mode == "q"):
+                        if cutlass.const_expr(self.mode == "q" and not self.baseline_precision):
                             value -= sigma * acc[c * 64 + part * 16 + i]
                         result[i] = value * scale
                     self.store_ds(result, cute.local_tile(staging, (128, 16), (0, part)), local)

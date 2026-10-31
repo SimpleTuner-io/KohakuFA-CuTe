@@ -1,0 +1,6979 @@
+{
+  "label": "candidate",
+  "schema_version": 4,
+  "date": "2026-10-31",
+  "base_revision": "183f4f5d49267ffc4add88075364842bafe91373",
+  "device": {
+    "name": "NVIDIA B300 SXM6 AC",
+    "multiprocessors": 148,
+    "capability": [
+      10,
+      3
+    ],
+    "memory_bytes": 287421038592,
+    "board_before": {
+      "name": "NVIDIA B300 SXM6 AC",
+      "driver_version": "595.84",
+      "memory.total": "275040",
+      "memory.used": "4",
+      "power.limit": "1100.00",
+      "power.draw": "132.63",
+      "clocks.sm": "120",
+      "temperature.gpu": "29"
+    },
+    "board_after": {
+      "name": "NVIDIA B300 SXM6 AC",
+      "driver_version": "595.84",
+      "memory.total": "275040",
+      "memory.used": "1834",
+      "power.limit": "1100.00",
+      "power.draw": "919.34",
+      "clocks.sm": "1972",
+      "temperature.gpu": "44"
+    }
+  },
+  "stack": {
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cuda": "13.2"
+  },
+  "packages": {
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15.post0",
+    "triton": "3.9.0"
+  },
+  "source_sha256": {
+    "src/kohakufa_cute/__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "src/kohakufa_cute/_ops.py": "2db8bea488b0638d8313580a4f49b0f0e45df8e1727630e90c51cda18773c160",
+    "src/kohakufa_cute/ada.py": "b875706983267097f1ec335d077438888037aa88146213363b641b5b47498a91",
+    "src/kohakufa_cute/api.py": "02bc8e537e7d3894ea1e723de70e38fba92ba1d95c10e0d9d74c04902d94af03",
+    "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "src/kohakufa_cute/blackwell_pipeline.py": "93c0df74a609af7702284a2ee9e1a5aee49a58bfb287ae74bcc4bc3db9c27387",
+    "src/kohakufa_cute/blackwell_register_aux.py": "6a1912574c50a75d632444837a997cb39edae6aea80e1846972a176340a14059",
+    "src/kohakufa_cute/hopper_forward.py": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+    "src/kohakufa_cute/kernels.py": "6ef95996616e45c6f0763daac976813a6fe6b3846eefda8a02744751e7df74f5",
+    "src/kohakufa_cute/l40s.py": "97b34f5bc2e7020fb1a7545d373b916c80f55bfa6487669eff0499848bace406",
+    "src/kohakufa_cute/launch.py": "450b6d27ed26346e2174c49fe40a652d7b78076bf116970bd4b7ddcbd2982a70",
+    "src/kohakufa_cute/medium_backward.py": "4df4b7b1c369c7ddf4cafafb9e2afecad2ebb5241ebcaab76bdff0d9d74cbd48",
+    "src/kohakufa_cute/native.cpp": "3c94eefc4143b2c63523edc771f15b2dbb1bc2268112a7e655a943e01977074c",
+    "src/kohakufa_cute/native.py": "5b29cfdf71c45468b271c8497495d7dd20ca2c2e2ce4e2625cc58f066d5da04f",
+    "src/kohakufa_cute/precision.py": "c60f4a0430567865a454c849799966bc01f45a5536f040a52dc170046ff038a9",
+    "src/kohakufa_cute/short_forward.py": "4b08931d4978d3b70be4f419db50661695c937944e9ad3b9b854fa3a9c219fdb",
+    "src/kohakufa_cute/sm103.py": "0c310638eda9c17a157091ca3dcf51ea08cd83baf34778c415e080d9d77a57e6",
+    "src/kohakufa_cute/sm120_backward.py": "34bc6d05dd40eaeaec73f867ff3b03073b5cd5ae67d649e17bde1e6b7f5492fd",
+    "src/kohakufa_cute/sm120_schedule.py": "e5c2ecd79a80582203a9913d0c4bfb2b5323229699920c661b23e44374fe9244",
+    "src/kohakufa_cute/sm86.py": "49f8b8b50809315f77978425420d65fa76729f20ace0f1a118b1e31574fc5d37",
+    "src/kohakufa_cute/sm86_backward.py": "2381cb376b2a1490e2ef488c8f768f0283e9b2f21fa83834b2627ea591c5ef35",
+    "src/kohakufa_cute/split_forward.py": "75f7d43144b200d9caedb6fbf713aed6335ec4005d1a3ba8b801dafa74818578",
+    "src/kohakufa_cute/weight_precision.py": "e33312450a22d65a3752522483e3910f2f38042b6e3a27aa73cc778e89d90884",
+    "src/kohakufa_cute/wide_backward.py": "5ce2d2b9039b5b33253b28c1e72f57a239e3540c09b6b343ae2af2f57d2d6b47"
+  },
+  "protocol": "Independent out/dQ/dK/dV versus FP64 mathematical and single-rounded-P/dS equations. Backward rounded reference uses actual O for delta. CUDA graph changed-input checks; rotate CuTe and default SDPA timing order. Device-event graph replay; compilation excluded.",
+  "measurements": [
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021966048384293078,
+            "max_absolute_error": 0.0025789262959189374
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.003155063216782335,
+            "max_absolute_error": 0.005029800912741411
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003125637654999508,
+            "max_absolute_error": 0.0077771573714602305
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002500092193529092,
+            "max_absolute_error": 0.004155587138953032
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002196604558460737,
+            "max_absolute_error": 0.0025789294649130046
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0017107943061097305,
+            "max_absolute_error": 0.0027691592695191503
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0017196366709081947,
+            "max_absolute_error": 0.003790277987718582
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001686425394117739,
+            "max_absolute_error": 0.0019503117073327303
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "757bdd461eee8ed3",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "082fbac67d4a80ba",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "56d4a78c6f30d7c7",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "757bdd461eee8ed3",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "082fbac67d4a80ba",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "56d4a78c6f30d7c7",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "84a91391c3bd07b3",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "632993280c22c7cc",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cf2b7aa8d5a8781e",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "84a91391c3bd07b3",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "632993280c22c7cc",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cf2b7aa8d5a8781e",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "757bdd461eee8ed3",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c96a0f1feb991a03",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "dbf5dd3aa04e1f84",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "757bdd461eee8ed3",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c96a0f1feb991a03",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "dbf5dd3aa04e1f84",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.01080792606257195,
+            0.0061414530500769615,
+            0.006141445133835077,
+            0.006141480524092913,
+            0.006141503807157278
+          ],
+          "backward": [
+            0.01637839001311353,
+            0.016376570283811037,
+            0.016376471361577116,
+            0.016376442291674214,
+            0.016376533919162956
+          ],
+          "joint": [
+            0.020490975100433004,
+            0.020490468815507288,
+            0.020490485768454643,
+            0.02049045952159514,
+            0.020490525644036788
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.0061414530500769615,
+            0.00614171102643013,
+            0.006141402292996645,
+            0.006141371093690395,
+            0.0061414181254804134
+          ],
+          "backward": [
+            0.01639232557752858,
+            0.01639239736311822,
+            0.016392612013115697,
+            0.01639231476054322,
+            0.01639266259366063
+          ],
+          "joint": [
+            0.020490610131537072,
+            0.02049043084491114,
+            0.020490614276066004,
+            0.02049053314069635,
+            0.020490483621950092
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.006141413934528828,
+            0.006141699384897947,
+            0.0061419373378157616,
+            0.006141484249383211,
+            0.006141851656138897
+          ],
+          "backward": [
+            0.015256232554369633,
+            0.01525118508003229,
+            0.015259626062331472,
+            0.015255940483343937,
+            0.015253932406594336
+          ],
+          "joint": [
+            0.020470604214222594,
+            0.02047068623999079,
+            0.020470636741857336,
+            0.020470634441199273,
+            0.02047072687139206
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.006141480524092913,
+          "backward": 0.016376533919162956,
+          "joint": 0.020490485768454643
+        },
+        "sdpa": {
+          "forward": 0.0061414181254804134,
+          "backward": 0.01639239736311822,
+          "joint": 0.02049053314069635
+        },
+        "previous": {
+          "forward": 0.006141699384897947,
+          "backward": 0.015255940483343937,
+          "joint": 0.020470636741857336
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019544160299339542,
+            "max_absolute_error": 0.008022813643555171
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0035468645377579413,
+            "max_absolute_error": 0.011592046726836135
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.00338922909600639,
+            "max_absolute_error": 0.017160685698027978
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.00246021806351334,
+            "max_absolute_error": 0.014698782341164396
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.001954417366344444,
+            "max_absolute_error": 0.008022870942209881
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.00169640217868275,
+            "max_absolute_error": 0.006744384765625
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016891479084810148,
+            "max_absolute_error": 0.007595704519189894
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0017012814497161298,
+            "max_absolute_error": 0.014438215643167496
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "12b674e0051e5f92",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "02d47c4806c393f8",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "4e63d91aff334c91",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "12b674e0051e5f92",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "02d47c4806c393f8",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "4e63d91aff334c91",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "cba1cfe19f948ace",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "632993280c22c7cc",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cf2b7aa8d5a8781e",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "cba1cfe19f948ace",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              8,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "632993280c22c7cc",
+            "grid": [
+              1,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cf2b7aa8d5a8781e",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "12b674e0051e5f92",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c96a0f1feb991a03",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b44bf80455e0b975",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "12b674e0051e5f92",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c96a0f1feb991a03",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b44bf80455e0b975",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.010160187331660641,
+            0.006147230509668589,
+            0.006147199310362339,
+            0.006147195119410753,
+            0.006147230509668589
+          ],
+          "backward": [
+            0.016355988572828016,
+            0.01634821350552765,
+            0.01635236232905347,
+            0.016351115599030516,
+            0.01635523068156982
+          ],
+          "joint": [
+            0.020471469776050466,
+            0.020470582567330777,
+            0.0204706868716199,
+            0.020470743764807377,
+            0.02047070010158669
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.006147261708974838,
+            0.006147374864667654,
+            0.006147265434265137,
+            0.006147179752588272,
+            0.006147406063973904
+          ],
+          "backward": [
+            0.01637650917078211,
+            0.0163764618713571,
+            0.016376348375308134,
+            0.016376889585361654,
+            0.01637655787664501
+          ],
+          "joint": [
+            0.02253936974452778,
+            0.022539968642667104,
+            0.022539979630597055,
+            0.022539537804506102,
+            0.022539653447724083
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.006147238425910473,
+            0.006147367414087057,
+            0.006147234234958887,
+            0.006147160194814205,
+            0.006147371139377356
+          ],
+          "backward": [
+            0.0163767386908547,
+            0.01637647081534671,
+            0.016376346556608343,
+            0.016376592366509582,
+            0.01637636974081582
+          ],
+          "joint": [
+            0.020470576829273706,
+            0.020470688234385474,
+            0.020470506946860183,
+            0.020470665045711264,
+            0.020470698100649404
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.006147230509668589,
+          "backward": 0.01635236232905347,
+          "joint": 0.02047070010158669
+        },
+        "sdpa": {
+          "forward": 0.006147265434265137,
+          "backward": 0.01637650917078211,
+          "joint": 0.022539653447724083
+        },
+        "previous": {
+          "forward": 0.006147238425910473,
+          "backward": 0.01637647081534671,
+          "joint": 0.020470665045711264
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.00215583157673108,
+            "max_absolute_error": 0.002506301708302794
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030294026478277555,
+            "max_absolute_error": 0.006595903856026153
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003004538079808913,
+            "max_absolute_error": 0.007584539946101421
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002422769069776011,
+            "max_absolute_error": 0.0040654060273861425
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002155830692896572,
+            "max_absolute_error": 0.002506287413167385
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016814768058891363,
+            "max_absolute_error": 0.003720304295785626
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016992861141672576,
+            "max_absolute_error": 0.0038005783608541233
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016858871061672283,
+            "max_absolute_error": 0.0031313933432102203
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "6edb011cbcc55dea",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcc030331b924554",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8484a669d2632591",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "6edb011cbcc55dea",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcc030331b924554",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8484a669d2632591",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "71a0e1d39bc9597e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "2e080ffe8439d7a8",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bc9a629935ffc359",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "71a0e1d39bc9597e",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "2e080ffe8439d7a8",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bc9a629935ffc359",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "6edb011cbcc55dea",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "4e1cd101eff13b07",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9d1b332d5418dfd5",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "6edb011cbcc55dea",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "4e1cd101eff13b07",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9d1b332d5418dfd5",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.01074059804280599,
+            0.009215242229402065,
+            0.009214706718921661,
+            0.009208648465573788,
+            0.009211484342813492
+          ],
+          "backward": [
+            0.023631046193402713,
+            0.02362255495861101,
+            0.023650224933061802,
+            0.02365587459158545,
+            0.023583909385224693
+          ],
+          "joint": [
+            0.03070692886290492,
+            0.030706072516935135,
+            0.030705793491822047,
+            0.030705959113069285,
+            0.03070589960837851
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.0061449455097317696,
+            0.006145566236227751,
+            0.006145199295133352,
+            0.006145343650132418,
+            0.006145418155938387
+          ],
+          "backward": [
+            0.016376451294006625,
+            0.016376809260739606,
+            0.016376484644115515,
+            0.01637648149428585,
+            0.016376811677487252
+          ],
+          "joint": [
+            0.020490361392734,
+            0.020490525323590122,
+            0.020490529876949878,
+            0.020490807507851233,
+            0.020490493160029617
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.009231776930391788,
+            0.009231578558683395,
+            0.009236144833266735,
+            0.009238308295607567,
+            0.009231320582330227
+          ],
+          "backward": [
+            0.022940767184331547,
+            0.02294434888606665,
+            0.022944846193106393,
+            0.022964710821452614,
+            0.022943683663816748
+          ],
+          "joint": [
+            0.030736128685648272,
+            0.030735785905704943,
+            0.030736266202814576,
+            0.030736187982825593,
+            0.03073575183120614
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.009214706718921661,
+          "backward": 0.023631046193402713,
+          "joint": 0.030705959113069285
+        },
+        "sdpa": {
+          "forward": 0.006145343650132418,
+          "backward": 0.016376484644115515,
+          "joint": 0.020490525323590122
+        },
+        "previous": {
+          "forward": 0.009231776930391788,
+          "backward": 0.02294434888606665,
+          "joint": 0.030736128685648272
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.00194555620591094,
+            "max_absolute_error": 0.00849799418402064
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0033316108846427666,
+            "max_absolute_error": 0.01133095212141555
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0033411848052269017,
+            "max_absolute_error": 0.015460812214246111
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0024129038681219447,
+            "max_absolute_error": 0.018412205163416573
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019455586884320978,
+            "max_absolute_error": 0.008498055683625605
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0017080959688785112,
+            "max_absolute_error": 0.007306696200050755
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.001696192308511304,
+            "max_absolute_error": 0.007706643449653328
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0017336934963483406,
+            "max_absolute_error": 0.014966512098908424
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "7e2c898b0dbe7d55",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcc030331b924554",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8484a669d2632591",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "7e2c898b0dbe7d55",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcc030331b924554",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8484a669d2632591",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "e168a84248e6cfa1",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "7fb574bfb54d5ede",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bc9a629935ffc359",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "e168a84248e6cfa1",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              16,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "7fb574bfb54d5ede",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bc9a629935ffc359",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "7e2c898b0dbe7d55",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcc030331b924554",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "3e2f41e4b6e5cbc1",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "7e2c898b0dbe7d55",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "bcc030331b924554",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "3e2f41e4b6e5cbc1",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.012254980001691467,
+            0.008196238428354263,
+            0.008196409791707993,
+            0.008196242153644562,
+            0.00819644145667553
+          ],
+          "backward": [
+            0.022521648044061964,
+            0.02251767298837453,
+            0.02251777118744571,
+            0.022518367902359806,
+            0.02251754666831245
+          ],
+          "joint": [
+            0.03068941300995091,
+            0.030689345596747287,
+            0.030693240396984574,
+            0.030696249052453283,
+            0.03070138661155158
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.00614154664799571,
+            0.006141726393252611,
+            0.006141507998108864,
+            0.006141359452158213,
+            0.006141413934528828
+          ],
+          "backward": [
+            0.016376505100980716,
+            0.016376600029054753,
+            0.01637653954213696,
+            0.01637652942112514,
+            0.016376870143031033
+          ],
+          "joint": [
+            0.02049050359188558,
+            0.020490914792302126,
+            0.020490416844022908,
+            0.020490450301855773,
+            0.02049053588892529
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.008920574560761452,
+            0.008932066150009632,
+            0.008925078436732292,
+            0.008939085528254509,
+            0.00894355121999979
+          ],
+          "backward": [
+            0.022517554362163912,
+            0.022517745864101234,
+            0.02251769929529318,
+            0.022517575145985562,
+            0.022517575145985562
+          ],
+          "joint": [
+            0.03070593471858401,
+            0.030706053649808007,
+            0.030705951846665167,
+            0.0307060057117093,
+            0.03070576357937124
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.008196409791707993,
+          "backward": 0.02251777118744571,
+          "joint": 0.030693240396984574
+        },
+        "sdpa": {
+          "forward": 0.006141507998108864,
+          "backward": 0.01637653954213696,
+          "joint": 0.02049050359188558
+        },
+        "previous": {
+          "forward": 0.008932066150009632,
+          "backward": 0.022517575145985562,
+          "joint": 0.030705951846665167
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021455274709067094,
+            "max_absolute_error": 0.0035624851203903685
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030603240605309146,
+            "max_absolute_error": 0.007614489299183846
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0030050022196465094,
+            "max_absolute_error": 0.004970196353790701
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002491460181815634,
+            "max_absolute_error": 0.005463123875623532
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021455287903238214,
+            "max_absolute_error": 0.003562159915273533
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016806929883522472,
+            "max_absolute_error": 0.002857780084013939
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016836987011098032,
+            "max_absolute_error": 0.0031029587335069664
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016952887519341817,
+            "max_absolute_error": 0.0032524573616683483
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "2240492579100aff",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8bebdeb508cf0c46",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e4352d27333447a7",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "2240492579100aff",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8bebdeb508cf0c46",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e4352d27333447a7",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "4329490922736cd5",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "97886469513edc69",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "4329490922736cd5",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "97886469513edc69",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "2240492579100aff",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2bec307d8cdc9e46",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fa74da67f187b21f",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "2240492579100aff",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2bec307d8cdc9e46",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fa74da67f187b21f",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.014333298884400533,
+            0.014329373395001446,
+            0.014329450843978101,
+            0.014329745348762064,
+            0.01432935215817054
+          ],
+          "backward": [
+            0.02457286436761866,
+            0.024574244572566104,
+            0.02457380579195724,
+            0.02457426277213574,
+            0.02457110545612099
+          ],
+          "joint": [
+            0.03688394908941639,
+            0.03688308750604786,
+            0.03688419253327126,
+            0.03688299567348713,
+            0.036882963580709825
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.008196054957807064,
+            0.008196195587515831,
+            0.008195973001420498,
+            0.0081963324919343,
+            0.008196222595870495
+          ],
+          "backward": [
+            0.024588479856807437,
+            0.024589042180701147,
+            0.024588785548021887,
+            0.024588589880544135,
+            0.024588547719155467
+          ],
+          "joint": [
+            0.030760706562418437,
+            0.030752154011291232,
+            0.03074537313889901,
+            0.030747041563371554,
+            0.030740289300966454
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.014329440659271702,
+            0.014329402258550594,
+            0.014329711118528241,
+            0.014329438049997095,
+            0.014329496750443399
+          ],
+          "backward": [
+            0.02865923914263039,
+            0.02865882359778835,
+            0.02865869936353025,
+            0.028658852184813673,
+            0.02865874784565165
+          ],
+          "joint": [
+            0.04098153764642291,
+            0.04108687476969771,
+            0.04098165752665621,
+            0.04098460174535263,
+            0.04098150770343512
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.014329450843978101,
+          "backward": 0.02457380579195724,
+          "joint": 0.03688308750604786
+        },
+        "sdpa": {
+          "forward": 0.008196195587515831,
+          "backward": 0.024588589880544135,
+          "joint": 0.030747041563371554
+        },
+        "previous": {
+          "forward": 0.014329440659271702,
+          "backward": 0.02865882359778835,
+          "joint": 0.04098165752665621
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019667872176045193,
+            "max_absolute_error": 0.009386282909070065
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.003335202595865611,
+            "max_absolute_error": 0.014303838277961667
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0032813011730300915,
+            "max_absolute_error": 0.01519417406367185
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002374330630980297,
+            "max_absolute_error": 0.018038214012538134
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.001966787339463127,
+            "max_absolute_error": 0.009386283666810158
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0017004289883425893,
+            "max_absolute_error": 0.006898164749145508
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0017201866668377554,
+            "max_absolute_error": 0.007758105173707008
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001707761233201833,
+            "max_absolute_error": 0.015506937052123249
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "2812a0239a757e80",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "164bc123432e410d",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "295b3e5d4c1fb3fb",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "2812a0239a757e80",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "164bc123432e410d",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "295b3e5d4c1fb3fb",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "979234120a538ba5",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "aede2d3bf225814e",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "979234120a538ba5",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              32,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "aede2d3bf225814e",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              32,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "2812a0239a757e80",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2bec307d8cdc9e46",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "74a8f5bacc1ad753",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "2812a0239a757e80",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2bec307d8cdc9e46",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "74a8f5bacc1ad753",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.014331820646104106,
+            0.014329505655485164,
+            0.014329558110848836,
+            0.014329731905133685,
+            0.014329518410404887
+          ],
+          "backward": [
+            0.024583756442617483,
+            0.024583973850123817,
+            0.024582061494193116,
+            0.024582428289223524,
+            0.02458513278772335
+          ],
+          "joint": [
+            0.036884429989112524,
+            0.036882905483967235,
+            0.03688338165911137,
+            0.03688343298262956,
+            0.03688297959252921
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.008196277543902397,
+            0.008196386508643627,
+            0.008196425624191761,
+            0.008196327835321426,
+            0.008196218870580196
+          ],
+          "backward": [
+            0.026629225387096535,
+            0.026630966145615154,
+            0.026631411353165754,
+            0.026631748877699493,
+            0.026632761144139892
+          ],
+          "joint": [
+            0.03278531948592706,
+            0.03278550833709969,
+            0.03278549442278346,
+            0.032785322300340765,
+            0.0327854074741644
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.014329500551576968,
+            0.01432939873947272,
+            0.014329551991836801,
+            0.014329579315230045,
+            0.01432943593479048
+          ],
+          "backward": [
+            0.02868675227490149,
+            0.028686762201513148,
+            0.02868665610306951,
+            0.0286865925726156,
+            0.028687085070180564
+          ],
+          "joint": [
+            0.041282337104794196,
+            0.04198378619779367,
+            0.041996910458519346,
+            0.04220832867110678,
+            0.041967762459953914
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.014329558110848836,
+          "backward": 0.024583756442617483,
+          "joint": 0.03688338165911137
+        },
+        "sdpa": {
+          "forward": 0.008196327835321426,
+          "backward": 0.026631411353165754,
+          "joint": 0.0327854074741644
+        },
+        "previous": {
+          "forward": 0.014329500551576968,
+          "backward": 0.02868675227490149,
+          "joint": 0.04198378619779367
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021505692610140456,
+            "max_absolute_error": 0.0028043665614609914
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030638858030326136,
+            "max_absolute_error": 0.0052387621593816824
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.00308098957292821,
+            "max_absolute_error": 0.006524475323382628
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002363632890145516,
+            "max_absolute_error": 0.0033418519028715066
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0021505686321003545,
+            "max_absolute_error": 0.0028043589791378887
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016705902427220848,
+            "max_absolute_error": 0.0037408602136086433
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.001670118270808357,
+            "max_absolute_error": 0.0038307694333918896
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001673540684468485,
+            "max_absolute_error": 0.003010302782058716
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "876e2ab5e3e8226d",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "96226c6ff246482a",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "46ad725ae3fe4b28",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "876e2ab5e3e8226d",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "96226c6ff246482a",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "46ad725ae3fe4b28",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "876e2ab5e3e8226d",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8f53172e47eda771",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "caa3a8c62010f841",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "876e2ab5e3e8226d",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8f53172e47eda771",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "caa3a8c62010f841",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.016396359986103535,
+            0.016392670681094304,
+            0.01639245192958111,
+            0.01639243775338371,
+            0.016392424092187108
+          ],
+          "backward": [
+            0.036850084032959265,
+            0.03684704865721744,
+            0.03684755129234813,
+            0.03684739627359691,
+            0.036846903346528945
+          ],
+          "joint": [
+            0.05130296911334244,
+            0.05125666329340031,
+            0.05124317515980114,
+            0.051264364981294726,
+            0.05126322270671835
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.018424037048527356,
+            0.018424029796865412,
+            0.018425067537685438,
+            0.018423520380166307,
+            0.01842787330604392
+          ],
+          "backward": [
+            0.15141476929642772,
+            0.15142652723524305,
+            0.15139258780130527,
+            0.15138365582721988,
+            0.1514301416350574
+          ],
+          "joint": [
+            0.16799746332941828,
+            0.16803010680020158,
+            0.16804932824274743,
+            0.1680327571463625,
+            0.1680155942251067
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.016392610140723202,
+            0.016392436834408084,
+            0.01639262095218947,
+            0.016392412574028396,
+            0.016392397307451883
+          ],
+          "backward": [
+            0.04917697380658678,
+            0.04917664231661565,
+            0.04917674286698603,
+            0.0491761227219264,
+            0.04917692947387695
+          ],
+          "joint": [
+            0.0655058154795778,
+            0.06550596134150609,
+            0.06550594123769969,
+            0.06550568955554811,
+            0.06550579058488315
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.01639245192958111,
+          "backward": 0.03684739627359691,
+          "joint": 0.05126322270671835
+        },
+        "sdpa": {
+          "forward": 0.018424037048527356,
+          "backward": 0.15141476929642772,
+          "joint": 0.16803010680020158
+        },
+        "previous": {
+          "forward": 0.016392436834408084,
+          "backward": 0.04917674286698603,
+          "joint": 0.0655058154795778
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        128,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0019320535016593907,
+            "max_absolute_error": 0.008425662646236898
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0034446302280968467,
+            "max_absolute_error": 0.017837279928675454
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0034059754112040945,
+            "max_absolute_error": 0.017507260528925706
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023610122206806977,
+            "max_absolute_error": 0.01746737073054927
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.00193205185543246,
+            "max_absolute_error": 0.008425695805610811
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.001677155709999095,
+            "max_absolute_error": 0.0077423092513666525
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016725338561242428,
+            "max_absolute_error": 0.007799641373431143
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016815453452475083,
+            "max_absolute_error": 0.015378333628177643
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "8bbc9e3da3d277b1",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "96226c6ff246482a",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "6d07723a93aefccc",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "8bbc9e3da3d277b1",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "96226c6ff246482a",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "6d07723a93aefccc",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              4,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              2048,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              2,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "8bbc9e3da3d277b1",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8e9d469307418440",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "46ad725ae3fe4b28",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "8bbc9e3da3d277b1",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              8,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "8e9d469307418440",
+            "grid": [
+              2,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "46ad725ae3fe4b28",
+            "grid": [
+              4,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.018426914407749368,
+            0.018423587969922463,
+            0.018423680100485545,
+            0.018423531168131387,
+            0.018423540120028677
+          ],
+          "backward": [
+            0.034805517798071506,
+            0.03480127346692075,
+            0.034805133749634995,
+            0.034800511676268325,
+            0.03480002237812252
+          ],
+          "joint": [
+            0.0511778874065522,
+            0.051176539897181704,
+            0.05117632063483603,
+            0.05117761296503695,
+            0.05117677180561928
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.018439470314206032,
+            0.018439352749648252,
+            0.018440149364565752,
+            0.018439440128921104,
+            0.018439440058449184
+          ],
+          "backward": [
+            0.1506884849234803,
+            0.15063069661458334,
+            0.1506400528649791,
+            0.15063907738887902,
+            0.15059672300576438
+          ],
+          "joint": [
+            0.1671381623909807,
+            0.16718093152800795,
+            0.16723378070490355,
+            0.16715076074054347,
+            0.16725613372494477
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.01842354719732463,
+            0.018423622999722396,
+            0.01842378683013545,
+            0.018423696157404554,
+            0.01842373622937149
+          ],
+          "backward": [
+            0.049137039336853636,
+            0.049143297263825554,
+            0.04914354780816511,
+            0.049142800460838236,
+            0.04914445786792126
+          ],
+          "joint": [
+            0.0655062980802634,
+            0.0655058154795778,
+            0.06550587596981207,
+            0.06550588072723287,
+            0.06550598647789464
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.018423587969922463,
+          "backward": 0.03480127346692075,
+          "joint": 0.05117677180561928
+        },
+        "sdpa": {
+          "forward": 0.018439440128921104,
+          "backward": 0.15063907738887902,
+          "joint": 0.16718093152800795
+        },
+        "previous": {
+          "forward": 0.018423696157404554,
+          "backward": 0.049143297263825554,
+          "joint": 0.06550588072723287
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002316256879489638,
+            "max_absolute_error": 0.0005225442236880817
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0029535405314060213,
+            "max_absolute_error": 0.0016253728022131708
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0028915446157489425,
+            "max_absolute_error": 0.0018233406539676644
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0024211870117442705,
+            "max_absolute_error": 0.0007606776681371441
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002316256988046939,
+            "max_absolute_error": 0.0005225413909056564
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016621091314623585,
+            "max_absolute_error": 0.0005959221239209
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.001663914994806078,
+            "max_absolute_error": 0.0008595979969641121
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016640391167751047,
+            "max_absolute_error": 0.0004866184463026002
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "079177034b823c86",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d2b84513531c35ae",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c09fba3c6871dea4",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "079177034b823c86",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d2b84513531c35ae",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c09fba3c6871dea4",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "3a40253148d35a03",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "2658ed0efeb14081",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "3a40253148d35a03",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "2658ed0efeb14081",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "079177034b823c86",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cc866a5174d029e5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c09fba3c6871dea4",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "079177034b823c86",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cc866a5174d029e5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c09fba3c6871dea4",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.1618904768437049,
+            0.16187723051241742,
+            0.1618879491632635,
+            0.16188700787432783,
+            0.1618778674633472
+          ],
+          "backward": [
+            0.44622566667907443,
+            0.44623151702196606,
+            0.44625077867721763,
+            0.44626969820715384,
+            0.44623281709816426
+          ],
+          "joint": [
+            0.6102050594025594,
+            0.6102354833684815,
+            0.610328533898102,
+            0.6103018544202933,
+            0.6102558908287001
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.06758841689752072,
+            0.06759229387555804,
+            0.06769122609650406,
+            0.06760172898965228,
+            0.06771474043420186
+          ],
+          "backward": [
+            0.22779347480983908,
+            0.2274352957349305,
+            0.22786472364403734,
+            0.22837467368589628,
+            0.22816170195830032
+          ],
+          "joint": [
+            0.29280159690163354,
+            0.2928069441898827,
+            0.29283884893064976,
+            0.2929888191111277,
+            0.29279755985035616
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.16187842144229547,
+            0.1618781770978655,
+            0.16187806168222815,
+            0.1618821280343192,
+            0.16188093903776887
+          ],
+          "backward": [
+            0.4236027819045047,
+            0.4235163262549867,
+            0.423614501953125,
+            0.4234897694689162,
+            0.4235269424763132
+          ],
+          "joint": [
+            0.5792731351630632,
+            0.5796256841615189,
+            0.5795211348422739,
+            0.5791750619577807,
+            0.5793826968170875
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.16188700787432783,
+          "backward": 0.44623281709816426,
+          "joint": 0.6102558908287001
+        },
+        "sdpa": {
+          "forward": 0.06760172898965228,
+          "backward": 0.22786472364403734,
+          "joint": 0.2928069441898827
+        },
+        "previous": {
+          "forward": 0.16187842144229547,
+          "backward": 0.4235269424763132,
+          "joint": 0.5793826968170875
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002097793923960019,
+            "max_absolute_error": 0.007836578329338373
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.003089967137180528,
+            "max_absolute_error": 0.011382093281546268
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003033159409966825,
+            "max_absolute_error": 0.01649777068694247
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002386603669978355,
+            "max_absolute_error": 0.01584177919639984
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002097792431122372,
+            "max_absolute_error": 0.007836579555026368
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016835450040706985,
+            "max_absolute_error": 0.0061157941818237305
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016820200098471953,
+            "max_absolute_error": 0.0073781700707513664
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0017743506709369903,
+            "max_absolute_error": 0.015424460005306173
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "19f6c999633ea7ec",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d2b84513531c35ae",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ab3e54f27f4ea03f",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "19f6c999633ea7ec",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d2b84513531c35ae",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ab3e54f27f4ea03f",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "3a40253148d35a03",
+            "grid": [
+              256,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "23fe923fcc5c150f",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "3a40253148d35a03",
+            "grid": [
+              256,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "063d845e455c07f7",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "23fe923fcc5c150f",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              256,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "19f6c999633ea7ec",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cc866a5174d029e5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c09fba3c6871dea4",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "19f6c999633ea7ec",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "9f08a6283e6a3b68",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "cc866a5174d029e5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "c09fba3c6871dea4",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.11860638107281174,
+            0.11861290550913942,
+            0.11862075186572382,
+            0.1185986466510199,
+            0.11862247180597717
+          ],
+          "backward": [
+            0.28788272218208094,
+            0.2878443253486919,
+            0.28779615280945176,
+            0.28778616403568685,
+            0.28781299921818554
+          ],
+          "joint": [
+            0.40544599827712147,
+            0.4053926545430005,
+            0.40545626384455985,
+            0.4054107355877636,
+            0.4053925304878049
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.038893977754090724,
+            0.03889826315143724,
+            0.0388965531773953,
+            0.038894950102260864,
+            0.0388945146588552
+          ],
+          "backward": [
+            0.1171049409754136,
+            0.11705701135440383,
+            0.11706055261273501,
+            0.1171184943704044,
+            0.11713207892651828
+          ],
+          "joint": [
+            0.15538995484727353,
+            0.15539195455866067,
+            0.155378523185361,
+            0.15541718573444183,
+            0.15535001710127
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.11859043353774641,
+            0.11860181375292621,
+            0.11861723212785619,
+            0.11863692088793683,
+            0.1186958413255115
+          ],
+          "backward": [
+            0.26675619580470844,
+            0.26682942436340656,
+            0.26682695602988177,
+            0.26686533910020105,
+            0.2669004552504596
+          ],
+          "joint": [
+            0.38377922382133806,
+            0.3839341677152194,
+            0.38383728380829213,
+            0.3838036732323842,
+            0.38390362079326923
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.11861290550913942,
+          "backward": 0.28781299921818554,
+          "joint": 0.4054107355877636
+        },
+        "sdpa": {
+          "forward": 0.038894950102260864,
+          "backward": 0.1171049409754136,
+          "joint": 0.15538995484727353
+        },
+        "previous": {
+          "forward": 0.11861723212785619,
+          "backward": 0.26682942436340656,
+          "joint": 0.38383728380829213
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0023378878040602657,
+            "max_absolute_error": 0.0005331091081167139
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.00291622646681602,
+            "max_absolute_error": 0.0011740377972010996
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0028846564391351555,
+            "max_absolute_error": 0.0009437055134573213
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0024195484656352045,
+            "max_absolute_error": 0.0007970282987247446
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0023378879811472414,
+            "max_absolute_error": 0.0005331219600227255
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016610372592903658,
+            "max_absolute_error": 0.0006705356563745379
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016617224078721731,
+            "max_absolute_error": 0.0007624971713515172
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001660064933725603,
+            "max_absolute_error": 0.00048646297727827914
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "9a9e591ed9bbdea1",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "447a46f0dc9ab743",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "9a9e591ed9bbdea1",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "447a46f0dc9ab743",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "4083bd01a7b02807",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "1446387434836e32",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "4083bd01a7b02807",
+            "grid": [
+              16,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "1446387434836e32",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "9a9e591ed9bbdea1",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2d1a9e4af90a69b7",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "9a9e591ed9bbdea1",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2d1a9e4af90a69b7",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.16586843696800438,
+            0.16595850626627603,
+            0.16595125834147134,
+            0.1766034024433025,
+            0.16589066823323567
+          ],
+          "backward": [
+            0.5594585290115871,
+            0.5597415023975159,
+            0.5604544650302844,
+            0.5595318654949746,
+            0.559378506092543
+          ],
+          "joint": [
+            0.7233451622119849,
+            0.724803506892963,
+            0.7248343586051551,
+            0.724776558254076,
+            0.7245718361674875
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.09419665988867021,
+            0.09428326948329012,
+            0.09622639265853804,
+            0.09189338523124341,
+            0.09608075071053053
+          ],
+          "backward": [
+            0.32259521994702395,
+            0.32632165608996133,
+            0.3226892732856266,
+            0.3249727332073709,
+            0.32373825022548536
+          ],
+          "joint": [
+            0.4277681943749179,
+            0.42917473975648274,
+            0.42574297426119134,
+            0.42894110699746174,
+            0.42958406488946144
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.17796965184499877,
+            0.1779981383675419,
+            0.16594569949753496,
+            0.18082285021418887,
+            0.17854543030261993
+          ],
+          "backward": [
+            0.5812462852114723,
+            0.5816761485317297,
+            0.5808394232461619,
+            0.581555818256579,
+            0.5805410195512382
+          ],
+          "joint": [
+            0.7419698914485191,
+            0.7415536908961055,
+            0.7420359293619792,
+            0.7412336548762535,
+            0.7415515273364622
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.16595125834147134,
+          "backward": 0.5595318654949746,
+          "joint": 0.724776558254076
+        },
+        "sdpa": {
+          "forward": 0.09428326948329012,
+          "backward": 0.32373825022548536,
+          "joint": 0.42894110699746174
+        },
+        "previous": {
+          "forward": 0.1779981383675419,
+          "backward": 0.5812462852114723,
+          "joint": 0.7415536908961055
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0020766492516119672,
+            "max_absolute_error": 0.00812553754451395
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.003060132469231408,
+            "max_absolute_error": 0.014804655013775259
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003137356021586978,
+            "max_absolute_error": 0.018474266387666027
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023691356894713447,
+            "max_absolute_error": 0.013431282257751143
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0020766506607084014,
+            "max_absolute_error": 0.008125677302933454
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016714977740775669,
+            "max_absolute_error": 0.006744253826077351
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016782122451220328,
+            "max_absolute_error": 0.007769861164155678
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016920293671099415,
+            "max_absolute_error": 0.014970674012147356
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "fb31e8ebac47c8f5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "447a46f0dc9ab743",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "fb31e8ebac47c8f5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "447a46f0dc9ab743",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "9e4688f6ef979154",
+            "grid": [
+              256,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "f54e03c78f466ada",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "9e4688f6ef979154",
+            "grid": [
+              256,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "d11b53c064d7d4fb",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "f54e03c78f466ada",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "163b258ea0027d64",
+            "grid": [
+              512,
+              1,
+              16
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "fb31e8ebac47c8f5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2d1a9e4af90a69b7",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "fb31e8ebac47c8f5",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "5ec885a83ddd6dc1",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "b9546414e07e7a51",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "2d1a9e4af90a69b7",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.11776523162004657,
+            0.11779029457028933,
+            0.1179041862487793,
+            0.12563339587285768,
+            0.1178084167335492
+          ],
+          "backward": [
+            0.3198766400737147,
+            0.3199082156852894,
+            0.31983241056784606,
+            0.3199401070450663,
+            0.31999825208615035
+          ],
+          "joint": [
+            0.43525855718221207,
+            0.43539591959990787,
+            0.43519285776729666,
+            0.43547011462882096,
+            0.43543573237923033
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.06494725266143228,
+            0.06616199199969952,
+            0.06479369648887068,
+            0.0654269588809706,
+            0.06607664454623562
+          ],
+          "backward": [
+            0.1677653838484585,
+            0.16842966287678277,
+            0.16712002463184053,
+            0.1694828347314762,
+            0.16887429861777678
+          ],
+          "joint": [
+            0.24778722512601603,
+            0.2490894559063489,
+            0.2512654093952922,
+            0.24847103851010102,
+            0.2505985782836294
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.12467898571992664,
+            0.1257452376014989,
+            0.1175650247275057,
+            0.1259505751966304,
+            0.12617116915125426
+          ],
+          "backward": [
+            0.33075841267903644,
+            0.3306034886559775,
+            0.33064612201678,
+            0.3306939333479926,
+            0.3306534322102865
+          ],
+          "joint": [
+            0.4466350538313656,
+            0.44667049801403097,
+            0.44684655570128573,
+            0.4467531554902081,
+            0.4467771042622793
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.1178084167335492,
+          "backward": 0.3199082156852894,
+          "joint": 0.43539591959990787
+        },
+        "sdpa": {
+          "forward": 0.0654269588809706,
+          "backward": 0.16842966287678277,
+          "joint": 0.2490894559063489
+        },
+        "previous": {
+          "forward": 0.1257452376014989,
+          "backward": 0.3306534322102865,
+          "joint": 0.4467531554902081
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0023094857729228668,
+            "max_absolute_error": 0.0005183803934537823
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.002894554270573227,
+            "max_absolute_error": 0.0012189513730662682
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.002880162598828728,
+            "max_absolute_error": 0.0016360338493139892
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023744433311768337,
+            "max_absolute_error": 0.0007267427614751076
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002309485997363859,
+            "max_absolute_error": 0.0005183901513000078
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.001659367392769809,
+            "max_absolute_error": 0.0005058805672888411
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016619834404381407,
+            "max_absolute_error": 0.0007742414611726645
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016600136191292807,
+            "max_absolute_error": 0.0004876243128819624
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "a03256897597af68",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "99d46170c58a553d",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "200c8c261b3ad998",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "a03256897597af68",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "99d46170c58a553d",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "200c8c261b3ad998",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "5360560a413a6b92",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "97886469513edc69",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "5360560a413a6b92",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "97886469513edc69",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "a03256897597af68",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "47a4ebb544711158",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "11179ca07f4f5d51",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "a03256897597af68",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "47a4ebb544711158",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "11179ca07f4f5d51",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.26061780040800886,
+            0.26709788443264615,
+            0.26814705984933035,
+            0.27631835063070825,
+            0.2683346928776921
+          ],
+          "backward": [
+            1.6075555710565477,
+            1.6411808201524078,
+            1.6422142904312884,
+            1.6239049942767034,
+            1.6480655357485912
+          ],
+          "joint": [
+            1.871133048579378,
+            1.9023446303147535,
+            1.9119076362022986,
+            1.8936886420616736,
+            1.899499012873723
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.1927146265062235,
+            0.19068474939026808,
+            0.1904086870016511,
+            0.18822475368693722,
+            0.18982102698886516
+          ],
+          "backward": [
+            0.8645350844771774,
+            0.8662453047726133,
+            0.8560184863729214,
+            0.8642195242422598,
+            0.8591441761363636
+          ],
+          "joint": [
+            1.0191085507171322,
+            1.0199601309640067,
+            1.0197397348832111,
+            1.026040135597696,
+            1.0219647154516103
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.2736442978905137,
+            0.27413463592529297,
+            0.2662181752250794,
+            0.27624076995414887,
+            0.27594394086093305
+          ],
+          "backward": [
+            1.7108231906233162,
+            1.7158581963900863,
+            1.7242146196036503,
+            1.7199585228635554,
+            1.7109534164954876
+          ],
+          "joint": [
+            1.9821331787109375,
+            1.9813760375976563,
+            1.9908128356933594,
+            1.9917427062988282,
+            1.984481964111328
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.26814705984933035,
+          "backward": 1.6411808201524078,
+          "joint": 1.899499012873723
+        },
+        "sdpa": {
+          "forward": 0.1904086870016511,
+          "backward": 0.8642195242422598,
+          "joint": 1.0199601309640067
+        },
+        "previous": {
+          "forward": 0.27413463592529297,
+          "backward": 1.7158581963900863,
+          "joint": 1.984481964111328
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        256
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002080154562590792,
+            "max_absolute_error": 0.007723073735304009
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030662955331190816,
+            "max_absolute_error": 0.011416743044383892
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003083015565744815,
+            "max_absolute_error": 0.01293275400934979
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002399924385189038,
+            "max_absolute_error": 0.013818363672778666
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0020801540139994386,
+            "max_absolute_error": 0.007723061355693783
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016710308459968015,
+            "max_absolute_error": 0.007720947265625
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016797273158872454,
+            "max_absolute_error": 0.007797821056556131
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016798885163221136,
+            "max_absolute_error": 0.014529738504279521
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "d1a36aa42f09a660",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "99d46170c58a553d",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "200c8c261b3ad998",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "d1a36aa42f09a660",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "99d46170c58a553d",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "200c8c261b3ad998",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "d6f8de4a89c16589",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "aede2d3bf225814e",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "d6f8de4a89c16589",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "fd7a9e47ee33de25",
+            "grid": [
+              1024,
+              1,
+              16
+            ]
+          },
+          {
+            "kernel": "aede2d3bf225814e",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "20d3f3e60a6cab12",
+            "grid": [
+              512,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "e222094bb78d4198",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "d1a36aa42f09a660",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "47a4ebb544711158",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "11179ca07f4f5d51",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "d1a36aa42f09a660",
+            "grid": [
+              32,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "ea5ef0e98cdc6908",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "47a4ebb544711158",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "11179ca07f4f5d51",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.1562637569397453,
+            0.1576764572359142,
+            0.1588607547790047,
+            0.1714262616807136,
+            0.157854843738502
+          ],
+          "backward": [
+            1.0344146887461345,
+            1.0421532164228724,
+            1.04137022951816,
+            1.0411199754284275,
+            1.0467302038314494
+          ],
+          "joint": [
+            1.1879508608863467,
+            1.1973050588584808,
+            1.1955304433064289,
+            1.1874640328543526,
+            1.1983699568782944
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            0.10815128203361266,
+            0.10694771973092995,
+            0.1082967927184286,
+            0.10713497015014757,
+            0.10436479100641215
+          ],
+          "backward": [
+            0.49397461576611584,
+            0.49340351422627765,
+            0.49737548828125,
+            0.4959930821468956,
+            0.5011788842512325
+          ],
+          "joint": [
+            0.5820422751366059,
+            0.583895115494039,
+            0.5837728043048702,
+            0.5893329374971445,
+            0.5939658538639894
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.16942607452723094,
+            0.16930350563742896,
+            0.15881767092157878,
+            0.16984945783563377,
+            0.17024673909058063
+          ],
+          "backward": [
+            1.0938678698593312,
+            1.0950176796216644,
+            1.0975496956471646,
+            1.1036440242420544,
+            1.098900981333064
+          ],
+          "joint": [
+            1.247629165649414,
+            1.248065185546875,
+            1.2551679611206055,
+            1.2481971740722657,
+            1.247731590270996
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.157854843738502,
+          "backward": 1.04137022951816,
+          "joint": 1.1955304433064289
+        },
+        "sdpa": {
+          "forward": 0.10713497015014757,
+          "backward": 0.4959930821468956,
+          "joint": 0.583895115494039
+        },
+        "previous": {
+          "forward": 0.16942607452723094,
+          "backward": 1.0975496956471646,
+          "joint": 1.248065185546875
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "dense",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002294895549308759,
+            "max_absolute_error": 0.0005338075306599299
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.002888278287284005,
+            "max_absolute_error": 0.0012920812677177373
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.002879332505032214,
+            "max_absolute_error": 0.001283050409958908
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.002364499392697146,
+            "max_absolute_error": 0.0007422885560482151
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.0022948959860648395,
+            "max_absolute_error": 0.000533812295955477
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.001660832913291681,
+            "max_absolute_error": 0.0004898819902864893
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016608050183339693,
+            "max_absolute_error": 0.0004887880762138308
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0016594402250780418,
+            "max_absolute_error": 0.0004880849674009369
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "a5687264b95f6d86",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d901df13fafbc130",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "a5687264b95f6d86",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d901df13fafbc130",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "a5687264b95f6d86",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "f6ad3ab2eace4253",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "a5687264b95f6d86",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "f6ad3ab2eace4253",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.6085143439513815,
+            0.6312958305404031,
+            0.6247773644519828,
+            0.6040218805862685,
+            0.635641560752011
+          ],
+          "backward": [
+            2.7903220653533936,
+            2.8313982563634075,
+            2.8409601026965725,
+            2.799036979675293,
+            2.8370528682585685
+          ],
+          "joint": [
+            3.4320607678643587,
+            3.4699365023908944,
+            3.479473771720097,
+            3.4202117919921875,
+            3.478004981731546
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            3.0193440755208334,
+            2.9958316433814263,
+            2.999788345829133,
+            3.028398895263672,
+            3.0146002000378025
+          ],
+          "backward": [
+            29.420900344848633,
+            29.446958541870117,
+            29.43236541748047,
+            29.425430297851562,
+            29.440250396728516
+          ],
+          "joint": [
+            32.36744689941406,
+            32.38951110839844,
+            32.37337112426758,
+            32.37068557739258,
+            32.38624572753906
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.590183064088983,
+            0.5905648563685042,
+            0.6311664695511321,
+            0.601509223550053,
+            0.5906991422846076
+          ],
+          "backward": [
+            3.254420245135272,
+            3.2544343736436634,
+            3.2738890471281827,
+            3.275210627803096,
+            3.2564618246895924
+          ],
+          "joint": [
+            3.8350633474496694,
+            3.8715987572303185,
+            3.8771353149414063,
+            3.8249391409067006,
+            3.8814474252554088
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.6247773644519828,
+          "backward": 2.8313982563634075,
+          "joint": 3.4699365023908944
+        },
+        "sdpa": {
+          "forward": 3.0146002000378025,
+          "backward": 29.43236541748047,
+          "joint": 32.37337112426758
+        },
+        "previous": {
+          "forward": 0.5906991422846076,
+          "backward": 3.2564618246895924,
+          "joint": 3.8715987572303185
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        512
+      ],
+      "dtype": "bf16",
+      "mode": "causal",
+      "accuracy": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002092108058882254,
+            "max_absolute_error": 0.008295143618528567
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0030378110836053254,
+            "max_absolute_error": 0.016326442681160902
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.003031517366528009,
+            "max_absolute_error": 0.017968170089209146
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.0023587349093578576,
+            "max_absolute_error": 0.018270007828617096
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "max_relative_error": 0.002092108858581106,
+            "max_absolute_error": 0.00829513246012814
+          },
+          "dq": {
+            "finite": true,
+            "max_relative_error": 0.0016724877291625776,
+            "max_absolute_error": 0.0078036244187043025
+          },
+          "dk": {
+            "finite": true,
+            "max_relative_error": 0.0016713739874449464,
+            "max_absolute_error": 0.007841615388425094
+          },
+          "dv": {
+            "finite": true,
+            "max_relative_error": 0.001674805605042805,
+            "max_absolute_error": 0.015391598539281404
+          }
+        }
+      },
+      "graph_resources": {
+        "cute/forward": [
+          {
+            "kernel": "40a03fdbab9d2264",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "cute/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d901df13fafbc130",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "cute/joint": [
+          {
+            "kernel": "40a03fdbab9d2264",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d901df13fafbc130",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/forward": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/backward": [
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "sdpa/joint": [
+          {
+            "kernel": "1ad9455e2fbaa844",
+            "grid": [
+              128,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "54928bf4dd4d6c2e",
+            "grid": [
+              65536,
+              1,
+              1
+            ]
+          },
+          {
+            "kernel": "04e3aa6e5ef93a4b",
+            "grid": [
+              12,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/forward": [
+          {
+            "kernel": "40a03fdbab9d2264",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          }
+        ],
+        "previous/backward": [
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d901df13fafbc130",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ],
+        "previous/joint": [
+          {
+            "kernel": "40a03fdbab9d2264",
+            "grid": [
+              32,
+              16,
+              2
+            ]
+          },
+          {
+            "kernel": "2624e1ca19a54a63",
+            "grid": [
+              256,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d901df13fafbc130",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          },
+          {
+            "kernel": "d5a5f43f0b39c8f9",
+            "grid": [
+              64,
+              16,
+              1
+            ]
+          }
+        ]
+      },
+      "samples_ms": {
+        "cute": {
+          "forward": [
+            0.37482505686142864,
+            0.38563470526055976,
+            0.39149902679108,
+            0.37935004042181775,
+            0.39288240649324635
+          ],
+          "backward": [
+            1.7898691214767157,
+            1.809723648370481,
+            1.7958281273935355,
+            1.787125514103816,
+            1.8038001547054368
+          ],
+          "joint": [
+            2.103700637817383,
+            2.130724156156499,
+            2.133589074966755,
+            2.099376272647939,
+            2.129415471503075
+          ]
+        },
+        "sdpa": {
+          "forward": [
+            1.8472579380251326,
+            1.8375603004738137,
+            1.8427046262300932,
+            1.8486001356592718,
+            1.83799644752785
+          ],
+          "backward": [
+            17.4061222076416,
+            17.39339828491211,
+            17.409364700317383,
+            17.417844772338867,
+            17.419172286987305
+          ],
+          "joint": [
+            19.262826919555664,
+            19.269678115844727,
+            19.235349655151367,
+            19.258441925048828,
+            19.266027450561523
+          ]
+        },
+        "previous": {
+          "forward": [
+            0.37587643365790374,
+            0.37343182528976104,
+            0.39054762829635226,
+            0.3732358556594292,
+            0.3774578623528028
+          ],
+          "backward": [
+            2.0862334858287466,
+            2.0965395840731533,
+            2.103286388308503,
+            2.08624284917658,
+            2.087739597667347
+          ],
+          "joint": [
+            2.409628147032203,
+            2.4087727244307353,
+            2.409820928806212,
+            2.4098856856183306,
+            2.41078874541492
+          ]
+        }
+      },
+      "medians_ms": {
+        "cute": {
+          "forward": 0.38563470526055976,
+          "backward": 1.7958281273935355,
+          "joint": 2.129415471503075
+        },
+        "sdpa": {
+          "forward": 1.8427046262300932,
+          "backward": 17.409364700317383,
+          "joint": 19.262826919555664
+        },
+        "previous": {
+          "forward": 0.37587643365790374,
+          "backward": 2.087739597667347,
+          "joint": 2.409820928806212
+        }
+      }
+    }
+  ],
+  "kernels": {
+    "757bdd461eee8ed3": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 37888,
+      "NUM_REGS": 124,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "9f08a6283e6a3b68": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 4096,
+      "NUM_REGS": 44,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "082fbac67d4a80ba": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_1",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 21504,
+      "NUM_REGS": 167,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "56d4a78c6f30d7c7": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_2",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 41984,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "84a91391c3bd07b3": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_fprop_wmma_f16_knob_1_128x64x64_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 40960,
+      "NUM_REGS": 236,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "063d845e455c07f7": {
+      "symbol": "_ZN5cudnn6fusion28compute_dot_do_o_specializedILb1ELi64EEEvPKvS3_PvS4_jjjjjjjjjjjjjjjjjfS3_S3_S3_S3_S3_bS3_S4_S3_S3_iiiiiiiiiPfS5_S5_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 28,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "632993280c22c7cc": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_bprop_wmma_f16_knob_2_64x128x64_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 81920,
+      "NUM_REGS": 254,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "cf2b7aa8d5a8781e": {
+      "symbol": "_ZN5cudnn6fusion22rearrange_n_convert_dqILb1EEEvPKvPvS4_jjjjjjjjjjS3_S4_S4_b15cudnnDataType_t",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 4096,
+      "NUM_REGS": 32,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "c96a0f1feb991a03": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_1",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 21504,
+      "NUM_REGS": 252,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "dbf5dd3aa04e1f84": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_2",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 41984,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "12b674e0051e5f92": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_0",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 37888,
+      "NUM_REGS": 125,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "02d47c4806c393f8": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_1",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 21504,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "4e63d91aff334c91": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_2",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 41984,
+      "NUM_REGS": 242,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "cba1cfe19f948ace": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_fprop_wmma_f16_knob_1_128x64x64_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 40960,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "b44bf80455e0b975": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tens_2",
+      "block": [
+        64,
+        1,
+        1
+      ],
+      "shared_bytes": 41984,
+      "NUM_REGS": 252,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "6edb011cbcc55dea": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Forward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensor_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 91136,
+      "NUM_REGS": 178,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "5ec885a83ddd6dc1": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81__0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 8192,
+      "NUM_REGS": 60,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "bcc030331b924554": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 82944,
+      "NUM_REGS": 215,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "8484a669d2632591": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103KeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tenso_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 83968,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 24,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "71a0e1d39bc9597e": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_fprop_wmma_f16_knob_1_64x64x128_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 40960,
+      "NUM_REGS": 215,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "d11b53c064d7d4fb": {
+      "symbol": "_ZN5cudnn6fusion28compute_dot_do_o_specializedILb1ELi128EEEvPKvS3_PvS4_jjjjjjjjjjjjjjjjjfS3_S3_S3_S3_S3_bS3_S4_S3_S3_iiiiiiiiiPfS5_S5_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 28,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "2e080ffe8439d7a8": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_bprop_wmma_f16_knob_2_64x64x128_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 98304,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 8,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "bc9a629935ffc359": {
+      "symbol": "_ZN5cudnn6fusion22rearrange_n_convert_dqILb1EEEvPKvPvS4_jjjjjjjjjjS3_S4_S4_b15cudnnDataType_t",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 8192,
+      "NUM_REGS": 32,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "4e1cd101eff13b07": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 82944,
+      "NUM_REGS": 211,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "9d1b332d5418dfd5": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103KeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tenso_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 83968,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 104,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "7e2c898b0dbe7d55": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Forward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensor_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 91136,
+      "NUM_REGS": 188,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "e168a84248e6cfa1": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_fprop_wmma_f16_knob_1_64x64x128_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 40960,
+      "NUM_REGS": 213,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "7fb574bfb54d5ede": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_bprop_wmma_f16_knob_2_64x64x128_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 98304,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "3e2f41e4b6e5cbc1": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103KeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tenso_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 83968,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 80,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "2240492579100aff": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 242,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "ea5ef0e98cdc6908": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81__0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 16384,
+      "NUM_REGS": 60,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "8bebdeb508cf0c46": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 148480,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 96,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "e4352d27333447a7": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 107520,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 64,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "4329490922736cd5": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_fprop_wmma_f16_knob_1_64x64x256_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 40960,
+      "NUM_REGS": 190,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "fd7a9e47ee33de25": {
+      "symbol": "_ZN5cudnn6fusion28compute_dot_do_o_specializedILb1ELi256EEEvPKvS3_PvS4_jjjjjjjjjjjjjjjjjfS3_S3_S3_S3_S3_bS3_S4_S3_S3_iiiiiiiiiPfS5_S5_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 28,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "97886469513edc69": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x256_1x4x1_cga2x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "20d3f3e60a6cab12": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x256_1x4x1_cga2x1x1_kernel1_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "e222094bb78d4198": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x256_1x4x1_cga2x1x1_kernel2_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "2bec307d8cdc9e46": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 148480,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 576,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "fa74da67f187b21f": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 107520,
+      "NUM_REGS": 254,
+      "LOCAL_SIZE_BYTES": 48,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "2812a0239a757e80": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 99328,
+      "NUM_REGS": 243,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "164bc123432e410d": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 148480,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 88,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "295b3e5d4c1fb3fb": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 107520,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 56,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "979234120a538ba5": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm80_flash_fprop_wmma_f16_knob_1_64x64x256_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 40960,
+      "NUM_REGS": 192,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "aede2d3bf225814e": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x256_1x4x1_cga2x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 24,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "74a8f5bacc1ad753": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 107520,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 32,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "876e2ab5e3e8226d": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 205824,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 32,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "2624e1ca19a54a63": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+      "block": [
+        32,
+        1,
+        1
+      ],
+      "shared_bytes": 32768,
+      "NUM_REGS": 60,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "96226c6ff246482a": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 205824,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 184,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "46ad725ae3fe4b28": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 135168,
+      "NUM_REGS": 254,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "1ad9455e2fbaa844": {
+      "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+      "block": [
+        32,
+        4,
+        1
+      ],
+      "shared_bytes": 51200,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 280,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "54928bf4dd4d6c2e": {
+      "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 20,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "04e3aa6e5ef93a4b": {
+      "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "shared_bytes": 60928,
+      "NUM_REGS": 220,
+      "LOCAL_SIZE_BYTES": 544,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "8f53172e47eda771": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 205824,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 1584,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "caa3a8c62010f841": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 135168,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "8bbc9e3da3d277b1": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_0",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 205824,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 40,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "6d07723a93aefccc": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsAttention_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_te_2",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 135168,
+      "NUM_REGS": 252,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "8e9d469307418440": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutesm103Query_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorpt_1",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 205824,
+      "NUM_REGS": 255,
+      "LOCAL_SIZE_BYTES": 1592,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "079177034b823c86": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_d_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 101376,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "d2b84513531c35ae": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div_1",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 185344,
+      "NUM_REGS": 154,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "c09fba3c6871dea4": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64__2",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 185344,
+      "NUM_REGS": 162,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "3a40253148d35a03": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_fprop_f16_knob_1_128x128x64_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "2658ed0efeb14081": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x64_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "163b258ea0027d64": {
+      "symbol": "_ZN5cudnn6fusion20convert_dq_to_16bitsILb1EEEvPKvPvjjjjjjjjjjPKfS6_S6_PfS3_S4_S4_bb",
+      "block": [
+        128,
+        1,
+        1
+      ],
+      "shared_bytes": 0,
+      "NUM_REGS": 28,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 100
+    },
+    "cc866a5174d029e5": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div_1",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 185344,
+      "NUM_REGS": 148,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "19f6c999633ea7ec": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_d_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 101376,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 8,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "ab3e54f27f4ea03f": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64__2",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 185344,
+      "NUM_REGS": 160,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "23fe923fcc5c150f": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x64_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "9a9e591ed9bbdea1": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 117760,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "b9546414e07e7a51": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_d_1",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 201728,
+      "NUM_REGS": 156,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "447a46f0dc9ab743": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i6_2",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 201728,
+      "NUM_REGS": 158,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "4083bd01a7b02807": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_fprop_f16_knob_2_128x128x128_1x4x1_cga2x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 48,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "1446387434836e32": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x128_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 8,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "2d1a9e4af90a69b7": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i6_2",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 201728,
+      "NUM_REGS": 162,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "fb31e8ebac47c8f5": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116128i64_div8i64_div8i64_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 117760,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 216,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "9e4688f6ef979154": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_fprop_f16_knob_1_128x128x128_4x1x1_cga1x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 48,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "f54e03c78f466ada": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_bprop_f16_knob_2_128x128x128_1x4x1_cga1x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "a03256897597af68": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 150528,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "99d46170c58a553d": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_d_1",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 201728,
+      "NUM_REGS": 154,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "200c8c261b3ad998": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i6_2",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 201728,
+      "NUM_REGS": 164,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "5360560a413a6b92": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_fprop_f16_knob_2_128x128x256_1x4x1_cga2x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "47a4ebb544711158": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_d_1",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 201728,
+      "NUM_REGS": 156,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "11179ca07f4f5d51": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i6_2",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 201728,
+      "NUM_REGS": 158,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "d1a36aa42f09a660": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116256i64_div8i64_div8i64_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 150528,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 224,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "d6f8de4a89c16589": {
+      "symbol": "cudnn_generated_fort_native_sdpa_sm100_flash_fprop_f16_knob_2_128x128x256_1x4x1_cga2x1x1_kernel0_0",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 24,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "a5687264b95f6d86": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "d901df13fafbc130": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "d5a5f43f0b39c8f9": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 0,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "f6ad3ab2eace4253": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 128,
+      "LOCAL_SIZE_BYTES": 16,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    },
+    "40a03fdbab9d2264": {
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+      "block": [
+        384,
+        1,
+        1
+      ],
+      "shared_bytes": 232448,
+      "NUM_REGS": 168,
+      "LOCAL_SIZE_BYTES": 160,
+      "BINARY_VERSION": 103,
+      "PTX_VERSION": 103
+    }
+  },
+  "benchmark_sha256": {
+    "benchmarks/qualify_baseline_precision.py": "a6a8d98ae5da49462d558202e8d31768119767fb864afae193085587df063647",
+    "benchmarks/experimental_precision_control.py": "62d8aa5689ca4e5f7e15eea71e3f360450b826365a9d161f87b39c1fe36cb179",
+    "benchmarks/reference.py": "6edbefe2bea7afff3cd5f024b1a4da70bc3f8d5af6b9e0e22b6360a7fcb541a7",
+    "benchmarks/compare_ada.py": "ba4cce427328ed6e1b1e24fe0e2627b5a7fdb5fe0808df6f2e61ac8fbc256a66",
+    "benchmarks/compare_l40s.py": "314ace8fa0205cfe82f1aa4db23b4ffca3a6290a6d8956854c5f74034a894b56"
+  },
+  "precision_contract": "Single rounded FP16/BF16 P; dS formed from rounded P and actual O/dO FP32 delta, rounded once; FP32 accumulation followed by gradient scaling.",
+  "controls": {
+    "cute": "Current default arithmetic and schedules.",
+    "previous": "Pre-change arithmetic reconstructed on this compiler; separately verified against the preceding checkout.",
+    "sdpa": "Default PyTorch SDPA; actual graph symbols identify the selected kernels."
+  },
+  "repeats": 5,
+  "target_window_ms": 100,
+  "loaded_libraries": [
+    "kohakufa_cute_native_3c94eefc4143b2c6.so",
+    "libc10_cuda.so",
+    "libcublas.so.13",
+    "libcublasLt.so.13",
+    "libcuda.so.595.84",
+    "libcudart.so.13",
+    "libcudnn.so.9",
+    "libcudnn_engines_precompiled.so.9",
+    "libcudnn_engines_runtime_compiled.so.9",
+    "libcudnn_engines_tensor_ir.so.9",
+    "libcudnn_graph.so.9",
+    "libcudnn_heuristic.so.9",
+    "libnvidia-nvvm70.so.4",
+    "libnvidia-ptxjitcompiler.so.595.84",
+    "libtorch.so",
+    "libtorch_cpu.so",
+    "libtorch_cuda.so",
+    "libtorch_global_deps.so",
+    "libtorch_nvshmem.so",
+    "libtorch_python.so"
+  ]
+}

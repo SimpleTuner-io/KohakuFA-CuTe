@@ -116,4 +116,8 @@ python -m benchmarks.compare_flashattention --backends cute sdpa \
   --export-code ../b200-captures/code
 ```
 
+Integration on the current main base passes both GPU tests and 225 CPU tests
+(139 GPU skips). Both actual loaded cubins remain byte-identical to the measured
+source captures after the unrelated SM80/GB10 host-dispatch updates.
+
 Raw profiler and sanitizer captures remain outside the tracked tree.

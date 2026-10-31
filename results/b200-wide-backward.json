@@ -4370,5 +4370,27 @@
       },
       "binding": "Exact profiled graph symbol found once in CUPTI module-loaded callback ELF bytes; SASS extracted from that independently loaded cubin."
     }
-  ]
+  ],
+  "publication_integration": {
+    "base_revision": "e0123ab",
+    "source_revision": "447078a",
+    "source_sha256": {
+      "src/kohakufa_cute/kernels.py": "64bc4a098a5e61a19698e01d77a8c23f4a3611b16aba5b76f2a20c5ddc4c86fd",
+      "src/kohakufa_cute/blackwell_register_aux.py": "9b12f76a1eac7a2824a81e5251bc4ce8673218e4559ce392c2edb44398184b19",
+      "src/kohakufa_cute/_ops.py": "0fc0519202f8b4b3eef68b0ff4e0ecb23909efbc727055530f60b47ca641b4ca",
+      "src/kohakufa_cute/api.py": "fe98802e810a574119e292afcb495d79bfc2a025cd3f7f2992a25d0fd539348a",
+      "src/kohakufa_cute/native.cpp": "df7c3e0faa1eccc1f4a228ea872262878c3ba66a240308cc4f19975e5d830bb4"
+    },
+    "gpu_tests": "pass: both directed and runtime/cache/graph tests",
+    "cpu_tests": {
+      "run": 225,
+      "skipped": 139,
+      "status": "pass"
+    },
+    "loaded_cubin_identity": "Both actual loaded cubins are byte-identical to the measured-source captures",
+    "loaded_cubin_sha256": [
+      "97a91cf5288dbbf1497792788d63d72c3184f4fd62b16775a4b35611dd9137cf",
+      "e74fd764b3103a450301cf7dd47c5ef20f5602daf8f1408457d4f412421f2d81"
+    ]
+  }
 }

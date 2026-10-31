@@ -224,7 +224,7 @@ BF16, B=1/H=16. Mask preparation is included. The causal triangle is supplied as
 | 1024 | 512 | Causal triangle | 2.306 | 5.095 | 2.21× |
 | 4096 | 512 | Causal triangle | 32.895 | 48.754 | 1.48× |
 
-All seven tested explicit-mask cases favor CuTe. The triangle lets CuTe skip fully hidden tiles; the all-true control also favors CuTe. These results do not establish performance for arbitrary mask densities or layouts. Retained October 21 measurements use PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1 and driver 580.178.04, with five rotated rounds of 30 replays. The current unmasked optimizations retain these mask paths.
+All seven cases favored CuTe on this retained October 21 snapshot, using PyTorch 2.11.0+cu130, CUDA 13.0, CuTe DSL 4.8.1 and driver 580.178.04, with five rotated rounds of 30 replays. They were not rerun after the backward arithmetic changes and do not qualify current masked performance. The new masked correctness checks do not replace those timing measurements; arbitrary mask densities and layouts need their own benchmarks.
 
 ## B300 MIG versus KohakuFA Gluon
 

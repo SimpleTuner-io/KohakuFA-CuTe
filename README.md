@@ -10,7 +10,6 @@ CuTe DSL attention for **RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100,
 - **RTX 4090 short D128 and long D16:** forward plus backward beats SDPA in both dtypes and visibility modes at S128/D128 and S1024/S4096/D16. All 20 short cases across D16/64/128/256/512 win; see the [4090 comparison](docs/rtx4090-tuning.md) for timings and sustained-load checks.
 - **L40S with 512-wide heads:** forward plus backward is **2.45–4.35× faster than default SDPA** across the same eight tested FP16/BF16, dense/causal, S1024/S4096 cases. Short D128 also improves; see the [L40S analysis](docs/l40s-outliers.md).
 - **H100 text inference with Clef 27B:** captured BF16 D256 backbone calls beat cuDNN SDPA by **1.24× at 787 tokens and 1.03× at 9,835 tokens**; schema calls beat it by **1.61–4.28×**. Small shapes and whole-model numerical compatibility still need work; see the [27B comparison](results/README.md#clef-27b-text-inference).
-- **RTX 5090 with explicit boolean masks:** the tested BF16 causal masks are **1.48–4.72× faster than default SDPA**, including mask preparation. Arbitrary masks need their own benchmarks.
 - **Other workloads:** choose it for its gradient calculation, then benchmark your shapes. Long D64/D128/D256 complete calls still trail SDPA on RTX 4090; smaller heads on the other RTX cards also have gaps. The measured H100 training cases trade throughput for precision; L40S comparisons are below.
 
 Automatic selection checks compatibility; it does **not** choose whichever backend is fastest for a shape.
@@ -31,8 +30,6 @@ Attention-call latency, **forward + backward**, in milliseconds; lower is better
 | RTX 3090 Ti | 512 | Causal | 30.965 | 57.699 | 1.86× |
 | L40S | 512 | Dense | 28.068 | 70.866 | 2.52× |
 | L40S | 512 | Causal | 14.272 | 40.016 | 2.80× |
-| RTX 5090 | 256 | Boolean causal mask | 6.052 | 24.294 | 4.01× |
-| RTX 5090 | 128 | Boolean causal mask | 2.318 | 10.050 | 4.33× |
 | RTX 5090 | 128 | Dense | 4.408 | 2.646 | 0.60× |
 | L40S | 128 | Dense | 4.284 | 2.666 | 0.62× |
 | H100 | 128 | Dense | 1.300 | 0.927 | 0.71× |

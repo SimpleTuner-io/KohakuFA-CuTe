@@ -2935,6 +2935,27 @@ def _compile_kernel(
         from .ada import schedule
 
         program = schedule(program, mode, layouts[0][1][-1], causal)
+    from . import l40s
+
+    if isinstance(program, (Attention, JointBackward)) and l40s.eligible(
+        device, mode, masked, layouts, configuration, kv_configuration, vector, causal=causal
+    ):
+        program = l40s.schedule(program, mode, layouts[0][1][-1], causal)
+    if (
+        (capability, torch.cuda.get_device_name(device)) in (((8, 9), "NVIDIA L40S"),)
+        and layouts[0][0] in (torch.bfloat16, torch.float16)
+        and layouts[0][1][-1] in (16, 64, 128, 256, 512)
+        and (layouts[0][1][-1] != 256 or layouts[0][1][1] == layouts[1][1][1])
+        and (
+            mode == "backward"
+            or mode == "forward"
+            and capability == (12, 0)
+            and layouts[0][0] == torch.float16
+            and layouts[0][1][-1] == 256
+            and not masked
+        )
+    ):
+        program = precision_schedule(program, layouts[0][1][-1], device=device)
     if (
         mode == "forward"
         and capability == (12, 1)

@@ -2,7 +2,7 @@
 
 [rtx5090.json](rtx5090.json), [rtx4090.json](rtx4090.json), [rtx3090ti.json](rtx3090ti.json), and [l40s.json](l40s.json) retain the latest four GPU grids, timing samples, source hashes, independent FP64 checks, and software/hardware metadata. The chart reads these reports directly. The October 22 grids in [performance.json](performance.json) are superseded; that file also retains the explicit-mask, B300 MIG, H100 and model comparisons. [gb10.json](gb10.json) retains the GB10 comparison separately.
 
-The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each panel labels its date, PyTorch version and measured power limit. The [RTX 4090 analysis](../docs/rtx4090-tuning.md) details its scheduling changes and remaining backward gap; the new three-device runs measure their released dispatch without enabling the 4090-specific policies.
+The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each panel labels its date, PyTorch version and measured power limit. The [RTX 4090 analysis](../docs/rtx4090-tuning.md) details its scheduling changes and remaining backward gap; L40S now has separately qualified device presets and compensated key/value products, while the other reports retain their preceding snapshots.
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
@@ -115,18 +115,18 @@ The public speed command compares installed CuTe with default SDPA; it does not 
 
 ## RTX 5090, RTX 4090 and RTX 3090 Ti
 
-All four plotted grids use B=1, H=16, contiguous BHSD, S128/S1024/S4096, D16/64/128/256/512, FP16/BF16, and dense/implicit causal visibility. Default SDPA uses FlashAttention-2 for the smaller heads and CUTLASS memory-efficient attention at D512 in the captured runs. The new reports retain actual eager and graph CUDA activities for every row, including required copies and memsets. The standalone `flash-attn` package was not measured.
+All four plotted grids use B=1, H=16, contiguous BHSD, S128/S1024/S4096, D16/64/128/256/512, FP16/BF16, and dense/implicit causal visibility. Default SDPA uses FlashAttention-2 for the smaller heads and CUTLASS memory-efficient attention at D512 in the captured runs. The retained RTX reports identify eager and graph CUDA activities per row, including required copies and memsets. L40S retains actual graph functions/resources for all 60 rows and separate eager/graph activity checks on four representative BF16 cases. The standalone `flash-attn` package was not measured.
 
 ![RTX and L40S performance across the latest 60-case grids](performance.svg)
 
-Ratios above one favor CuTe. Counts below compare the observed medians; values close to one can be ties within variability. All four GPUs beat default SDPA in the eight long D512 complete-call cases. The new schedules remain selected specifically on RTX 4090, which also wins all 20 short cases and all eight long D16 cases. Its long D64/D128/D256 complete calls still trail SDPA.
+Ratios above one favor CuTe. Counts below compare the observed medians; values close to one can be ties within variability. All four GPUs beat default SDPA in the eight long D512 complete-call cases. Device presets are selected on RTX 4090 and L40S. RTX 4090 also wins all 20 short cases and all eight long D16 cases. Its long D64/D128/D256 complete calls still trail SDPA.
 
 | GPU | Forward wins | Backward wins | F+B wins | Long D512 SDPA / CuTe F+B |
 | --- | ---: | ---: | ---: | ---: |
 | RTX 5090 | 31/60 | 25/60 | 24/60 | 1.90–4.42× |
 | RTX 4090 | 46/60 | 31/60 | 36/60 | 2.09–4.32× |
 | RTX 3090 Ti | 18/60 | 24/60 | 20/60 | 1.61–2.71× |
-| L40S | 19/60 | 24/60 | 20/60 | 2.70–4.68× |
+| L40S | 33/60 | 28/60 | 28/60 | 2.45–4.35× |
 
 Representative BF16 S4096 forward + backward, milliseconds:
 
@@ -138,25 +138,25 @@ Representative BF16 S4096 forward + backward, milliseconds:
 | RTX 4090 | 512 | Causal | 16.225 | 39.596 | 2.44× |
 | RTX 3090 Ti | 512 | Dense | 63.654 | 102.242 | 1.61× |
 | RTX 3090 Ti | 512 | Causal | 30.965 | 57.699 | 1.86× |
-| L40S | 512 | Dense | 26.247 | 72.344 | 2.76× |
-| L40S | 512 | Causal | 14.159 | 40.870 | 2.89× |
+| L40S | 512 | Dense | 28.068 | 70.866 | 2.52× |
+| L40S | 512 | Causal | 14.272 | 40.016 | 2.80× |
 
-RTX 4090 BF16 S128/D128 complete latency is **15.54 µs dense and 15.56 µs causal**, versus SDPA's 29.33 and 25.31 µs. Long D16 also wins on that selected schedule; the other three released paths still trail SDPA on long D16. Short D256 remains a complete-call loss on those three cards, despite their matching shared-memory capacities.
+RTX 4090 BF16 S128/D128 complete latency is **15.54 µs dense and 15.56 µs causal**, versus SDPA's 29.33 and 25.31 µs. Long D16 also wins on that selected schedule; the retained RTX 5090/3090 Ti paths and the refreshed L40S path still trail SDPA on long D16. Short D256 remains a complete-call loss on the retained RTX 5090/3090 Ti paths. The new L40S short D128/D256 calls win across both dtypes and visibility modes; its long D64/D128 training calls still favor SDPA. See the [L40S evidence](../docs/l40s-outliers.md) for precision costs and preceding-schedule controls.
 
 ### Hardware, software and shared memory
 
-These are separate full devices. The new RTX 5090, RTX 3090 Ti and L40S runs use source revision `d4700f5`, Python 3.13.18, PyTorch 2.15.0+cu132, PyTorch CUDA runtime/toolkit 13.2, CuTe DSL 4.8.1, TVM FFI 0.1.15.post0 and Triton 3.9.0. The retained RTX 4090 run uses those framework/runtime versions and records its own source hashes; its compiler inventory is separate. All four measurements are dated October 30, 2026 UTC.
+These are separate full devices. The retained RTX 5090 and RTX 3090 Ti runs use source revision `d4700f5`, Python 3.13.18, PyTorch 2.15.0+cu132, PyTorch CUDA runtime/toolkit 13.2, CuTe DSL 4.8.1, TVM FFI 0.1.15.post0 and Triton 3.9.0. The retained RTX 4090 run uses those framework/runtime versions and records its own source hashes; its compiler inventory is separate. Those retained measurements are dated October 30, 2026 UTC. L40S was refreshed October 31 on the same framework/toolkit versions, with driver 615.71.09 and driver API 13040; its original measured source hashes remain in [l40s.json](l40s.json).
 
 | GPU | SMs / nominal VRAM | Power limit | Host driver | Active CUDA driver library |
 | --- | --- | ---: | --- | --- |
 | RTX 5090 | 170 / 32 GB | 600 W | 595.99.02 | 595.99.02 |
 | RTX 4090 | 128 / 24 GB | 450 W | 615.71.09 | 615.71.09 |
 | RTX 3090 Ti | 84 / 24 GB | 450 W | 595.58.03 | 595.58.03 |
-| L40S | 142 / 48 GB | 350 W | 580.65.06 | 595.112.07 |
+| L40S | 142 / 48 GB | 350 W | 615.71.09 | 615.71.09 |
 
-The L40S host has an R580 kernel driver. NVIDIA's supported `cuda-compat-13-2` package supplies the active 595.112.07 CUDA/PTX-JIT libraries and driver API 13.2, allowing the same PyTorch 2.15+cu132 binary and toolkit as the other new runs. See [NVIDIA's forward-compatibility matrix](https://docs.nvidia.com/deploy/cuda-compatibility/forward-compatibility.html). The actual loaded library basenames are retained in the report.
+The refreshed L40S run uses its host CUDA/PTX-JIT libraries directly. Its actual loaded library basenames are retained in the report.
 
-PyTorch’s CUDA version is separate from the DSL code generator. All three new devices report the NVIDIA NVVM compiler release **13.4.59 / NVVM 23.0.0**, but the installed DSL library extras and exact emitted PTX differ:
+PyTorch’s CUDA version is separate from the DSL code generator. The retained RTX 5090/3090 Ti inventories report NVIDIA NVVM **13.4.59 / NVVM 23.0.0**; the installed DSL library extras and exact emitted PTX differ:
 
 | GPU | DSL 4.8.1 library extras | Representative emitted PTX ISA | Target |
 | --- | --- | --- | --- |
@@ -164,7 +164,7 @@ PyTorch’s CUDA version is separate from the DSL code generator. All three new 
 | RTX 3090 Ti | base/core/cu12/cu13; cu13 IR loaded | 9.4 | `sm_86` |
 | L40S | base/core/cu12/cu13; cu13 IR loaded | 9.4 | `sm_89` |
 
-The reports retain distribution versions, loaded library basenames, exact PTX headers and hashes. The 3090 Ti/L40S exports are representative released forward calls collected after the baseline campaign. The 5090 export is the released backward control from a separate same-stack comparison, rather than an export from the primary timing process. The retained 4090 report records emitted CuTe PTX 8.8 / `sm_89` with NVVM 13.4.59; its PTX 9.2 record belongs to the source-matched native SDPA reconstruction, not captured CuTe code. Thus these are qualified per-device stacks, not a homogeneous DSL compiler comparison. CUDA function virtual-target attributes are not interpreted as PTX ISA versions.
+The reports retain distribution versions, loaded library basenames, exact PTX headers and hashes. The 3090 Ti exports are representative released forward calls collected after its baseline campaign. L40S records sixteen representative compiler-export cases from the final captured backward bundles, separate from its timing process; loaded CuTe module bytes were not independently dumped in that export process. The 5090 export is the released backward control from a separate same-stack comparison, rather than an export from the primary timing process. The retained 4090 report records emitted CuTe PTX 8.8 / `sm_89` with NVVM 13.4.59; its PTX 9.2 record belongs to the source-matched native SDPA reconstruction, not captured CuTe code. Thus these are qualified per-device stacks, not a homogeneous DSL compiler comparison. CUDA function virtual-target attributes are not interpreted as PTX ISA versions.
 
 The RTX 3090 Ti now runs at 450 W, whereas the older retained run used 285 W. Framework, driver, power, and host changes prevent attributing cross-run differences solely to kernel changes. Compare backends within a measured row.
 
@@ -181,34 +181,34 @@ Matching shared memory does not produce matching work distribution. In the recor
 
 ### Measurement and qualification
 
-The three new grids use seven alternating SDPA/CuTe rounds targeting 200 ms per backend and phase, with at least 16 graph replays. The RTX 4090 grid rotates SDPA, its preceding CuTe control and the selected schedule under the same window settings. Compilation, allocation, profiling and telemetry are excluded from those timing windows. Short graph measurements can include host submission gaps. Separately timed forward and backward medians need not sum exactly to complete-call medians.
+The retained RTX 5090/3090 Ti grids use seven alternating SDPA/CuTe rounds targeting 200 ms per backend and phase, with at least 16 graph replays. L40S rotates SDPA, released arithmetic/schedules, precision-matched preceding schedules and selected CuTe in seven rounds targeting 200 ms per phase, with at least 16 replays. The RTX 4090 grid rotates SDPA, its preceding CuTe control and the selected schedule under the same window settings. Compilation, allocation, profiling and telemetry are excluded from those timing windows. Short graph measurements can include host submission gaps. Separately timed forward and backward medians need not sum exactly to complete-call medians.
 
-Every new row checks output, dQ, dK and dV against independent full-length centered FP64 on identical rounded inputs, evaluated in two-head chunks. Each component must stay below 1% norm-relative error for BF16 or 0.5% for FP16, with exact zero when its reference norm is zero. All **180 new grid cases pass**, including changed-input forward/complete graph checks. SDPA is a performance baseline, rather than the numerical oracle.
+Every retained or refreshed row checks output, dQ, dK and dV against independent full-length centered FP64 on identical rounded inputs, evaluated in two-head chunks. Each component must stay below 1% norm-relative error for BF16 or 0.5% for FP16, with exact zero when its reference norm is zero. All 60 cases pass for each of the retained RTX 5090/3090 Ti grids and the refreshed L40S grid, including changed-input forward/complete graph checks. L40S additionally retains dtype-correct pointwise gates for eager and all three captured phases, for all four backends. SDPA is a performance baseline, rather than the numerical oracle.
 
 | GPU | GPU-enabled discovery | Skips | Result |
 | --- | ---: | ---: | --- |
 | RTX 5090 | 150 | 50 | Pass |
 | RTX 4090 | 150 | 33 | Pass |
 | RTX 3090 Ti | 150 | 50 | Pass |
-| L40S | 150 | 43 | One rectangular BF16 dV failure; see below |
+| L40S | 194 | 56 | Pass on `671a8a2`; final targeted checks below |
 
-Separate sustained BF16 B1/H16/S4096 checks run D128 dense and D512 causal through four 20-second SDPA/CuTe/CuTe/SDPA passes on each new GPU. Event groups target 200 ms and cap at 100 replays; the first five seconds of latency samples and first 25 board samples are excluded from summaries. The reports retain latency variability, board power, clocks, temperatures and available clock-event reasons. These whole-board observations do not provide precise cycle normalization or HFU. The 4090 report retains its own sustained D16 and D128 checks.
+The retained RTX 5090/3090 Ti reports include sustained BF16 B1/H16/S4096 D128 dense and D512 causal SDPA/CuTe controls. L40S instead records a separate previous/selected/selected/previous forward check at S4096/D128: four 20-second passes, first five seconds excluded, with 20.3% lower selected median latency. Power, clock and temperature samples remain separate from canonical timing. These observations do not provide precise cycle normalization or HFU. The 4090 report retains its own sustained D16/D128 checks.
 
 ## L40S
 
-The new full 142-SM/48-GB L40S comparison measures current released dispatch at its 350 W board limit, with the same 60-case grid and precision gates as the RTX refresh. Medians improve on SDPA most consistently at D512. Smaller long heads remain slower for complete calls.
+The refreshed full 142-SM/48-GB L40S comparison includes device schedules and compensated key/value products at its 350 W board limit. It covers the same 60 shapes as the retained RTX comparisons. Short D128/D256 calls now beat SDPA; smaller long heads remain slower for complete calls.
 
 | Head dim | S128 SDPA / CuTe F+B range | S1024/S4096 SDPA / CuTe F+B range |
 | ---: | ---: | ---: |
-| 16 | 1.08–1.11× | 0.60–0.68× |
-| 64 | 1.07–1.19× | 0.62–0.73× |
-| 128 | 0.87–0.97× | 0.73–0.77× |
-| 256 | 0.87–0.91× | 0.81–0.85× |
-| 512 | 3.33–3.57× | 2.70–4.68× |
+| 16 | 0.96–1.23× | 0.74–1.03× |
+| 64 | 1.08–1.11× | 0.56–0.68× |
+| 128 | 1.44–1.66× | 0.62–0.70× |
+| 256 | 1.24–1.29× | 0.72–0.80× |
+| 512 | 3.82–4.36× | 2.45–4.35× |
 
-The performance grid passes its independent FP64 and graph gates. Full GPU discovery has one unresolved failure in `test_dynamic_lengths_preserve_forward_configuration_thresholds`: BF16 **B2/H16/Sq1023/Sk17/D128 dV** exceeds the unchanged pointwise `atol=rtol=0.02` gate for one of 69,632 elements. The failing suite element has absolute error 0.0255118 and relative error 0.138132.
+All 60 cases pass independent eager and captured-graph component gates for all four backends. Full GPU discovery passed 194 tests with 56 skips on `671a8a2`; final `2806bcc` key/value tests and public dispatch checks passed separately, followed by an eight-case `26a1061` integration smoke. The [L40S analysis](../docs/l40s-outliers.md) distinguishes these revisions and the device-only split from the original measurement snapshot.
 
-A standalone rerun preserves exact operands, outputs and gradients with source hashes. Its dV norm-relative error against independent centered FP64 is **0.2360%**, with one pointwise violation; the other three components pass that pointwise gate. Torch FP64 MATH and the independent centered FP64 dV reference agree to approximately 8e-16 norm-relative error. This is a current-main numerical failure outside the square timing grid. No tolerance was changed, and the failed rectangular call has no successful timing claim in these tables.
+The prior BF16 B2/H16/Sq1023/Sk17/D128 dV failure is fixed without changing tolerances. The same saved coordinate changes from approximately −0.15918 to −0.18457, against centered FP64 −0.18469. Separate probability and derivative residual products also fix compact wrong-sign cancellation and FP16 intermediate-underflow cases. These corrections have a latency cost; the report retains released and precision-matched controls so scheduling gains are not confused with arithmetic changes.
 
 ## RTX 5090 explicit boolean masks
 
@@ -342,18 +342,18 @@ These commands rerun the general timing/precision protocol on the installed stac
 
 ### Reproduce the new RTX and L40S grids
 
-Run from a source checkout with the CUDA extras installed. The defaults cover all 60 cases and use seven alternating 200-ms rounds. Profiling passes run after each row's uninstrumented timing and write raw traces outside the tracked tree.
+Run from a source checkout with the CUDA extras installed. The retained RTX driver covers all 60 cases using seven alternating 200-ms rounds, with profiling after timing. The L40S four-backend driver instead uses a fresh process without profiler initialization, seven rotating rounds targeting 200 ms per phase, and separate representative profiling processes.
 
 ```bash
 python -m benchmarks.compare_devices --expect-device 'NVIDIA GeForce RTX 5090' \
   --output ../rtx5090.json --profiles ../rtx5090-profiles
 python -m benchmarks.compare_devices --expect-device 'NVIDIA GeForce RTX 3090 Ti' \
   --output ../rtx3090ti.json --profiles ../rtx3090ti-profiles
-python -m benchmarks.compare_devices --expect-device 'NVIDIA L40S' \
-  --output ../l40s.json --profiles ../l40s-profiles
+python -m benchmarks.compare_l40s --expect-device 'NVIDIA L40S' \
+  --output ../l40s.json
 ```
 
-The retained reports add the separate suite, launch-resource, environment and sustained evidence. Their runtime and benchmark source hashes identify the qualified code. The [4090 analysis](../docs/rtx4090-tuning.md#reproduce) retains its preceding-control reproduction command.
+The L40S report retains its original combined-development measurement hashes; [its provenance note](../docs/l40s-outliers.md#measurement-provenance-and-this-device-split) explains the device-only packaging. The retained reports add the separate suite, launch-resource, environment and sustained evidence. Their runtime and benchmark source hashes identify the qualified code. The [4090 analysis](../docs/rtx4090-tuning.md#reproduce) retains its preceding-control reproduction command.
 
 ### Clef 27B captures and replay
 

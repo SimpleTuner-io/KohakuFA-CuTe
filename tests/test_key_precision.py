@@ -57,8 +57,11 @@ class KeyCancellationReferenceTests(unittest.TestCase):
 
 
 def qualified_device():
-    # Device PRs enable these checks alongside their precision policy.
-    return False
+    return (
+        torch.cuda.is_available()
+        and torch.cuda.get_device_capability() == (8, 9)
+        and torch.cuda.get_device_name() == "NVIDIA L40S"
+    )
 
 
 @unittest.skipUnless(qualified_device(), "Requires a qualified key-gradient precision device")

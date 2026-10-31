@@ -41,3 +41,11 @@ This is still low-precision attention. Extremely small derivatives can fall belo
 `attention(..., center_keys=True)` subtracts the mean key per batch and K/V head in FP32, then casts once back to the input dtype. In exact arithmetic, this shifts every visible logit in a query row equally and leaves softmax unchanged, including with causal attention, boolean masks, and GQA.
 
 In finite precision it can reduce score and dQ errors from a shared key component. Autograd differentiates through the mean subtraction, including its correction to dK. It adds a reduction and temporary key storage and defaults to `False`. This implements [KohakuFA's key-centering addition](https://github.com/KohakuBlueleaf/KohakuFA/commit/043d4afe873f5c254dad6d701f7ca70aeb0692be) alongside the always-enabled centered backward.
+
+## Compensated key/value products on L40S
+
+The qualified L40S backward paths retain separate high and low components of probabilities and softmax derivatives before tensor-core products. Each component accumulates in its own FP32 sum, combined in the epilogue. This fixes cancellation cases where a single rounded operand gives a wrong-sign dK or dV despite a small whole-tensor norm error. FP16 residual storage is scaled to avoid losing representable gradients to intermediate underflow.
+
+Automatic activation is restricted to the full L40S device family qualified here and FP16/BF16 head widths 16/64/128/256/512. D256 uses the new owner only without an explicit mask and with equal query/key-value head counts. D512 uses it without an explicit mask, including the separately checked grouped-head path. Other wide configurations retain their preceding fallback. Other GPU families retain their existing arithmetic until separately enabled and qualified.
+
+The [L40S analysis](l40s-outliers.md) records exact FP64 regressions, unchanged component gates, latency costs, scheduling gains and source provenance. Cancellation coordinates have a zero-atol 2% relative gate; the FP16 probability-underflow coordinate retains a 0.5% gate.

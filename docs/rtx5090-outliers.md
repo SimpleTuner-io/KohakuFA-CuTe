@@ -310,13 +310,13 @@ The wide helper's exact source bytes were separately qualified with the same
 three tools.
 
 The public [measurement source tag](https://github.com/SimpleTuner-io/KohakuFA-CuTe/tree/measurement-source/gpu-outliers-20261031)
-retains the combined snapshot and its recorded source revisions. This stacked
-RTX 5090 change retains the selected JIT definitions and device modules byte for
-byte. It omits the inactive RTX 3090 Ti host selector and test qualification;
-the reproduction harness correspondingly removes that unavailable selector's
-import and disabled-control patch. The retained JSON still records the actual
-`26a1061` measurement revision and original runtime and benchmark hashes. These
-publication changes are source-equivalence checks, not new GPU measurements.
+retains the combined snapshot and its recorded source revisions. Selected JIT
+definitions and RTX 5090 device modules retain their qualified bytes. The
+completed stack restores the original benchmark control imports; the later Ti
+selector remains inactive on this device. The JSON still records the actual
+`26a1061` measurement revision and original runtime and benchmark hashes.
+Publication packaging received source-equivalence checks and does not claim new
+RTX 5090 GPU measurements.
 
 Reproduce the canonical matrix and focused qualification with:
 

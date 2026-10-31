@@ -8,7 +8,7 @@ The canonical measurements are in [the L40S report](../results/l40s.json), with 
 
 ## Measurement provenance and this device split
 
-The retained JSON is the original combined-development measurement snapshot, published under the `measurement-source/gpu-outliers-20261031` source reference. Its canonical samples, gates, source hashes and benchmark hashes are unchanged. The later integration smoke is recorded separately. This device PR enables only L40S; the shared kernel owners and `l40s.py` retain their qualified bytes. Its dispatcher omits unselected device hooks, and the reproduction harness patches only the L40S selector because the other new selector modules are not present in this stack yet. Those packaging changes received CPU/static checks; this split does not claim a new GPU run or a byte-identical whole-repository snapshot.
+The retained JSON is the original combined-development measurement snapshot, published under the `measurement-source/gpu-outliers-20261031` source reference. Its canonical samples, gates, source hashes and benchmark hashes are unchanged. The later integration smoke is recorded separately. Shared kernel owners and `l40s.py` retain their qualified bytes; changes to other devices' selectors do not replace those measurements. The completed stack restores the original benchmark control imports now that all selector modules are present. Publication packaging received CPU/static checks and does not claim a new L40S GPU run or a byte-identical whole-repository measurement snapshot.
 
 ## What changed
 

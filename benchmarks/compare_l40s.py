@@ -239,6 +239,7 @@ def main():
                 for name in (
                     "compensated_keys",
                     "compensated_values",
+                    "compensated_normalizer",
                     "precise_values",
                     "scaled_key_residual",
                     "scaled_value_residual",

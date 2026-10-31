@@ -36,6 +36,10 @@ attention benchmarks, not end-to-end training speedups.
 [recorded comparison](results/README.md#gb10-dgx--rtx-spark) predates this arithmetic
 change and was not requalified in this campaign.
 
+**B300 joint schedule (experimental):** the [FA4 comparison](docs/blackwell_fa4.md)
+covers measured gains and pending initialization qualification. Use its explicit
+benchmark factory to evaluate it.
+
 ## Install
 
 Install a CUDA-enabled **PyTorch 2.11+**, then:

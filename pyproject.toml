@@ -14,6 +14,14 @@ dependencies = ["torch>=2.11", "packaging>=23"]
 
 [project.optional-dependencies]
 cuda = ["nvidia-cutlass-dsl>=4.8,<4.9", "apache-tvm-ffi>=0.1.14,<0.2", "ninja>=1.11", "triton>=3.6,<4"]
+blackwell-fa4 = [
+    "torch==2.15.0",
+    "nvidia-cutlass-dsl==4.8.1",
+    "apache-tvm-ffi==0.1.15.post0",
+    "quack-kernels==0.6.5",
+    "torch-c-dlpack-ext==0.1.5",
+    "flash-attn-4[cu13] @ git+https://github.com/Dao-AILab/flash-attention.git@4616f5116d33e3ba3cbb71d582caffcfcb49649c#subdirectory=flash_attn/cute",
+]
 dev = ["build", "black==24.8.0", "isort==5.13.2"]
 plots = ["matplotlib>=3.8"]
 

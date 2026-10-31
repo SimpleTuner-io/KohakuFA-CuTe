@@ -88,6 +88,16 @@ def _center_keys(k):
     return (keys - keys.mean(dim=-2, keepdim=True)).to(k.dtype)
 
 
+def _blackwell_attention(q, k, v, mask, dropout, causal, scale, gqa):
+    if torch.compiler.is_compiling() or q.device.type != "cuda":
+        return None
+    from . import fa4_blackwell
+
+    if fa4_blackwell.compatible(q, k, v, mask, dropout, causal, scale, gqa):
+        return fa4_blackwell.run_attention(q, k, v, causal=causal, scale=scale)
+    return None
+
+
 def attention(q, k, v, *, mask=None, causal=False, scale=None, center_keys=False):
     """Strict CUDA attention; Q/K/V have shape [B, H, S, D], with implicit GQA.
 
@@ -102,6 +112,9 @@ def attention(q, k, v, *, mask=None, causal=False, scale=None, center_keys=False
         k = _center_keys(k)
     if torch.compiler.is_compiling():
         return _ops.attention(q, k, v, mask=mask, causal=causal, scale=scale)
+    selected = _blackwell_attention(q, k, v, mask, 0.0, causal, scale, True)
+    if selected is not None:
+        return selected
     return _extension().attention(q, k, v, mask, scale, causal)
 
 
@@ -113,6 +126,9 @@ def scaled_dot_product_attention(
         _validate(query, key, value, attn_mask, dropout_p, is_causal, enable_gqa)
         if torch.compiler.is_compiling():
             return _ops.attention(query, key, value, mask=attn_mask, causal=is_causal, scale=scale)
+    selected = _blackwell_attention(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
+    if selected is not None:
+        return selected
     return _extension().sdpa(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
 
 
@@ -121,6 +137,9 @@ def automatic_scaled_dot_product_attention(
 ):
     """Select centered CuTe kernels on supported GPUs, native SDPA for unsupported calls."""
     if query.device.type == "cuda":
+        selected = _blackwell_attention(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
+        if selected is not None:
+            return selected
         if not torch.compiler.is_compiling() and _extension.cache_info().currsize:
             return _extension().automatic_sdpa(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
         if _compatible(query, key, value, attn_mask, dropout_p, is_causal, enable_gqa) and _runtime_available():

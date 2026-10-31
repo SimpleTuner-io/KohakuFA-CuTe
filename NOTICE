@@ -92,3 +92,17 @@ https://github.com/Dao-AILab/flash-attention
 Reference revision: 85d6dfe3573708b5632915950cd8b069b924ba52
 Copyright (c) 2025, Tri Dao.
 BSD-3-Clause; the full license and contributor list are included in LICENSES/BSD-3-Clause.txt.
+
+The optional fa4_blackwell schedule retains adapted CuTe methods from FlashAttention:
+https://github.com/Dao-AILab/flash-attention
+Reference revision: 4616f5116d33e3ba3cbb71d582caffcfcb49649c.
+Copyright (c) 2022, the respective contributors, as shown by the AUTHORS file.
+All rights reserved.
+The BSD-3-Clause license and contributor list are reproduced in
+LICENSES/FlashAttention-BSD-3-Clause.txt and LICENSES/FlashAttention-AUTHORS.txt.
+Unchanged scheduling helpers come from the separately installed pinned dependency.
+The local methods preserve separate unscaled score maxima and logarithmic
+normalization, round P once before dS, and round dS once for gradient products.
+They use FP32 products, actual rounded O/dO delta, and late dQ/dK scaling.
+This optional SM103 path accumulates dQ in FP32 with atomics before its final
+conversion; deterministic execution retains the existing CuTe path.

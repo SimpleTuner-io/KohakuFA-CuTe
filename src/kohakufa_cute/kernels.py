@@ -2941,8 +2941,13 @@ def _compile_kernel(
         device, mode, masked, layouts, configuration, kv_configuration, vector, causal=causal
     ):
         program = l40s.schedule(program, mode, layouts[0][1][-1], causal)
+    if capability == (12, 0) and isinstance(program, (Attention, JointBackward)):
+        from . import sm120_schedule
+
+        if sm120_schedule.eligible(device, mode, masked, layouts, configuration, kv_configuration, vector):
+            program = sm120_schedule.schedule(program, mode, layouts[0][1][-1], causal, vector)
     if (
-        (capability, torch.cuda.get_device_name(device)) in (((8, 9), "NVIDIA L40S"),)
+        (capability, torch.cuda.get_device_name(device)) in (((8, 9), "NVIDIA L40S"), ((12, 0), "NVIDIA GeForce RTX 5090"))
         and layouts[0][0] in (torch.bfloat16, torch.float16)
         and layouts[0][1][-1] in (16, 64, 128, 256, 512)
         and (layouts[0][1][-1] != 256 or layouts[0][1][1] == layouts[1][1][1])

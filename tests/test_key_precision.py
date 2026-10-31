@@ -57,10 +57,9 @@ class KeyCancellationReferenceTests(unittest.TestCase):
 
 
 def qualified_device():
-    return (
-        torch.cuda.is_available()
-        and torch.cuda.get_device_capability() == (8, 9)
-        and torch.cuda.get_device_name() == "NVIDIA L40S"
+    return torch.cuda.is_available() and (torch.cuda.get_device_capability(), torch.cuda.get_device_name()) in (
+        ((8, 9), "NVIDIA L40S"),
+        ((12, 0), "NVIDIA GeForce RTX 5090"),
     )
 
 

@@ -27,7 +27,7 @@ class AmpereScheduleTests(unittest.TestCase):
         native.extension().clear_cache()
         kernels._compile_kernel.cache_clear()
 
-    def compare(self, actual, q, k, v, dout, *, causal=False, scale=None):
+    def compare(self, actual, q, k, v, dout, *, causal=False, scale=None, mask=None):
         if max(q.shape[2], k.shape[2]) >= 2048:
             parts = [
                 fp64_reference(
@@ -35,12 +35,13 @@ class AmpereScheduleTests(unittest.TestCase):
                     dout[:, head : head + 2],
                     causal=causal,
                     scale=scale,
+                    mask=mask,
                 )
                 for head in range(0, q.shape[1], 2)
             ]
             reference = tuple(torch.cat([part[i] for part in parts], dim=1) for i in range(4))
         else:
-            reference = fp64_reference((q, k, v), dout, causal=causal, scale=scale)
+            reference = fp64_reference((q, k, v), dout, causal=causal, scale=scale, mask=mask)
         atol = rtol = 0.02 if q.dtype == torch.bfloat16 else 0.003
         for got, want in zip(actual, reference):
             torch.testing.assert_close(got.double(), want, atol=atol, rtol=rtol)
@@ -214,3 +215,163 @@ class AmpereScheduleTests(unittest.TestCase):
                                 graph.replay()
                                 self.compare(replayed, q, k, v, dout, causal=causal)
                 self.assertEqual(compiler.call_count, 2)
+
+    @staticmethod
+    def capture_layouts(function, inputs, dout, causal):
+        operands = tuple(tensor.detach().requires_grad_() for tensor in inputs)
+        stream = torch.cuda.Stream()
+        stream.wait_stream(torch.cuda.current_stream())
+
+        def operation():
+            out = function(*operands, is_causal=causal)
+            return out, *torch.autograd.grad(out, operands, dout)
+
+        with torch.cuda.stream(stream):
+            for _ in range(3):
+                operation()
+            graph = torch.cuda.CUDAGraph(keep_graph=True)
+            with torch.cuda.graph(graph, stream=stream):
+                actual = operation()
+        torch.cuda.current_stream().wait_stream(stream)
+        graph.replay()
+        torch.cuda.synchronize()
+        return graph, (operands, dout, None, actual)
+
+    def test_d64_long_bounds_cache_compiled_calls_and_poisoned_replay(self):
+        from benchmarks.compare_sm86 import graph_metadata
+        from kohakufa_cute import kernels, native, scaled_dot_product_attention
+
+        cases = (
+            (1023, 1023),
+            (1024, 1024),
+            (1025, 1025),
+            (1025, 1031),
+            (4095, 4095),
+            (4096, 4096),
+            (4097, 4097),
+            (4096, 4095),
+            (1024, 1024),
+        )
+        for dtype, causal in itertools.product((torch.float16, torch.bfloat16), (False, True)):
+            native.extension().clear_cache()
+            kernels._compile_kernel.cache_clear()
+            with patch.object(native, "compile_kernel", wraps=native.compile_kernel) as compiler:
+                for queries, keys in cases:
+                    with self.subTest(dtype=dtype, causal=causal, queries=queries, keys=keys):
+                        torch.manual_seed(1847)
+                        inputs = tuple(
+                            torch.randn(1, 16, length + 4, 64, device="cuda", dtype=dtype)[:, :, offset : offset + length]
+                            for length, offset in ((queries, 1), (keys, 2), (keys, 2))
+                        )
+                        dout = torch.randn_like(inputs[0])
+                        graph, storage = self.capture_layouts(scaled_dot_product_attention, inputs, dout.clone(), causal)
+                        self.assertEqual(storage[0][0].stride(), inputs[0].stride())
+                        expected_n2 = dtype == torch.bfloat16 and queries == keys and 1024 <= queries <= 4096
+                        names = [node["symbol"] for node in graph_metadata(graph)]
+                        self.assertEqual(any("D64Values" in name for name in names), expected_n2)
+                        self.compare(storage[3], *inputs, dout, causal=causal)
+                        if queries == keys and queries in (1024, 4097):
+                            operands, graph_dout, _, outputs = storage
+                            with torch.no_grad():
+                                for tensor in (*operands, graph_dout):
+                                    tensor.copy_(torch.randn_like(tensor) * 0.5)
+                                for tensor in outputs:
+                                    tensor.fill_(float("nan"))
+                            graph.replay()
+                            self.compare(outputs, *operands, graph_dout, causal=causal)
+                self.assertEqual(compiler.call_count, 2)
+            torch.compiler.reset()
+            compiled = torch.compile(attention, fullgraph=True, dynamic=True)
+            for length in (1024, 4097, 1025):
+                inputs = tuple(torch.randn(1, 16, length, 64, device="cuda", dtype=dtype).requires_grad_() for _ in range(3))
+                dout = torch.randn_like(inputs[0])
+                actual = self.run_attention(*inputs, dout, causal=causal, function=compiled)
+                self.compare(actual, *inputs, dout, causal=causal)
+            torch.compiler.reset()
+
+    def test_d64_masks_gqa_batch_and_vector_fallbacks(self):
+        from benchmarks.compare_sm86 import graph_metadata
+
+        for dtype, kind in itertools.product((torch.float16, torch.bfloat16), ("stride", "batch", "gqa", "padding", "full")):
+            with self.subTest(dtype=dtype, kind=kind):
+                torch.manual_seed(1859)
+                batch, heads, kv_heads = (2, 4, 4) if kind == "batch" else (1, 16, 8 if kind == "gqa" else 16)
+                stride = 2 if kind == "stride" else 1
+                inputs = tuple(
+                    torch.randn(batch, count, 1024, 64 * stride, device="cuda", dtype=dtype)[..., ::stride]
+                    for count in (heads, kv_heads, kv_heads)
+                )
+                dout = torch.randn_like(inputs[0])
+                mask = None
+                if kind in ("padding", "full"):
+                    mask = torch.ones(batch, 1, 1024 if kind == "full" else 1, 1024, device="cuda", dtype=torch.bool)
+                    mask[..., -1] = False
+                    if kind == "full":
+                        mask[:, :, -1] = False
+
+                def function(q, k, v, is_causal=False):
+                    return attention(q, k, v, causal=is_causal, mask=mask)
+
+                graph, storage = self.capture_layouts(function, inputs, dout.clone(), True)
+                self.assertEqual(storage[0][0].stride(), inputs[0].stride())
+                self.assertFalse(any("D64Values" in node["symbol"] for node in graph_metadata(graph)))
+                self.compare(storage[3], *inputs, dout, causal=True, mask=mask)
+                if mask is not None:
+                    self.assertEqual(torch.count_nonzero(storage[3][2][:, :, -1]).item(), 0)
+                    self.assertEqual(torch.count_nonzero(storage[3][3][:, :, -1]).item(), 0)
+                    if kind == "full":
+                        self.assertEqual(torch.count_nonzero(storage[3][0][:, :, -1]).item(), 0)
+                        self.assertEqual(torch.count_nonzero(storage[3][1][:, :, -1]).item(), 0)
+
+    def test_d64_selected_bf16_and_fp16_fallback_preserve_directed_coordinates(self):
+        from benchmarks.compare_sm86 import graph_metadata
+        from tests.test_key_precision import key_cancellation, key_coordinate
+        from tests.test_value_precision import square_value_cancellation, value_residual_underflow
+
+        for dtype, causal in itertools.product((torch.float16, torch.bfloat16), (False, True)):
+            with self.subTest(dtype=dtype, causal=causal, recipe="key"):
+                inputs, dout = key_cancellation(64, dtype, "cuda", square=True)
+                if causal:
+                    # Active rows see all 1031 non-negligible keys, preserving
+                    # the same closed form under causal visibility.
+                    inputs = (inputs[0].roll(1031, 2), inputs[1], inputs[2])
+                    dout = dout.roll(1031, 2)
+
+                def function(q, k, v, is_causal=False):
+                    return attention(q, k, v, causal=is_causal)
+
+                graph, storage = self.capture_layouts(function, inputs, dout.clone(), causal)
+                self.assertEqual(
+                    any("D64Values" in node["symbol"] for node in graph_metadata(graph)), dtype == torch.bfloat16
+                )
+                self.compare(storage[3], *inputs, dout, causal=causal)
+                coordinate = storage[3][2][:, :, 0, 0].double()
+                self.assertTrue((coordinate < 0).all())
+                self.assertTrue((coordinate != 0).all())
+                torch.testing.assert_close(coordinate, torch.full_like(coordinate, key_coordinate(64)), atol=0, rtol=0.02)
+        for dtype in (torch.float16, torch.bfloat16):
+            with self.subTest(dtype=dtype, recipe="value"):
+                inputs, dout, scale, target = square_value_cancellation(64, dtype, "cuda", length=1024)
+
+                def function(q, k, v, is_causal=False):
+                    return attention(q, k, v, causal=is_causal, scale=scale)
+
+                graph, storage = self.capture_layouts(function, inputs, dout.clone(), False)
+                self.assertEqual(
+                    any("D64Values" in node["symbol"] for node in graph_metadata(graph)), dtype == torch.bfloat16
+                )
+                self.compare(storage[3], *inputs, dout, scale=scale)
+                coordinate = storage[3][3][:, :, 0, 0].double()
+                self.assertTrue((coordinate < 0).all())
+                torch.testing.assert_close(coordinate, torch.full_like(coordinate, target), atol=0, rtol=0.02)
+        inputs, dout, scale, target = value_residual_underflow(64, "cuda", length=1024)
+
+        def function(q, k, v, is_causal=False):
+            return attention(q, k, v, causal=is_causal, scale=scale)
+
+        graph, storage = self.capture_layouts(function, inputs, dout.clone(), False)
+        self.assertFalse(any("D64Values" in node["symbol"] for node in graph_metadata(graph)))
+        self.compare(storage[3], *inputs, dout, scale=scale)
+        coordinate = storage[3][3][:, :, 0, 0].double()
+        self.assertTrue((coordinate > 0).all())
+        torch.testing.assert_close(coordinate, torch.full_like(coordinate, target), atol=0, rtol=0.005)

@@ -39,6 +39,26 @@ class LongSquareBackward:
             self.fallback(q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, base, scale, stream)
 
 
+class D64LongSquare:
+    """Use the fixed N2 owner only within the qualified long-square range."""
+
+    def __init__(self, fallback):
+        # Reuse the warp-MMA owner with independently qualified Ti bounds.
+        from .sm120_backward import D64Values
+
+        self.fallback = fallback
+        self.tuned = D64Values(fallback)
+
+    @cute.jit
+    def __call__(
+        self, q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, base, scale, stream: cuda.CUstream
+    ):
+        if q.shape[2] == k.shape[2] and q.shape[2] >= 1024 and q.shape[2] <= 4096:
+            self.tuned(q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, base, scale, stream)
+        else:
+            self.fallback(q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, base, scale, stream)
+
+
 def eligible(device, mode, masked, layouts, configuration, kv_configuration, vector):
     dimension = layouts[0][1][-1]
     if (
@@ -52,6 +72,8 @@ def eligible(device, mode, masked, layouts, configuration, kv_configuration, vec
         or torch.cuda.get_device_name(device) != "NVIDIA GeForce RTX 3090 Ti"
         or torch.cuda.get_device_properties(device).multi_processor_count != 84
     ):
+        return False
+    if dimension == 64 and layouts[0][0] != torch.bfloat16:
         return False
     if mode == "forward":
         return configuration == {
@@ -72,7 +94,7 @@ def eligible(device, mode, masked, layouts, configuration, kv_configuration, vec
         )
     return (
         mode == "backward"
-        and dimension in (16, 128)
+        and dimension in (16, 64, 128)
         and configuration == (32, 32 if dimension == 16 else dimension, 4, False, True, False, False)
         and kv_configuration == configuration
     )
@@ -89,6 +111,9 @@ def schedule(program, mode, dimension, causal):
 
         short = ShortForward(causal, dimension, rows=16, chunk=64, output_width=64, vector=program.vector)
         return AdaptiveAttention(program, program, short)
+    if dimension == 64:
+        program.keyvalue = D64LongSquare(program.keyvalue)
+        return program
     if dimension == 256:
         from .sm86_backward import QueryMajorQueries
 

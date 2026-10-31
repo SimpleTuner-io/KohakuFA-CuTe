@@ -92,3 +92,10 @@ https://github.com/Dao-AILab/flash-attention
 Reference revision: 85d6dfe3573708b5632915950cd8b069b924ba52
 Copyright (c) 2025, Tri Dao.
 BSD-3-Clause; the full license and contributor list are included in LICENSES/BSD-3-Clause.txt.
+
+The optional fa4_sm80 package derives modified forward, softmax, backward, and
+preprocess methods from FlashAttention at revision
+4616f5116d33e3ba3cbb71d582caffcfcb49649c. Unchanged methods use the pinned optional
+dependency. Copyright and contributor notices are retained with the derived
+methods; the BSD-3-Clause license and AUTHORS list are reproduced in
+LICENSES/FlashAttention-BSD-3-Clause.txt and LICENSES/FlashAttention-AUTHORS.txt.

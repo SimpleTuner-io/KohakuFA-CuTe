@@ -1,0 +1,177 @@
+import unittest
+from importlib.metadata import PackageNotFoundError
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+
+import torch
+
+from kohakufa_cute import api, fa4_sm80
+
+
+def cuda_operand(shape=(1, 16, 4096, 128), dtype=torch.bfloat16, contiguous=True):
+    return SimpleNamespace(
+        shape=shape,
+        ndim=4,
+        dtype=dtype,
+        device=torch.device("cuda", 0),
+        is_contiguous=lambda: contiguous,
+    )
+
+
+class Sm80SelectionTests(unittest.TestCase):
+    def test_architecture_shape_scale_and_runtime_boundary(self):
+        q = cuda_operand()
+        with (
+            patch.object(torch.cuda, "get_device_capability", return_value=(8, 0)),
+            patch.object(torch.cuda, "current_device", return_value=0),
+            patch.object(torch.cuda, "get_device_properties", return_value=SimpleNamespace(multi_processor_count=108)),
+            patch.object(fa4_sm80, "available", return_value=True),
+        ):
+            for causal in (False, True):
+                for dtype in (torch.bfloat16, torch.float16):
+                    q = cuda_operand(dtype=dtype)
+                    self.assertTrue(fa4_sm80.compatible(q, q, q, None, 0, causal, None, False))
+            medium = cuda_operand((1, 8, 2048, 128))
+            self.assertTrue(fa4_sm80.compatible(medium, medium, medium, None, 0, False, None, False))
+            self.assertFalse(fa4_sm80.compatible(medium, medium, medium, None, 0, True, None, False))
+            for scale in (-0.1, 0, 3e38, float("nan"), float("inf")):
+                self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, scale, False))
+            for shape in (
+                (1, 16, 2047, 128),
+                (1, 16, 4097, 128),
+                (2, 16, 4096, 128),
+                (1, 17, 4096, 128),
+                (1, 7, 4096, 128),
+                (1, 16, 4096, 256),
+            ):
+                operand = cuda_operand(shape)
+                self.assertFalse(fa4_sm80.compatible(operand, operand, operand, None, 0, False, None, False))
+            self.assertFalse(fa4_sm80.compatible(q, cuda_operand((1, 2, 257, 128)), q, None, 0, False, None, True))
+            self.assertFalse(fa4_sm80.compatible(q, q, q, object(), 0, False, None, False))
+            self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0.1, False, None, False))
+            operand = cuda_operand(contiguous=False)
+            self.assertFalse(fa4_sm80.compatible(operand, operand, operand, None, 0, False, None, False))
+            with patch.object(torch.compiler, "is_compiling", return_value=True):
+                self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
+            with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
+                self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
+            with patch.object(torch.cuda, "get_device_capability", return_value=(8, 6)):
+                self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
+            with patch.object(torch.cuda, "get_device_properties", return_value=SimpleNamespace(multi_processor_count=14)):
+                self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
+            with patch.object(torch.cuda, "current_device", return_value=1):
+                self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
+
+    def test_missing_optional_dependency_retains_native_schedule(self):
+        fa4_sm80.available.cache_clear()
+        try:
+            with patch.object(fa4_sm80, "version", side_effect=PackageNotFoundError):
+                self.assertFalse(fa4_sm80.available())
+        finally:
+            fa4_sm80.available.cache_clear()
+
+    def test_selected_errors_propagate_even_with_warm_native_cache(self):
+        q = cuda_operand()
+        extension = Mock()
+        extension.cache_info.return_value = SimpleNamespace(currsize=1)
+        with (
+            patch.object(api, "_extension", extension),
+            patch.object(fa4_sm80, "compatible", return_value=True),
+            patch.object(fa4_sm80, "attention", side_effect=RuntimeError("selected schedule failed")),
+        ):
+            for function in (api.attention, api.scaled_dot_product_attention, api.automatic_scaled_dot_product_attention):
+                with self.subTest(function=function.__name__), self.assertRaisesRegex(RuntimeError, "selected schedule"):
+                    function(q, q, q)
+        extension.assert_not_called()
+
+    def test_repeated_calls_preserve_package_entry_function(self):
+        from kohakufa_cute.fa4_sm80 import _attention
+
+        entry = fa4_sm80.attention
+        with patch.object(_attention, "attention", return_value=object()) as selected:
+            for _ in range(2):
+                fa4_sm80.attention(None, None, None)
+                self.assertIs(fa4_sm80.attention, entry)
+            self.assertEqual(selected.call_count, 2)
+
+
+@unittest.skipUnless(
+    torch.cuda.is_available() and torch.cuda.get_device_capability() == (8, 0) and fa4_sm80.available(),
+    "Requires the qualified optional A100 schedule",
+)
+class Sm80KernelTests(unittest.TestCase):
+    def test_public_selected_boundaries_and_native_exception(self):
+        from benchmarks.reference import fp64_reference, metrics
+
+        for dtype in (torch.bfloat16, torch.float16):
+            for sequence in (2048, 2049, 4095):
+                for heads, dimension in ((8, 64), (8, 128), (16, 64), (16, 128)):
+                    for causal in (False, True):
+                        with self.subTest(dtype=dtype, sequence=sequence, heads=heads, dimension=dimension, causal=causal):
+                            torch.manual_seed(827)
+                            inputs = [
+                                torch.randn(1, heads, sequence, dimension, device="cuda", dtype=dtype, requires_grad=True)
+                                for _ in range(3)
+                            ]
+                            dout = torch.randn_like(inputs[0])
+                            selected = fa4_sm80.compatible(*inputs, None, 0, causal, None, False)
+                            out = api.scaled_dot_product_attention(*inputs, is_causal=causal)
+                            self.assertEqual(hasattr(out.grad_fn, "schedule"), selected)
+                            actual = out, *torch.autograd.grad(out, inputs, dout)
+                            for head in range(heads):
+                                part = [tensor[:, head : head + 1].detach() for tensor in inputs]
+                                reference = fp64_reference(part, dout[:, head : head + 1], causal=causal)
+                                for got, expected in zip(actual, reference):
+                                    error = metrics(got[:, head : head + 1], expected)
+                                    self.assertTrue(error["finite"])
+                                    self.assertLess(error["relative_error"], 0.01 if dtype == torch.bfloat16 else 0.005)
+
+    def test_public_repeated_calls_graph_symbols_and_compiled_native_fallback(self):
+        from benchmarks.compare_ada import capture
+        from benchmarks.compare_l40s import graph_kernels
+
+        torch.manual_seed(817)
+        inputs = [torch.randn(1, 16, 4096, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
+        dout = torch.randn_like(inputs[0])
+        for function in (api.attention, api.scaled_dot_product_attention, api.automatic_scaled_dot_product_attention):
+            for _ in range(2):
+                out = function(*(tensor.detach().requires_grad_(True) for tensor in inputs))
+                self.assertTrue(hasattr(out.grad_fn, "schedule"))
+                self.assertTrue(callable(fa4_sm80.attention))
+        graph, owners = capture(api.scaled_dot_product_attention, inputs, dout, False, "joint", keep_graph=True)
+        symbols = [record["symbol"] for record in graph_kernels(graph)]
+        self.assertEqual(len(symbols), 4)
+        self.assertTrue(any("fa4_sm80" in symbol and "Forward" in symbol for symbol in symbols))
+        self.assertTrue(any("fa4_sm80" in symbol and "BackwardSm80" in symbol for symbol in symbols))
+        compiled = torch.compile(api.scaled_dot_product_attention, backend="eager", fullgraph=True)
+        graph, owners = capture(compiled, inputs, dout, False, "joint", keep_graph=True)
+        symbols = [record["symbol"] for record in graph_kernels(graph)]
+        self.assertTrue(all("fa4_sm80" not in symbol for symbol in symbols))
+        self.assertTrue(any("kohakufa_cute" in symbol for symbol in symbols))
+
+    def test_direct_tails_heads_and_expanded_output_gradient(self):
+        from benchmarks.reference import fp64_reference, metrics
+        from kohakufa_cute.fa4_sm80._attention import attention
+
+        for dtype in (torch.bfloat16, torch.float16):
+            for heads, dimension, causal in ((1, 64, False), (3, 128, True)):
+                with self.subTest(dtype=dtype, heads=heads, dimension=dimension, causal=causal):
+                    torch.manual_seed(809)
+                    inputs = [
+                        torch.randn(1, heads, 257, dimension, device="cuda", dtype=dtype, requires_grad=True)
+                        for _ in range(3)
+                    ]
+                    out = attention(*inputs, causal=causal)
+                    self.assertTrue(hasattr(out.grad_fn, "schedule"))
+                    actual = out, *torch.autograd.grad(out.sum(), inputs)
+                    for head in range(heads):
+                        part = [tensor[:, head : head + 1].detach() for tensor in inputs]
+                        reference = fp64_reference(part, torch.ones_like(part[0]), causal=causal)
+                        for got, expected in zip(actual, reference):
+                            error = metrics(got[:, head : head + 1], expected)
+                            self.assertTrue(error["finite"])
+                            self.assertLess(error["relative_error"], 0.01 if dtype == torch.bfloat16 else 0.005)
+
+
+if __name__ == "__main__":
+    unittest.main()

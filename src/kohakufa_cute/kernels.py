@@ -2926,7 +2926,14 @@ def _compile_kernel(
             not masked
             and layouts[0][0] == torch.bfloat16
             and layouts[0][1][-1] == 512
-            and torch.cuda.get_device_capability(device) == (10, 3)
+            and (
+                capability == (10, 3)
+                or capability == (10, 0)
+                and "B200" in torch.cuda.get_device_name(device)
+                and "MIG" not in torch.cuda.get_device_name(device)
+                and layouts[0][1][0] == 1
+                and layouts[0][1][1] in (8, 16)
+            )
             and configuration == _SM103_FUSED_CONFIGURATIONS[(512, "q")]
             and kv_configuration == _SM103_FUSED_CONFIGURATIONS[(512, "kv")]
             and layouts[0][1][1] == layouts[1][1][1]
@@ -2938,7 +2945,16 @@ def _compile_kernel(
             if isinstance(program.query, PipelineBackward) and isinstance(program.keyvalue, PipelineBackward):
                 from .blackwell_register_aux import AdaptiveBackward
 
-                program = AdaptiveBackward(causal, program, base_vector)
+                program = AdaptiveBackward(
+                    causal,
+                    program,
+                    base_vector,
+                    maximum_length=1024 if capability == (10, 0) else None,
+                    minimum_length=1024 if capability == (10, 0) and layouts[0][1][1] == 8 else 512,
+                )
+                for owner in (program.wide.q, program.wide.kv):
+                    owner.hardware_reductions = capability == (10, 3)
+                    owner.role_statistics = capability == (10, 0)
     elif mode == "forward" and len(layouts[7][1]) == 5:
         from .split_forward import Forward
 

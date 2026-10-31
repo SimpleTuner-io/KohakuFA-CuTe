@@ -1,0 +1,4374 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-31T23:43:31.737327+00:00",
+  "base_revision": "4cc9e3ba40b3e3b069d20ae86980a2655b3b76ab",
+  "runtime_source_sha256": {
+    "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "src/kohakufa_cute/blackwell_pipeline.py": "93c0df74a609af7702284a2ee9e1a5aee49a58bfb287ae74bcc4bc3db9c27387",
+    "src/kohakufa_cute/blackwell_register_aux.py": "9b12f76a1eac7a2824a81e5251bc4ce8673218e4559ce392c2edb44398184b19",
+    "src/kohakufa_cute/kernels.py": "1928b039926bca36f1b70b47980098740a8dbb2a5015e85f4613405c6f92fa79",
+    "src/kohakufa_cute/launch.py": "450b6d27ed26346e2174c49fe40a652d7b78076bf116970bd4b7ddcbd2982a70",
+    "src/kohakufa_cute/native.cpp": "3c94eefc4143b2c63523edc771f15b2dbb1bc2268112a7e655a943e01977074c"
+  },
+  "comparison_driver_sha256": "9ee9f6626ccd3934f0cf5e08661d06e9011fb521650003e5c198810480aeb28c",
+  "backend_adapter_sha256": "252c82b8e116b1b588ad52a5707c94973adc7e1f35070ad0df6d220b222a6673",
+  "benchmark_tools_base_revision": "e0123ab",
+  "device": {
+    "name": "NVIDIA B200",
+    "capability": [
+      10,
+      0
+    ],
+    "sm": 148,
+    "memory_bytes": 191503007744
+  },
+  "stack": {
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cuda": "13.2",
+    "driver_api": 13040
+  },
+  "packages": {
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15.post0",
+    "triton": "3.9.0"
+  },
+  "hardware_limit": {
+    "power_watts": 1000.0,
+    "host_driver": "580.126.09"
+  },
+  "compatibility_libraries": {
+    "libcuda": "615.71.10",
+    "libnvidia-ptxjitcompiler": "615.71.10"
+  },
+  "protocol": {
+    "timing": "Warmed CUDA-graph GPU events; rotate variant order; compilation/capture and profiling excluded",
+    "rounds": 5,
+    "target_window_ms": 80,
+    "layout": "Contiguous BHSD API inputs",
+    "backward": "Retained actual forward; all dQ/dK/dV",
+    "joint": "Forward plus actual-output delta and all gradients"
+  },
+  "scope": {
+    "device": "Full B200 SM100",
+    "dtype": "BF16",
+    "batch": 1,
+    "head_dimension": 512,
+    "presets": [
+      {
+        "heads": 16,
+        "minimum_tokens": 512,
+        "maximum_tokens": 1024
+      },
+      {
+        "heads": 8,
+        "minimum_tokens": 1024,
+        "maximum_tokens": 1024
+      }
+    ],
+    "visibility": [
+      "dense",
+      "causal"
+    ],
+    "mask": null
+  },
+  "arithmetic": "Separate unscaled maximum/log normalization; single-rounded BF16 P/dS; FP32 products and actual-O delta; late dQ/dK scale",
+  "qualification": {
+    "gpu_tests": "tests.test_b200_wide: directed actual-O rounding and runtime/cache/changed-graph boundaries",
+    "gpu_tests_status": "pass",
+    "bf16_per_head_component_norm_limit": 0.01,
+    "repaired_backward_owners": {
+      "memcheck": "pass",
+      "racecheck": "pass",
+      "synccheck": "pass"
+    },
+    "initialization": {
+      "status": "reserved_shared_state_diagnostic",
+      "byte_address": "0x54",
+      "holding_byte_address": "0x4a0",
+      "reserved_registers": [
+        0,
+        288,
+        1024,
+        64,
+        0
+      ],
+      "allocator_control_ctas": 296,
+      "allocator_control_threads": 128,
+      "allocator_control_reported_errors": 592,
+      "seeded_and_unseeded_holding_values": [
+        0
+      ],
+      "note": "Initcheck is not clean; allocator-only seeded/unseeded controls reproduce compiler-generated reserved-state diagnostics. Full-call native-forward race reports remain separate.",
+      "unfiltered_global_control": {
+        "status": "pass",
+        "shape": [
+          1,
+          16,
+          512,
+          512
+        ],
+        "coverage": "All kernels, including input initialization, forward and actual-output delta producers, backward, and finite readback"
+      },
+      "filtered_global_control": {
+        "status": "stopped_after_diagnostics",
+        "exit_code": 143,
+        "note": "Kernel-filtered consumers reported dependent global reads without complete producer instrumentation; retained separately."
+      },
+      "filtered_launch_count_control": {
+        "exit_code": 86,
+        "reported_errors": 6,
+        "note": "Host scalar finite-readback initialization diagnostics; not a complete memory-ownership qualification."
+      }
+    },
+    "profiler": {
+      "systems": "2026.1.0.0",
+      "compute_sanitizer": "2026.3.0.0",
+      "compute_counters": "ERR_NVGPUCTRPERM"
+    }
+  },
+  "excluded_trial": {
+    "heads": 8,
+    "tokens": 512,
+    "causal_joint_regression_percent": 10.7,
+    "automatic_wide_selection": false
+  },
+  "measurements": [
+    {
+      "shape": [
+        1,
+        16,
+        512,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "dense",
+      "wide_selected": true,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.01842444534875675,
+            "samples_ms": [
+              0.018426391666201268,
+              0.01842444534875675,
+              0.018423836116822967,
+              0.018426728803058002,
+              0.018424156813593637
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002231958565020894
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.06821999849973025,
+            "samples_ms": [
+              0.06840495399658857,
+              0.06817408022673234,
+              0.06820209055564867,
+              0.06821999849973025,
+              0.06828025409153529
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.002938445029982198,
+              "dk": 0.0029299362936463505,
+              "dv": 0.0023692588724458885
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016710303727994133,
+              "dk": 0.0016794773598622999,
+              "dv": 0.0016674968324050842
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.08606137181262327,
+            "samples_ms": [
+              0.08607611199529772,
+              0.08605923751448337,
+              0.08606137181262327,
+              0.08606316061580882,
+              0.0860586899977464
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0029112835936897295,
+              "dq": 0.002938445029982198,
+              "dk": 0.0029299362936463505,
+              "dv": 0.002913093994503812
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016710303727994133,
+              "dk": 0.0016794773598622999,
+              "dv": 0.0016674968324050842
+            }
+          }
+        },
+        "torch_sdpa": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.075782112770117,
+            "samples_ms": [
+              0.07578481038411458,
+              0.07577994585493099,
+              0.07577382755370628,
+              0.075782112770117,
+              0.07579197046410946
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002231736208825941
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.7618526640392486,
+            "samples_ms": [
+              0.761483045724722,
+              0.7618526640392486,
+              0.7622206027691181,
+              0.7618221869835486,
+              0.7619596628042368
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  8192,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.002928376631325744,
+              "dk": 0.0029213474807549275,
+              "dv": 0.0023691242993374626
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.002929877391626755,
+              "dk": 0.0029236895274107203,
+              "dv": 0.0016679533186197127
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.8363510131835937,
+            "samples_ms": [
+              0.8363510131835937,
+              0.8357511018451892,
+              0.8366039878443667,
+              0.8357588115491366,
+              0.836726218775699
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  8192,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0029040433557219873,
+              "dq": 0.00291318611446164,
+              "dk": 0.002928376631325744,
+              "dv": 0.0029213474807549275
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.002929877391626755,
+              "dk": 0.0029236895274107203,
+              "dv": 0.0016679533186197127
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.018441387747096204,
+            "samples_ms": [
+              0.018441387747096204,
+              0.018441788340122632,
+              0.01844126259860552,
+              0.01844122327847819,
+              0.018441915859465113
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002231958565020894
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.11814643037879956,
+            "samples_ms": [
+              0.11814643037879956,
+              0.11817245599170736,
+              0.11816982796051072,
+              0.11814341350330347,
+              0.1181405481958824
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.002938445029982198,
+              "dk": 0.0029299362936463505,
+              "dv": 0.002369348086373064
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016710303727994133,
+              "dk": 0.0016794773598622999,
+              "dv": 0.0016674968656574289
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.15079430377844608,
+            "samples_ms": [
+              0.1507564884887927,
+              0.15081813217569212,
+              0.15079231913673358,
+              0.1508005710435321,
+              0.15079430377844608
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0029112835936897295,
+              "dq": 0.002938445029982198,
+              "dk": 0.0029299362936463505,
+              "dv": 0.002913093994503812
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016710303727994133,
+              "dk": 0.0016794773598622999,
+              "dv": 0.0016674968656574289
+            }
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        512,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "causal",
+      "wide_selected": true,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.023884834271471648,
+            "samples_ms": [
+              0.023905674920989484,
+              0.023884834271471648,
+              0.023897534651721983,
+              0.02388442719915248,
+              0.023829374074432162
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002015902543434184
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.07568389597722297,
+            "samples_ms": [
+              0.07568389597722297,
+              0.07568630642361111,
+              0.07565388468189277,
+              0.0757077510540302,
+              0.07567143831851977
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.00320584116147204,
+              "dk": 0.003206034069786787,
+              "dv": 0.002437775364479555
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0017191733606612162,
+              "dk": 0.001723644848670963,
+              "dv": 0.0016983721056776906
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.10271395625303202,
+            "samples_ms": [
+              0.10276172192065747,
+              0.10271395625303202,
+              0.10263083237108869,
+              0.10277312035654106,
+              0.10266831863758176
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0031842467681702305,
+              "dq": 0.0031336241932594876,
+              "dk": 0.00320584116147204,
+              "dv": 0.003206034069786787
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0017191733606612162,
+              "dk": 0.001723644848670963,
+              "dv": 0.0016983721056776906
+            }
+          }
+        },
+        "torch_sdpa": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.07376230913786097,
+            "samples_ms": [
+              0.0737615847120098,
+              0.07376961209880772,
+              0.07376146361050931,
+              0.07376230913786097,
+              0.07376524643260432
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0020159488308716627
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.7247770136052912,
+            "samples_ms": [
+              0.723881045254794,
+              0.7244706587357954,
+              0.7247770136052912,
+              0.7250909285111861,
+              0.7248605207963423
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  8192,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0032245700114881177,
+              "dk": 0.0032725514135283616,
+              "dv": 0.0024380332876949577
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0031177208243396847,
+              "dk": 0.003091294459981293,
+              "dv": 0.0016983102165423205
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.8005190762606534,
+            "samples_ms": [
+              0.8002012634277343,
+              0.8006249237060546,
+              0.8005190762606534,
+              0.8004405474421954,
+              0.8008905275903567
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  8192,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  8,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0032725514135283616,
+              "dq": 0.003124035344523736,
+              "dk": 0.003077944849431776,
+              "dv": 0.0032245700114881177
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0031177208243396847,
+              "dk": 0.003091294459981293,
+              "dv": 0.0016983102165423205
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.024527671470125127,
+            "samples_ms": [
+              0.024518672913078247,
+              0.024532629887588996,
+              0.024527671470125127,
+              0.024526496571225152,
+              0.024534549580596327
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002015902543434184
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.10861127093121722,
+            "samples_ms": [
+              0.10863705559255687,
+              0.10861560314685315,
+              0.10858560138278538,
+              0.10861127093121722,
+              0.10857663074685209
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.00320584116147204,
+              "dk": 0.003206034069786787,
+              "dv": 0.0024377589817138434
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0017191733606612162,
+              "dk": 0.001723644848670963,
+              "dv": 0.0016983721667772217
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.1425272531888115,
+            "samples_ms": [
+              0.14259315051620813,
+              0.1425272531888115,
+              0.14249295520611255,
+              0.14256809857846162,
+              0.1425193225031909
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  4,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0031842467681702305,
+              "dq": 0.0031336241932594876,
+              "dk": 0.00320584116147204,
+              "dv": 0.003206034069786787
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0017191733606612162,
+              "dk": 0.001723644848670963,
+              "dv": 0.0016983721667772217
+            }
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "dense",
+      "wide_selected": true,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.05170133549679992,
+            "samples_ms": [
+              0.05140456343835482,
+              0.05146047231313344,
+              0.053871044721759735,
+              0.05170133549679992,
+              0.05223603978097556
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.00224192837861212
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.2612450154622396,
+            "samples_ms": [
+              0.2567975362141927,
+              0.2612450154622396,
+              0.26126825241815477,
+              0.255780140822908,
+              0.26263300152526653
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0029024864350401117,
+              "dk": 0.00289481029755882,
+              "dv": 0.0023757405691720314
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016640854025248408,
+              "dk": 0.0016621127950714602,
+              "dv": 0.001661081696913067
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.30659531633515924,
+            "samples_ms": [
+              0.3011757532755534,
+              0.3106277585029602,
+              0.30659531633515924,
+              0.30085748525766226,
+              0.31157737970352173
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002897044408306365,
+              "dq": 0.0029024864350401117,
+              "dk": 0.00289481029755882,
+              "dv": 0.002890083300165802
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016640854025248408,
+              "dk": 0.0016621127950714602,
+              "dv": 0.001661081696913067
+            }
+          }
+        },
+        "torch_sdpa": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.24517826975127796,
+            "samples_ms": [
+              0.2437162776123789,
+              0.24584114811502142,
+              0.24591879844665526,
+              0.24517826975127796,
+              0.24437872371318178
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0022420615604612595
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 2.971913851224459,
+            "samples_ms": [
+              2.9703028752253604,
+              2.974413651686448,
+              2.9742842454176683,
+              2.971150911771334,
+              2.971913851224459
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  16384,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  12,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.002901038607635541,
+              "dk": 0.0028947054279161314,
+              "dv": 0.002375792366450345
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.002909966689501315,
+              "dk": 0.002909987698704956,
+              "dv": 0.0016634250619841395
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 3.212309201558431,
+            "samples_ms": [
+              3.216343879699707,
+              3.212309201558431,
+              3.211609204610189,
+              3.212249437967936,
+              3.212835947672526
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  16384,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  12,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0028983369129343493,
+              "dq": 0.0028947054279161314,
+              "dk": 0.0028980923867042542,
+              "dv": 0.002901038607635541
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.002909966689501315,
+              "dk": 0.002909987698704956,
+              "dv": 0.0016634250619841395
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.05181809560852258,
+            "samples_ms": [
+              0.05197239632370832,
+              0.051258395338090845,
+              0.05489369388544383,
+              0.05181809560852258,
+              0.051233936053080915
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.00224192837861212
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.43098189710904766,
+            "samples_ms": [
+              0.43098189710904766,
+              0.4307671021879389,
+              0.4402347830838935,
+              0.43222469753689235,
+              0.43070504930284287
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0029024864350401117,
+              "dk": 0.00289481029755882,
+              "dv": 0.00237578165502105
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016640854025248408,
+              "dk": 0.0016621127950714602,
+              "dv": 0.0016610837679531616
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.4755261358386742,
+            "samples_ms": [
+              0.47423407274805857,
+              0.4755261358386742,
+              0.48304897401391006,
+              0.47559866847762144,
+              0.47542037507017215
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002897044408306365,
+              "dq": 0.0029024864350401117,
+              "dk": 0.00289481029755882,
+              "dv": 0.002890083300165802
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016640854025248408,
+              "dk": 0.0016621127950714602,
+              "dv": 0.0016610837679531616
+            }
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "causal",
+      "wide_selected": true,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.0563597082213906,
+            "samples_ms": [
+              0.056489765253365694,
+              0.056379295322162105,
+              0.05634012127329581,
+              0.0563597082213906,
+              0.056353735033267814
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0020438751644042824
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.2236567051136861,
+            "samples_ms": [
+              0.22376816440636005,
+              0.22352953707234244,
+              0.22360173927969626,
+              0.22368754697649668,
+              0.2236567051136861
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0031087639230608258,
+              "dk": 0.003106696848881593,
+              "dv": 0.002391552908399658
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016702561977907765,
+              "dk": 0.001674596518096982,
+              "dv": 0.0016794005459137848
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.28011593348543407,
+            "samples_ms": [
+              0.2802617390950521,
+              0.2800051772803591,
+              0.28012880137268925,
+              0.28011593348543407,
+              0.2800724230314556
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+                "grid": [
+                  16,
+                  16,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0031087639230608258,
+              "dq": 0.003106696848881593,
+              "dk": 0.003027428273404447,
+              "dv": 0.0030340809775134007
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016702561977907765,
+              "dk": 0.001674596518096982,
+              "dv": 0.0016794005459137848
+            }
+          }
+        },
+        "torch_sdpa": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.19900393130174324,
+            "samples_ms": [
+              0.19884695935605176,
+              0.19897736127103738,
+              0.19900393130174324,
+              0.19910081702085278,
+              0.19906267707730518
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0020437820249990255
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 2.3319199505974266,
+            "samples_ms": [
+              2.3319199505974266,
+              2.33209228515625,
+              2.3304629606359146,
+              2.331434362074908,
+              2.333262050853056
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  16384,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  12,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0031170016935036433,
+              "dk": 0.003121582536485635,
+              "dv": 0.00239153635326767
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0030274932528899794,
+              "dk": 0.002998738491053152,
+              "dv": 0.0016793939483226111
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 2.5346468033329135,
+            "samples_ms": [
+              2.533173591859879,
+              2.536658502394153,
+              2.5346468033329135,
+              2.535283734721522,
+              2.5341078235257055
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "_Z43fmha_cutlassF_bf16_aligned_32x128_gmem_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi32ELi128ELi65536ELb1ELb1EE6ParamsE",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  4,
+                  1
+                ],
+                "shared_bytes": 51200,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 280,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_ZN2at6native18elementwise_kernelILi128ELi4EZNS0_22gpu_kernel_impl_nocastIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE10_clEvEUlN3c108BFloat16EE_EEvS4_RKT_EUliE_EEviT1_",
+                "grid": [
+                  16384,
+                  1,
+                  1
+                ],
+                "block": [
+                  128,
+                  1,
+                  1
+                ],
+                "shared_bytes": 0,
+                "NUM_REGS": 20,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "_Z45fmha_cutlassB_bf16_aligned_128x64_k65536_sm80N22PyTorchMemEffAttention23AttentionBackwardKernelIN7cutlass4arch4Sm80ENS1_10bfloat16_tELb1ELb0ELb0ELi128ELi64ELi65536ELb0EE6ParamsE",
+                "grid": [
+                  12,
+                  16,
+                  1
+                ],
+                "block": [
+                  256,
+                  1,
+                  1
+                ],
+                "shared_bytes": 60928,
+                "NUM_REGS": 220,
+                "LOCAL_SIZE_BYTES": 544,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0030671744221321072,
+              "dq": 0.003047212282023375,
+              "dk": 0.0031170016935036433,
+              "dv": 0.003121582536485635
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0030274932528899794,
+              "dk": 0.002998738491053152,
+              "dv": 0.0016793939483226111
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.05648161147614306,
+            "samples_ms": [
+              0.05652610548635543,
+              0.0565076442580149,
+              0.05642872348555863,
+              0.05643899661978496,
+              0.05648161147614306
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0020438751644042824
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.28875172008167616,
+            "samples_ms": [
+              0.28875172008167616,
+              0.28884158169266083,
+              0.28877627286044033,
+              0.28872902610085227,
+              0.2886650224165483
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0031087639230608258,
+              "dk": 0.003106696848881593,
+              "dv": 0.002391572799287696
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016702561977907765,
+              "dk": 0.001674596518096982,
+              "dv": 0.0016794014348811932
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.345747117872362,
+            "samples_ms": [
+              0.3458077897241105,
+              0.3458290100097656,
+              0.34563379702360736,
+              0.345747117872362,
+              0.34574616006958536
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_0",
+                "grid": [
+                  8,
+                  16,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+                "grid": [
+                  64,
+                  16,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+                "grid": [
+                  32,
+                  16,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0031087639230608258,
+              "dq": 0.003106696848881593,
+              "dk": 0.003027428273404447,
+              "dv": 0.0030340809775134007
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016702561977907765,
+              "dk": 0.001674596518096982,
+              "dv": 0.0016794014348811932
+            }
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        512,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "dense",
+      "wide_selected": false,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.018408086195710795,
+            "samples_ms": [
+              0.018416191370973077,
+              0.018395488019103342,
+              0.018408887526568246,
+              0.018404600055815897,
+              0.018408086195710795
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0022139608322203626
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.06407683462945872,
+            "samples_ms": [
+              0.06411775464632065,
+              0.06408071881325744,
+              0.06402036207133875,
+              0.06403981509318625,
+              0.06407683462945872
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_3",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_4",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__5",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.002938523436871767,
+              "dk": 0.0029267853976402704,
+              "dv": 0.002369773939065127
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016651494393423846,
+              "dk": 0.001667840589208071,
+              "dv": 0.0016669075898947906
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.07995433365590383,
+            "samples_ms": [
+              0.07993525495432845,
+              0.07995433365590383,
+              0.07997041049907536,
+              0.07995562442960095,
+              0.07995131209089949
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_3",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_4",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__5",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002905248705079129,
+              "dq": 0.002938523436871767,
+              "dk": 0.0029267853976402704,
+              "dv": 0.0028874415013612716
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016651494393423846,
+              "dk": 0.001667840589208071,
+              "dv": 0.0016669075898947906
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.0184237398485798,
+            "samples_ms": [
+              0.018423863499818467,
+              0.018423624180364487,
+              0.018423894751274365,
+              0.018423450071634487,
+              0.0184237398485798
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0022139608322203626
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.06320082803003378,
+            "samples_ms": [
+              0.06320082803003378,
+              0.06318492416507941,
+              0.06320354007995707,
+              0.06319059915100501,
+              0.06322746564636486
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.002938523436871767,
+              "dk": 0.0029267853976402704,
+              "dv": 0.002369773939065127
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016651494393423846,
+              "dk": 0.001667840589208071,
+              "dv": 0.0016669075898947906
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.08103352833569534,
+            "samples_ms": [
+              0.0809865445506816,
+              0.08103352833569534,
+              0.08098474232857007,
+              0.08103557524642324,
+              0.08105945781389225
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.002905248705079129,
+              "dq": 0.002938523436871767,
+              "dk": 0.0029267853976402704,
+              "dv": 0.0028874415013612716
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016651494393423846,
+              "dk": 0.001667840589208071,
+              "dv": 0.0016669075898947906
+            }
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        512,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "causal",
+      "wide_selected": false,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.022535929726754538,
+            "samples_ms": [
+              0.022536261246242886,
+              0.022535012906388742,
+              0.022535368124961038,
+              0.022535929726754538,
+              0.02253629120302872
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.001995993395308299
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.06334206375914571,
+            "samples_ms": [
+              0.06335776102126339,
+              0.0633486082867259,
+              0.06333210601930594,
+              0.06334206375914571,
+              0.06332890981576421
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_3",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_4",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__5",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.00311782028569636,
+              "dk": 0.0030993222138191094,
+              "dv": 0.0023775831254596908
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016649247836048695,
+              "dk": 0.0016789250926149252,
+              "dv": 0.0016679063218256011
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.08566715477365498,
+            "samples_ms": [
+              0.08570575816546808,
+              0.08566715477365498,
+              0.08564466877556666,
+              0.08567757498717539,
+              0.0856645163427839
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_3",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_4",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__5",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.00311782028569636,
+              "dq": 0.0030993222138191094,
+              "dk": 0.0029790747616589533,
+              "dv": 0.0029671114666333996
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016649247836048695,
+              "dk": 0.0016789250926149252,
+              "dv": 0.0016679063218256011
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.022521393153410105,
+            "samples_ms": [
+              0.02251961989209831,
+              0.022521953054608326,
+              0.02252020422433842,
+              0.022521393153410105,
+              0.02252430508373516
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.001995993395308299
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.06316916636140865,
+            "samples_ms": [
+              0.0631752077108956,
+              0.06316865002095458,
+              0.0631648337486947,
+              0.06316916636140865,
+              0.06318267998231891
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.00311782028569636,
+              "dk": 0.0030993222138191094,
+              "dv": 0.0023775831254596908
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016649247836048695,
+              "dk": 0.0016789250926149252,
+              "dv": 0.0016679063218256011
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.0857734515749175,
+            "samples_ms": [
+              0.0857734515749175,
+              0.08579273182502796,
+              0.08577028910319011,
+              0.08575123413480987,
+              0.08580683017599172
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  4,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.00311782028569636,
+              "dq": 0.0030993222138191094,
+              "dk": 0.0029790747616589533,
+              "dv": 0.0029671114666333996
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016649247836048695,
+              "dk": 0.0016789250926149252,
+              "dv": 0.0016679063218256011
+            }
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        1024,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "dense",
+      "wide_selected": true,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.027360149125611653,
+            "samples_ms": [
+              0.026615866927048815,
+              0.027360149125611653,
+              0.027239419409541315,
+              0.027668361810434954,
+              0.02751179808086304
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0022432702053843197
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.12389953319842999,
+            "samples_ms": [
+              0.12108937362951736,
+              0.12389953319842999,
+              0.12550328078779202,
+              0.1236800537109375,
+              0.12469983604865345
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0028987774171915985,
+              "dk": 0.0028956138545183315,
+              "dv": 0.00235573066557694
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.001659655591943774,
+              "dk": 0.0016618804195423793,
+              "dv": 0.0016609507765118175
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.14831277660857467,
+            "samples_ms": [
+              0.14738932329482748,
+              0.14831277660857467,
+              0.1489407660154404,
+              0.14786368396794686,
+              0.14841350363619502
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0028952145474375806,
+              "dq": 0.0028987774171915985,
+              "dk": 0.0028889569131446352,
+              "dv": 0.002894355168975316
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.001659655591943774,
+              "dk": 0.0016618804195423793,
+              "dv": 0.0016609507765118175
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.027461965516804812,
+            "samples_ms": [
+              0.026622228816508057,
+              0.027657909853314237,
+              0.027787295742544613,
+              0.027461965516804812,
+              0.027402450345086714
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0022432702053843197
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.2180597809539444,
+            "samples_ms": [
+              0.21600693596733941,
+              0.21890228184041458,
+              0.22000709115943579,
+              0.2180597809539444,
+              0.21799737232219246
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0028987774171915985,
+              "dk": 0.0028956138545183315,
+              "dv": 0.0023557724334042503
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.001659655591943774,
+              "dk": 0.0016618804195423793,
+              "dv": 0.0016609508334628502
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.25272247118827623,
+            "samples_ms": [
+              0.2525891346536624,
+              0.2531536384410797,
+              0.25259959392058545,
+              0.2529191633512736,
+              0.25272247118827623
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 96,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0028952145474375806,
+              "dq": 0.0028987774171915985,
+              "dk": 0.0028889569131446352,
+              "dv": 0.002894355168975316
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.001659655591943774,
+              "dk": 0.0016618804195423793,
+              "dv": 0.0016609508334628502
+            }
+          }
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        8,
+        1024,
+        512
+      ],
+      "dtype": "bf16",
+      "visibility": "causal",
+      "wide_selected": true,
+      "backends": {
+        "current_default": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.03074168107641025,
+            "samples_ms": [
+              0.030753305470090538,
+              0.030739356006800965,
+              0.03074168107641025,
+              0.030739915769086138,
+              0.030741840355054336
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0020445288692894515
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.1293194694581273,
+            "samples_ms": [
+              0.1294042334423908,
+              0.1293194694581273,
+              0.12933328416612414,
+              0.12925818538199046,
+              0.12929647109087775
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0031669196111760688,
+              "dk": 0.0032046905336195006,
+              "dv": 0.002383422983016435
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016836285749382135,
+              "dk": 0.0016784325821376262,
+              "dv": 0.0016808294926629098
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.165885066986084,
+            "samples_ms": [
+              0.16597637901226514,
+              0.1659057075643838,
+              0.165885066986084,
+              0.1658555988479009,
+              0.1658814589182536
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_1",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_d_2",
+                "grid": [
+                  16,
+                  8,
+                  1
+                ],
+                "block": [
+                  512,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 128,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0029364006879428577,
+              "dq": 0.0031669196111760688,
+              "dk": 0.0032046905336195006,
+              "dv": 0.0030611193243445236
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016836285749382135,
+              "dk": 0.0016784325821376262,
+              "dv": 0.0016808294926629098
+            }
+          }
+        },
+        "preceding_control": {
+          "forward": {
+            "status": "pass",
+            "median_ms": 0.03073885156749226,
+            "samples_ms": [
+              0.03073792926693377,
+              0.03073885156749226,
+              0.030739247209241753,
+              0.030737483145865017,
+              0.03073961237715327
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0020445288692894515
+            }
+          },
+          "backward": {
+            "status": "pass",
+            "median_ms": 0.1726892176276978,
+            "samples_ms": [
+              0.17270987612935074,
+              0.17275139968639366,
+              0.1726881064784344,
+              0.1726892176276978,
+              0.1726484131394771
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "dq": 0.0031669196111760688,
+              "dk": 0.0032046905336195006,
+              "dv": 0.002383346211192421
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016836285749382135,
+              "dk": 0.0016784325821376262,
+              "dv": 0.0016808301902613246
+            }
+          },
+          "joint": {
+            "status": "pass",
+            "median_ms": 0.20922136682225026,
+            "samples_ms": [
+              0.2092446354743377,
+              0.20920841819361635,
+              0.20917625427246095,
+              0.20922136682225026,
+              0.20930517096268503
+            ],
+            "graph_kernels": [
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineForward_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_d_0",
+                "grid": [
+                  8,
+                  8,
+                  2
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 232448,
+                "NUM_REGS": 168,
+                "LOCAL_SIZE_BYTES": 152,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_te_0",
+                "grid": [
+                  64,
+                  8,
+                  1
+                ],
+                "block": [
+                  32,
+                  1,
+                  1
+                ],
+                "shared_bytes": 32768,
+                "NUM_REGS": 60,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div_1",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 150,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              },
+              {
+                "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_18512i64_div8i64_div8i64__2",
+                "grid": [
+                  32,
+                  8,
+                  1
+                ],
+                "block": [
+                  384,
+                  1,
+                  1
+                ],
+                "shared_bytes": 201728,
+                "NUM_REGS": 154,
+                "LOCAL_SIZE_BYTES": 0,
+                "BINARY_VERSION": 100,
+                "PTX_VERSION": 100
+              }
+            ],
+            "mathematical_max_per_head_relative_error": {
+              "out": 0.0029364006879428577,
+              "dq": 0.0031669196111760688,
+              "dk": 0.0032046905336195006,
+              "dv": 0.0030611193243445236
+            },
+            "rounded_backward_max_per_head_relative_error": {
+              "dq": 0.0016836285749382135,
+              "dk": 0.0016784325821376262,
+              "dv": 0.0016808301902613246
+            }
+          }
+        }
+      }
+    }
+  ],
+  "machine_code": [
+    {
+      "backend": "cute",
+      "loaded_cubin_sha256": "e74fd764b3103a450301cf7dd47c5ef20f5602daf8f1408457d4f412421f2d81",
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+      "static_instruction_count": 404,
+      "static_matrix_opcodes": {
+        "HMMA.16816.F32.BF16": 64
+      },
+      "static_barrier_opcodes": {
+        "LDGDEPBAR": 1,
+        "DEPBAR.LE": 1,
+        "BAR.SYNC.DEFER_BLOCKING": 1
+      },
+      "binding": "Exact profiled graph symbol found once in CUPTI module-loaded callback ELF bytes; SASS extracted from that independently loaded cubin."
+    },
+    {
+      "backend": "cute",
+      "loaded_cubin_sha256": "e74fd764b3103a450301cf7dd47c5ef20f5602daf8f1408457d4f412421f2d81",
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_1",
+      "static_instruction_count": 4024,
+      "static_matrix_opcodes": {
+        "UTCHMMA": 40
+      },
+      "static_barrier_opcodes": {
+        "DEPBAR.LE": 2,
+        "BAR.SYNC.DEFER_BLOCKING": 24,
+        "MEMBAR.ALL.CTA": 8,
+        "UTCBAR": 11
+      },
+      "binding": "Exact profiled graph symbol found once in CUPTI module-loaded callback ELF bytes; SASS extracted from that independently loaded cubin."
+    },
+    {
+      "backend": "cute",
+      "loaded_cubin_sha256": "e74fd764b3103a450301cf7dd47c5ef20f5602daf8f1408457d4f412421f2d81",
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_register_auxRegisterAux_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_2",
+      "static_instruction_count": 5055,
+      "static_matrix_opcodes": {
+        "UTCHMMA": 72
+      },
+      "static_barrier_opcodes": {
+        "DEPBAR.LE": 2,
+        "BAR.SYNC.DEFER_BLOCKING": 28,
+        "MEMBAR.ALL.CTA": 12,
+        "UTCBAR": 15
+      },
+      "binding": "Exact profiled graph symbol found once in CUPTI module-loaded callback ELF bytes; SASS extracted from that independently loaded cubin."
+    },
+    {
+      "backend": "candidate",
+      "loaded_cubin_sha256": "45a46f010f9704939d0bd6f87a3da85be23f55e792a2bc2efc82bce0c3965718",
+      "symbol": "kernel_cutlass_kernel_kohakufa_cutekernelsOutputDelta_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81__0",
+      "static_instruction_count": 404,
+      "static_matrix_opcodes": {
+        "HMMA.16816.F32.BF16": 64
+      },
+      "static_barrier_opcodes": {
+        "LDGDEPBAR": 1,
+        "DEPBAR.LE": 1,
+        "BAR.SYNC.DEFER_BLOCKING": 1
+      },
+      "binding": "Exact profiled graph symbol found once in CUPTI module-loaded callback ELF bytes; SASS extracted from that independently loaded cubin."
+    },
+    {
+      "backend": "candidate",
+      "loaded_cubin_sha256": "45a46f010f9704939d0bd6f87a3da85be23f55e792a2bc2efc82bce0c3965718",
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineQuery_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_d_1",
+      "static_instruction_count": 6189,
+      "static_matrix_opcodes": {
+        "UTCHMMA": 144
+      },
+      "static_barrier_opcodes": {
+        "DEPBAR.LE": 2,
+        "BAR.SYNC.DEFER_BLOCKING": 14,
+        "MEMBAR.ALL.CTA": 37,
+        "UTCBAR": 43
+      },
+      "binding": "Exact profiled graph symbol found once in CUPTI module-loaded callback ELF bytes; SASS extracted from that independently loaded cubin."
+    },
+    {
+      "backend": "candidate",
+      "loaded_cubin_sha256": "45a46f010f9704939d0bd6f87a3da85be23f55e792a2bc2efc82bce0c3965718",
+      "symbol": "kernel_cutlass_kernel_kohakufa_cuteblackwell_pipelineKeyValue_object_at__tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_116512i64_div8i64_div8i6_2",
+      "static_instruction_count": 7448,
+      "static_matrix_opcodes": {
+        "UTCHMMA": 160
+      },
+      "static_barrier_opcodes": {
+        "DEPBAR.LE": 2,
+        "BAR.SYNC.DEFER_BLOCKING": 18,
+        "MEMBAR.ALL.CTA": 37,
+        "UTCBAR": 43
+      },
+      "binding": "Exact profiled graph symbol found once in CUPTI module-loaded callback ELF bytes; SASS extracted from that independently loaded cubin."
+    }
+  ]
+}

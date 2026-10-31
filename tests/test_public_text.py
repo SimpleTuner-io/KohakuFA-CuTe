@@ -1,18 +1,26 @@
 """Exercise the client-side guard without publishing any content."""
 
+import importlib.util
 import os
-from pathlib import Path
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 GUARD = Path(__file__).resolve().parents[1] / "tools" / "check_public_text.py"
 BLOCKED = "Blocked: local machine identity was found in public text.\n"
 
 
 class PublicTextTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        spec = importlib.util.spec_from_file_location("public_text_guard", GUARD)
+        cls.module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.module)
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
@@ -120,6 +128,59 @@ class PublicTextTests(unittest.TestCase):
         self.commit()
         self.git("config", "user.name", "Project Maintainers")
         self.assert_blocked(self.guard("--history"))
+
+    def test_tree_ids_remain_opaque_for_both_object_formats(self):
+        # This real blob ID contains bytes resembling a home-relative path.
+        opaque = bytes.fromhex("87aba9d4332e1b593786507e5c1a6718acd3f207")
+        with self.assertRaises(self.module.Blocked):
+            self.module.scan(opaque, [])
+        for width in (20, 32):
+            with self.subTest(hash_bytes=width):
+                identifier = opaque + b"\0" * (width - len(opaque))
+                tree = b"100644 first.py\0" + identifier + b"40000 directory\0" + identifier
+                with patch.object(self.module, "scan", wraps=self.module.scan) as checked:
+                    self.module.scan_tree(tree, [], width)
+                self.assertEqual([call.args[0] for call in checked.call_args_list], [b"first.py", b"directory"])
+
+    def test_tree_names_still_block_identity_hosts_and_paths(self):
+        private = [self.module.re.compile(self.module.re.escape(self.private_name))]
+        names = (self.private_name.encode(), b"fixture-host" + b".internal", b"~" + b"\\" + b"capture")
+        for name in names:
+            with self.subTest(kind=names.index(name)):
+                with self.assertRaises(self.module.Blocked):
+                    self.module.scan_tree(b"100644 " + name + b"\0" + b"x" * 20, private, 20)
+
+    def test_history_supports_sha256_repository(self):
+        self.repo = self.root / "sha256-repo"
+        self.repo.mkdir()
+        self.git("init", "--quiet", "--object-format=sha256")
+        self.git("config", "user.name", "Project Maintainers")
+        self.git("config", "user.email", "maintainers@example.invalid")
+        (self.repo / "tools").mkdir()
+        shutil.copyfile(GUARD, self.repo / "tools" / GUARD.name)
+        self.write("nested/notes.txt", "Safe content", stage=True)
+        self.commit()
+        result = self.guard("--history", "--metadata")
+        self.assertEqual((result.returncode, result.stdout, result.stderr), (0, b"", b""))
+
+    def test_malformed_tree_entries_fail_closed(self):
+        identifier = b"x" * 20
+        malformed = (
+            b"invalid name\0" + identifier,
+            b"100644 \0" + identifier,
+            b"100644 .\0" + identifier,
+            b"100644 ..\0" + identifier,
+            b"100644 nested/name\0" + identifier,
+            b"100644 name" + identifier,
+            b"100644 name\0" + identifier[:-1],
+            b"100644 name\0" + identifier + b"trailing",
+        )
+        for index, tree in enumerate(malformed):
+            with self.subTest(kind=index):
+                with self.assertRaises(self.module.Blocked):
+                    self.module.scan_tree(tree, [], 20)
+        with self.assertRaises(self.module.Blocked):
+            self.module.scan_tree(b"", [], 0)
 
     def test_push_tip_outside_refs_is_scanned(self):
         self.commit()

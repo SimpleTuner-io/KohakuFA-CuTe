@@ -159,6 +159,10 @@ class Attention:
         self.packed_statistics = packed_statistics
         self.compensated_values = False
         self.compensated_keys = False
+        self.scaled_key_residual = False
+        self.scaled_value_residual = False
+        self.combined_key_products = False
+        self.combined_value_products = False
         if packed_statistics and (mode not in ("q", "kv") or not centered or masked or hopper or tma or pipelined or tcgen):
             raise ValueError("Packed statistics require generic centered backward ownership.")
         if (narrow_n or warp_centering or full_visibility or full_copies) and (
@@ -857,6 +861,8 @@ class Attention:
             if cutlass.const_expr(self.compensated_keys):
                 residual = cute.make_fragment_like(scores)
                 residual.store(scores.load() - rounded_scores.load().to(cutlass.Float32))
+                if cutlass.const_expr(self.scaled_key_residual and left.element_type == cutlass.Float16):
+                    residual.store(residual.load() * cutlass.Float32(1024.0))
                 rounded_residual = cute.make_fragment_like(rounded_scores)
                 packed_half_conversion(residual, rounded_residual)
                 self.store_packed_weights(rounded_residual, shared_derivative_residual, coords)
@@ -865,11 +871,22 @@ class Attention:
                 row, col = coords[i]
                 shared_scores[row, col] = scores[i].to(left.element_type)
                 shared_probabilities[row, col] = probabilities[i].to(left.element_type)
+            if cutlass.const_expr(self.compensated_keys):
+                for i in cutlass.range_constexpr(cute.size(coords)):
+                    row, col = coords[i]
+                    high = scores[i].to(left.element_type).to(cutlass.Float32)
+                    residual_key = scores[i] - high
+                    if cutlass.const_expr(self.scaled_key_residual and left.element_type == cutlass.Float16):
+                        residual_key *= cutlass.Float32(1024.0)
+                    shared_derivative_residual[row, col] = residual_key.to(left.element_type)
         if cutlass.const_expr(self.compensated_values):
             for i in cutlass.range_constexpr(cute.size(coords)):
                 row, col = coords[i]
                 high = probabilities[i].to(left.element_type).to(cutlass.Float32)
-                shared_residual[row, col] = (probabilities[i] - high).to(left.element_type)
+                residual_value = probabilities[i] - high
+                if cutlass.const_expr(self.scaled_value_residual and left.element_type == cutlass.Float16):
+                    residual_value *= cutlass.Float32(16777216.0)
+                shared_residual[row, col] = residual_value.to(left.element_type)
 
     @cute.jit
     def dual_product(self, weights, probabilities, source, offset, mma, thread, tid, result, mean):
@@ -1261,14 +1278,46 @@ class Attention:
         if cutlass.const_expr(self.compensated_keys):
             assert (
                 self.mode == "kv"
-                and self.narrow_n
+                and not (self.hopper or self.tma or self.tcgen or self.pipelined or self.paired_scores)
+                and self.centered
                 and self.warps == 4
-                and self.column_warps == 4
-                and self.width == 128
-                and self.columns == 32
-                and not self.paired_scores
-                and not self.compensated_values
-            ), "Key residuals require the qualified unpaired narrow D128 key owner."
+                and (
+                    (
+                        q.shape[3] == 128
+                        and self.narrow_n
+                        and self.column_warps == 4
+                        and self.rows == 16
+                        and self.width == q.shape[3]
+                        and self.columns == 32
+                    )
+                    or (
+                        self.column_warps == 1
+                        and self.score_column_warps == 1
+                        and self.rows == 64
+                        and not self.narrow_n
+                        and (
+                            (
+                                q.shape[3] == 16
+                                and self.width == 32
+                                and self.logical_width in (0, 16)
+                                and self.columns in (32, 64)
+                            )
+                            or (q.shape[3] == 64 and self.width == 64 and not self.logical_width and self.columns == 32)
+                        )
+                    )
+                    or (
+                        q.shape[3] in (64, 128)
+                        and self.width == q.shape[3]
+                        and self.column_warps == 2
+                        and self.score_column_warps == 2
+                        and self.rows == 32
+                        and self.columns == 32
+                        and not self.narrow_n
+                        and self.kv_column_statistics
+                        and not self.stage_statistics
+                    )
+                )
+            ), "Key residuals require an explicitly qualified KV owner."
         tid, _, _ = cute.arch.thread_idx()
         lane = tid % 32
         tile, bh, width = self.grid_coordinates(q, k)
@@ -1836,7 +1885,8 @@ class Attention:
                 if cutlass.const_expr(self.compensated_values):
                     shared_residual = self.shared(allocator, q.element_type, weight_layout)
             if cutlass.const_expr(self.compensated_keys):
-                shared_derivative_residual = self.shared(allocator, q.element_type, weight_layout)
+                if cutlass.const_expr(self.column_warps > 1 or self.warps == 8):
+                    shared_derivative_residual = self.shared(allocator, q.element_type, weight_layout)
                 accum_key_low = cute.make_rmem_tensor(accum.shape, cutlass.Float32)
                 accum_key_low.fill(0.0)
             accv = cute.make_rmem_tensor(accum.shape, cutlass.Float32)
@@ -1970,12 +2020,44 @@ class Attention:
                                         ),
                                     )
                                 cute.arch.sync_threads()
-                                self.product(shared_scores, right, offset, mma, thread, tid, accum)
                                 if cutlass.const_expr(self.compensated_keys):
-                                    self.product(shared_derivative_residual, right, offset, mma, thread, tid, accum_key_low)
-                                self.product(shared_probabilities, other_right, offset, mma, thread, tid, accv)
+                                    if cutlass.const_expr(self.combined_key_products):
+                                        self.dual_product(
+                                            shared_scores,
+                                            shared_derivative_residual,
+                                            right,
+                                            offset,
+                                            mma,
+                                            thread,
+                                            tid,
+                                            accum,
+                                            accum_key_low,
+                                        )
+                                    else:
+                                        self.product(shared_scores, right, offset, mma, thread, tid, accum)
+                                        self.product(
+                                            shared_derivative_residual, right, offset, mma, thread, tid, accum_key_low
+                                        )
+                                else:
+                                    self.product(shared_scores, right, offset, mma, thread, tid, accum)
                                 if cutlass.const_expr(self.compensated_values):
-                                    self.product(shared_residual, other_right, offset, mma, thread, tid, accv_low)
+                                    if cutlass.const_expr(self.combined_value_products):
+                                        self.dual_product(
+                                            shared_probabilities,
+                                            shared_residual,
+                                            other_right,
+                                            offset,
+                                            mma,
+                                            thread,
+                                            tid,
+                                            accv,
+                                            accv_low,
+                                        )
+                                    else:
+                                        self.product(shared_probabilities, other_right, offset, mma, thread, tid, accv)
+                                        self.product(shared_residual, other_right, offset, mma, thread, tid, accv_low)
+                                else:
+                                    self.product(shared_probabilities, other_right, offset, mma, thread, tid, accv)
                             else:
                                 scores, probability = self.kv_weights(
                                     left,
@@ -1994,23 +2076,58 @@ class Attention:
                                     shared_statistics,
                                     tcgen_state=tcgen_state,
                                 )
-                                self.product(scores, right, offset, mma, thread, tid, accum)
-                                self.product(probability, other_right, offset, mma, thread, tid, accv)
+                                if cutlass.const_expr(self.compensated_keys):
+                                    residual_key = cute.make_fragment_like(scores)
+                                    for component in cutlass.range_constexpr(cute.size(scores)):
+                                        rounded_key = scores[component].to(q.element_type).to(cutlass.Float32)
+                                        low_key = scores[component] - rounded_key
+                                        if cutlass.const_expr(
+                                            self.scaled_key_residual and q.element_type == cutlass.Float16
+                                        ):
+                                            low_key *= cutlass.Float32(1024.0)
+                                        residual_key[component] = low_key
+                                    if cutlass.const_expr(self.combined_key_products):
+                                        self.dual_product(
+                                            scores, residual_key, right, offset, mma, thread, tid, accum, accum_key_low
+                                        )
+                                    else:
+                                        self.product(scores, right, offset, mma, thread, tid, accum)
+                                        self.product(residual_key, right, offset, mma, thread, tid, accum_key_low)
+                                else:
+                                    self.product(scores, right, offset, mma, thread, tid, accum)
                                 if cutlass.const_expr(self.compensated_values):
                                     residual = cute.make_fragment_like(probability)
-                                    residual.store(
-                                        probability.load()
-                                        - probability.load().to(other_right.element_type).to(cutlass.Float32)
-                                    )
-                                    self.product(residual, other_right, offset, mma, thread, tid, accv_low)
+                                    for component in cutlass.range_constexpr(cute.size(probability)):
+                                        rounded = probability[component].to(q.element_type).to(cutlass.Float32)
+                                        low_value = probability[component] - rounded
+                                        if cutlass.const_expr(
+                                            self.scaled_value_residual and q.element_type == cutlass.Float16
+                                        ):
+                                            low_value *= cutlass.Float32(16777216.0)
+                                        residual[component] = low_value
+                                    if cutlass.const_expr(self.combined_value_products):
+                                        self.dual_product(
+                                            probability, residual, other_right, offset, mma, thread, tid, accv, accv_low
+                                        )
+                                    else:
+                                        self.product(probability, other_right, offset, mma, thread, tid, accv)
+                                        self.product(residual, other_right, offset, mma, thread, tid, accv_low)
+                                else:
+                                    self.product(probability, other_right, offset, mma, thread, tid, accv)
                     if cutlass.const_expr(self.pipelined) or active:
                         cute.arch.sync_threads()
             if cutlass.const_expr(self.compensated_keys):
                 for component in cutlass.range_constexpr(cute.size(accum)):
-                    accum[component] += accum_key_low[component]
+                    if cutlass.const_expr(self.scaled_key_residual and q.element_type == cutlass.Float16):
+                        accum[component] += accum_key_low[component] * cutlass.Float32(0.0009765625)
+                    else:
+                        accum[component] += accum_key_low[component]
             self.store_result(accum, dk, left, batch, kvhead, start, offset, thread, tid, scale)
             if cutlass.const_expr(self.compensated_values):
-                accv.store(accv.load() + accv_low.load())
+                if cutlass.const_expr(self.scaled_value_residual and q.element_type == cutlass.Float16):
+                    accv.store(accv.load() + accv_low.load() * cutlass.Float32(0.000000059604644775390625))
+                else:
+                    accv.store(accv.load() + accv_low.load())
             self.store_result(accv, dv, left, batch, kvhead, start, offset, thread, tid, cutlass.Float32(1.0))
         if cutlass.const_expr(self.tcgen):
             cute.arch.sync_threads()
@@ -2540,6 +2657,13 @@ def _rtx4090_tuning(device, mode, masked, layouts, configuration, kv_configurati
     )
 
 
+def precision_schedule(program, dimension):
+    """Apply the qualified operand-precision policy after device scheduling."""
+    from .precision import schedule
+
+    return schedule(program, dimension)
+
+
 @lru_cache(maxsize=128)
 def _compile_kernel(
     device,
@@ -2724,15 +2848,9 @@ def _compile_kernel(
             ((12, 0), "NVIDIA GeForce RTX 5090"),
         )
         and layouts[0][0] in (torch.bfloat16, torch.float16)
-        and layouts[0][1][-1] == 128
-        and isinstance(program, JointBackward)
-        and isinstance(program.keyvalue, Attention)
-        and program.keyvalue.column_warps == 1
-        and not program.keyvalue.hopper
+        and layouts[0][1][-1] in (16, 64, 128)
     ):
-        from .value_precision import RectangularValues
-
-        program.keyvalue = RectangularValues(program.keyvalue)
+        program = precision_schedule(program, layouts[0][1][-1])
     if (
         mode == "forward"
         and capability == (12, 1)

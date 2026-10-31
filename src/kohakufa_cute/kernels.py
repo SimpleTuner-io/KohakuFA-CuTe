@@ -2532,7 +2532,7 @@ def kernel_configuration(device, mode, descriptors):
             columns, warps = 32, 8
         elif mode != "forward" and dimension > 128:
             hopper = False
-    centered = capability in ((8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)) and mode != "forward"
+    centered = capability in ((8, 0), (8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)) and mode != "forward"
     if centered and mode == "q":
         width = (dimension + 31) // 32 * 32 if dimension <= 192 else 128
         warps = 4 if dimension <= 256 else 1
@@ -3043,7 +3043,16 @@ def _compile_kernel(
 
 
 def centered_backward(q):
-    return torch.cuda.get_device_capability(q.device.index) in ((8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1))
+    return torch.cuda.get_device_capability(q.device.index) in (
+        (8, 0),
+        (8, 6),
+        (8, 9),
+        (9, 0),
+        (10, 0),
+        (10, 3),
+        (12, 0),
+        (12, 1),
+    )
 
 
 class PackMask:

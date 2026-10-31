@@ -6,7 +6,7 @@ import torch
 
 @unittest.skipUnless(
     torch.cuda.is_available()
-    and torch.cuda.get_device_capability() in {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)},
+    and torch.cuda.get_device_capability() in {(8, 0), (8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)},
     "Requires Ampere, Ada, Hopper or Blackwell",
 )
 class CuTeAttentionTests(unittest.TestCase):
@@ -1361,7 +1361,7 @@ class CuTeAttentionTests(unittest.TestCase):
         from kohakufa_cute import attention
         from tests.attention_reference import attention_reference as baseline_reference
 
-        if torch.cuda.get_device_capability() not in {(8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)}:
+        if torch.cuda.get_device_capability() not in {(8, 0), (8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)}:
             self.skipTest("Centered backward requires Ampere, Ada, Hopper or Blackwell.")
         for dtype in (torch.bfloat16, torch.float16):
             for dim in (1, 17, 64, 80, 96, 128, 160, 192, 224, 256, 257, 384, 511, 512):

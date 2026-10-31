@@ -13,11 +13,13 @@ class Owner:
     def __init__(self, mode="kv", *, masked=False, causal=True):
         self.mode, self.masked, self.causal = mode, masked, causal
         self.centered, self.vector, self.copy_cache_global = True, 8, True
+        self.compensated_normalizer = False
 
 
 class Replacement:
     def __init__(self, causal, **options):
         self.causal, self.options = causal, options
+        self.scaled_key_residual = False
 
 
 class UntouchableQuery:
@@ -83,6 +85,25 @@ class WidePrecisionPolicyTests(unittest.TestCase):
             scalar = self.replace(Owner(), 512, device=0)
         self.assertTrue(packed.options["packed_bf16_causal"])
         self.assertNotIn("packed_bf16_causal", scalar.options)
+
+    def test_forward_normalizer_and_medium_scale_share_the_precision_boundary(self):
+        capabilities = {0: (8, 9), 1: (12, 0)}
+        names = {0: "NVIDIA L40S", 1: "NVIDIA GeForce RTX 5090"}
+        with (
+            patch("torch.cuda.get_device_capability", side_effect=lambda device: capabilities[device]),
+            patch("torch.cuda.get_device_name", side_effect=lambda device: names[device]),
+        ):
+            for device in (0, 1):
+                fallback, short, query = Owner("forward"), object(), UntouchableQuery()
+                wrapper = types.SimpleNamespace(fallback=fallback, short=short, query=query)
+                actual = self.replace(wrapper, 256, device=device)
+                self.assertIs(actual, wrapper)
+                self.assertIs(actual.fallback, fallback)
+                self.assertIs(actual.short, short)
+                self.assertIs(actual.query, query)
+                self.assertEqual(fallback.compensated_normalizer, device == 1)
+                keyvalue = self.replace(Owner(), 256, device=device)
+                self.assertEqual(keyvalue.scaled_key_residual, device == 1)
 
     def test_full_cta_barriers_stay_outside_partial_thread_guards(self):
         # The wide kernel's 128 score producers share a CTA with 128 other

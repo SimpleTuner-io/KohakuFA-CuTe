@@ -102,6 +102,70 @@ def packed_half_conversion(source, destination):
         packed[i] = pack_half_pair(source[2 * i], source[2 * i + 1], destination.element_type)
 
 
+@dsl_user_op
+def normalizer_add(a, b, *, loc=None, ip=None):
+    return cutlass.Float32(
+        llvm.inline_asm(
+            T.f32(),
+            [cutlass.Float32(a).ir_value(loc=loc, ip=ip), cutlass.Float32(b).ir_value(loc=loc, ip=ip)],
+            "add.rn.f32 $0, $1, $2;",
+            "=f,f,f",
+            has_side_effects=False,
+            is_align_stack=False,
+            asm_dialect=llvm.AsmDialect.AD_ATT,
+        )
+    )
+
+
+@dsl_user_op
+def normalizer_sub(a, b, *, loc=None, ip=None):
+    return cutlass.Float32(
+        llvm.inline_asm(
+            T.f32(),
+            [cutlass.Float32(a).ir_value(loc=loc, ip=ip), cutlass.Float32(b).ir_value(loc=loc, ip=ip)],
+            "sub.rn.f32 $0, $1, $2;",
+            "=f,f,f",
+            has_side_effects=False,
+            is_align_stack=False,
+            asm_dialect=llvm.AsmDialect.AD_ATT,
+        )
+    )
+
+
+@dsl_user_op
+def normalizer_mul(a, b, *, loc=None, ip=None):
+    return cutlass.Float32(
+        llvm.inline_asm(
+            T.f32(),
+            [cutlass.Float32(a).ir_value(loc=loc, ip=ip), cutlass.Float32(b).ir_value(loc=loc, ip=ip)],
+            "mul.rn.f32 $0, $1, $2;",
+            "=f,f,f",
+            has_side_effects=False,
+            is_align_stack=False,
+            asm_dialect=llvm.AsmDialect.AD_ATT,
+        )
+    )
+
+
+@dsl_user_op
+def normalizer_fma(a, b, c, *, loc=None, ip=None):
+    return cutlass.Float32(
+        llvm.inline_asm(
+            T.f32(),
+            [
+                cutlass.Float32(a).ir_value(loc=loc, ip=ip),
+                cutlass.Float32(b).ir_value(loc=loc, ip=ip),
+                cutlass.Float32(c).ir_value(loc=loc, ip=ip),
+            ],
+            "fma.rn.f32 $0, $1, $2, $3;",
+            "=f,f,f,f",
+            has_side_effects=False,
+            is_align_stack=False,
+            asm_dialect=llvm.AsmDialect.AD_ATT,
+        )
+    )
+
+
 class Attention:
     def __init__(
         self,
@@ -157,6 +221,7 @@ class Attention:
         self.full_visibility = full_visibility
         self.full_copies = full_copies
         self.packed_statistics = packed_statistics
+        self.compensated_normalizer = False
         self.compensated_values = False
         self.compensated_keys = False
         self.scaled_key_residual = False
@@ -1156,7 +1221,9 @@ class Attention:
         return tensor
 
     @cute.jit
-    def online_softmax(self, scores, coordinates, accum, maxima, sums, mask, location, full, magnitude, sign):
+    def online_softmax(
+        self, scores, coordinates, accum, maxima, sums, mask, location, full, magnitude, sign, normalizer_carry=None
+    ):
         batch, head, start, key, sq, sk = location
         rc, av = row_view(coordinates), row_view(accum)
         scores.store(scores.load() * sign)
@@ -1185,7 +1252,21 @@ class Attention:
                 if sv[r, c] != -cutlass.Float32.inf:
                     probability = cute.math.exp2((sv[r, c] - new) * magnitude * 1.4426950408889634, fastmath=True)
                 sv[r, c] = probability
-            sums[r] = sums[r] * alpha + quad_sum(sv[r, None].load().reduce(cute.ReductionOp.ADD, 0.0, 0))
+            term = quad_sum(sv[r, None].load().reduce(cute.ReductionOp.ADD, 0.0, 0))
+            if cutlass.const_expr(normalizer_carry is not None):
+                old = normalizer_mul(sums[r], alpha)
+                scale_error = normalizer_fma(sums[r], alpha, -old)
+                low_scaled = normalizer_fma(normalizer_carry[r], alpha, scale_error)
+                new_sum = normalizer_add(old, term)
+                add_error = cutlass.Float32(0.0)
+                if old >= term:
+                    add_error = normalizer_add(normalizer_sub(old, new_sum), term)
+                else:
+                    add_error = normalizer_add(normalizer_sub(term, new_sum), old)
+                normalizer_carry[r] = normalizer_add(low_scaled, add_error)
+                sums[r] = new_sum
+            else:
+                sums[r] = sums[r] * alpha + term
             maxima[r] = new
             av[r, None] = av[r, None].load() * alpha
 
@@ -1275,6 +1356,13 @@ class Attention:
 
     @cute.kernel
     def kernel(self, q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, delta_base, scale, mma, tma_args):
+        if cutlass.const_expr(self.compensated_normalizer):
+            assert (
+                self.mode == "forward"
+                and self.width == 256
+                and self.column_warps == 1
+                and not (self.masked or self.hopper or self.tcgen or self.sm103_rows)
+            ), "Normalizer compensation requires the qualified unmasked D256 forward owner."
         if cutlass.const_expr(self.compensated_keys):
             assert (
                 self.mode == "kv"
@@ -1446,6 +1534,10 @@ class Attention:
             sums = cute.make_rmem_tensor(maxima.shape, cutlass.Float32)
             maxima.fill(-cutlass.Float32.inf)
             sums.fill(0.0)
+            normalizer_carry = None
+            if cutlass.const_expr(self.compensated_normalizer):
+                normalizer_carry = cute.make_rmem_tensor(sums.shape, cutlass.Float32)
+                normalizer_carry.fill(0.0)
             limit = cutlass.min(k.shape[2], start + self.rows) if cutlass.const_expr(self.causal) else k.shape[2]
             count = cute.ceil_div(limit, self.columns)
             if cutlass.const_expr(self.pipelined):
@@ -1541,6 +1633,7 @@ class Attention:
                             full,
                             magnitude,
                             sign,
+                            normalizer_carry=normalizer_carry,
                         )
                         self.product(scores, other_right, offset, mma, thread, tid, accum)
                 if cutlass.const_expr(self.forward_overlap):
@@ -1548,7 +1641,10 @@ class Attention:
                 if cutlass.const_expr(self.pipelined) or active:
                     cute.arch.sync_threads()
             for r in cutlass.range_constexpr(cute.size(rc.shape[0])):
-                denom = sums[r] if sums[r] > 0.0 else cutlass.Float32(1.0)
+                total = sums[r]
+                if cutlass.const_expr(self.compensated_normalizer):
+                    total = normalizer_add(total, normalizer_carry[r])
+                denom = total if total > 0.0 else cutlass.Float32(1.0)
                 av[r, None] = av[r, None].load() / denom
                 row = start + rc[r, 0][0]
                 publish = True
@@ -2856,8 +2952,7 @@ def _compile_kernel(
         if sm120_schedule.eligible(device, mode, masked, layouts, configuration, kv_configuration, vector):
             program = sm120_schedule.schedule(program, mode, layouts[0][1][-1], causal, vector)
     if (
-        mode == "backward"
-        and (capability, torch.cuda.get_device_name(device))
+        (capability, torch.cuda.get_device_name(device))
         in (
             ((8, 6), "NVIDIA GeForce RTX 3090 Ti"),
             ((8, 9), "NVIDIA L40S"),
@@ -2866,6 +2961,14 @@ def _compile_kernel(
         and layouts[0][0] in (torch.bfloat16, torch.float16)
         and layouts[0][1][-1] in (16, 64, 128, 256, 512)
         and (layouts[0][1][-1] != 256 or layouts[0][1][1] == layouts[1][1][1])
+        and (
+            mode == "backward"
+            or mode == "forward"
+            and capability == (12, 0)
+            and layouts[0][0] == torch.float16
+            and layouts[0][1][-1] == 256
+            and not masked
+        )
     ):
         program = precision_schedule(program, layouts[0][1][-1], device=device)
     if (

@@ -159,6 +159,8 @@ class MediumKeyValue(Attention):
             residual = cute.make_fragment_like(scores)
             residual.store(scores.load() - rounded_scores.load().to(cutlass.Float32))
             rounded_residual = cute.make_fragment_like(rounded_scores)
+            if cutlass.const_expr(self.scaled_key_residual and q.element_type == cutlass.Float16):
+                residual.store(residual.load() * cutlass.Float32(1024.0))
             packed_half_conversion(residual, rounded_residual)
             probability_residual = cute.make_fragment_like(dp)
             probability_residual.store(dp.load() - rounded_probabilities.load().to(cutlass.Float32))
@@ -184,7 +186,10 @@ class MediumKeyValue(Attention):
             # Release all weight and Q/dO readers before the next copies.
             cute.arch.sync_threads()
         for component in cutlass.range_constexpr(cute.size(accum_k)):
-            accum_k[component] += accum_key_low[component]
+            if cutlass.const_expr(self.scaled_key_residual and q.element_type == cutlass.Float16):
+                accum_k[component] += accum_key_low[component] * cutlass.Float32(0.0009765625)
+            else:
+                accum_k[component] += accum_key_low[component]
         for component in cutlass.range_constexpr(cute.size(accum_v)):
             if cutlass.const_expr(q.element_type == cutlass.Float16):
                 accum_v[component] += accum_value_low[component] * cutlass.Float32(5.960464477539063e-08)

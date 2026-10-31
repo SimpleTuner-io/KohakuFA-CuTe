@@ -16,15 +16,15 @@ def schedule(program, dimension, *, device=None):
     else:
         from .wide_backward import WideKeyValue as KeyValue
 
-    options = {}
-    if dimension == 512 and device is not None:
+    is_rtx5090 = False
+    if device is not None:
         import torch
 
-        if (
+        is_rtx5090 = (
             torch.cuda.get_device_capability(device) == (12, 0)
             and torch.cuda.get_device_name(device) == "NVIDIA GeForce RTX 5090"
-        ):
-            options["packed_bf16_causal"] = True
+        )
+    options = {"packed_bf16_causal": True} if dimension == 512 and is_rtx5090 else {}
 
     memo = {}
 
@@ -33,9 +33,15 @@ def schedule(program, dimension, *, device=None):
         if identity in memo:
             return memo[identity]
         memo[identity] = owner
+        if type(owner) is Attention and owner.mode == "forward" and not owner.masked:
+            if dimension == 256 and is_rtx5090:
+                owner.compensated_normalizer = True
+            return owner
         if type(owner) is Attention and owner.mode == "kv" and not owner.masked:
             assert owner.centered
             replacement = KeyValue(owner.causal, vector=owner.vector, copy_cache_global=owner.copy_cache_global, **options)
+            if dimension == 256 and is_rtx5090:
+                replacement.scaled_key_residual = True
             memo[identity] = replacement
             return replacement
         for attribute in (

@@ -279,7 +279,8 @@ class AmpereScheduleTests(unittest.TestCase):
                                     tensor.fill_(float("nan"))
                             graph.replay()
                             self.compare(outputs, *operands, graph_dout, causal=causal)
-                self.assertEqual(compiler.call_count, 2)
+                # Native caches retain a separate D64 max-length >= 1024 class.
+                self.assertEqual(compiler.call_count, 4)
             torch.compiler.reset()
             compiled = torch.compile(attention, fullgraph=True, dynamic=True)
             for length in (1024, 4097, 1025):

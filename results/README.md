@@ -60,6 +60,11 @@ The timings and qualification below describe the recorded pre-removal revision.
 SM121 was unavailable for this precision-removal campaign; these figures do not
 qualify its changed default backward arithmetic.
 
+The newer [D256 query-owner comparison](../docs/gb10-query-ownership.md) measures
+the maintained arithmetic against the previous owner and direct FA2 on a full
+GB10. It records focused qualification and known full-suite failures separately;
+the historical tables below are unchanged.
+
 GB10 supports FP16/BF16 forward and centered backward on Linux ARM64. Use the [GB10 installation instructions](../README.md#install); `CUTE_DSL_ARCH=sm_121a` and the CUDA 13 DSL libraries were used for validation. Automatic selection checks compatibility rather than predicted speed, so benchmark the intended shapes.
 
 ### Short-sequence comparisons

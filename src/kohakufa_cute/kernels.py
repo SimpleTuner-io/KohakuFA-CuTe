@@ -2631,6 +2631,18 @@ def kernel_configuration(device, mode, descriptors):
 def backward_query_configuration(device, causal, masked, descriptors):
     configuration = kernel_configuration(device, "q", descriptors)
     if (
+        torch.cuda.get_device_capability(device) == (12, 1)
+        and not masked
+        and descriptors[0][0] in (torch.float16, torch.bfloat16)
+        and descriptors[0][1][-1] == 256
+        and descriptors[0][1][1] == descriptors[1][1][1]
+        and configuration == (32, 128, 4, False, True, False, False)
+        and _aligned_tiles(descriptors)
+    ):
+        # One full-width dQ owner shares QK/dP across all 256 features.
+        # Four column warps keep its Q/dO/K/V staging within 96 KiB.
+        return 64, 256, 8, False, True, False, False
+    if (
         torch.cuda.get_device_capability(device) == (8, 9)
         and not masked
         and descriptors[0][0] in (torch.float16, torch.bfloat16)

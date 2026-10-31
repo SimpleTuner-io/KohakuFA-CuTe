@@ -1044,6 +1044,59 @@ class CuTeAttentionTests(unittest.TestCase):
                     k, v = [torch.randn(1, 1, 35, dim, device="cuda", dtype=dtype) for _ in range(2)]
                     self.compare(q, k, v)
 
+    def test_sm121_d256_query_owner_reuses_cache_and_changed_graph_inputs(self):
+        if torch.cuda.get_device_capability() != (12, 1):
+            self.skipTest("Requires GB10 full-width query backward.")
+        from benchmarks.reference import fp64_reference, metrics, rounded_reference
+        from kohakufa_cute import native
+
+        extension = native.extension()
+        extension.clear_cache()
+        self.addCleanup(extension.clear_cache)
+        for dtype, causal in itertools.product((torch.float16, torch.bfloat16), (False, True)):
+            # Reuse native dynamic-length entries across both sides of the
+            # 32-row owner and 64-key tile boundaries, including rectangular tails.
+            for queries in (31, 129, 257, 65):
+                with self.subTest(dtype=dtype, causal=causal, queries=queries):
+                    torch.manual_seed(121256)
+                    q = torch.randn(1, 2, queries, 256, device="cuda", dtype=dtype) * 0.5
+                    k, v = [torch.randn(1, 2, queries + 6, 256, device="cuda", dtype=dtype) * 0.5 for _ in range(2)]
+                    dout = torch.randn_like(q)
+                    scale = -0.125
+
+                    def run():
+                        out, maximum, logsum, blocks = extension.forward(q, k, v, None, scale, causal)
+                        gradients = extension.backward(q, k, v, None, maximum, logsum, dout, blocks, out, scale, causal)
+                        return out, *gradients
+
+                    run()
+                    torch.cuda.synchronize()
+                    graph = torch.cuda.CUDAGraph()
+                    with torch.cuda.graph(graph):
+                        actual = run()
+                    for tensor in (q, k, v, dout):
+                        tensor.copy_(torch.randn_like(tensor) * 0.5)
+                    for tensor in actual:
+                        tensor.fill_(float("nan"))
+                    graph.replay()
+                    torch.cuda.synchronize()
+                    for got, eager in zip(actual, run()):
+                        self.assertTrue(torch.equal(got, eager))
+                    for head in range(2):
+                        inputs = tuple(tensor[:, head : head + 1] for tensor in (q, k, v))
+                        grad = dout[:, head : head + 1]
+                        expectations = (
+                            fp64_reference(inputs, grad, causal=causal, scale=scale),
+                            rounded_reference(
+                                inputs, grad, causal=causal, scale=scale, output=actual[0][:, head : head + 1]
+                            ),
+                        )
+                        for expected in expectations:
+                            for got, want in zip(actual, expected):
+                                error = metrics(got[:, head : head + 1], want)
+                                self.assertTrue(error["finite"])
+                                self.assertLess(error["relative_error"], 0.01 if dtype == torch.bfloat16 else 0.005)
+
     def test_sm121_wide_head_tails_masks_and_layouts(self):
         if torch.cuda.get_device_capability() != (12, 1):
             self.skipTest("Requires GB10 wide-head dispatch.")

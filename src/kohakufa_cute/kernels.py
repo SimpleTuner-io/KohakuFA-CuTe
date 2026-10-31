@@ -2839,6 +2839,12 @@ def _compile_kernel(
         from .ada import schedule
 
         program = schedule(program, mode, layouts[0][1][-1], causal)
+    from . import l40s
+
+    if isinstance(program, (Attention, JointBackward)) and l40s.eligible(
+        device, mode, masked, layouts, configuration, kv_configuration, vector, causal=causal
+    ):
+        program = l40s.schedule(program, mode, layouts[0][1][-1], causal)
     if (
         mode == "backward"
         and (capability, torch.cuda.get_device_name(device))

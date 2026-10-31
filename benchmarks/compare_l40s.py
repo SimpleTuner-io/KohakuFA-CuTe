@@ -366,7 +366,8 @@ def main():
                         report["measurements"].append(row)
                         args.output.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
                         print(json.dumps({key: row[key] for key in ("shape", "dtype", "mode", "medians_ms")}), flush=True)
-                        del graphs, storage, actual, reference, q, k, v, dout
+                        torch.cuda.synchronize()
+                        del graph, graphs, storage, actual, expected, reference, q, k, v, dout
                         compiled.clear()
                         gc.collect()
     source_unchanged = report["source_sha256"] == {

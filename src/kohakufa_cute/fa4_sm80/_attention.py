@@ -25,6 +25,11 @@ class Schedule:
     kv_m_warps: int = 2
     dq_m_warps: int = 2
     v_in_regs: bool = False
+    causal_head_group: int = 1
+
+    def __post_init__(self):
+        if self.causal_head_group not in (1, 2, 4, 8, 16):
+            raise ValueError("Causal head groups must be one of 1, 2, 4, 8 or 16.")
 
 
 @lru_cache(maxsize=8)
@@ -119,6 +124,7 @@ def _backward(q, k, v, out, dout, maximum, logsum, scale, causal, schedule, capa
             V_in_regs=schedule.v_in_regs,
         )
         program.shared_capacity = capacity
+        program.causal_head_group = schedule.causal_head_group
         tensors = [interface.to_cute_tensor(t) for t in (q, k, v, dout, lognorm, delta, scratch, dk, dv)]
         auxiliary = AuxData([interface.to_cute_aux_tensor(maximum)], None)
         _main_cache[key] = cute.compile(

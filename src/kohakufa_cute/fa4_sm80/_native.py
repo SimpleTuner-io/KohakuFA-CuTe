@@ -110,6 +110,7 @@ class FlatBackward:
             V_in_regs=schedule.v_in_regs,
         )
         self.main.shared_capacity = capacity
+        self.main.causal_head_group = schedule.causal_head_group
         self.convert = FlashAttentionBackwardPostprocess(
             dtype,
             dimension,
@@ -205,11 +206,7 @@ def compile_kernel(mode, tensors, causal, configuration=None):
             dtypes[tensor.dtype],
             tuple(cute.sym_int() for _ in tensor.shape),
             stride=tuple(
-                (
-                    stride
-                    if stride <= 1
-                    else cute.sym_int64(divisibility=min(16 // tensor.element_size(), stride & -stride))
-                )
+                (stride if stride <= 1 else cute.sym_int64(divisibility=min(16 // tensor.element_size(), stride & -stride)))
                 for stride in tensor.stride()
             ),
             memspace=cute.AddressSpace.gmem,
@@ -233,9 +230,7 @@ def compile_kernel(mode, tensors, causal, configuration=None):
         raise ValueError("Multi-stage register-Q forward is not qualified.")
     capacity = torch.cuda.get_device_properties(q.device).shared_memory_per_block_optin
     if mode == "backward":
-        program = FlatBackward(
-            dtypes[q.dtype], q.shape[-1], causal, capacity, schedule, capability[0] * 10 + capability[1]
-        )
+        program = FlatBackward(dtypes[q.dtype], q.shape[-1], causal, capacity, schedule, capability[0] * 10 + capability[1])
     elif mode == "forward":
         program = FlatForward(dtypes[q.dtype], q.shape[-1], causal, capacity, schedule, forward_threads)
     else:

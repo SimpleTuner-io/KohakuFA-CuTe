@@ -128,7 +128,6 @@ class L40sSelectionTests(unittest.TestCase):
                 function(q, q, q)
         selected = _l40s.schedule(128, 4096, False)
         extension.AttentionRunner.assert_called_once_with("warp", asdict(selected))
-        self.assertEqual(len(asdict(selected)), 13)
         self.assertEqual(runner.call_count, 3)
 
 

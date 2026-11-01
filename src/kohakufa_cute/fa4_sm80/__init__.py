@@ -34,7 +34,7 @@ def available():
 
 def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     """Select only the full-device shape and arithmetic families qualified here."""
-    from . import _l40s
+    from . import _l40s, _sm120
 
     if (
         getattr(q, "ndim", None) == 4
@@ -43,6 +43,8 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         and _l40s.is_device(q.device)
     ):
         return _l40s.compatible(q, k, v, mask, dropout, causal, scale, gqa)
+    if _sm120.compatible(q, k, v, mask, dropout, causal, scale, gqa):
+        return available()
     if (
         torch.compiler.is_compiling()
         or mask is not None
@@ -80,12 +82,13 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
 
 
 def attention(q, k, v, *, causal=False, scale=None):
-    from . import _l40s
-
-    if q.device.type == "cuda" and _l40s.is_device(q.device):
-        return _l40s.attention(q, k, v, causal=causal, scale=scale)
+    from . import _l40s, _sm120
     from ._host import native_runner
     from ._schedules import a100_schedule
 
+    if q.device.type == "cuda" and _l40s.is_device(q.device):
+        return _l40s.attention(q, k, v, causal=causal, scale=scale)
+    if _sm120.target_device(q.device):
+        return native_runner(_sm120.schedule(q.shape[-1]))(q, k, v, causal=causal, scale=scale)
     runner = native_runner(a100_schedule(q.shape[-1], q.shape[2], causal))
     return runner(q, k, v, causal=causal, scale=scale)

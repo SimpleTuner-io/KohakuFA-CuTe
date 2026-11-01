@@ -14,8 +14,9 @@ Automatic selection checks compatibility; it does **not** predict the fastest ba
 ## Performance
 
 **Forward + backward**, milliseconds; lower is better. B1/H16, BF16, S4096,
-dense attention. All rows below were refreshed after removing the automatic
-compensated arithmetic policy. Compilation is excluded.
+dense attention. The RTX 5090 D128 row uses the [pinned schedule](docs/rtx5090-configured-host.md);
+other rows retain the existing baseline. All use the default rounded arithmetic.
+Compilation is excluded.
 
 | GPU | Head dim | CuTe | Default SDPA | SDPA / CuTe |
 | --- | ---: | ---: | ---: | ---: |
@@ -23,7 +24,7 @@ compensated arithmetic policy. Compilation is excluded.
 | RTX 4090 | 512 | 31.159 | 67.562 | 2.17× |
 | RTX 3090 Ti | 512 | 61.916 | 104.654 | 1.69× |
 | L40S | 512 | 24.781 | 71.017 | 2.87× |
-| RTX 5090 | 128 | 3.320 | 2.674 | 0.81× |
+| RTX 5090 (pinned schedule) | 128 | 2.493 | 2.664 | 1.07× |
 | L40S | 128 | 3.132 | 2.663 | 0.85× |
 
 The L40S D128 row predates the bounded [shared warp training update](docs/l40s-warp-training.md),
@@ -113,9 +114,10 @@ Supported CuTe inputs:
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
 
-The optional tuned installation selects bounded [A100](docs/a100-sm80-fa4.md) and
-[L40S training](docs/l40s-warp-training.md) D64/D128 schedules. Their shape and
-software bounds are documented; other CUDA calls retain standard CuTe dispatch.
+The optional tuned installation selects bounded [A100](docs/a100-sm80-fa4.md),
+[L40S training](docs/l40s-warp-training.md), and [RTX 5090 training](docs/rtx5090-configured-host.md)
+D64/D128 schedules. Their shape and software bounds are documented; other CUDA calls
+retain standard CuTe dispatch.
 
 GB10 has an [explicit D128 shared entry](docs/gb10-shared.md) with measured shape/dtype schedules and ordinary CuTe fallbacks. It is opt-in.
 

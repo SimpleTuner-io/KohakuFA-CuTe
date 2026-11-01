@@ -108,18 +108,26 @@ class Sm80SelectionTests(unittest.TestCase):
             patch.object(fa4_sm80, "compatible", return_value=True),
             patch.object(fa4_sm80, "attention", side_effect=RuntimeError("selected schedule failed")),
         ):
-            for function in (api.attention, api.scaled_dot_product_attention, api.automatic_scaled_dot_product_attention):
-                with self.subTest(function=function.__name__), self.assertRaisesRegex(RuntimeError, "selected schedule"):
+            for function in (
+                api.attention,
+                api.scaled_dot_product_attention,
+                api.automatic_scaled_dot_product_attention,
+            ):
+                with (
+                    self.subTest(function=function.__name__),
+                    self.assertRaisesRegex(RuntimeError, "selected schedule"),
+                ):
                     function(q, q, q)
         extension.assert_not_called()
 
     def test_repeated_calls_preserve_package_entry_function(self):
-        from kohakufa_cute.fa4_sm80 import _host
+        from kohakufa_cute.fa4_sm80 import _host, _sm120
 
         entry = fa4_sm80.attention
         q = cuda_operand()
         runner = Mock(return_value=object())
         with (
+            patch.object(_sm120, "target_device", return_value=False),
             patch.object(_host, "native_runner", return_value=runner) as selected,
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 0)),
         ):

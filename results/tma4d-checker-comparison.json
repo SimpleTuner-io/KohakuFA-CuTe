@@ -1,0 +1,174 @@
+{
+  "scope": "Checker-only comparison on the same full SM120 RTX5090, original NVCC13.2 executable and existing uninstrumented loaded-code controls. No attention qualification or performance claim.",
+  "device": {
+    "device": "NVIDIA GeForce RTX 5090",
+    "capability": [
+      12,
+      0
+    ],
+    "sm_count": 170,
+    "driver": 13020,
+    "runtime": 13020
+  },
+  "source": {
+    "cuda_sha256": "058461d7d7981475593781eec6f058f278b74458bddc27adfb5bb1bffe7b28f8",
+    "runner_sha256": "83df27dd78e9d8c15a46a52f72b2a8675551825e835bdb2d65c22fd73481a4f4",
+    "binary_sha256": "65fcf574b9933b9266c672a9575eca62ab640fd29fef04451de3620d50e93c73",
+    "ptx_sha256": "69dbdf5071a5cd189f3f0a6f50113e339dc4f44fb726f58ff1c38520a50bc3f4",
+    "raw_matrix_sha256": "0d8c25ed5025b588f39345fb68f518d97460670b5b2c0e14c96e378b0db360a5",
+    "tested_matrix_driver_sha256": "f96a6ae87b679b7e6194eb836337b7fddbd44942eae70b14cd602f35a253ebfa",
+    "published_matrix_driver_sha256": "59b9f4318643636a3419d593691c83fd067e5e2bbae7a203edb15dd7beb1518e",
+    "matrix_publication_changes": "Formatting and module docstring only; remaining AST equals tested orchestration."
+  },
+  "versions": {
+    "old": {
+      "version": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2026 NVIDIA Corporation\nVersion 2026.1.0.0 (build 37182542) (public-release)\n",
+      "sha256": "5cba659e1cd603aa2370e103425f184368e6ed405da90ce85743c4399c324dbc"
+    },
+    "new": {
+      "version": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2026 NVIDIA Corporation\nVersion 2026.3.0.0 (build 38855100) (public-release)\n",
+      "sha256": "fc3b9d2abad07999a56631a6be69c320461ebdb80a5ab0044775c44d301c9488"
+    }
+  },
+  "rows": [
+    {
+      "checker": "old",
+      "mode": "read",
+      "initialization": "uninitialized",
+      "rows": 256,
+      "initcheck_status": 99,
+      "reported_errors": 36864,
+      "physical_verification": "passed",
+      "uninstrumented_control": "9f5f01bb96c763bf2bf213909bddaf24d091a2cf410172c72d59ee68a5ade5ec",
+      "result_sha256": "56ed0e9933397a45a1b17ca4aedb5f380b7d3c94923d29b6df4a9b709de7a8bc"
+    },
+    {
+      "checker": "old",
+      "mode": "read",
+      "initialization": "uninitialized",
+      "rows": 257,
+      "initcheck_status": 99,
+      "reported_errors": 37008,
+      "physical_verification": "passed",
+      "uninstrumented_control": "d1ead8d1361310347542731ea76ae43fe4f1a2ea9446c4a56f95274191f3a311",
+      "result_sha256": "1b5d02f0b13a8738a87530dcd774ca2f44aed02029bf92fa733fbe6ea0806577"
+    },
+    {
+      "checker": "old",
+      "mode": "full",
+      "initialization": "uninitialized",
+      "rows": 256,
+      "initcheck_status": 99,
+      "reported_errors": 36864,
+      "physical_verification": "passed",
+      "uninstrumented_control": "e811d9d3c371b78d5ab4a749828f9f65e1de4b4ff3a5f1b3431b92eee3009e3a",
+      "result_sha256": "7853808bc1574e722e69c14de4f49209089def901eceecfbbe7d7d6423191638"
+    },
+    {
+      "checker": "old",
+      "mode": "full",
+      "initialization": "uninitialized",
+      "rows": 257,
+      "initcheck_status": 99,
+      "reported_errors": 37008,
+      "physical_verification": "passed",
+      "uninstrumented_control": "b770d6ede8081d57e19bb4f9715612d2c668214c2873e8629d3c892f3c498dca",
+      "result_sha256": "08185af84109a2503d12aa2338d1b2a9b626d0fcf635faf2c8cc605c150c6946"
+    },
+    {
+      "checker": "old",
+      "mode": "ordinary",
+      "initialization": "uninitialized",
+      "rows": 257,
+      "initcheck_status": 0,
+      "reported_errors": 0,
+      "physical_verification": "passed",
+      "uninstrumented_control": "f9b49337d6d05bbe0fca5c54284f139a8a09d1b56d68276724065e57866af18e",
+      "result_sha256": "b6c445c37ca2d684df7abe86fed5143e51200953e78494e662d413ed850d1a90"
+    },
+    {
+      "checker": "old",
+      "mode": "full",
+      "initialization": "poison",
+      "rows": 257,
+      "initcheck_status": 0,
+      "reported_errors": 0,
+      "physical_verification": "passed",
+      "uninstrumented_control": "dd76e793a475cba9ef5ae90d2008bc4599ff4879caa9d4827e052e8d147bf996",
+      "result_sha256": "a6d1970a66cdfabcd1c2340d81dd6ad350029e4cc10739134f26fe20a05605b3"
+    },
+    {
+      "checker": "new",
+      "mode": "read",
+      "initialization": "uninitialized",
+      "rows": 256,
+      "initcheck_status": 99,
+      "reported_errors": 36864,
+      "physical_verification": "passed",
+      "uninstrumented_control": "9f5f01bb96c763bf2bf213909bddaf24d091a2cf410172c72d59ee68a5ade5ec",
+      "result_sha256": "93302bf25537f6d3cf2c3f60ff1fb4254040584ca16d1320b9ccfbaddde9166a"
+    },
+    {
+      "checker": "new",
+      "mode": "read",
+      "initialization": "uninitialized",
+      "rows": 257,
+      "initcheck_status": 99,
+      "reported_errors": 37008,
+      "physical_verification": "passed",
+      "uninstrumented_control": "d1ead8d1361310347542731ea76ae43fe4f1a2ea9446c4a56f95274191f3a311",
+      "result_sha256": "e004660a40a0afb589426c69ce25bd4a688fa01ec224bd4d0c516100a6fbe7f0"
+    },
+    {
+      "checker": "new",
+      "mode": "full",
+      "initialization": "uninitialized",
+      "rows": 256,
+      "initcheck_status": 99,
+      "reported_errors": 36864,
+      "physical_verification": "passed",
+      "uninstrumented_control": "e811d9d3c371b78d5ab4a749828f9f65e1de4b4ff3a5f1b3431b92eee3009e3a",
+      "result_sha256": "cfd9fe47a5d24a3b6f99a7868e1175b02b086543cf7a19695d828bd288f549ad"
+    },
+    {
+      "checker": "new",
+      "mode": "full",
+      "initialization": "uninitialized",
+      "rows": 257,
+      "initcheck_status": 99,
+      "reported_errors": 37008,
+      "physical_verification": "passed",
+      "uninstrumented_control": "b770d6ede8081d57e19bb4f9715612d2c668214c2873e8629d3c892f3c498dca",
+      "result_sha256": "f048f2ab9297d72a0871e6f39df27bad72aa133d0d5688db9e5817b33db13134"
+    },
+    {
+      "checker": "new",
+      "mode": "ordinary",
+      "initialization": "uninitialized",
+      "rows": 257,
+      "initcheck_status": 0,
+      "reported_errors": 0,
+      "physical_verification": "passed",
+      "uninstrumented_control": "f9b49337d6d05bbe0fca5c54284f139a8a09d1b56d68276724065e57866af18e",
+      "result_sha256": "c7a5e59112ce2e5e8e5bcbd89182bdf3f96c76831b05b93c85182a5ed411e2aa"
+    },
+    {
+      "checker": "new",
+      "mode": "full",
+      "initialization": "poison",
+      "rows": 257,
+      "initcheck_status": 0,
+      "reported_errors": 0,
+      "physical_verification": "passed",
+      "uninstrumented_control": "dd76e793a475cba9ef5ae90d2008bc4599ff4879caa9d4827e052e8d147bf996",
+      "result_sha256": "ff316a18fe0be236e918dd4d75a1e857a173fd1811ae6b830d4e6142ae0b016e"
+    }
+  ],
+  "interpretation": "Compute Sanitizer2026.3.0 reproduces every tested2026.1.0 result. Newer shared-memory initcheck fixes do not clear this standalone rank4 global-store diagnostic. All12 physical checks pass; H200/B300 initialization findings remain unresolved.",
+  "official_tool_archive": {
+    "toolkit_redist": "13.4.3",
+    "component": "cuda_sanitizer_api13.4.92",
+    "sha256": "bf5303fe49d8ab871876213a7a2cf9ebe844406a293dbd05cd327f52c976a726",
+    "source": "https://developer.download.nvidia.com/compute/cuda/redist/redistrib_13.4.3.json"
+  }
+}

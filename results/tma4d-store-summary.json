@@ -1,0 +1,497 @@
+{
+  "schema_version": 1,
+  "scope": "Standalone constant-store initialization diagnostic on full SM120 RTX5090. No attention arithmetic/performance or H200 qualification.",
+  "device": {
+    "device": "NVIDIA GeForce RTX 5090",
+    "capability": [
+      12,
+      0
+    ],
+    "sm_count": 170,
+    "driver": 13020,
+    "runtime": 13020
+  },
+  "toolchain": {
+    "python_runner": "3.13.18",
+    "nvcc": "13.2.51",
+    "compute_sanitizer": "2026.1.0.0 build37182542",
+    "compiler_options": [
+      "-std=c++17",
+      "-O2",
+      "-lineinfo",
+      "-arch=sm_120"
+    ],
+    "cupti_library_sha256": "56e00e126802d5ab3f73cfe8467fbb851b2f42127ce808b5d8f8769fc5dd3e22"
+  },
+  "source": {
+    "cuda_sha256": "058461d7d7981475593781eec6f058f278b74458bddc27adfb5bb1bffe7b28f8",
+    "runner_sha256": "83df27dd78e9d8c15a46a52f72b2a8675551825e835bdb2d65c22fd73481a4f4",
+    "binary_sha256": "65fcf574b9933b9266c672a9575eca62ab640fd29fef04451de3620d50e93c73",
+    "ptx_sha256": "69dbdf5071a5cd189f3f0a6f50113e339dc4f44fb726f58ff1c38520a50bc3f4",
+    "raw_matrix_sha256": "0d8c25ed5025b588f39345fb68f518d97460670b5b2c0e14c96e378b0db360a5",
+    "tested_matrix_driver_sha256": "f96a6ae87b679b7e6194eb836337b7fddbd44942eae70b14cd602f35a253ebfa",
+    "published_matrix_driver_sha256": "59b9f4318643636a3419d593691c83fd067e5e2bbae7a203edb15dd7beb1518e",
+    "matrix_publication_changes": "Formatting and module docstring only; remaining AST equals tested orchestration."
+  },
+  "completion": {
+    "collection_completed": true,
+    "terminal_status": 99,
+    "elapsed_seconds": 57.81090698298067,
+    "unmodified_init_clean": false,
+    "captured_controls": 12,
+    "initcheck_cases": 12,
+    "memory_race_sync_cases": 9,
+    "physical_verification_passes": 33
+  },
+  "capture_scope": {
+    "uninstrumented": "Actual CUPTI-loaded ELF and selected eager launch symbol/SASS.",
+    "instrumented": "CUPTI disabled after subscriber conflict; source/executable/PTX/geometry/initialization matched to captured control. Direct instrumented ELF capture unavailable."
+  },
+  "interpretation": "For this standalone SM120 producer, rank4 TMA writes are not recognized by initialization tracking. Physical output, changed replay and guards pass; ordinary stores are init-clean; poison removes the reports; full completion wait does not. H200 attention initialization remains unresolved; no gate is waived.",
+  "geometry": {
+    "dimensions": [
+      64,
+      "rows",
+      2,
+      2
+    ],
+    "box": [
+      64,
+      128,
+      1,
+      1
+    ],
+    "dtype": "BF16 bit patterns; no floating-point arithmetic",
+    "prefix_guard_bytes": 128,
+    "iterations": [
+      "eager constant1",
+      "same graph constant2",
+      "same graph constant4"
+    ],
+    "host_oracle": "Forward-enumerated coordinate mask independent of GPU inverse mapping."
+  },
+  "rows": [
+    {
+      "label": "read-uninitialized-256-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "de9a4f42c5ffc41bb7afc7704d21fae7ea3d9fb2234b7fa0495627a79bcbbca9",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "read"
+    },
+    {
+      "label": "read-poison-256-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "222590cfac0b2184ef0eca53be114948b082baa1a4e01b9cd09dd0e4ce329b2f",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "read"
+    },
+    {
+      "label": "read-uninitialized-257-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "30b35c7eb30fef3f062e26218259c8e76d1c4e0592d2f5753dd7eb346793abba",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "read"
+    },
+    {
+      "label": "read-poison-257-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "47e48a44ea35e7a67ec1ab794b4b34893cdce755980a5a32fbb08b506d6e5ae4",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "read"
+    },
+    {
+      "label": "full-uninitialized-256-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "c3e9ce970ace9b7e32dca0511eaed48fda249fedeaa11024f34e42ea5a81183d",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "full"
+    },
+    {
+      "label": "full-poison-256-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "6000ccf020c9736d56df13660cd7d82ab82572fae58ff97511afeacec37322c0",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "full"
+    },
+    {
+      "label": "full-uninitialized-257-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "4856211581ca2ccc05cf0459fa36b64102cc5e479ea053a0af5a0c8829309098",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "full"
+    },
+    {
+      "label": "full-poison-257-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "7574ae2a39f1203abfe004e05c546123b6dddca67c769694f5d82fe1d1eea341",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "full"
+    },
+    {
+      "label": "ordinary-uninitialized-256-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "780697c206071d802bcc7eb6385af7f7092fbbd78b5766ba079e71c0e6157269",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "ordinary"
+    },
+    {
+      "label": "ordinary-poison-256-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "3179b31e6fb485e8912258a2ff3825b5286bd4f02e1d7dc80a4253bcd1f560e4",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "ordinary"
+    },
+    {
+      "label": "ordinary-uninitialized-257-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "48b70d54134ded2fc5045077b0d5d6a7241d1e5a8f21235ef3b55d94de5b51f8",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "ordinary"
+    },
+    {
+      "label": "ordinary-poison-257-none",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "passed",
+      "report_sha256": "c897d512fc626c00ba6cc286745f05d19be8b6dce30b92c2f03d1df35bd59051",
+      "execution_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loaded_producer": "ordinary"
+    },
+    {
+      "label": "read-uninitialized-256-initcheck",
+      "exit_status": 99,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "e30480c314a8153b835c386f96f407fdb14e81d0e0949da3e5b5ac85f9c7be80",
+      "execution_log_sha256": "fb42d72a763bb8da21246e8ef36370a540f8b4d549de51dc56cfbf682ece7899",
+      "sanitizer_errors": 36864,
+      "control_result_sha256": "9f5f01bb96c763bf2bf213909bddaf24d091a2cf410172c72d59ee68a5ade5ec",
+      "reported_read_bytes": 16,
+      "reported_consumer": "tma4d_consume+0x140",
+      "all_reported_reads_inside_logical_output": true,
+      "same_executable_control_verified": true,
+      "first_reported_output_offset": 1568,
+      "retained_reported_read_count": 12
+    },
+    {
+      "label": "read-poison-256-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "ab98275b08ffdf25a42da17d61f6db667c546fdbfc15bd89f6c0479405c9fbc8",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "4493312ad54651b2c7ae404e6b120ee8afc568dcd3216458fd8549167159fcb2",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "read-uninitialized-257-initcheck",
+      "exit_status": 99,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "c0175116d76ff4f2c8cc4e14ecf0df9093be3cb7e7e200c4ac639021161badfb",
+      "execution_log_sha256": "5830d8f0e3711b8328eb4f0648bf55d99c9605568e04aac48e34e7561d947c27",
+      "sanitizer_errors": 37008,
+      "control_result_sha256": "d1ead8d1361310347542731ea76ae43fe4f1a2ea9446c4a56f95274191f3a311",
+      "reported_read_bytes": 16,
+      "reported_consumer": "tma4d_consume+0x140",
+      "all_reported_reads_inside_logical_output": true,
+      "same_executable_control_verified": true,
+      "first_reported_output_offset": 1568,
+      "retained_reported_read_count": 12
+    },
+    {
+      "label": "read-poison-257-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "d4899edebda05a959f6f0cb9f6c6087dd869dc5fd86a47ec9107091b1aaaf31c",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "127757489fca4d34af8d5cdb95da90e618685699e847fc04b2bafbd0139a34d6",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "full-uninitialized-256-initcheck",
+      "exit_status": 99,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "55498bb7808d5accc820bf901019e1bd46658182ad7ef287e1108232156a75d4",
+      "execution_log_sha256": "2883cca95174996aa09d33c2bab3e37b687df99f0b7c88b9032cf2bb17164442",
+      "sanitizer_errors": 36864,
+      "control_result_sha256": "e811d9d3c371b78d5ab4a749828f9f65e1de4b4ff3a5f1b3431b92eee3009e3a",
+      "reported_read_bytes": 16,
+      "reported_consumer": "tma4d_consume+0x140",
+      "all_reported_reads_inside_logical_output": true,
+      "same_executable_control_verified": true,
+      "first_reported_output_offset": 1568,
+      "retained_reported_read_count": 12
+    },
+    {
+      "label": "full-poison-256-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "3ea37167b2fa42a12eee253153fd4c4e695f130c39bec5066f36cab8e83047f3",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "8d29fbdaf55069f21382a7b1c315ee9cb4815902f4f13e3d66be97574f8f7e7f",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "full-uninitialized-257-initcheck",
+      "exit_status": 99,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "9066c5090e3ef59dd2e93040c5e35831eadee440fb331ed0046f952026dc8851",
+      "execution_log_sha256": "694a2e17bcd8f6619e26464cf55866431d871b5589c28592c17ac669172b7f9b",
+      "sanitizer_errors": 37008,
+      "control_result_sha256": "b770d6ede8081d57e19bb4f9715612d2c668214c2873e8629d3c892f3c498dca",
+      "reported_read_bytes": 16,
+      "reported_consumer": "tma4d_consume+0x140",
+      "all_reported_reads_inside_logical_output": true,
+      "same_executable_control_verified": true,
+      "first_reported_output_offset": 1568,
+      "retained_reported_read_count": 12
+    },
+    {
+      "label": "full-poison-257-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "9f16e6c0ef07c61f6454c5da4625aa32512cba9b76d7819073ee7c51b7f5e15c",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "dd76e793a475cba9ef5ae90d2008bc4599ff4879caa9d4827e052e8d147bf996",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "ordinary-uninitialized-256-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "f8b25942d105a1b38bf55a5147b51face824f4481c8463ca0a0891bd0346f254",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "5a67be38ff0d733e4fae021b008ec259109f5a0964ebae4f95818842c7cd98cd",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "ordinary-poison-256-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "1454e4b0bd7f3081cf7af95d8e409d749f215f5e8846b2b500c60d161f7bc54e",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "366a4a7f92dad9b2bc099586de936ddac2609f126bd0524813a0004aa57d6ffa",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "ordinary-uninitialized-257-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "590adfd663de2fcc7ce675134f2db077cda3ac78f5ab7926ac106fbb3c82ecb3",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "f9b49337d6d05bbe0fca5c54284f139a8a09d1b56d68276724065e57866af18e",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "ordinary-poison-257-initcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "ebba021955309a1ece83ec617d8d4a7e7e343a892ea1d04e93871107e801b172",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "c47b394a6cdb18b56e5f42ad6d847c83437a307166ed57e7f8ab44e65a1785bf",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "read-uninitialized-257-memcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "fb2a820eedc5400890556d28115bd8642ef66f3c307f336cd12f1952beda0706",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "d1ead8d1361310347542731ea76ae43fe4f1a2ea9446c4a56f95274191f3a311",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "full-uninitialized-257-memcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "ba6a91d687fed00340b4c0093d165572779ec5fc966a08a06187026134d4c189",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "b770d6ede8081d57e19bb4f9715612d2c668214c2873e8629d3c892f3c498dca",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "ordinary-uninitialized-257-memcheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "a6d2ab0269d363e7109aacdc536f557d00851d5537039dff8c96fd580a9fd760",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "f9b49337d6d05bbe0fca5c54284f139a8a09d1b56d68276724065e57866af18e",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "read-uninitialized-257-racecheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "1eb77e1ee756e1b31dbffa9a23a287f32c58db3adce6ada6cb61dfb9792ef1af",
+      "execution_log_sha256": "91dbb142f8feb8786cd6fde6ac035e816b67db14e4b7b400a01386ec106b75c4",
+      "control_result_sha256": "d1ead8d1361310347542731ea76ae43fe4f1a2ea9446c4a56f95274191f3a311",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "full-uninitialized-257-racecheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "fefcd0e0e9404963b41a2f8a6d52f0597b25b12565be6a259ca2bc1f2515bab7",
+      "execution_log_sha256": "91dbb142f8feb8786cd6fde6ac035e816b67db14e4b7b400a01386ec106b75c4",
+      "control_result_sha256": "b770d6ede8081d57e19bb4f9715612d2c668214c2873e8629d3c892f3c498dca",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "ordinary-uninitialized-257-racecheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "f6b70674adb02827fc2a5b4b2d82c64251c47d91e8796d831b08e48616f4e642",
+      "execution_log_sha256": "91dbb142f8feb8786cd6fde6ac035e816b67db14e4b7b400a01386ec106b75c4",
+      "control_result_sha256": "f9b49337d6d05bbe0fca5c54284f139a8a09d1b56d68276724065e57866af18e",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "read-uninitialized-257-synccheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "04364632f17360720c977ecef4b8a784ff5687b6496c8be494c4f010705a9dbe",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "d1ead8d1361310347542731ea76ae43fe4f1a2ea9446c4a56f95274191f3a311",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "full-uninitialized-257-synccheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "3c67f1dba2635ff2f3060a1ba58e965b25c5e5ec5b9064f283d23e48474b853f",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "b770d6ede8081d57e19bb4f9715612d2c668214c2873e8629d3c892f3c498dca",
+      "same_executable_control_verified": true
+    },
+    {
+      "label": "ordinary-uninitialized-257-synccheck",
+      "exit_status": 0,
+      "physical_verification": "passed",
+      "code_binding": "unavailable_under_sanitizer",
+      "report_sha256": "b741e88b2fd81858d2b2f842d26d814965513975b5ddd576c5181ec5c61cfe28",
+      "execution_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "sanitizer_errors": 0,
+      "control_result_sha256": "f9b49337d6d05bbe0fca5c54284f139a8a09d1b56d68276724065e57866af18e",
+      "same_executable_control_verified": true
+    }
+  ],
+  "loaded_producers": {
+    "read": {
+      "binding": {
+        "symbol": "tma4d_read",
+        "loaded_cubin_sha256": "5f9fe4fe6623a475084eb041fa0aa674c086d02390d3284cfd6449e50f9f96be",
+        "selected_sass_sha256": "0d42b2970d1d9ba8fa88f5f96e7582fc929be1e783022822d62eb72b5f253914",
+        "disassembly_architectures": [
+          "sm_120"
+        ]
+      },
+      "resources": {
+        "registers": 13,
+        "static_shared_bytes": 16384,
+        "local_bytes": 0,
+        "binary_version": 120,
+        "ptx_version": 120,
+        "block_threads": 128
+      },
+      "store_instruction": "UTMASTG.4D"
+    },
+    "full": {
+      "binding": {
+        "symbol": "tma4d_full",
+        "loaded_cubin_sha256": "5f9fe4fe6623a475084eb041fa0aa674c086d02390d3284cfd6449e50f9f96be",
+        "selected_sass_sha256": "d1751fddc93631188c8f0b88b310418d22bdd9f98c7fdbcedb57f6e10b00f8b5",
+        "disassembly_architectures": [
+          "sm_120"
+        ]
+      },
+      "resources": {
+        "registers": 13,
+        "static_shared_bytes": 16384,
+        "local_bytes": 0,
+        "binary_version": 120,
+        "ptx_version": 120,
+        "block_threads": 128
+      },
+      "store_instruction": "UTMASTG.4D"
+    },
+    "ordinary": {
+      "binding": {
+        "symbol": "tma4d_ordinary",
+        "loaded_cubin_sha256": "5f9fe4fe6623a475084eb041fa0aa674c086d02390d3284cfd6449e50f9f96be",
+        "selected_sass_sha256": "dda77c2740dd8ba35e32278b8ba14c65aa8cb8e40d5a68db9b5f2c2d1f1a08dd",
+        "disassembly_architectures": [
+          "sm_120"
+        ]
+      },
+      "resources": {
+        "registers": 28,
+        "static_shared_bytes": 0,
+        "local_bytes": 0,
+        "binary_version": 120,
+        "ptx_version": 120,
+        "block_threads": 128
+      },
+      "store_instruction": "STG.E.U16"
+    }
+  },
+  "consumer": {
+    "symbol": "tma4d_consume",
+    "reported_pc": "0x140",
+    "uninstrumented_control_instruction_at_pc": "LDG.E.128",
+    "loaded_control_elf_sha256": "5f9fe4fe6623a475084eb041fa0aa674c086d02390d3284cfd6449e50f9f96be",
+    "instrumented_loaded_capture": "unavailable"
+  }
+}

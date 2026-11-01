@@ -54,6 +54,10 @@ automatic filename collisions. Exact instruction comparisons additionally need
 an unambiguous binding to the loaded graph function; a matching symbol alone
 can be insufficient across variants. Retain raw captures outside the tracked tree.
 
+## B200 D512 backward
+
+The [B200 analysis](../docs/b200-wide-backward.md) and [compact measurements](b200-wide-backward.json) cover the bounded BF16 D512 backward selector, paired complete-call timings against the preceding CuTe owner and SDPA, arithmetic checks, and the remaining profiler/sanitizer limitations. The selected cases are batch 1 with 16 heads at 512–1024 tokens, or 8 heads at 1024 tokens.
+
 ## GB10 (DGX / RTX Spark)
 
 The timings and qualification below describe the recorded pre-removal revision.

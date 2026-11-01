@@ -1,0 +1,1854 @@
+{
+  "schema_version": 1,
+  "source_revision": "2f726815b5bee3db6d7245e490381585ab66111d",
+  "timing_boundary": "Complete warmed eager wall time; synchronization at window boundaries; backend profiling outside timing.",
+  "device": {
+    "name": "NVIDIA A100-SXM4-80GB",
+    "sm_count": 108,
+    "capability": [
+      8,
+      0
+    ],
+    "power_limit_watts": 400
+  },
+  "torch": "2.15.0+cu132",
+  "protocol": {
+    "repeats": 5,
+    "minimum_calls_per_window": 10,
+    "warmup_ms": 1000.0,
+    "minimum_window_ms": 100.0
+  },
+  "benchmark_driver_sha256": "f10b741e20f2b1a456ecc94ece227a35e242b6b6447b6d692a3373a91e1c53eb",
+  "static_source_sha256": {
+    "__init__.py": "aef577f0ad3d5a885d6d7c72168721f71be9241acbc5192b90b4b617628d1536",
+    "_attention.py": "112df7b2c89bc71ae556b2dfc8da7b5a8002995b587a4d8114250abc5e7bfe10",
+    "_backward.py": "d0693a82101bd241461e03b4acb88ca026311a6624034832db8fc95648e876ed",
+    "_forward.py": "4c895d89559a16b19f5eebdcf998d6d9a14e316cc03397a57539f2827c69aad4",
+    "_preprocess.py": "9beb2c7280ee5b583023611a4e94122cd1b05a4517b2b66665b4e0eb7f30ee60",
+    "_private_api.py": "1b70b88344b0da3c87300a869ae689e68b38482a4dd85518c6d520bed8b4a91e",
+    "_schedules.py": "1256921615ceffdae91c1eddc0851f322379ade092c3b8c595df6af9abe2a4ec",
+    "_softmax.py": "f68f05ad0dfde4b2a826d9160f64f197fcc45aad457aa740f89af5c7ff329284"
+  },
+  "backend_boundaries": {
+    "native": "Existing native CuTe; automatic static selection disabled.",
+    "previous": "Explicit immutable Schedule() through the static Python entry.",
+    "candidate": "Explicit selected A100 schedule; bypasses automatic performance bounds.",
+    "public": "Full public API with actual automatic selection.",
+    "sdpa": "PyTorch SDPA; actual selected kernels captured separately."
+  },
+  "acceptance": "Unchanged independent per-head output and gradient norm limits: BF16 1%, FP16 0.5%; directed checks retain input-dtype P/dS and actual-O delta.",
+  "validation": {
+    "public_gpu_test_methods": 5,
+    "public_gpu_status": 0
+  },
+  "limitations": [
+    "Full A100-SXM4-80GB; separate device and timing boundary from the historical 40GB graph matrix.",
+    "D128 windows drifted materially: some five-sample ranges span 12-38% of their median. Sustained telemetry reached 85-86 Celsius and SM clocks of 630-1170 MHz during later measurements. These medians do not establish small robust D128 speedups.",
+    "All eight joint public-path medians are below matched SDPA medians, but variability and device state limit conclusions; no universal speedup is claimed.",
+    "Standalone FA2 was traced separately and was not part of this eager timing sweep.",
+    "Systems confirms launched symbols and resources. Compiler-returned image hashes are not proof of the exact TVM-loaded image.",
+    "NCU hardware counters denied with ERR_NVGPUCTRPERM."
+  ],
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1000.32196380198,
+      "calls_per_window": {
+        "native": 128,
+        "previous": 215,
+        "candidate": 217,
+        "sdpa": 205,
+        "public": 215
+      },
+      "samples_ms": {
+        "native": [
+          0.7632503838976845,
+          0.7754538200970273,
+          0.7819171478331555,
+          0.7732863741694018,
+          0.7727303527644835
+        ],
+        "previous": [
+          0.45019432165941525,
+          0.45441583145496456,
+          0.4511560876528884,
+          0.4508332219408002,
+          0.44993307484790335
+        ],
+        "candidate": [
+          0.4572668241568699,
+          0.4545365103996844,
+          0.45206256785906407,
+          0.4589458378160604,
+          0.45442514224535857
+        ],
+        "sdpa": [
+          0.49450465864161164,
+          0.494493639505491,
+          0.49473907480516083,
+          0.4980648095469649,
+          0.495239810609236
+        ],
+        "public": [
+          0.45240952005220014,
+          0.45236487504701284,
+          0.45483654234991516,
+          0.4523894294749859,
+          0.4546630564470624
+        ]
+      },
+      "median_ms": {
+        "native": 0.7732863741694018,
+        "previous": 0.4508332219408002,
+        "candidate": 0.4545365103996844,
+        "sdpa": 0.49473907480516083,
+        "public": 0.45240952005220014
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1000.1619108952582,
+      "calls_per_window": {
+        "native": 31,
+        "previous": 54,
+        "candidate": 57,
+        "sdpa": 56,
+        "public": 55
+      },
+      "samples_ms": {
+        "native": [
+          3.2121049270274176,
+          3.1954552377423933,
+          3.1960245462194568,
+          3.181071861857368,
+          3.214725939136359
+        ],
+        "previous": [
+          1.8666714464348775,
+          1.8782550210340156,
+          1.8682586701793804,
+          1.854039478564152,
+          1.8615784830655213
+        ],
+        "candidate": [
+          1.813782705811032,
+          1.809496432542801,
+          1.7808921586133932,
+          1.8085293684220105,
+          1.8169040334198558
+        ],
+        "sdpa": [
+          1.8363701362561966,
+          1.8413451450344707,
+          1.8516095920598932,
+          1.8509700894355774,
+          1.8199825759178825
+        ],
+        "public": [
+          1.8204498866742307,
+          1.8199741840362549,
+          1.8206553787670352,
+          1.8202706578780303,
+          1.797914564270865
+        ]
+      },
+      "median_ms": {
+        "native": 3.1960245462194568,
+        "previous": 1.8666714464348775,
+        "candidate": 1.809496432542801,
+        "sdpa": 1.8413451450344707,
+        "public": 1.8202706578780303
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::bfloat16_t> >, false, false, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": true,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1000.2650390379131,
+      "calls_per_window": {
+        "native": 213,
+        "previous": 307,
+        "candidate": 309,
+        "sdpa": 313,
+        "public": 306
+      },
+      "samples_ms": {
+        "native": [
+          0.46568939969503265,
+          0.4781021675348562,
+          0.471887624704502,
+          0.4770897696135749,
+          0.4775690749952211
+        ],
+        "previous": [
+          0.31404522268847845,
+          0.3128723811710114,
+          0.31252987895173046,
+          0.3144099477205292,
+          0.3137065307009686
+        ],
+        "candidate": [
+          0.31595063037133525,
+          0.3152606574800408,
+          0.31409382783961526,
+          0.3156391270820377,
+          0.3178349325379122
+        ],
+        "sdpa": [
+          0.31862393045387327,
+          0.3198982207491375,
+          0.32189483055101037,
+          0.32340215679746087,
+          0.32203409600610167
+        ],
+        "public": [
+          0.312924450506864,
+          0.31254955208282065,
+          0.31336030642824625,
+          0.31493225567091526,
+          0.3161162299292734
+        ]
+      },
+      "median_ms": {
+        "native": 0.4770897696135749,
+        "previous": 0.3137065307009686,
+        "candidate": 0.3156391270820377,
+        "sdpa": 0.32189483055101037,
+        "public": 0.31336030642824625
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": true,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1000.312966760248,
+      "calls_per_window": {
+        "native": 57,
+        "previous": 84,
+        "candidate": 90,
+        "sdpa": 86,
+        "public": 90
+      },
+      "samples_ms": {
+        "native": [
+          1.7686828219315462,
+          1.7874027733086495,
+          1.7935511770478465,
+          1.7864910902030635,
+          1.7830930535861276
+        ],
+        "previous": [
+          1.1713751591742039,
+          1.1814892890730075,
+          1.1762535709532953,
+          1.1746803564684731,
+          1.1793124167958187
+        ],
+        "candidate": [
+          1.1115383356809616,
+          1.1087459201614063,
+          1.1050151143636968,
+          1.111246355705791,
+          1.1193606122914288
+        ],
+        "sdpa": [
+          1.1700340005200962,
+          1.1646004534478105,
+          1.1714230356521385,
+          1.16629280193254,
+          1.1675586750687554
+        ],
+        "public": [
+          1.1052351548439927,
+          1.1066878783620067,
+          1.1159359736161099,
+          1.1111498448169894,
+          1.1099021778338485
+        ]
+      },
+      "median_ms": {
+        "native": 1.7864910902030635,
+        "previous": 1.1762535709532953,
+        "candidate": 1.111246355705791,
+        "sdpa": 1.1675586750687554,
+        "public": 1.1099021778338485
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::bfloat16_t> >, false, true, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.float16",
+      "causal": false,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1000.0412371009588,
+      "calls_per_window": {
+        "native": 128,
+        "previous": 206,
+        "candidate": 208,
+        "sdpa": 199,
+        "public": 206
+      },
+      "samples_ms": {
+        "native": [
+          0.7752507590339519,
+          0.7906217724666931,
+          0.7970879196363967,
+          0.7943932869238779,
+          0.803716538939625
+        ],
+        "previous": [
+          0.4720635151544821,
+          0.484889592450944,
+          0.4765115343757625,
+          0.4759851314163613,
+          0.47708249840776895
+        ],
+        "candidate": [
+          0.484990135121804,
+          0.4806214240558732,
+          0.47675340409533906,
+          0.4850196396896186,
+          0.481054484575557
+        ],
+        "sdpa": [
+          0.5137789947678096,
+          0.5153741397375438,
+          0.5193666026145969,
+          0.5129409144309598,
+          0.5153683552415527
+        ],
+        "public": [
+          0.47723972238600254,
+          0.47921865626952603,
+          0.4782648305001768,
+          0.4807001712180457,
+          0.47971284948289394
+        ]
+      },
+      "median_ms": {
+        "native": 0.7943932869238779,
+        "previous": 0.4765115343757625,
+        "candidate": 0.481054484575557,
+        "sdpa": 0.5153683552415527,
+        "public": 0.47921865626952603
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::half_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.float16",
+      "causal": false,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1006.5779220312834,
+      "calls_per_window": {
+        "native": 31,
+        "previous": 53,
+        "candidate": 56,
+        "sdpa": 54,
+        "public": 55
+      },
+      "samples_ms": {
+        "native": [
+          3.2677818390150226,
+          3.2654466077445017,
+          3.2853981359831748,
+          3.2493873469291197,
+          3.2523768923936354
+        ],
+        "previous": [
+          1.8995813234656487,
+          1.9231840774838656,
+          1.908191093155798,
+          1.9117746554877397,
+          1.9025935896865602
+        ],
+        "candidate": [
+          1.8333859292657249,
+          1.833970084719892,
+          1.8178137335261064,
+          1.8419025332799979,
+          1.8441822862119548
+        ],
+        "sdpa": [
+          1.8914793704256967,
+          1.8916127478910818,
+          1.9101221459331337,
+          1.8918090586171106,
+          1.936238948945646
+        ],
+        "public": [
+          1.8342928283593871,
+          1.8343372524461963,
+          1.8349655988541516,
+          1.8347131257707423,
+          1.834568694572557
+        ]
+      },
+      "median_ms": {
+        "native": 3.2654466077445017,
+        "previous": 1.908191093155798,
+        "candidate": 1.833970084719892,
+        "sdpa": 1.8918090586171106,
+        "public": 1.834568694572557
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::half_t> >, false, false, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::half_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.float16",
+      "causal": true,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1001.2092739343643,
+      "calls_per_window": {
+        "native": 203,
+        "previous": 295,
+        "candidate": 294,
+        "sdpa": 310,
+        "public": 290
+      },
+      "samples_ms": {
+        "native": [
+          0.4867003735136516,
+          0.4907136925225481,
+          0.49547727903342015,
+          0.49486785686662044,
+          0.4979519453358474
+        ],
+        "previous": [
+          0.332237074498908,
+          0.3340198784687762,
+          0.3309921566712654,
+          0.33262901765815284,
+          0.33207743318151617
+        ],
+        "candidate": [
+          0.33362814998190826,
+          0.3336798985723127,
+          0.3301185004565181,
+          0.3385837585823674,
+          0.3370562676010894
+        ],
+        "sdpa": [
+          0.33177396793278957,
+          0.3314302543238286,
+          0.33207738681906657,
+          0.3309632831763837,
+          0.33530787745070073
+        ],
+        "public": [
+          0.3333256371190836,
+          0.3330503526175844,
+          0.332933927661386,
+          0.3342274833342125,
+          0.3386275585869263
+        ]
+      },
+      "median_ms": {
+        "native": 0.49486785686662044,
+        "previous": 0.332237074498908,
+        "candidate": 0.3336798985723127,
+        "sdpa": 0.33177396793278957,
+        "public": 0.3333256371190836
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::half_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "torch.float16",
+      "causal": true,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1004.0164198726416,
+      "calls_per_window": {
+        "native": 55,
+        "previous": 83,
+        "candidate": 87,
+        "sdpa": 85,
+        "public": 88
+      },
+      "samples_ms": {
+        "native": [
+          1.8157857046885924,
+          1.844418997114355,
+          1.8475202589549802,
+          1.846717255698009,
+          1.8573538908226923
+        ],
+        "previous": [
+          1.189888662557645,
+          1.1973406625799385,
+          1.1940512985709202,
+          1.1990288025643452,
+          1.220485947308052
+        ],
+        "candidate": [
+          1.1480904409083827,
+          1.1498795543936478,
+          1.1472512603919396,
+          1.153590007760059,
+          1.163429173844299
+        ],
+        "sdpa": [
+          1.201186718090492,
+          1.2080554466913729,
+          1.208634296541705,
+          1.209996032583363,
+          1.2109218384413158
+        ],
+        "public": [
+          1.1407464890825478,
+          1.1567237247204916,
+          1.1408892618915574,
+          1.1537571130743758,
+          1.1536063076081602
+        ]
+      },
+      "median_ms": {
+        "native": 1.846717255698009,
+        "previous": 1.1973406625799385,
+        "candidate": 1.1498795543936478,
+        "sdpa": 1.208634296541705,
+        "public": 1.1536063076081602
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 128,
+            "backward_n": 128,
+            "query_stages": 1,
+            "dout_stages": 1,
+            "threads": 256,
+            "score_m_warps": 4,
+            "kv_m_warps": 4,
+            "dq_m_warps": 4,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<64, 128, 128, 8, 4, 4, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 8, cutlass::half_t> >, false, true, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<64, 128, 128, 4, false, false, cutlass::half_t, Flash_kernel_traits<64, 128, 128, 4, cutlass::half_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1003.2304772175848,
+      "calls_per_window": {
+        "native": 67,
+        "previous": 117,
+        "candidate": 117,
+        "sdpa": 114,
+        "public": 117
+      },
+      "samples_ms": {
+        "native": [
+          1.4263803014225924,
+          1.5033801336453032,
+          1.521674116878812,
+          1.5775814596841584,
+          1.5732335871947345
+        ],
+        "previous": [
+          0.8419846049231342,
+          0.8609431445534922,
+          0.9123896861560324,
+          0.9534825714161763,
+          0.9486038182089981
+        ],
+        "candidate": [
+          0.8612965297304157,
+          0.8863890822180825,
+          0.8949395070154952,
+          1.0141638489678884,
+          1.0064071020445762
+        ],
+        "sdpa": [
+          0.900402979663851,
+          0.9288569021839321,
+          0.9717327469077549,
+          1.027018648751995,
+          1.0675024322903992
+        ],
+        "public": [
+          0.8610225298529507,
+          0.9187418792364944,
+          0.953612299874807,
+          1.0010966171438878,
+          1.0065703262758052
+        ]
+      },
+      "median_ms": {
+        "native": 1.521674116878812,
+        "previous": 0.9123896861560324,
+        "candidate": 0.8949395070154952,
+        "sdpa": 0.9717327469077549,
+        "public": 0.953612299874807
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": false,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1010.5090979486704,
+      "calls_per_window": {
+        "native": 18,
+        "previous": 32,
+        "candidate": 31,
+        "sdpa": 30,
+        "public": 30
+      },
+      "samples_ms": {
+        "native": [
+          5.839524713034431,
+          5.98234822973609,
+          6.109437206760049,
+          6.475044052220053,
+          6.513821168078317
+        ],
+        "previous": [
+          3.3304648532066494,
+          3.4747332538245246,
+          4.035332152852789,
+          4.034668090753257,
+          3.9717194013064727
+        ],
+        "candidate": [
+          3.4022252225587444,
+          3.463335530531983,
+          3.487216353776955,
+          4.165607835015943,
+          3.9632908038554655
+        ],
+        "sdpa": [
+          3.460662408421437,
+          3.526745969429612,
+          3.5996858961880207,
+          4.243284370750189,
+          4.117076890543103
+        ],
+        "public": [
+          3.428558570643266,
+          3.5283024422824383,
+          3.5580852068960667,
+          4.174819619705279,
+          4.1831790780027704
+        ]
+      },
+      "median_ms": {
+        "native": 6.109437206760049,
+        "previous": 3.9717194013064727,
+        "candidate": 3.487216353776955,
+        "sdpa": 3.5996858961880207,
+        "public": 3.5580852068960667
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::bfloat16_t> >, false, false, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": true,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1000.0119232572615,
+      "calls_per_window": {
+        "native": 111,
+        "previous": 149,
+        "candidate": 184,
+        "sdpa": 161,
+        "public": 182
+      },
+      "samples_ms": {
+        "native": [
+          0.8687348616821272,
+          0.9443212787176037,
+          1.0316110098617033,
+          1.0037512333879062,
+          1.021066999381727
+        ],
+        "previous": [
+          0.6600381500218939,
+          0.6941451859854212,
+          0.7530318591868718,
+          0.7266450717095161,
+          0.783222289943455
+        ],
+        "candidate": [
+          0.5827466780117349,
+          0.6371189526322744,
+          0.6183246099997474,
+          0.6979338814625922,
+          0.8044033868076361
+        ],
+        "sdpa": [
+          0.6434759125113487,
+          0.6935775384121801,
+          0.7011638896435685,
+          0.7298063596722132,
+          0.8912202294753946
+        ],
+        "public": [
+          0.5764011370407028,
+          0.6303868287212246,
+          0.7167027797549963,
+          0.7075769059196279,
+          0.7481276170238034
+        ]
+      },
+      "median_ms": {
+        "native": 1.0037512333879062,
+        "previous": 0.7266450717095161,
+        "candidate": 0.6371189526322744,
+        "sdpa": 0.7011638896435685,
+        "public": 0.7075769059196279
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "causal": true,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1004.0750238113105,
+      "calls_per_window": {
+        "native": 29,
+        "previous": 45,
+        "candidate": 47,
+        "sdpa": 44,
+        "public": 47
+      },
+      "samples_ms": {
+        "native": [
+          3.4544876583948216,
+          3.8873904448901784,
+          3.9299565592202645,
+          4.12723608314991,
+          4.337804761297744
+        ],
+        "previous": [
+          2.4024356363548174,
+          2.5839110215504966,
+          2.6107989562054477,
+          2.676884022851785,
+          2.9057226247257657
+        ],
+        "candidate": [
+          2.471484848238686,
+          2.536164170646287,
+          2.4887696602084537,
+          2.6677774681531368,
+          2.9211130409323154
+        ],
+        "sdpa": [
+          2.609207972206853,
+          2.59663252456283,
+          2.716349977576597,
+          2.755335955457254,
+          3.013298000124368
+        ],
+        "public": [
+          2.474685100481865,
+          2.458558546656624,
+          2.5496053350891206,
+          2.707903739064932,
+          2.8920406871970665
+        ]
+      },
+      "median_ms": {
+        "native": 3.9299565592202645,
+        "previous": 2.6107989562054477,
+        "candidate": 2.536164170646287,
+        "sdpa": 2.716349977576597,
+        "public": 2.5496053350891206
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 64,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrbf16gmemalign16oi64div8i64div8i64div_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrbf16gmemalign16oi64div8i64div8i64div81_tensorptrbf16gmemalign16oi64div8i64div8i64div81_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrbf16gmemalign16oi64div81i64div8i64div8_tensorptrbf16gmemalign16oi64div81i64div8i_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 64,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::bfloat16_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::bfloat16_t> >, false, true, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.float16",
+      "causal": false,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1001.0250969789922,
+      "calls_per_window": {
+        "native": 54,
+        "previous": 89,
+        "candidate": 92,
+        "sdpa": 89,
+        "public": 88
+      },
+      "samples_ms": {
+        "native": [
+          1.7244096293493554,
+          2.473447721934429,
+          2.450498165907683,
+          2.4572632758429758,
+          2.653249349721052
+        ],
+        "previous": [
+          1.3077433398935232,
+          1.689306842267848,
+          1.6425318879943884,
+          1.6772234184520969,
+          1.740894683249546
+        ],
+        "candidate": [
+          1.4465991508863543,
+          1.7391628707232683,
+          1.6509095540918086,
+          1.839819764111029,
+          1.8400855655984387
+        ],
+        "sdpa": [
+          1.5327413514089048,
+          1.7535943862343772,
+          1.756512988986594,
+          1.7511795609770866,
+          1.857223491487878
+        ],
+        "public": [
+          1.623979272236201,
+          1.7264904560182581,
+          1.723861877425489,
+          1.6994332175024531,
+          1.8404830532910472
+        ]
+      },
+      "median_ms": {
+        "native": 2.4572632758429758,
+        "previous": 1.6772234184520969,
+        "candidate": 1.7391628707232683,
+        "sdpa": 1.7535943862343772,
+        "public": 1.723861877425489
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::half_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::half_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.float16",
+      "causal": false,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1005.5797891691327,
+      "calls_per_window": {
+        "native": 14,
+        "previous": 22,
+        "candidate": 19,
+        "sdpa": 19,
+        "public": 19
+      },
+      "samples_ms": {
+        "native": [
+          9.089403852288212,
+          10.435810079798102,
+          10.471391657899533,
+          10.584765579551458,
+          10.891965124756098
+        ],
+        "previous": [
+          5.924757464196194,
+          6.7733545067974115,
+          6.616404491730711,
+          6.620136893947016,
+          6.963567956435409
+        ],
+        "candidate": [
+          6.187153195864276,
+          6.775014274018376,
+          6.548992750283919,
+          6.774834259168098,
+          7.162445200313079
+        ],
+        "sdpa": [
+          6.472771374606772,
+          6.98603398019546,
+          6.986786096699928,
+          6.9860847862927535,
+          7.3785618388731224
+        ],
+        "public": [
+          6.728655094967077,
+          6.776108161399239,
+          6.776169800248585,
+          6.7749907948861,
+          6.807211909051004
+        ]
+      },
+      "median_ms": {
+        "native": 10.471391657899533,
+        "previous": 6.620136893947016,
+        "candidate": 6.774834259168098,
+        "sdpa": 6.9860847862927535,
+        "public": 6.776108161399239
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 128,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::half_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::half_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::half_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::half_t> >, false, false, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::half_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::half_t> >, false, false, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.float16",
+      "causal": true,
+      "phase": "forward",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1001.6866531223059,
+      "calls_per_window": {
+        "native": 75,
+        "previous": 106,
+        "candidate": 123,
+        "sdpa": 107,
+        "public": 121
+      },
+      "samples_ms": {
+        "native": [
+          1.2529565890630086,
+          1.784879124412934,
+          1.7593136616051197,
+          1.7654819041490555,
+          1.7760286356012027
+        ],
+        "previous": [
+          0.9377848813837429,
+          1.3915819625528354,
+          1.2493853782356348,
+          1.2522354142142917,
+          1.2687735285891115
+        ],
+        "candidate": [
+          0.972695326871746,
+          1.280154794363714,
+          1.2147388178703746,
+          1.2658694001838444,
+          1.2656840480621752
+        ],
+        "sdpa": [
+          1.1366924845448165,
+          1.3498092531531214,
+          1.3536412059982246,
+          1.2514329402246207,
+          1.3251695129149985
+        ],
+        "public": [
+          1.1955282173681359,
+          1.2618502879068871,
+          1.2440531560766304,
+          1.2503868769392494,
+          1.3236318838066798
+        ]
+      },
+      "median_ms": {
+        "native": 1.7654819041490555,
+        "previous": 1.2522354142142917,
+        "candidate": 1.2656840480621752,
+        "sdpa": 1.3251695129149985,
+        "public": 1.2503868769392494
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::half_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::half_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": null,
+          "schedule": null
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "torch.float16",
+      "causal": true,
+      "phase": "joint",
+      "public_selected_static": true,
+      "warm_elapsed_ms": 1005.1718992181122,
+      "calls_per_window": {
+        "native": 23,
+        "previous": 33,
+        "candidate": 32,
+        "sdpa": 27,
+        "public": 30
+      },
+      "samples_ms": {
+        "native": [
+          5.549008472134238,
+          6.126297070928242,
+          6.128318911499304,
+          6.092372431379298,
+          6.050652925572965
+        ],
+        "previous": [
+          4.0685177188027986,
+          4.195719576356086,
+          3.9997610235304544,
+          3.981948576190255,
+          3.985804138761578
+        ],
+        "candidate": [
+          4.053500029840507,
+          4.051656098454259,
+          3.8744322810089216,
+          4.034317971672863,
+          4.111831935006194
+        ],
+        "sdpa": [
+          4.295346706553742,
+          4.232088811005707,
+          4.265649244189262,
+          4.247281890086554,
+          4.357328862641697
+        ],
+        "public": [
+          3.986113937571645,
+          3.95595597413679,
+          4.043070940921704,
+          4.028644738718867,
+          4.038256965577602
+        ]
+      },
+      "median_ms": {
+        "native": 6.092372431379298,
+        "previous": 3.9997610235304544,
+        "candidate": 4.051656098454259,
+        "sdpa": 4.265649244189262,
+        "public": 4.028644738718867
+      },
+      "eager_paths": {
+        "candidate": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 64,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "public": {
+          "operators": [],
+          "cuda_kernels": [
+            "kernel_cutlass_kernel_flash_attncuteflash_bwd_postprocessFlashAttentionBackwardPostprocess_object_at__tensorptrf32gmemalign16oi64div4i64div41_tensorptrf16gmemalign16oi64div8i64div8i64div8_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_attention_apilocalsConfiguredForward_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64div8_t_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_backwardFlashAttentionBackwardSm80_object_at__tensorptrf16gmemalign16oi64div8i64div8i64div81_tensorptrf16gmemalign16oi64div8i64div8i64div81_ten_0",
+            "kernel_cutlass_kernel_kohakufa_cutefa4_sm80_preprocessFlashAttentionBackwardPreprocess_object_at__tensorptrf16gmemalign16oi64div81i64div8i64div8_tensorptrf16gmemalign16oi64div81i64div8i64_0"
+          ],
+          "grad_fn": "_AttentionBackward",
+          "schedule": {
+            "forward_m": 64,
+            "forward_n": 64,
+            "forward_stages": 1,
+            "query_in_registers": false,
+            "backward_m": 64,
+            "backward_n": 128,
+            "query_stages": 2,
+            "dout_stages": 2,
+            "threads": 256,
+            "score_m_warps": 2,
+            "kv_m_warps": 2,
+            "dq_m_warps": 2,
+            "v_in_regs": false
+          }
+        },
+        "sdpa": {
+          "operators": [
+            "aten::_scaled_dot_product_flash_attention",
+            "aten::_scaled_dot_product_flash_attention_backward",
+            "aten::scaled_dot_product_attention"
+          ],
+          "cuda_kernels": [
+            "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+            "void pytorch_flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::half_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params, int)",
+            "void pytorch_flash::flash_bwd_dot_do_o_kernel<true, Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::half_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::half_t> > >(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<128, 64, 128, 8, 2, 4, 2, false, false, cutlass::half_t, Flash_kernel_traits<128, 64, 128, 8, cutlass::half_t> >, false, true, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+            "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::half_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::half_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)"
+          ],
+          "grad_fn": "ScaledDotProductFlashAttentionBackward0",
+          "schedule": null
+        }
+      }
+    }
+  ]
+}

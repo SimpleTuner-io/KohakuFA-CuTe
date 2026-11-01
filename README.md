@@ -52,6 +52,11 @@ python -m pip install '.[cuda]'
 
 Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and a C++17 compiler. The native launcher builds on first use. `pip install .` installs the API without CUDA extras; automatic selection can then use native SDPA on CPU/MPS.
 
+**A100 tuned installation:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
+then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the
+[qualified long D64/D128 path](docs/a100-sm80-fa4.md). The base `cuda` extra
+provides generic A100 compatibility; short and compiled calls retain that path.
+
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
 CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:
 
@@ -100,7 +105,7 @@ Supported CuTe inputs:
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
 
-A100 uses the generic SM80 schedule; see its [qualification and baseline comparison](docs/a100-support.md) before choosing it for performance.
+On A100, the [tuned installation](docs/a100-sm80-fa4.md) selects the measured long D64/D128 schedule. Its shape and software bounds are documented; other calls use native CuTe.
 
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 

@@ -84,7 +84,8 @@ def attention(q, k, v, *, causal=False, scale=None):
 
     if q.device.type == "cuda" and _l40s.is_device(q.device):
         return _l40s.attention(q, k, v, causal=causal, scale=scale)
-    from ._attention import attention as run
+    from ._host import native_runner
     from ._schedules import a100_schedule
 
-    return run(q, k, v, causal=causal, scale=scale, schedule=a100_schedule(q.shape[-1], q.shape[2], causal))
+    runner = native_runner(a100_schedule(q.shape[-1], q.shape[2], causal))
+    return runner(q, k, v, causal=causal, scale=scale)

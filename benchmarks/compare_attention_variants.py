@@ -18,6 +18,7 @@ def main():
     parser.add_argument("--seq", nargs="+", type=int, default=[128, 1024, 4096])
     parser.add_argument("--dim", nargs="+", type=int, default=[64, 128])
     parser.add_argument("--heads", type=int, default=16)
+    parser.add_argument("--no-grad-forward", action="store_true")
     parser.add_argument("--dtype", nargs="+", choices=("bf16", "fp16"), default=["bf16", "fp16"])
     parser.add_argument("--phases", nargs="+", choices=("forward", "backward", "joint"), default=["joint"])
     parser.add_argument("--visibility", nargs="+", choices=("dense", "causal"), default=["dense", "causal"])
@@ -61,7 +62,8 @@ def main():
     if len(operations) < 2:
         parser.error("Compare at least two explicit operations.")
     report = {
-        "scope": "Same-process alternating graph replay and complete eager calls; forward retains gradients.",
+        "scope": "Same-process alternating graph replay and complete eager calls.",
+        "forward_gradients": not args.no_grad_forward,
         "event_scope": "The eager CUDA-event interval includes launch gaps; graph replay is a separate device-path control.",
         "device": torch.cuda.get_device_name(),
         "torch": str(torch.__version__),
@@ -97,6 +99,13 @@ def main():
         for phase in args.phases:
             executions, graphs, resources = {}, {}, {}
             for label, operation in operations.items():
+                if phase == "forward" and args.no_grad_forward:
+                    original_operation = operation
+
+                    def operation(*values, _operation=original_operation, **kwargs):
+                        with torch.no_grad():
+                            return _operation(*values, **kwargs)
+
                 saved = operation(*inputs, is_causal=causal) if phase == "backward" else None
 
                 def execute(op=operation, output=saved, selected_phase=phase):

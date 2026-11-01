@@ -36,7 +36,7 @@ class NativeHeadGroupControlsTests(unittest.TestCase):
         module = extension()
         for group in (1, 2, 4, 8, 16):
             module.AttentionRunner("warp", {"causal_head_group": group})
-        module.AttentionRunner("hopper", {"causal_head_group": 1})
+        module.AttentionRunner("hopper", {"causal_head_group": 1, "maximum_multiple": 128})
         for group in (-1, 0, 3, 32):
             with self.subTest(group=group), self.assertRaises(ValueError):
                 module.AttentionRunner("warp", {"causal_head_group": group})

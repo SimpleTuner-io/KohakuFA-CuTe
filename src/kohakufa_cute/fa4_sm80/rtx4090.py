@@ -31,6 +31,7 @@ def schedule(dimension, causal):
         kv_m_warps=4 if wide_d64 else 2,
         dq_m_warps=4 if wide_d64 else 2,
         v_in_regs=not narrow_query,
+        causal_head_group=16 if causal else 1,
     )
 
 

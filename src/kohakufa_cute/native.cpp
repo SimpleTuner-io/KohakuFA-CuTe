@@ -4,6 +4,7 @@
 #include <c10/cuda/CUDAStream.h>
 #include <c10/core/GradMode.h>
 #include <torch/csrc/autograd/custom_function.h>
+#include <torch/csrc/autograd/python_variable.h>
 #include <torch/extension.h>
 #include <pybind11/stl.h>
 #include <tvm/ffi/container/tensor.h>
@@ -36,12 +37,12 @@ std::mutex cache_mutex;
 
 // The configuration is constructed once, then retained as immutable CPU data
 // through autograd. Hot calls never rebuild Python dictionaries or DLPack views.
-constexpr std::array<const char *, 16> configured_fields = {
+constexpr std::array<const char *, 17> configured_fields = {
     "forward_m", "forward_n", "forward_stages", "query_in_registers", "backward_m", "backward_n",
     "query_stages", "dout_stages", "threads", "score_m_warps", "kv_m_warps", "dq_m_warps", "v_in_regs",
-    "forward_threads", "maximum_multiple", "accumulator_head_dim"};
-constexpr std::array<int64_t, 16> configured_defaults = {
-    128, 64, 1, 0, 64, 128, 2, 2, 256, 2, 2, 2, 0, 128, 1, 0};
+    "forward_threads", "maximum_multiple", "accumulator_head_dim", "causal_head_group"};
+constexpr std::array<int64_t, 17> configured_defaults = {
+    128, 64, 1, 0, 64, 128, 2, 2, 256, 2, 2, 2, 0, 128, 1, 0, 1};
 constexpr int configuration_backward_m = 5;
 constexpr int configuration_maximum_multiple = 15;
 constexpr int configuration_accumulator_head_dim = 16;
@@ -64,7 +65,7 @@ Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool m
     const auto family = configuration.defined() ? configuration.const_data_ptr<int64_t>()[0] : 0;
     Key key = {backward, tensors[0].get_device(), causal, masked, sm80, family};
     // Fourteen rank-four aliases plus the immutable configuration and mode
-    // need 164 integers. Keep the default reservation unchanged.
+    // need 165 integers. Keep the default reservation unchanged.
     key.reserve(inference ? 176 : 160);
     if (family == 1)
         key.push_back(inference);
@@ -146,8 +147,11 @@ tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, b
     if (configuration.defined()) {
         const auto *values = configuration.const_data_ptr<int64_t>();
         py::dict parameters;
-        for (size_t i = 0; i < configured_fields.size(); ++i)
+        for (size_t i = 0; i < configured_fields.size(); ++i) {
+            if (values[0] == 2 && i == 16)
+                continue;
             parameters[configured_fields[i]] = values[i + 1];
+        }
         const char *configured_mode = values[0] == 1 ? (inference ? "warp_inference" : (backward ? "warp_backward" : "warp_forward"))
                                                     : (backward ? "hopper_backward" : "hopper_forward");
         name = compiler(configured_mode, inputs, causal, masked, parameters).cast<std::string>();
@@ -387,6 +391,11 @@ class AttentionRunner {
                           "Maximum padding must be a power of two up to 1024.");
         TORCH_CHECK_VALUE(values[16] == 0 || (values[16] >= 32 && values[16] <= 512 && values[16] % 32 == 0),
                           "Accumulator width must be zero or a multiple of 32 up to 512.");
+        TORCH_CHECK_VALUE(values[17] == 1 || values[17] == 2 || values[17] == 4 ||
+                              values[17] == 8 || values[17] == 16,
+                          "Causal head groups must be one of 1, 2, 4, 8 or 16.");
+        TORCH_CHECK_VALUE(family == "warp" || values[17] == 1,
+                          "Causal head grouping requires the warp kernel family.");
         if (family == "warp") {
             TORCH_CHECK_VALUE(values[9] == 256 && (values[14] == 128 || values[14] == 256),
                               "Warp experiments require 256 backward threads and 128/256 forward threads.");
@@ -467,6 +476,38 @@ bool supported_device(int device) {
     return (major == 8 && (minor == 0 || minor == 6 || minor == 9)) || (major == 9 && minor == 0) || (major == 10 && (minor == 0 || minor == 3)) || (major == 12 && (minor == 0 || minor == 1));
 }
 
+bool full_a40(int device) {
+    static std::map<int, bool> devices;
+    static std::mutex device_mutex;
+    std::lock_guard<std::mutex> lock(device_mutex);
+    auto found = devices.find(device);
+    if (found != devices.end())
+        return found->second;
+    cudaDeviceProp properties;
+    C10_CUDA_CHECK(cudaGetDeviceProperties(&properties, device));
+    const bool selected = properties.major == 8 && properties.minor == 6 &&
+                          std::strcmp(properties.name, "NVIDIA A40") == 0 &&
+                          properties.multiProcessorCount == 84 && properties.sharedMemPerBlockOptin == 101376;
+    return devices.emplace(device, selected).first->second;
+}
+
+bool a40_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v, bool causal) {
+    if (q.dim() != 4 || k.dim() != 4 || v.dim() != 4 || q.sizes() != k.sizes() || q.sizes() != v.sizes() ||
+        !q.is_cuda() || q.device() != k.device() || q.device() != v.device() ||
+        (q.scalar_type() != at::kHalf && q.scalar_type() != at::kBFloat16) ||
+        q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
+        q.size(0) != 1 || q.size(1) != 16 || (q.size(2) != 1024 && q.size(2) != 4096) ||
+        !(q.size(3) == 128 || (q.size(3) == 64 && causal)) ||
+        !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
+        reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 != 0)
+        return false;
+    int current;
+    C10_CUDA_CHECK(cudaGetDevice(&current));
+    return q.get_device() == current && full_a40(q.get_device());
+}
+
 bool compatible(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask, double dropout, bool causal, bool gqa) {
     return dropout == 0.0 && q.dim() == 4 && k.dim() == 4 && v.dim() == 4 && q.is_cuda() && q.device() == k.device() &&
            q.device() == v.device() && (q.scalar_type() == at::kHalf || q.scalar_type() == at::kBFloat16) &&
@@ -500,6 +541,12 @@ bool validate(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask) {
 } // namespace
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
+    module.def("a40_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
+        if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
+            return false;
+        return a40_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
+                                       THPVariable_Unpack(v.ptr()), causal);
+    });
     py::class_<AttentionRunner>(module, "AttentionRunner", py::module_local())
         .def(py::init<const std::string &, const std::map<std::string, int64_t> &>(),
              py::arg("family"), py::arg("configuration") = std::map<std::string, int64_t>{})

@@ -6,7 +6,7 @@ from dataclasses import replace
 from pathlib import Path
 
 
-def make_attention(source=None, dependencies=None, *, direct=False, forward_control="selected"):
+def make_attention(source=None, dependencies=None, *, direct=False, forward_control="selected", causal_head_group=None):
     if forward_control not in ("selected", "stage2", "register-q"):
         raise ValueError("Select a bounded independent forward pipeline control.")
     if dependencies:
@@ -30,7 +30,7 @@ def make_attention(source=None, dependencies=None, *, direct=False, forward_cont
         or not fa4_sm80.available()
     ):
         raise ValueError("The explicit native qualification requires the pinned full RTX 4090 runtime.")
-    if not direct and forward_control == "selected":
+    if not direct and forward_control == "selected" and causal_head_group is None:
         return rtx4090.scaled_dot_product_attention
 
     def selected(q, k, v, *, is_causal=False, scale=None, enable_gqa=False):
@@ -38,6 +38,8 @@ def make_attention(source=None, dependencies=None, *, direct=False, forward_cont
         if enable_gqa or not 1.1754943508222875e-38 <= actual_scale <= 2e38:
             return api.scaled_dot_product_attention(q, k, v, is_causal=is_causal, scale=scale, enable_gqa=enable_gqa)
         configuration = rtx4090.schedule(q.shape[-1], is_causal)
+        if is_causal and causal_head_group is not None:
+            configuration = replace(configuration, causal_head_group=causal_head_group)
         if q.shape[-1] == 128:
             if forward_control == "stage2":
                 configuration = replace(configuration, forward_stages=2)

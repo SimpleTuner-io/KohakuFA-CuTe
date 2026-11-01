@@ -117,3 +117,5 @@ python -m benchmarks.compare_flashattention --backends cute fa2 sdpa \
 
 The optional dependency notes specify the pinned FlashAttention revision. Source
 and qualifier hashes in the compact record identify the measured implementation.
+
+The [causal head-grouping follow-up](rtx4090-causal-head-groups.md) applies the measured G16 ordering to the same bounded causal calls. Its newer record includes separate graph and eager results.

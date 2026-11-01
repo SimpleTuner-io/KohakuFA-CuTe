@@ -3,7 +3,7 @@
 import math
 
 
-def make_attention(*, native=True, forward_m=None):
+def make_attention(*, native=True, forward_m=None, forward_n=None):
     import torch
 
     from kohakufa_cute import api, fa4_sm80
@@ -26,10 +26,18 @@ def make_attention(*, native=True, forward_m=None):
         if q.shape != k.shape or q.shape != v.shape:
             raise ValueError("These controls require square MHA.")
         selected = schedule(q.shape[-1], q.shape[2], is_causal)
-        if forward_m is not None:
+        if forward_n is None and forward_m is not None:
             from dataclasses import replace
 
             selected = replace(selected, forward_m=forward_m)
+        elif forward_n is not None and q.shape[-1] == 128 and not is_causal:
+            from dataclasses import replace
+
+            selected = replace(
+                selected,
+                forward_m=selected.forward_m if forward_m is None else forward_m,
+                forward_n=forward_n,
+            )
         if native:
             return native_runner(selected)(q, k, v, causal=is_causal, scale=scale)
         return attention(q, k, v, causal=is_causal, scale=scale, schedule=selected)

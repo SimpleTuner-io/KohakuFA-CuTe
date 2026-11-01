@@ -30,14 +30,15 @@ def binding(path):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--captures", type=Path, required=True)
+    parser.add_argument("--n32", action="store_true", help="Summarize the independently qualified N32 public update.")
     parser.add_argument("--output", type=Path, default=Path("results/l40s-warp-training.json"))
     parser.add_argument("--plot", type=Path, default=Path("results/l40s-warp-training.svg"))
     args = parser.parse_args()
     root = args.captures
-    name = "l40s-stage22-cached-final-matrix.json"
+    name = "l40s-n32-public-v2-matrix.json" if args.n32 else "l40s-stage22-cached-final-matrix.json"
     raw = json.loads((root / name).read_text())
     assert len(raw["rows"]) == 96
-    assert (root / "l40s-stage22-cached-final-matrix.status").read_text().strip() == "0"
+    assert (root / name.replace(".json", ".status")).read_text().strip() == "0"
     report = {
         "schema_version": 1,
         "status": "qualified PR candidate; merge state is separate",
@@ -58,7 +59,9 @@ def main():
             "tvm_ffi": "0.1.15.post0",
             "quack": "0.6.5",
         },
-        "base_revision": "224781bb6fc15c62208a34c94e988fd3165bbc31",
+        "base_revision": (
+            "2104255ec92065b294c0a0403cbdc0f6340b3799" if args.n32 else "224781bb6fc15c62208a34c94e988fd3165bbc31"
+        ),
         "precision": "Separate unscaled maxima and shifted log normalization; P and dS rounded once to input dtype; FP32 products/actual-O delta; late dQ/dK scale. Unchanged per-head 1% BF16/0.5% FP16 gates.",
         "scope": "Training B1/H16 square aligned contiguous FP16/BF16 MHA, S1024 or4096; D64 causal only4096. Inference, other lengths, masks, GQA and other dimensions retain preceding dispatch.",
         "protocol": raw["protocol"],
@@ -82,6 +85,8 @@ def main():
         }
         entry["fa2_over_public"] = entry["median_event_ms"]["fa2"] / entry["median_event_ms"]["public"]
         entry["previous_over_public"] = entry["median_event_ms"]["previous"] / entry["median_event_ms"]["public"]
+        if args.n32:
+            entry["parent_n64_over_public"] = entry["median_event_ms"]["parent_n64"] / entry["median_event_ms"]["public"]
         report["rows"].append(entry)
     for dimension in (64, 128):
         for causal in (False, True):
@@ -95,14 +100,26 @@ def main():
             report["machine_code"][label + "-fa2"] = binding(root / relative)
             report["capture_sha256"][relative] = digest(root / relative)
     for dtype in ("bf16", "fp16"):
-        for backend in ("candidate", "fa2"):
+        for backend in ("public", "parent_n64", "fa2") if args.n32 else ("candidate", "fa2"):
             label = f"D128-dense-forward-{dtype}-{backend}"
-            relative = f"l40s-stage20-final-code/{label}/binding.json"
+            relative = (
+                f"l40s-n32-public-v1-code/{dtype}-{backend}/binding.json"
+                if args.n32
+                else f"l40s-stage20-final-code/{label}/binding.json"
+            )
             report["machine_code"][label] = binding(root / relative)
             report["capture_sha256"][relative] = digest(root / relative)
     report["qualification"] = {}
-    for name in ("l40s-stage12-native-qualification.json", "l40s-stage18-forward128-qualification.json"):
-        data = json.loads((root / name).read_text())
+    qualification_files = [("l40s-stage12-native-qualification.json", root / "l40s-stage12-native-qualification.json")]
+    if args.n32:
+        experiment = next(path for path in root.glob("l40s-forward-n32-v1-*") if path.is_dir())
+        qualification_files.append(("n32-factorial/m128n32-full.json", experiment / "m128n32-full.json"))
+    else:
+        qualification_files.append(
+            ("l40s-stage18-forward128-qualification.json", root / "l40s-stage18-forward128-qualification.json")
+        )
+    for name, path in qualification_files:
+        data = json.loads(path.read_text())
         assert data["status"] == "pass" and len(data["rows"]) == 96
         report["qualification"][name] = {
             "rows": len(data["rows"]),
@@ -118,8 +135,8 @@ def main():
                 if value is not None:
                     group[error["component"]] = max(group.get(error["component"], 0), value)
         report["qualification"][name]["max_required_relative_error"] = maximum_errors
-        report["capture_sha256"][name] = digest(root / name)
-    for stage, variant in ((12, "native"), (18, "forward128")):
+        report["capture_sha256"][name] = digest(path)
+    for stage, variant in ((12, "native"),) if args.n32 else ((12, "native"), (18, "forward128")):
         for tool in ("memcheck", "racecheck", "synccheck", "initcheck"):
             name = f"l40s-stage{stage}-{variant}-{tool}.json"
             data = json.loads((root / name).read_text())
@@ -139,7 +156,7 @@ def main():
             report["capture_sha256"][name] = digest(root / name)
     for suffix in ("guard-tests", "cpu", "gpu-tests"):
         stage = 21 if suffix == "gpu-tests" else 25
-        name = f"l40s-stage{stage}-{suffix}.log"
+        name = f"l40s-n32-public-v1-{suffix}.log" if args.n32 else f"l40s-stage{stage}-{suffix}.log"
         text = (root / name).read_text()
         assert "\nOK" in text and "FAILED" not in text
         skips = re.findall(r"OK \(skipped=(\d+)\)", text)
@@ -150,6 +167,57 @@ def main():
             "scope": "GPU public API" if suffix == "gpu-tests" else "local CPU checks",
         }
         report["capture_sha256"][name] = digest(root / name)
+    if args.n32:
+        for tool in ("memcheck", "racecheck", "synccheck", "initcheck"):
+            name = f"l40s-n32-public-v1-dense-{tool}.log"
+            log = (root / name).read_text()
+            summary = [line for line in log.splitlines() if "SUMMARY:" in line][-1]
+            pattern = (
+                r"RACECHECK SUMMARY: 0 hazards displayed \(0 errors, 0 warnings\)"
+                if tool == "racecheck"
+                else r"ERROR SUMMARY: 0 errors(?:\s|$)"
+            )
+            assert re.search(pattern, summary)
+            data = next(json.loads(line) for line in log.splitlines() if line.startswith('{"status": "pass"'))
+            assert len(data["rows"]) == 6
+            report["qualification"][name] = {
+                "rows": 6,
+                "status": "pass",
+                "reference_device": "cpu",
+                "scope": "D128 dense BF16 and FP16 tails and changed/poisoned graphs",
+                "tool_summary": summary,
+            }
+            report["capture_sha256"][name] = digest(root / name)
+        capacity = root / "l40s-n32-resource-v1.json"
+        assert (root / "l40s-n32-resource-v1.status").read_text().strip() == "0"
+        report["resource_capacity"] = json.loads(capacity.read_text())
+        report["capture_sha256"][capacity.name] = digest(capacity)
+        report["scope_note"] = (
+            "N32 changes only D128 dense S4096. Explicit parent_n64 calls the N64 native schedule and omits Python public selection; excluded selector cases are labelled."
+        )
+        identities = {}
+        for dtype in ("bf16", "fp16"):
+            variants = {}
+            for label in ("public", "parent_n64"):
+                relative = f"l40s-n32-bwd-code-v1/{dtype}-{label}/binding.json"
+                variants[label] = binding(root / relative)
+                report["capture_sha256"][relative] = digest(root / relative)
+            for key in ("loaded_cubin_sha256", "sass_sha256", "ptx_sha256"):
+                assert variants["public"][key] == variants["parent_n64"][key]
+            identities[dtype] = variants
+        report["backward_code_identity"] = identities
+        archive = root / "l40s-n32-bindings-archive-v1.verified-receipt.json"
+        receipt = json.loads(archive.read_text())
+        assert receipt["verified_off_host"]
+        report["retained_code_archive"] = {key: receipt[key] for key in ("sha256", "bytes", "files", "verified_off_host")}
+        loops = root / "l40s-n32-keyloop-summary.json"
+        report["forward_static_key_loops"] = json.loads(loops.read_text())
+        report["capture_sha256"][loops.name] = digest(loops)
+        report["allocation_control"] = {
+            "report": "results/l40s-n32-allocation.json",
+            "scope": "Separate shared-input-storage and balanced-capture-order diagnostic; standard96 timing rows above are unchanged, including mixed BF16 joint result.",
+            "capture_sha256": digest(root / "l40s-n32-allocation-v2.json"),
+        }
     report["counter_limit"] = (
         "Nsight Compute ERR_NVGPUCTRPERM; no counter-derived occupancy, cache, stall or utilization claims."
     )
@@ -182,7 +250,7 @@ def main():
         }
         y = np.arange(len(cases))
         for offset, backend, color, title in (
-            (-0.16, "previous", "#375f7b", "Preceding CuTe / candidate"),
+            (-0.16, "previous", "#375f7b", "Original native CuTe / public" if args.n32 else "Preceding CuTe / candidate"),
             (0.16, "fa2", "#c87834", "FA2 / candidate"),
         ):
             ratio = [rows[key][backend + "_over_public"] for key in cases]

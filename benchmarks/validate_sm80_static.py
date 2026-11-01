@@ -6,6 +6,7 @@ import itertools
 import json
 import math
 from pathlib import Path
+from unittest.mock import patch
 
 import torch
 
@@ -95,13 +96,19 @@ def main():
 
     def retain(label, inputs, dout, *, causal=False, scale=None):
         operands = [t.detach().requires_grad_(True) for t in inputs]
-        out = function(*operands, is_causal=causal, scale=scale)
+        saved = []
+        with (
+            patch.object(fa4_sm80, "attention", wraps=fa4_sm80.attention) as call,
+            torch.autograd.graph.saved_tensors_hooks(lambda tensor: saved.append(tensor) or tensor, lambda tensor: tensor),
+        ):
+            out = function(*operands, is_causal=causal, scale=scale)
         actual_scale = inputs[0].shape[-1] ** -0.5 if scale is None else scale
-        selected = hasattr(out.grad_fn, "schedule")
+        selected = call.called
         if args.direct and actual_scale > 0:
-            assert hasattr(out.grad_fn, "schedule"), "The selected public call did not execute the static schedule."
+            assert selected, "The selected public call did not execute the static schedule."
         if selected:
-            maximum, logsum = out.grad_fn.saved_tensors[-2:]
+            assert len(saved) == 6
+            maximum, logsum = saved[-2:]
         actual = out, *torch.autograd.grad(out, operands, dout)
         directed = label.startswith("rounded") or label == "negative-common-offset"
         row = {

@@ -18,11 +18,14 @@ def main():
     parser.add_argument("--seq", nargs="+", type=int, default=[128, 1024, 4096])
     parser.add_argument("--dim", nargs="+", type=int, default=[64, 128])
     parser.add_argument("--heads", type=int, default=16)
+    parser.add_argument("--no-grad-forward", action="store_true")
     parser.add_argument("--dtype", nargs="+", choices=("bf16", "fp16"), default=["bf16", "fp16"])
     parser.add_argument("--phases", nargs="+", choices=("forward", "backward", "joint"), default=["joint"])
+    parser.add_argument("--visibility", nargs="+", choices=("dense", "causal"), default=["dense", "causal"])
     parser.add_argument("--warmup-ms", type=float, default=1000)
     parser.add_argument("--window-ms", type=float, default=100)
     parser.add_argument("--repeats", type=int, default=7)
+    parser.add_argument("--seed", type=int, default=371, help="Use an independent input seed for final evaluation.")
     parser.add_argument("--source-revision", help="Full revision label supplied by the frozen-snapshot installer.")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -59,7 +62,8 @@ def main():
     if len(operations) < 2:
         parser.error("Compare at least two explicit operations.")
     report = {
-        "scope": "Same-process alternating graph replay and complete eager calls; forward retains gradients.",
+        "scope": "Same-process alternating graph replay and complete eager calls.",
+        "forward_gradients": not args.no_grad_forward,
         "event_scope": "The eager CUDA-event interval includes launch gaps; graph replay is a separate device-path control.",
         "device": torch.cuda.get_device_name(),
         "torch": str(torch.__version__),
@@ -73,12 +77,13 @@ def main():
             if path.is_file() and path.suffix in (".py", ".cpp")
         },
         "operations": metadata,
-        "protocol": {key: getattr(args, key) for key in ("warmup_ms", "window_ms", "repeats")},
+        "protocol": {key: getattr(args, key) for key in ("warmup_ms", "window_ms", "repeats", "seed")},
         "rows": [],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    for sequence, dimension, dtype_name, causal in itertools.product(args.seq, args.dim, args.dtype, (False, True)):
-        torch.manual_seed(371)
+    for sequence, dimension, dtype_name, visibility in itertools.product(args.seq, args.dim, args.dtype, args.visibility):
+        causal = visibility == "causal"
+        torch.manual_seed(args.seed)
         dtype = torch.bfloat16 if dtype_name == "bf16" else torch.float16
         inputs = [
             torch.randn(1, args.heads, sequence, dimension, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)
@@ -94,6 +99,13 @@ def main():
         for phase in args.phases:
             executions, graphs, resources = {}, {}, {}
             for label, operation in operations.items():
+                if phase == "forward" and args.no_grad_forward:
+                    original_operation = operation
+
+                    def operation(*values, _operation=original_operation, **kwargs):
+                        with torch.no_grad():
+                            return _operation(*values, **kwargs)
+
                 saved = operation(*inputs, is_causal=causal) if phase == "backward" else None
 
                 def execute(op=operation, output=saved, selected_phase=phase):

@@ -111,6 +111,7 @@ class FlatBackward:
             V_in_regs=schedule.v_in_regs,
         )
         self.main.shared_capacity = capacity
+        self.main.causal_head_group = schedule.causal_head_group
         self.convert = FlashAttentionBackwardPostprocess(
             dtype,
             dimension,

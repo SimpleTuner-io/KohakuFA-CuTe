@@ -1,5 +1,9 @@
 # A40 D128 shared attention
 
+For the current public entry, see the [causal D64/D128 scheduling and host
+overhead follow-up](a40-causal-grouped.md). The measurements below describe the
+initial D128 selection before causal grouping and immutable-device caching.
+
 The explicit A40 entry uses the shared warp-MMA forward and joint backward through
 cached native C++ runners. It keeps the [standard arithmetic](precision.md): P and
 dS each convert once to the input dtype, products and delta accumulate in FP32,

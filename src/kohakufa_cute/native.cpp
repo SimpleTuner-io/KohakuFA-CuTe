@@ -4,6 +4,7 @@
 #include <c10/cuda/CUDAStream.h>
 #include <torch/csrc/autograd/custom_function.h>
 #include <torch/extension.h>
+#include <pybind11/stl.h>
 #include <tvm/ffi/container/tensor.h>
 #include <tvm/ffi/extra/c_env_api.h>
 #include <tvm/ffi/function.h>
@@ -12,6 +13,7 @@
 #include <cmath>
 #include <cstring>
 #include <list>
+#include <limits>
 #include <map>
 #include <mutex>
 
@@ -31,6 +33,18 @@ std::map<Key, Entry> programs;
 std::list<Key> recent;
 std::mutex cache_mutex;
 
+// The configuration is constructed once, then retained as immutable CPU data
+// through autograd. Hot calls never rebuild Python dictionaries or DLPack views.
+constexpr std::array<const char *, 16> configured_fields = {
+    "forward_m", "forward_n", "forward_stages", "query_in_registers", "backward_m", "backward_n",
+    "query_stages", "dout_stages", "threads", "score_m_warps", "kv_m_warps", "dq_m_warps", "v_in_regs",
+    "forward_threads", "maximum_multiple", "accumulator_head_dim"};
+constexpr std::array<int64_t, 16> configured_defaults = {
+    128, 64, 1, 0, 64, 128, 2, 2, 256, 2, 2, 2, 0, 128, 1, 0};
+constexpr int configuration_backward_m = 5;
+constexpr int configuration_maximum_multiple = 15;
+constexpr int configuration_accumulator_head_dim = 16;
+
 std::pair<int, int> device_capability(int device);
 
 int split_forward_count(const Tensor &q, const Tensor &k, bool masked, bool causal) {
@@ -44,10 +58,16 @@ int split_forward_count(const Tensor &q, const Tensor &k, bool masked, bool caus
     return q.size(2) > 64 || k.size(2) <= 256 ? 4 : 16;
 }
 
-Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false) {
-    Key key = {backward, tensors[0].get_device(), causal, masked, sm80};
+Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false,
+                      const Tensor &configuration = Tensor()) {
+    const auto family = configuration.defined() ? configuration.const_data_ptr<int64_t>()[0] : 0;
+    Key key = {backward, tensors[0].get_device(), causal, masked, sm80, family};
     key.reserve(160);
-    if (sm80) {
+    if (sm80 || configuration.defined()) {
+        if (configuration.defined()) {
+            const auto *values = configuration.const_data_ptr<int64_t>();
+            key.insert(key.end(), values, values + configuration.numel());
+        }
         // Cache exact runtime layouts for the optional entry. Do not reuse
         // native dispatch's shape/stride equivalence classes.
         for (const auto &tensor : tensors) {
@@ -95,8 +115,9 @@ Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool m
     return key;
 }
 
-tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false) {
-    auto key = configuration_key(backward, tensors, causal, masked, sm80);
+tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false,
+                          const Tensor &configuration = Tensor()) {
+    auto key = configuration_key(backward, tensors, causal, masked, sm80, configuration);
     std::unique_lock<std::mutex> lock(cache_mutex);
     auto found = programs.find(key);
     if (found != programs.end()) {
@@ -115,9 +136,19 @@ tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, b
     for (size_t i = 0; i < tensors.size(); ++i)
         inputs[i] = py::cast(tensors[i]);
     const char *mode = sm80 ? (backward ? "sm80_backward" : "sm80_forward") : (backward ? "backward" : "forward");
-    auto name = py::module_::import("kohakufa_cute.native")
-                    .attr("compile_kernel")(mode, inputs, causal, masked)
-                    .cast<std::string>();
+    auto compiler = py::module_::import("kohakufa_cute.native").attr("compile_kernel");
+    std::string name;
+    if (configuration.defined()) {
+        const auto *values = configuration.const_data_ptr<int64_t>();
+        py::dict parameters;
+        for (size_t i = 0; i < configured_fields.size(); ++i)
+            parameters[configured_fields[i]] = values[i + 1];
+        const char *configured_mode = values[0] == 1 ? (backward ? "warp_backward" : "warp_forward")
+                                                    : (backward ? "hopper_backward" : "hopper_forward");
+        name = compiler(configured_mode, inputs, causal, masked, parameters).cast<std::string>();
+    } else {
+        name = compiler(mode, inputs, causal, masked).cast<std::string>();
+    }
     auto function = tvm::ffi::Function::GetGlobalRequired(name);
     tvm::ffi::Function::RemoveGlobal(name);
     recent.push_front(key);
@@ -141,8 +172,9 @@ class StreamScope {
     ~StreamScope() { TVMFFIEnvSetStream(kDLCUDA, device, previous, nullptr); }
 };
 
-void launch(bool backward, const Tensors &tensors, double scale, bool causal, bool masked, bool sm80 = false) {
-    auto function = program(backward, tensors, causal, masked, sm80);
+void launch(bool backward, const Tensors &tensors, double scale, bool causal, bool masked, bool sm80 = false,
+            const Tensor &configuration = Tensor()) {
+    auto function = program(backward, tensors, causal, masked, sm80, configuration);
     std::array<DLTensor, 14> dl;
     std::array<tvm::ffi::AnyView, 15> arguments;
     for (size_t i = 0; i < tensors.size(); ++i) {
@@ -275,6 +307,120 @@ class Sm80Attention : public torch::autograd::Function<Sm80Attention> {
         return {dq, dk, dv, Tensor(), Tensor()};
     }
 };
+
+class ConfiguredAttention : public torch::autograd::Function<ConfiguredAttention> {
+  public:
+    static Tensor forward(AutogradContext *ctx, Tensor q, Tensor k, Tensor v, double scale, bool causal,
+                          Tensor configuration) {
+        c10::cuda::CUDAGuard guard(q.device());
+        const auto *parameters = configuration.const_data_ptr<int64_t>();
+        const auto multiple = parameters[configuration_maximum_multiple];
+        const auto padded = (q.size(2) + multiple - 1) / multiple * multiple;
+        auto out = at::empty_like(q);
+        auto maximum = at::empty({q.size(0), q.size(1), padded}, q.options().dtype(at::kFloat));
+        if (padded != q.size(2))
+            maximum.zero_();
+        auto logsum = at::empty({q.size(0), q.size(1), q.size(2)}, maximum.options());
+        launch(false, {q, k, v, q, out, maximum, logsum, out, maximum, out, out, out, maximum, maximum},
+               scale, causal, false, false, configuration);
+        ctx->save_for_backward({q, k, v, out, maximum, logsum});
+        ctx->saved_data["configuration"] = configuration;
+        ctx->saved_data["scale"] = scale;
+        ctx->saved_data["causal"] = causal;
+        return out;
+    }
+
+    static variable_list backward(AutogradContext *ctx, variable_list gradients) {
+        auto saved = ctx->get_saved_variables();
+        const auto configuration = ctx->saved_data["configuration"].toTensor();
+        const auto *parameters = configuration.const_data_ptr<int64_t>();
+        const auto &q = saved[0];
+        c10::cuda::CUDAGuard guard(q.device());
+        auto dout = gradients[0].contiguous();
+        if (reinterpret_cast<uintptr_t>(dout.data_ptr()) % 16 != 0)
+            dout = dout.clone(at::MemoryFormat::Contiguous);
+        auto dq = at::empty_like(q), dk = at::empty_like(saved[1]), dv = at::empty_like(saved[2]);
+        const auto tile_m = parameters[configuration_backward_m];
+        const auto rounded = (q.size(2) + tile_m - 1) / tile_m * tile_m;
+        const auto accumulator_width = parameters[configuration_accumulator_head_dim] == 0
+                                           ? q.size(3) : parameters[configuration_accumulator_head_dim];
+        auto delta = at::empty({q.size(0), q.size(1), rounded}, q.options().dtype(at::kFloat));
+        auto lognorm = at::empty_like(delta);
+        auto scratch = at::empty({q.size(0), q.size(1), rounded * accumulator_width}, delta.options());
+        launch(true, {q, saved[1], saved[2], q, saved[3], saved[4], saved[5], dout, delta, dq, dk, dv, scratch, lognorm},
+               ctx->saved_data["scale"].toDouble(), ctx->saved_data["causal"].toBool(), false, false, configuration);
+        return {dq, dk, dv, Tensor(), Tensor(), Tensor()};
+    }
+};
+
+bool validate(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask);
+
+class AttentionRunner {
+    Tensor configuration;
+
+  public:
+    AttentionRunner(const std::string &family, const std::map<std::string, int64_t> &options) {
+        TORCH_CHECK_VALUE(family == "warp" || family == "hopper", "Select the warp or hopper kernel family.");
+        std::vector<int64_t> values(1 + configured_fields.size());
+        values[0] = family == "warp" ? 1 : 2;
+        size_t recognized = 0;
+        for (size_t i = 0; i < configured_fields.size(); ++i) {
+            auto entry = options.find(configured_fields[i]);
+            values[i + 1] = entry == options.end() ? configured_defaults[i] : entry->second;
+            recognized += entry != options.end();
+        }
+        TORCH_CHECK_VALUE(recognized == options.size(), "Unknown attention launch configuration field.");
+        const auto power_of_two = [](int64_t n) { return n > 0 && (n & (n - 1)) == 0; };
+        for (int index : {1, 2, 5, 6})
+            TORCH_CHECK_VALUE(power_of_two(values[index]) && values[index] >= 16 && values[index] <= 256,
+                              "Attention tile dimensions must be powers of two in 16..256.");
+        TORCH_CHECK_VALUE(values[3] >= 1 && values[3] <= 2 && values[7] >= 1 && values[7] <= 2 &&
+                              values[8] >= 1 && values[8] <= values[7], "Unsupported pipeline stage counts.");
+        for (int index : {4, 13})
+            TORCH_CHECK_VALUE(values[index] == 0 || values[index] == 1, "Attention configuration flags must be 0 or 1.");
+        TORCH_CHECK_VALUE(power_of_two(values[15]) && values[15] <= 1024,
+                          "Maximum padding must be a power of two up to 1024.");
+        TORCH_CHECK_VALUE(values[16] == 0 || (values[16] >= 32 && values[16] <= 512 && values[16] % 32 == 0),
+                          "Accumulator width must be zero or a multiple of 32 up to 512.");
+        if (family == "warp") {
+            TORCH_CHECK_VALUE(values[9] == 256 && (values[14] == 128 || values[14] == 256),
+                              "Warp experiments require 256 backward threads and 128/256 forward threads.");
+            for (int index : {10, 11, 12})
+                TORCH_CHECK_VALUE(power_of_two(values[index]) && values[index] <= 8, "Unsupported MMA warp layout.");
+            TORCH_CHECK_VALUE(!(values[3] > 1 && values[4]),
+                              "Register-Q with a multi-stage forward is not qualified.");
+            TORCH_CHECK_VALUE(values[15] == 1,
+                              "Warp experiments retain exact maximum rows.");
+        } else {
+            TORCH_CHECK_VALUE(values[15] % values[5] == 0,
+                              "Hopper maximum padding must cover complete backward tiles.");
+        }
+        configuration = at::tensor(values, at::TensorOptions().dtype(at::kLong).device(at::kCPU));
+    }
+
+    Tensor call(Tensor q, Tensor k, Tensor v, std::optional<double> scale, bool causal) const {
+        validate(q, k, v, std::nullopt);
+        const auto target = device_capability(q.get_device());
+        const auto family = configuration.const_data_ptr<int64_t>()[0];
+        const auto amount = scale.value_or(std::pow(q.size(3), -0.5));
+        const bool warp_device = (target.first == 8 && (target.second == 0 || target.second == 6 || target.second == 9)) ||
+                                 (target.first == 12 && (target.second == 0 || target.second == 1));
+        TORCH_CHECK_VALUE((family == 1 && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
+                          "The configured attention family does not match the CUDA device.");
+        TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
+                              q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&
+                              reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
+                              reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
+                              reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
+                              (q.size(3) == 64 || q.size(3) == 128) && std::isfinite(amount) &&
+                              amount >= std::numeric_limits<float>::min() && amount <= 2e38,
+                          "Configured attention requires aligned contiguous square D64/D128 FP16/BF16 MHA and a positive normal FP32 scale.");
+        const auto accumulator_width = configuration.const_data_ptr<int64_t>()[configuration_accumulator_head_dim];
+        TORCH_CHECK_VALUE(accumulator_width == 0 || accumulator_width == q.size(3),
+                          "These D64/D128 experiments require the input head width for accumulation.");
+        return ConfiguredAttention::apply(q, k, v, amount, causal, configuration);
+    }
+};
 std::pair<int, int> device_capability(int device) {
     static std::map<int, std::pair<int, int>> capabilities;
     static std::mutex capability_mutex;
@@ -326,6 +472,14 @@ bool validate(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask) {
 } // namespace
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
+    py::class_<AttentionRunner>(module, "AttentionRunner", py::module_local())
+        .def(py::init<const std::string &, const std::map<std::string, int64_t> &>(),
+             py::arg("family"), py::arg("configuration") = std::map<std::string, int64_t>{})
+        .def("__call__", [](const AttentionRunner &runner, Tensor q, Tensor k, Tensor v,
+                            std::optional<double> scale, bool causal) {
+            py::gil_scoped_release release;
+            return runner.call(q, k, v, scale, causal);
+        }, py::arg("q"), py::arg("k"), py::arg("v"), py::arg("scale") = std::nullopt, py::arg("causal") = false);
     module.def("sm80_attention", [](Tensor q, Tensor k, Tensor v, double scale, bool causal) {
         py::gil_scoped_release release;
         validate(q, k, v, std::nullopt);
@@ -336,7 +490,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
                               reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
                               (q.size(3) == 64 || q.size(3) == 128) &&
-                              std::isfinite(scale) && scale > 0 && scale <= 2e38,
+                              std::isfinite(scale) && scale >= std::numeric_limits<float>::min() && scale <= 2e38,
                           "The native SM80 entry requires aligned contiguous square FP16/BF16 MHA, D64/D128 and a positive scale.");
         return Sm80Attention::apply(q, k, v, scale, causal);
     });

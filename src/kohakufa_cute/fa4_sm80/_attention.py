@@ -60,7 +60,10 @@ def _backward(q, k, v, out, dout, maximum, logsum, scale, causal, schedule, capa
 
     from ._backward import FlashAttentionBackwardSm80
 
-    q, k, v, out, dout = [t.transpose(1, 2).detach() for t in (q, k, v, out, dout.contiguous())]
+    dout = dout.contiguous()
+    if dout.data_ptr() % 16:
+        dout = dout.clone()
+    q, k, v, out, dout = [t.transpose(1, 2).detach() for t in (q, k, v, out, dout)]
     batch, sequence, heads, dimension = q.shape
     rounded = (sequence + schedule.backward_m - 1) // schedule.backward_m * schedule.backward_m
     dtype = interface.torch2cute_dtype_map[q.dtype]

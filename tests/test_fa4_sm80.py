@@ -8,13 +8,14 @@ import torch
 from kohakufa_cute import api, fa4_sm80
 
 
-def cuda_operand(shape=(1, 16, 4096, 128), dtype=torch.bfloat16, contiguous=True):
+def cuda_operand(shape=(1, 16, 4096, 128), dtype=torch.bfloat16, contiguous=True, pointer=4096):
     return SimpleNamespace(
         shape=shape,
         ndim=4,
         dtype=dtype,
         device=torch.device("cuda", 0),
         is_contiguous=lambda: contiguous,
+        data_ptr=lambda: pointer,
     )
 
 
@@ -51,6 +52,10 @@ class Sm80SelectionTests(unittest.TestCase):
             self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0.1, False, None, False))
             operand = cuda_operand(contiguous=False)
             self.assertFalse(fa4_sm80.compatible(operand, operand, operand, None, 0, False, None, False))
+            for position in range(3):
+                operands = [q, q, q]
+                operands[position] = cuda_operand(pointer=4098)
+                self.assertFalse(fa4_sm80.compatible(*operands, None, 0, False, None, False))
             with patch.object(torch.compiler, "is_compiling", return_value=True):
                 self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
             with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
@@ -100,6 +105,41 @@ class Sm80SelectionTests(unittest.TestCase):
     "Requires the qualified optional A100 schedule",
 )
 class Sm80KernelTests(unittest.TestCase):
+    def test_unaligned_inputs_use_native_and_output_gradient_is_materialized(self):
+        from benchmarks.reference import fp64_reference, metrics
+
+        for dtype in (torch.bfloat16, torch.float16):
+            torch.manual_seed(839)
+            shape = (1, 8, 2048, 64)
+            inputs = [torch.randn(shape, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)]
+            unaligned = torch.empty(inputs[0].numel() + 1, device="cuda", dtype=dtype)[1:].view(shape)
+            unaligned.copy_(inputs[0].detach())
+            unaligned.requires_grad_(True)
+            self.assertTrue(unaligned.is_contiguous())
+            self.assertNotEqual(unaligned.data_ptr() % 16, 0)
+            for position in range(3):
+                operands = list(inputs)
+                operands[position] = unaligned
+                self.assertFalse(fa4_sm80.compatible(*operands, None, 0, False, None, False))
+                out = api.scaled_dot_product_attention(*operands)
+                self.assertFalse(hasattr(out.grad_fn, "schedule"))
+                torch.autograd.grad(out, operands, torch.ones_like(out))
+            out = api.scaled_dot_product_attention(*inputs)
+            self.assertTrue(hasattr(out.grad_fn, "schedule"))
+            dout = torch.empty(out.numel() + 1, device="cuda", dtype=dtype)[1:].view(shape)
+            dout.normal_()
+            self.assertTrue(dout.is_contiguous())
+            self.assertNotEqual(dout.data_ptr() % 16, 0)
+            actual = out, *torch.autograd.grad(out, inputs, dout)
+            for head in range(shape[1]):
+                reference = fp64_reference(
+                    [tensor[:, head : head + 1].detach() for tensor in inputs], dout[:, head : head + 1], causal=False
+                )
+                for got, expected in zip(actual, reference):
+                    error = metrics(got[:, head : head + 1], expected)
+                    self.assertTrue(error["finite"])
+                    self.assertLess(error["relative_error"], 0.01 if dtype == torch.bfloat16 else 0.005)
+
     def test_public_selected_boundaries_and_native_exception(self):
         from benchmarks.reference import fp64_reference, metrics
 

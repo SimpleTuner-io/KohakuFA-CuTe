@@ -8,8 +8,8 @@ the native extension while retaining the same GPU methods.
 
 ## Buffers and ownership
 
-The API receives contiguous `[B,H,S,D]` Q/K/V, with equal shapes and input dtype
-FP16 or BF16. The current selected schedule uses `B=1`, D64/D128, square
+The API receives contiguous, 16-byte-aligned `[B,H,S,D]` Q/K/V, with equal shapes
+and input dtype FP16 or BF16. The current selected schedule uses `B=1`, D64/D128, square
 attention, and positive scale. A BSHD view has strides
 `(H*S*D, D, S*D, 1)`; it changes metadata without moving data.
 
@@ -33,7 +33,9 @@ Forward saves Q, K, V, actual owned `out`, `maximum`, and `logsum` for autograd.
 Fresh operands, statistics, output, and gradient pointers must reach each call
 and graph capture. Cache compilation and layout classes; preserve tensor buffer
 ownership and initialization lifetimes. Expanded `dout` currently converts to a
-contiguous BHSD tensor before the BSHD view.
+contiguous BHSD tensor before the BSHD view. A contiguous dO whose starting
+address is not 16-byte aligned requires an aligned clone before the vectorized
+backward loads. Unaligned Q/K/V use the native CuTe path.
 
 ## Current compiled callable arguments
 

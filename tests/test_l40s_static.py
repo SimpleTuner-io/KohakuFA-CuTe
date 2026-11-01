@@ -91,9 +91,37 @@ class L40sSelectionTests(unittest.TestCase):
         self.assertIs(_l40s.schedule(128, 4096, False), _l40s.schedule(128, 4096, False))
         _l40s.is_device.cache_clear()
         with patch.object(self.properties, "name", "NVIDIA GeForce RTX 4090"):
-            with patch("kohakufa_cute.fa4_sm80._attention.attention", return_value=object()) as preceding:
+            with patch("kohakufa_cute.fa4_sm80._host.native_runner", return_value=Mock(return_value=object())) as preceding:
                 fa4_sm80.attention(q, q, q)
             preceding.assert_called_once()
+
+    def test_n32_is_limited_to_dense_d128_at_4096(self):
+        from kohakufa_cute.fa4_sm80 import _l40s
+
+        for dimension in (64, 128):
+            for sequence in (1024, 4096):
+                for causal in (False, True):
+                    selected = _l40s.schedule(dimension, sequence, causal)
+                    expected = 32 if dimension == 128 and sequence == 4096 and not causal else 64
+                    self.assertEqual(selected.forward_n, expected)
+
+    def test_forward_m_control_keeps_its_existing_scope(self):
+        from benchmarks.l40s_schedules import make_attention
+        from kohakufa_cute.fa4_sm80 import _host, _l40s
+
+        for dimension, causal in ((64, False), (64, True), (128, False), (128, True)):
+            q = training_operand((1, 16, 4096, dimension))
+            with patch.object(_host, "native_runner", return_value=Mock()) as runner:
+                make_attention(forward_m=64)(q, q, q, is_causal=causal)
+                self.assertEqual(runner.call_args.args[0].forward_m, 64)
+            with patch.object(_host, "native_runner", return_value=Mock()) as runner:
+                make_attention(forward_m=128, forward_n=32)(q, q, q, is_causal=causal)
+                expected = _l40s.schedule(dimension, 4096, causal)
+                got = runner.call_args.args[0]
+                if dimension == 128 and not causal:
+                    self.assertEqual((got.forward_m, got.forward_n), (128, 32))
+                else:
+                    self.assertEqual(got, expected)
 
     def test_a100_does_not_enter_l40s_tensor_validation(self):
         from kohakufa_cute.fa4_sm80 import _l40s
@@ -165,14 +193,21 @@ class L40sPublicKernelTests(unittest.TestCase):
         from benchmarks.validate_sm80_static import assess
         from kohakufa_cute.fa4_sm80 import _l40s
 
-        inputs = [torch.randn(1, 16, 1024, 128, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)]
-        dout = torch.randn_like(inputs[0])
-        with patch.object(_l40s, "attention", wraps=_l40s.attention) as selected:
-            for function in (api.attention, api.scaled_dot_product_attention, api.automatic_scaled_dot_product_attention):
-                output = function(*inputs)
-                actual = output, *torch.autograd.grad(output, inputs, dout)
-                assess(actual, inputs, dout, causal=False, scale=None, directed=False, pointwise=False)
-            self.assertEqual(selected.call_count, 3)
+        for sequence in (1024, 4096):
+            inputs = [
+                torch.randn(1, 16, sequence, 128, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)
+            ]
+            dout = torch.randn_like(inputs[0])
+            with patch.object(_l40s, "attention", wraps=_l40s.attention) as selected:
+                for function in (
+                    api.attention,
+                    api.scaled_dot_product_attention,
+                    api.automatic_scaled_dot_product_attention,
+                ):
+                    output = function(*inputs)
+                    actual = output, *torch.autograd.grad(output, inputs, dout)
+                    assess(actual, inputs, dout, causal=False, scale=None, directed=False, pointwise=False)
+                self.assertEqual(selected.call_count, 3)
 
     def test_inference_and_short_training_retain_native_fallback(self):
         from kohakufa_cute import native

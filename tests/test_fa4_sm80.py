@@ -108,24 +108,56 @@ class Sm80SelectionTests(unittest.TestCase):
             patch.object(fa4_sm80, "compatible", return_value=True),
             patch.object(fa4_sm80, "attention", side_effect=RuntimeError("selected schedule failed")),
         ):
-            for function in (api.attention, api.scaled_dot_product_attention, api.automatic_scaled_dot_product_attention):
-                with self.subTest(function=function.__name__), self.assertRaisesRegex(RuntimeError, "selected schedule"):
+            for function in (
+                api.attention,
+                api.scaled_dot_product_attention,
+                api.automatic_scaled_dot_product_attention,
+            ):
+                with (
+                    self.subTest(function=function.__name__),
+                    self.assertRaisesRegex(RuntimeError, "selected schedule"),
+                ):
                     function(q, q, q)
         extension.assert_not_called()
 
     def test_repeated_calls_preserve_package_entry_function(self):
-        from kohakufa_cute.fa4_sm80 import _attention
+        from kohakufa_cute.fa4_sm80 import _host, _sm120
 
         entry = fa4_sm80.attention
         q = cuda_operand()
+        runner = Mock(return_value=object())
         with (
-            patch.object(_attention, "attention", return_value=object()) as selected,
+            patch.object(_sm120, "target_device", return_value=False),
+            patch.object(_host, "native_runner", return_value=runner) as selected,
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 0)),
         ):
             for _ in range(2):
                 fa4_sm80.attention(q, q, q)
                 self.assertIs(fa4_sm80.attention, entry)
             self.assertEqual(selected.call_count, 2)
+            self.assertEqual(runner.call_count, 2)
+
+    def test_native_runner_cache_retains_every_selected_schedule_field(self):
+        from dataclasses import asdict, replace
+
+        from kohakufa_cute.fa4_sm80._host import native_runner
+        from kohakufa_cute.fa4_sm80._schedules import a100_schedule
+
+        schedule = a100_schedule(64, 4096, False)
+        different = replace(schedule, query_stages=2)
+        module = Mock()
+        native = SimpleNamespace(extension=Mock(return_value=module))
+        native_runner.cache_clear()
+        try:
+            with patch.dict("sys.modules", {"kohakufa_cute.native": native}):
+                first = native_runner(schedule)
+                self.assertIs(first, native_runner(schedule))
+                native_runner(different)
+            self.assertEqual(module.AttentionRunner.call_count, 2)
+            self.assertEqual(module.AttentionRunner.call_args_list[0].args, ("warp", asdict(schedule)))
+            self.assertEqual(module.AttentionRunner.call_args_list[1].args, ("warp", asdict(different)))
+        finally:
+            native_runner.cache_clear()
 
 
 @unittest.skipUnless(
@@ -133,6 +165,26 @@ class Sm80SelectionTests(unittest.TestCase):
     "Requires the qualified optional A100 schedule",
 )
 class Sm80KernelTests(unittest.TestCase):
+    def public_output(self, inputs, *, causal=False, scale=None, function=None):
+        from benchmarks.validate_sm80_static import statistics
+
+        function = api.scaled_dot_product_attention if function is None else function
+        selected = fa4_sm80.compatible(*inputs, None, 0, causal, scale, False)
+        saved = []
+        with (
+            patch.object(fa4_sm80, "attention", wraps=fa4_sm80.attention) as call,
+            torch.autograd.graph.saved_tensors_hooks(lambda tensor: saved.append(tensor) or tensor, lambda tensor: tensor),
+        ):
+            if function is api.attention:
+                output = function(*inputs, causal=causal, scale=scale)
+            else:
+                output = function(*inputs, is_causal=causal, scale=scale)
+        self.assertEqual(call.call_count, int(selected))
+        if selected:
+            self.assertEqual(len(saved), 6)
+            statistics(inputs, saved[-2], saved[-1], causal, inputs[0].shape[-1] ** -0.5 if scale is None else scale)
+        return output
+
     def test_tiny_positive_scales_retain_native_zero_aware_fallback(self):
         from benchmarks.reference import metrics
 
@@ -145,8 +197,7 @@ class Sm80KernelTests(unittest.TestCase):
                     with self.subTest(dtype=dtype, scale=scale, causal=causal):
                         operands = [tensor.detach().requires_grad_(True) for tensor in inputs]
                         self.assertFalse(fa4_sm80.compatible(*operands, None, 0, causal, scale, False))
-                        out = api.scaled_dot_product_attention(*operands, is_causal=causal, scale=scale)
-                        self.assertFalse(hasattr(out.grad_fn, "schedule"))
+                        out = self.public_output(operands, causal=causal, scale=scale)
                         actual = out, *torch.autograd.grad(out, operands, dout)
                         operands = [tensor.detach().requires_grad_(True) for tensor in inputs]
                         with patch.object(fa4_sm80, "compatible", return_value=False):
@@ -176,11 +227,9 @@ class Sm80KernelTests(unittest.TestCase):
                 operands = list(inputs)
                 operands[position] = unaligned
                 self.assertFalse(fa4_sm80.compatible(*operands, None, 0, False, None, False))
-                out = api.scaled_dot_product_attention(*operands)
-                self.assertFalse(hasattr(out.grad_fn, "schedule"))
+                out = self.public_output(operands)
                 torch.autograd.grad(out, operands, torch.ones_like(out))
-            out = api.scaled_dot_product_attention(*inputs)
-            self.assertTrue(hasattr(out.grad_fn, "schedule"))
+            out = self.public_output(inputs)
             dout = torch.empty(out.numel() + 1, device="cuda", dtype=dtype)[1:].view(shape)
             dout.normal_()
             self.assertTrue(dout.is_contiguous())
@@ -209,9 +258,7 @@ class Sm80KernelTests(unittest.TestCase):
                                 for _ in range(3)
                             ]
                             dout = torch.randn_like(inputs[0])
-                            selected = fa4_sm80.compatible(*inputs, None, 0, causal, None, False)
-                            out = api.scaled_dot_product_attention(*inputs, is_causal=causal)
-                            self.assertEqual(hasattr(out.grad_fn, "schedule"), selected)
+                            out = self.public_output(inputs, causal=causal)
                             actual = out, *torch.autograd.grad(out, inputs, dout)
                             for head in range(heads):
                                 part = [tensor[:, head : head + 1].detach() for tensor in inputs]
@@ -230,8 +277,7 @@ class Sm80KernelTests(unittest.TestCase):
         dout = torch.randn_like(inputs[0])
         for function in (api.attention, api.scaled_dot_product_attention, api.automatic_scaled_dot_product_attention):
             for _ in range(2):
-                out = function(*(tensor.detach().requires_grad_(True) for tensor in inputs))
-                self.assertTrue(hasattr(out.grad_fn, "schedule"))
+                out = self.public_output([tensor.detach().requires_grad_(True) for tensor in inputs], function=function)
                 self.assertTrue(callable(fa4_sm80.attention))
         graph, owners = capture(api.scaled_dot_product_attention, inputs, dout, False, "joint", keep_graph=True)
         symbols = [record["symbol"] for record in graph_kernels(graph)]
@@ -243,6 +289,39 @@ class Sm80KernelTests(unittest.TestCase):
         symbols = [record["symbol"] for record in graph_kernels(graph)]
         self.assertTrue(all("fa4_sm80" not in symbol for symbol in symbols))
         self.assertTrue(any("kohakufa_cute" in symbol for symbol in symbols))
+
+    def test_cached_public_scales_statistics_and_changed_graph(self):
+        from benchmarks.compare_ada import capture
+        from benchmarks.validate_sm80_static import assess
+
+        for dtype, heads, dimension, causal in (
+            (torch.bfloat16, 8, 64, False),
+            (torch.float16, 16, 128, True),
+        ):
+            with self.subTest(dtype=dtype, dimension=dimension, causal=causal):
+                torch.manual_seed(947)
+                inputs = [torch.randn(1, heads, 2048, dimension, device="cuda", dtype=dtype) for _ in range(3)]
+                dout = torch.randn_like(inputs[0])
+                for scale in (0.17, 0.41, 0.17):
+                    operands = [tensor.detach().requires_grad_(True) for tensor in inputs]
+                    out = self.public_output(operands, causal=causal, scale=scale)
+                    actual = out, *torch.autograd.grad(out, operands, dout)
+                    assess(actual, operands, dout, causal=causal, scale=scale, directed=False, pointwise=False)
+
+                def function(q, k, v, *, is_causal=False):
+                    return api.scaled_dot_product_attention(q, k, v, is_causal=is_causal, scale=0.17)
+
+                graph, storage = capture(function, [tensor.detach() for tensor in inputs], dout, causal, "joint")
+                operands, _, _, actual = storage
+                for _ in range(2):
+                    with torch.no_grad():
+                        for tensor in (*operands, dout):
+                            tensor.copy_(torch.randn_like(tensor))
+                        for tensor in actual:
+                            tensor.fill_(float("nan"))
+                    graph.replay()
+                    torch.cuda.synchronize()
+                    assess(actual, operands, dout, causal=causal, scale=0.17, directed=False, pointwise=False)
 
     def test_direct_tails_heads_and_expanded_output_gradient(self):
         from benchmarks.reference import fp64_reference, metrics

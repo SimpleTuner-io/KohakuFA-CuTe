@@ -23,7 +23,9 @@ attention, and an FP32-normal positive scale. A BSHD view has strides
 | `dq_accum` | `[B,H,R*D]` | FP32 | Preparation zero-fill, joint atomic accumulation / dQ conversion |
 | `dq`, `dk`, `dv` | `[B,H,S,D]`, BSHD views at launch | Input dtype | Conversion or joint epilogue / caller |
 
-`R = ceil(S / backward_m) * backward_m`. The default `backward_m` is 64.
+`R = ceil(S / backward_m) * backward_m`. The explicit default is 64; the
+selected long A100 D64 schedule uses 128. Allocation and preparation must use
+the actual selected value.
 Preparation zero-fills `dq_accum` on every invocation. `maximum` is the literal
 unscaled maximum and `logsum` is the shifted log2 normalization. Preparation
 copies that normalization into padded `lognorm`, without another log-base
@@ -95,9 +97,11 @@ C(dq_accum, dq_bshd, scale, None, None, None, None)
 ```
 
 The placeholders are cumulative lengths, used lengths, sink tensors, and
-scheduler metadata. Compilation must use actual architecture, main thread
-count 256, `backward_m=64`, `AtomLayoutMdQ=2`, and `swap_ab=False`. A four-warp
-conversion reads a different scratch layout and permutes dQ.
+scheduler metadata. Compilation must use actual architecture, the main thread
+count, selected `backward_m` and `dq_m_warps`, and `swap_ab=False`. The initial
+schedule uses 256 threads, M64 and two dQ M warps; selected long D64 uses
+256 threads, M128 and four dQ M warps. A conversion with a different scratch
+layout can permute dQ.
 
 These invocation lists include Python-specialized arguments. They do not assert
 that an exported packed FFI function retains every `None` slot. The exported
@@ -112,6 +116,21 @@ register `function.__tvm_ffi_object__()`, retain its `tvm::ffi::Function`, form
 non-owning DLTensor views, and call it under the current-device/current-stream
 scope. Allocate buffers in C++ with the shapes above. Constructing the BSHD
 layout inside the host program avoids repeated Python views and DLPack setup.
+
+The cached A100 public-entry candidate passes the current 13 named `Schedule`
+fields unchanged to `AttentionRunner("warp", configuration)`. Its helper caches
+the runner by the complete schedule; tensors, device/stream descriptors and
+positive scale remain invocation inputs. Automatic eligibility stays unchanged.
+The existing Python entry remains an explicit scheduling and code-generation
+control during qualification.
+
+This helper is qualified against that 13-field schema. Future controls such as
+packed-probability conversion, early probability stores, probability-barrier
+elision or causal head grouping require explicit support in both the Python
+configuration adapter and native runner before activation. Do not silently
+discard unsupported controls or substitute their defaults. Unknown settings
+must fail visibly; a new configuration needs its own source, arithmetic,
+resource, memory and complete-call qualification.
 
 Cache keys must distinguish forward/backward, device, dtype, causal mode, tile
 schedule, thread/warp layouts, stride/alignment classes, relevant shape

@@ -1,6 +1,7 @@
 """CuTe attention extracted from SimpleTuner, inspired by KohakuFA."""
 
 from .api import attention, automatic_scaled_dot_product_attention, scaled_dot_product_attention
+from .rtx3090 import rtx3090_attention
 
 __version__ = "0.1.0"
-__all__ = ["attention", "scaled_dot_product_attention", "automatic_scaled_dot_product_attention"]
+__all__ = ["attention", "scaled_dot_product_attention", "automatic_scaled_dot_product_attention", "rtx3090_attention"]

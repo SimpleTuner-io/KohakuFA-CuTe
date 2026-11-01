@@ -43,7 +43,7 @@ def assess(actual, inputs, dout, *, causal, scale, directed, pointwise):
 STATISTICS = []
 
 
-def run(function, inputs, dout, *, causal=False, scale=None):
+def run(function, inputs, dout, *, causal=False, scale=None, reference_device=None):
     operands = [t.detach().requires_grad_(True) for t in inputs]
     saved = []
     with torch.autograd.graph.saved_tensors_hooks(lambda t: saved.append(t) or t, lambda t: t):
@@ -52,7 +52,16 @@ def run(function, inputs, dout, *, causal=False, scale=None):
     if actual_scale > 0:
         assert len(saved) == 6, "The explicit native call did not save its six expected tensors."
         maximum, logsum = saved[-2:]
-        STATISTICS.append(statistics(inputs, maximum, logsum, causal, actual_scale))
+        device = inputs[0].device if reference_device is None else reference_device
+        STATISTICS.append(
+            statistics(
+                tuple(t.detach().to(device) for t in inputs),
+                maximum.detach().to(device),
+                logsum.detach().to(device),
+                causal,
+                actual_scale,
+            )
+        )
     return out, *torch.autograd.grad(out, operands, dout)
 
 
@@ -60,10 +69,27 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", required=True)
     parser.add_argument("--dependencies")
+    parser.add_argument("--dimensions", nargs="+", type=int, choices=(64, 128), default=[128])
+    parser.add_argument("--head-group", type=int, choices=(1, 4, 16))
+    parser.add_argument("--reference-device", choices=("cuda", "cpu"), default="cuda")
     parser.add_argument("--smoke", action="store_true", help="Small tail and changed-graph probes for sanitizers.")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    function = make_attention(args.source, args.dependencies, direct=True)
+    function = make_attention(args.source, args.dependencies, direct=True, head_group=args.head_group)
+    reference_device = torch.device(args.reference_device)
+    if reference_device.type == "cpu":
+        torch.set_num_threads(4)
+
+    def run_case(inputs, dout, **kwargs):
+        try:
+            return run(function, inputs, dout, reference_device=reference_device, **kwargs)
+        except Exception:
+            torch.save(
+                {"inputs": tuple(t.detach().cpu() for t in inputs), "dout": dout.detach().cpu(), "kwargs": kwargs},
+                args.output.with_suffix(".failed.pt"),
+            )
+            raise
+
     report = {
         "device": torch.cuda.get_device_name(),
         "capability": list(torch.cuda.get_device_capability()),
@@ -74,11 +100,40 @@ def main():
         },
         "candidate_sha256": hashlib.sha256(Path(__file__).with_name("a40_shared_candidates.py").read_bytes()).hexdigest(),
         "smoke": args.smoke,
+        "dimensions": args.dimensions,
+        "head_group_control": args.head_group,
+        "reference_device": args.reference_device,
         "host": "native C++ configured runner; full shared joint schedule",
         "statistics_checks": STATISTICS,
         "rows": [],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
+
+    def assess_case(label, inputs, dout, actual, *, causal, scale, directed):
+        try:
+            return assess(
+                tuple(t.detach().to(reference_device) for t in actual),
+                tuple(t.detach().to(reference_device) for t in inputs),
+                dout.detach().to(reference_device),
+                causal=causal,
+                scale=scale,
+                directed=directed,
+                pointwise=directed
+                and label in ("rounded-cancellation", "rounded-key-cancellation", "rounded-fp16-underflow"),
+            )
+        except Exception:
+            torch.save(
+                {
+                    "inputs": tuple(t.detach().cpu() for t in inputs),
+                    "dout": dout.detach().cpu(),
+                    "actual": tuple(t.detach().cpu() for t in actual),
+                    "case": label,
+                    "causal": causal,
+                    "scale": scale,
+                },
+                args.output.with_suffix(".failed.pt"),
+            )
+            raise
 
     def retain(label, inputs, dout, actual, *, causal, scale=None, directed=False):
         row = {
@@ -88,15 +143,14 @@ def main():
             "causal": causal,
             "scale": scale,
             "directed_rounded_gate": directed,
-            "errors": assess(
-                actual,
+            "errors": assess_case(
+                label,
                 inputs,
                 dout,
+                actual,
                 causal=causal,
                 scale=scale,
                 directed=directed,
-                pointwise=directed
-                and label in ("rounded-cancellation", "rounded-key-cancellation", "rounded-fp16-underflow"),
             ),
         }
         report["rows"].append(row)
@@ -104,61 +158,59 @@ def main():
         print({key: row[key] for key in ("case", "shape", "dtype", "causal", "scale")}, flush=True)
 
     matrix = (
-        ((torch.bfloat16, 128, 129, True), (torch.float16, 128, 129, False))
+        ((torch.bfloat16, args.dimensions[0], 129, True), (torch.float16, args.dimensions[-1], 129, False))
         if args.smoke
-        else itertools.product((torch.bfloat16, torch.float16), (128,), (129, 257), (False, True))
+        else itertools.product((torch.bfloat16, torch.float16), args.dimensions, (129, 257), (False, True))
     )
     for dtype, dimension, sequence, causal in matrix:
         torch.manual_seed(221)
         q, k, v, dout = [torch.randn(1, 2, sequence, dimension, device="cuda", dtype=dtype) for _ in range(4)]
         inputs = q, k, v
-        actual = run(function, inputs, dout, causal=causal)
+        actual = run_case(inputs, dout, causal=causal)
         retain("random-tail", inputs, dout, actual, causal=causal)
         if not args.smoke:
             q.mul_(0.3)
             k.mul_(0.3)
             q[..., 0], k[..., 0] = 20, -20
             for scale in (dimension**-0.5, -0.125, 0.0):
-                actual = run(function, inputs, dout, causal=causal, scale=scale)
+                actual = run_case(inputs, dout, causal=causal, scale=scale)
                 retain("negative-common-offset", inputs, dout, actual, causal=causal, scale=scale, directed=True)
     if not args.smoke:
-        for dtype, dimension in itertools.product((torch.bfloat16, torch.float16), (128,)):
+        for dtype, dimension in itertools.product((torch.bfloat16, torch.float16), args.dimensions):
             inputs, dout, scale, _ = square_value_cancellation(dimension, dtype, "cuda", length=1024, heads=2)
-            actual = run(function, inputs, dout, scale=scale)
+            actual = run_case(inputs, dout, scale=scale)
             retain("rounded-cancellation", inputs, dout, actual, causal=False, scale=scale, directed=True)
-        for dtype, dimension in itertools.product((torch.bfloat16, torch.float16), (128,)):
+        for dtype, dimension in itertools.product((torch.bfloat16, torch.float16), args.dimensions):
             inputs, dout = key_cancellation(dimension, dtype, "cuda", heads=2, square=True)
-            actual = run(function, inputs, dout)
+            actual = run_case(inputs, dout)
             retain("rounded-key-cancellation", inputs, dout, actual, causal=False, directed=True)
-        for dtype, dimension in itertools.product((torch.bfloat16, torch.float16), (128,)):
+        for dtype, dimension in itertools.product((torch.bfloat16, torch.float16), args.dimensions):
             q, k, v, dout = [torch.zeros(1, 2, 129, dimension, device="cuda", dtype=dtype) for _ in range(4)]
             q[..., 0], k[..., 0], k[:, :, 0, 0] = 10, 9 if dtype == torch.float16 else 5, 10
             v[..., 0], v[:, :, 0, 0], dout[..., 0] = -1, 1, 1
-            actual = run(function, (q, k, v), dout, scale=1.0)
+            actual = run_case((q, k, v), dout, scale=1.0)
             retain("sharp-saturated", (q, k, v), dout, actual, causal=False, scale=1.0, directed=True)
-        for dtype, (heads, dimension) in itertools.product(
-            (torch.bfloat16, torch.float16), ((18, 128), (24, 128), (32, 128))
-        ):
+        for dtype, dimension, heads in itertools.product((torch.bfloat16, torch.float16), args.dimensions, (18, 24, 32)):
             torch.manual_seed(223)
             q, k, v, dout = [torch.randn(1, heads, 257, dimension, device="cuda", dtype=dtype) for _ in range(4)]
-            actual = run(function, (q, k, v), dout, causal=True)
+            actual = run_case((q, k, v), dout, causal=True)
             retain("model-head-count-tail", (q, k, v), dout, actual, causal=True)
         for dtype, dimension, sequence, causal in itertools.product(
-            (torch.bfloat16, torch.float16), (128,), (1025,), (False, True)
+            (torch.bfloat16, torch.float16), args.dimensions, (1025,), (False, True)
         ):
             torch.manual_seed(227)
             q, k, v, dout = [torch.randn(1, 2, sequence, dimension, device="cuda", dtype=dtype) for _ in range(4)]
-            actual = run(function, (q, k, v), dout, causal=causal)
+            actual = run_case((q, k, v), dout, causal=causal)
             retain("long-random-tail", (q, k, v), dout, actual, causal=causal)
-        for dimension in (128,):
+        for dimension in args.dimensions:
             inputs, dout, scale, _ = value_residual_underflow(dimension, "cuda", length=1024, heads=2)
-            actual = run(function, inputs, dout, scale=scale)
+            actual = run_case(inputs, dout, scale=scale)
             retain("rounded-fp16-underflow", inputs, dout, actual, causal=False, scale=scale, directed=True)
 
     from benchmarks.compare_ada import capture
 
-    for dtype, causal in ((torch.bfloat16, True), (torch.float16, False)):
-        q, k, v, dout = [torch.randn(1, 2, 129, 128, device="cuda", dtype=dtype) for _ in range(4)]
+    for dimension, (dtype, causal) in itertools.product(args.dimensions, ((torch.bfloat16, True), (torch.float16, False))):
+        q, k, v, dout = [torch.randn(1, 2, 129, dimension, device="cuda", dtype=dtype) for _ in range(4)]
         graph, storage = capture(function, (q, k, v), dout, causal, "joint")
         operands, _, _, actual = storage
         for seed in (249, 251):

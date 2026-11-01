@@ -60,6 +60,19 @@ class HopperEligibilityTests(unittest.TestCase):
             with self.subTest(parameters=parameters):
                 self.assertFalse(self.compatible(**parameters))
 
+    def test_explicit_python_entry_rejects_scales_outside_its_arithmetic_domain(self):
+        for scale in (0.0, -0.25, 1e-100, float("nan"), float("inf"), "invalid"):
+            with self.subTest(scale=scale), self.assertRaises(ValueError):
+                fa4_hopper.attention(*self.inputs, scale=scale)
+
+    def test_python_policy_factory_rejects_positive_underflow_before_launch(self):
+        from benchmarks.experimental_hopper_lpt import make_attention
+
+        operation = make_attention()
+        for scale in (1e-100, float("nan"), float("inf"), "invalid"):
+            with self.subTest(scale=scale), self.assertRaises(ValueError):
+                operation(*self.inputs, scale=scale)
+
     def test_short_tails_other_heads_and_dimensions_keep_fallback(self):
         for shape in ((1, 16, 128, 128), (1, 16, 4095, 128), (1, 8, 4096, 128), (1, 16, 4096, 256)):
             with self.subTest(shape=shape):

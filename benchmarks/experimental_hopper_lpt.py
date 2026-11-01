@@ -9,6 +9,7 @@ Use make_control_attention and make_attention as a paired comparison. Both
 include the same maximum padding and Python preparation as static_hopper.
 """
 
+import math
 from functools import lru_cache
 
 
@@ -113,10 +114,14 @@ def _make_attention(interleave, ordinary_stores=False, separate_masking=False):
 
     def attention(q, k, v, *, is_causal=False, scale=None, enable_gqa=False):
         selected = q.shape[-1] ** -0.5 if scale is None else scale
+        if not isinstance(selected, (int, float)) or not math.isfinite(selected):
+            raise ValueError("The Hopper experiment requires a finite numeric scale.")
         if selected <= 0:
             from kohakufa_cute import native
 
             return native.extension().sdpa(q, k, v, None, 0.0, is_causal, scale, enable_gqa)
+        if not torch.finfo(torch.float32).tiny <= selected <= 2e38:
+            raise ValueError("The positive Hopper experiment requires a normal FP32 scale.")
         if (
             torch.cuda.get_device_capability(q.device) != (9, 0)
             or q.shape != k.shape

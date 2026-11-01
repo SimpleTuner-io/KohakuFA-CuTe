@@ -72,6 +72,12 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
 
 
 def attention(q, k, v, *, causal=False, scale=None):
+    if scale is not None and (
+        not isinstance(scale, (int, float))
+        or not math.isfinite(scale)
+        or not torch.finfo(torch.float32).tiny <= scale <= 2e38
+    ):
+        raise ValueError("The experimental Hopper pipeline requires a positive normal FP32 scale.")
     from ._attention import attention as run
 
     return run(q, k, v, causal=causal, scale=scale)

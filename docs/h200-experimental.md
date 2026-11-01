@@ -10,6 +10,7 @@ per CTA, and approximately 140 GiB of device memory. The comparison matrix is
 contiguous square attention, batch 1, 16 equal Q/KV heads, 4,096 tokens, D64 or
 D128, BF16 or FP16, dense and causal. Other devices, head dimensions, masks,
 rectangular attention and GQA need their own qualification.
+The experimental positive-scale entry requires a finite normal FP32 scale.
 
 ## Arithmetic and implementation
 

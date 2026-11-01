@@ -83,6 +83,23 @@ class ValueCancellationReferenceTests(unittest.TestCase):
                 self.assertGreater(target, 0.5)
                 self.assertLess(metrics(reference[3].half(), reference[3])["relative_error"], 0.005)
 
+    def test_causal_underflow_fixture_keeps_output_gradients_representable(self):
+        # Later zero-dO rows leave this prefix contribution unchanged at L4096.
+        inputs, dout, scale, _ = value_residual_underflow(16, "cpu", length=1024, heads=1)
+        original = rounded_reference(inputs, dout, causal=True, scale=scale)
+        self.assertFalse(torch.isfinite(original[3].half()).all())
+        self.assertGreater(original[3].abs().max().item(), torch.finfo(torch.float16).max)
+        overflow = torch.zeros_like(original[3], dtype=torch.bool)
+        overflow[..., 1:95, 0] = True
+        self.assertTrue(torch.equal(torch.isposinf(original[3].half()), overflow))
+        self.assertTrue(torch.equal(torch.isinf(original[3].half()), overflow))
+        scaled = rounded_reference(inputs, dout * 0.125, causal=True, scale=scale)
+        for previous, bounded in zip(original, scaled):
+            torch.testing.assert_close(bounded, previous * 0.125, atol=0, rtol=0)
+            self.assertTrue(torch.isfinite(bounded.half()).all())
+        self.assertGreater(scaled[3].abs().max().item(), 32768)
+        self.assertLess(metrics(scaled[3].half(), scaled[3])["relative_error"], 0.005)
+
 
 @unittest.skipUnless(qualified_device(), "Requires a qualified low-precision value-gradient device")
 class RectangularValuePrecisionTests(unittest.TestCase):

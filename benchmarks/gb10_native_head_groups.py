@@ -27,8 +27,7 @@ def make_attention(*, head_group=1, direct=False, variant="q2-register"):
         )
         if variant not in ("q2-register", "q1-shared", "q2-shared"):
             raise ValueError("Select a declared pipeline/storage control.")
-        if variant != "q2-register":
-            base = replace(base, query_stages=1 if variant == "q1-shared" else 2, v_in_regs=False)
+        base = replace(base, query_stages=1 if variant == "q1-shared" else 2, v_in_regs=variant == "q2-register")
         return native_runner(replace(base, causal_head_group=head_group))
 
     def operation(q, k, v, *, is_causal=False, scale=None, enable_gqa=False):
@@ -48,6 +47,16 @@ def make_public(*, previous=False):
         from benchmarks.gb10_device_cache import previous_module
 
         return previous_module("controls/gb10_before_groups.py").scaled_dot_product_attention
+    from kohakufa_cute.fa4_sm80.gb10 import scaled_dot_product_attention
+
+    return scaled_dot_product_attention
+
+
+def make_long_public(*, previous=False):
+    if previous:
+        from benchmarks.gb10_device_cache import previous_module
+
+        return previous_module("controls/gb10_before_long_causal.py").scaled_dot_product_attention
     from kohakufa_cute.fa4_sm80.gb10 import scaled_dot_product_attention
 
     return scaled_dot_product_attention

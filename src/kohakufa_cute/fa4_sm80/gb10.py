@@ -15,18 +15,21 @@ def schedule(sequence, causal, heads=4, dtype=torch.bfloat16):
     if sequence not in (512, 1024, 4096) or (causal and sequence == 1024):
         raise ValueError("The explicit GB10 schedule requires a qualified sequence family.")
     wide_dense = not causal and ((sequence == 1024 and heads == 4) or (sequence == 4096 and dtype == torch.float16))
+    shared_causal = causal and sequence == 4096 and heads == 4 and dtype == torch.float16
     return Schedule(
         forward_m=64,
         backward_m=32 if wide_dense else 64,
         backward_n=128 if wide_dense else 64,
-        query_stages=1 if wide_dense else 2,
+        query_stages=1 if wide_dense or shared_causal else 2,
         dout_stages=1,
         threads=256,
         score_m_warps=2 if wide_dense else 4,
         kv_m_warps=2,
         dq_m_warps=2,
-        v_in_regs=not wide_dense,
-        causal_head_group=16 if causal and sequence == 512 and heads == 16 and dtype == torch.bfloat16 else 1,
+        v_in_regs=not (wide_dense or shared_causal),
+        causal_head_group=(
+            4 if shared_causal else 16 if causal and sequence == 512 and heads == 16 and dtype == torch.bfloat16 else 1
+        ),
     )
 
 

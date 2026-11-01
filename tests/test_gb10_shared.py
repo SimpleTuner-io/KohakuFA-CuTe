@@ -21,7 +21,11 @@ def operand(shape=(1, 16, 4096, 128), *, dtype=torch.bfloat16, pointer=4096, con
 
 class Gb10SharedTests(unittest.TestCase):
     def setUp(self):
-        self.properties = SimpleNamespace(name="NVIDIA GB10", multi_processor_count=48, shared_memory_per_block_optin=101376)
+        gb10._qualified_device.cache_clear()
+        self.addCleanup(gb10._qualified_device.cache_clear)
+        self.properties = SimpleNamespace(
+            name="NVIDIA GB10", major=12, minor=1, multi_processor_count=48, shared_memory_per_block_optin=101376
+        )
         self.patches = [
             patch.object(torch.cuda, "current_device", return_value=0),
             patch.object(torch.cuda, "get_device_capability", return_value=(12, 1)),
@@ -66,18 +70,42 @@ class Gb10SharedTests(unittest.TestCase):
     def test_partition_and_runtime_guards(self):
         q = operand()
         for name, value in (
+            ("major", 8),
+            ("minor", 0),
             ("name", "Other SM121 device"),
             ("multi_processor_count", 64),
             ("shared_memory_per_block_optin", 98304),
         ):
+            gb10._qualified_device.cache_clear()
             with patch.object(self.properties, name, value):
                 self.assertFalse(gb10.compatible(q, q, q))
+        gb10._qualified_device.cache_clear()
         with patch.object(fa4_sm80, "available", return_value=False):
             self.assertFalse(gb10.compatible(q, q, q))
         with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
             self.assertFalse(gb10.compatible(q, q, q))
         with patch.object(torch.compiler, "is_compiling", return_value=True):
             self.assertFalse(gb10.compatible(q, q, q))
+
+    def test_device_classification_cached_but_call_guards_stay_dynamic(self):
+        q = operand()
+        with patch.object(torch.cuda, "get_device_properties", return_value=self.properties) as properties:
+            self.assertTrue(gb10.compatible(q, q, q))
+            self.assertTrue(gb10.compatible(q, q, q))
+            properties.assert_called_once_with(0)
+            for options in ({"scale": 0.0}, {"scale": -0.125}, {"mask": object()}, {"gqa": True}):
+                self.assertFalse(gb10.compatible(q, q, q, **options))
+            with patch.object(torch.cuda, "current_device", return_value=1):
+                self.assertFalse(gb10.compatible(q, q, q))
+            with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
+                self.assertFalse(gb10.compatible(q, q, q))
+            with patch.object(torch.compiler, "is_compiling", return_value=True):
+                self.assertFalse(gb10.compatible(q, q, q))
+            properties.assert_called_once_with(0)
+        with patch.object(torch.cuda, "get_device_properties", return_value=self.properties) as properties:
+            self.assertTrue(gb10._qualified_device(1))
+            self.assertTrue(gb10._qualified_device(1))
+            properties.assert_called_once_with(1)
 
     def test_short_dense_and_causal_keep_the_qualified_query_tile(self):
         dense = gb10.schedule(4096, False, dtype=torch.float16)

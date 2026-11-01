@@ -18,7 +18,6 @@ def main():
     parser.add_argument("--seq", nargs="+", type=int, default=[128, 1024, 4096])
     parser.add_argument("--dim", nargs="+", type=int, default=[64, 128])
     parser.add_argument("--heads", type=int, default=16)
-    parser.add_argument("--seed", type=int, default=371)
     parser.add_argument("--dtype", nargs="+", choices=("bf16", "fp16"), default=["bf16", "fp16"])
     parser.add_argument("--phases", nargs="+", choices=("forward", "backward", "joint"), default=["joint"])
     parser.add_argument("--visibility", nargs="+", choices=("dense", "causal"), default=["dense", "causal"])

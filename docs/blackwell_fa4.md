@@ -170,7 +170,7 @@ python -m benchmarks.compare_flashattention --backends cute fa4 \
   --modes dense causal --repeats 5 --window-ms 100 \
   --flash-revision 4616f5116d33e3ba3cbb71d582caffcfcb49649c \
   --output b300-fa4.json
-python -m benchmarks.qualify_blackwell_fa4 --static --output directed.json
+python -m benchmarks.qualify_blackwell_fa4 --output directed.json
 python -m unittest tests.test_fa4_blackwell -v
 python -m benchmarks.qualify_blackwell_experimental_public --output public.json
 ```

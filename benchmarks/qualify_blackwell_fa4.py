@@ -1,4 +1,4 @@
-"""Directed qualification for an explicitly selected experimental FA4 schedule."""
+"""Directed qualification for the retained experimental static FA4 schedule."""
 
 import argparse
 import hashlib
@@ -10,7 +10,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--smoke", action="store_true")
-    parser.add_argument("--static", action="store_true", default=True, help="Use the retained static schedule (default)")
     args = parser.parse_args()
     forward_schedule = "packed"
 
@@ -77,7 +76,8 @@ def main():
             check("random-tail", tuple(tensors[:3]), tensors[3], causal=causal, graph=True)
             if length == 257:
                 strided = [
-                    torch.randn(1, length, heads, dimension, dtype=dtype, device="cuda").transpose(1, 2) for _ in range(4)
+                    torch.randn(1, length, heads, dimension, dtype=dtype, device="cuda").transpose(1, 2)
+                    for _ in range(4)
                 ]
                 check("bshd-storage-view", tuple(strided[:3]), strided[3], causal=causal, graph=True)
 
@@ -92,12 +92,10 @@ def main():
         inputs, dout, scale, _ = value_residual_underflow(64, "cuda", heads=1)
         check("expected-fp16-probability-underflow", inputs, dout, scale=scale, directed=True)
     source = Path(__file__).with_name("blackwell_fa4_experiments.py")
-    static_sources = {}
-    if args.static:
-        import kohakufa_cute.fa4_blackwell
+    import kohakufa_cute.fa4_blackwell
 
-        folder = Path(kohakufa_cute.fa4_blackwell.__file__).parent
-        static_sources = {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(folder.glob("*.py"))}
+    folder = Path(kohakufa_cute.fa4_blackwell.__file__).parent
+    static_sources = {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(folder.glob("*.py"))}
     report = dict(
         source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
         static_sources=static_sources,

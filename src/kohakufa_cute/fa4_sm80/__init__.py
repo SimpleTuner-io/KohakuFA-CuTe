@@ -34,6 +34,10 @@ def available():
 
 def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     """Select only the full-device shape and arithmetic families qualified here."""
+    from . import _sm120
+
+    if _sm120.compatible(q, k, v, mask, dropout, causal, scale, gqa):
+        return available()
     if (
         torch.compiler.is_compiling()
         or mask is not None
@@ -71,7 +75,12 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
 
 
 def attention(q, k, v, *, causal=False, scale=None):
+    from . import _sm120
     from ._attention import attention as run
     from ._schedules import a100_schedule
 
+    if _sm120.target_device(q.device):
+        from ._host import native_runner
+
+        return native_runner(_sm120.schedule(q.shape[-1]))(q, k, v, causal=causal, scale=scale)
     return run(q, k, v, causal=causal, scale=scale, schedule=a100_schedule(q.shape[-1], q.shape[2], causal))

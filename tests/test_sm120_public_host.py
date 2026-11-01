@@ -44,7 +44,7 @@ class Sm120PublicSelectionTests(unittest.TestCase):
     def test_qualified_family_and_unchanged_schedule_fields(self):
         capability, properties, current, available = self.runtime()
         with capability, properties, current, available:
-            for length in (1024, 4096):
+            for length in (4096,):
                 for dimension in (64, 128):
                     for dtype in (torch.bfloat16, torch.float16):
                         for causal in (False, True):
@@ -61,7 +61,7 @@ class Sm120PublicSelectionTests(unittest.TestCase):
         capability, properties, current, available = self.runtime()
         with capability, properties, current, available:
             q = operand()
-            for shape in ((1, 16, 128, 128), (1, 16, 2048, 128), (1, 24, 4096, 128), (2, 16, 4096, 128)):
+            for shape in ((1, 16, 128, 128), (1, 16, 1024, 128), (1, 16, 2048, 128), (1, 24, 4096, 128), (2, 16, 4096, 128)):
                 value = operand(shape)
                 self.assertFalse(fa4_sm80.compatible(value, value, value, None, 0, False, None, False))
             for value in (
@@ -111,9 +111,16 @@ class Sm120PublicKernelTests(unittest.TestCase):
         from benchmarks.validate_sm80_static import assess, statistics
         from kohakufa_cute import api
 
-        function = api.scaled_dot_product_attention if function is None else function
+        if function is None:
+            from kohakufa_cute.fa4_sm80._host import native_runner
+
+            def function(q, k, v, *, is_causal=False, scale=None):
+                if q.shape[2] == 4096:
+                    return api.scaled_dot_product_attention(q, k, v, is_causal=is_causal, scale=scale)
+                return native_runner(_sm120.schedule(q.shape[-1]))(q, k, v, causal=is_causal, scale=scale)
+
         operands = [t.detach().requires_grad_(True) for t in inputs]
-        self.assertTrue(fa4_sm80.compatible(*operands, None, 0, causal, scale, False))
+        self.assertEqual(fa4_sm80.compatible(*operands, None, 0, causal, scale, False), inputs[0].shape[2] == 4096)
         saved = []
         with torch.autograd.graph.saved_tensors_hooks(lambda t: saved.append(t) or t, lambda t: t):
             out = function(*operands, is_causal=causal, scale=scale)
@@ -122,17 +129,31 @@ class Sm120PublicKernelTests(unittest.TestCase):
         actual = out, *torch.autograd.grad(out, operands, dout)
         assess(actual, operands, dout, causal=causal, scale=scale, directed=directed, pointwise=pointwise)
 
+    def test_final_public_bounds(self):
+        from benchmarks.compare_ada import capture
+        from benchmarks.compare_l40s import graph_kernels
+        from kohakufa_cute import api
+
+        for length in (1024, 4096):
+            inputs = [torch.randn(1, 16, length, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
+            dout = torch.randn_like(inputs[0])
+            operands = [t.detach().requires_grad_(True) for t in inputs]
+            self.assertEqual(fa4_sm80.compatible(*operands, None, 0, True, None, False), length == 4096)
+            graph, _ = capture(api.scaled_dot_product_attention, inputs, dout, True, "joint", keep_graph=True)
+            symbols = [row["symbol"] for row in graph_kernels(graph)]
+            self.assertEqual(any("fa4_sm80_backward" in symbol for symbol in symbols), length == 4096)
+
     def test_selected_matrix_and_public_frontdoors(self):
         from kohakufa_cute import api
 
         for dtype in (torch.bfloat16, torch.float16):
-            for length in (1024, 4096):
+            for length in (4096,):
                 for dimension in (64, 128):
                     for causal in (False, True):
                         torch.manual_seed(947)
                         q, k, v, dout = [torch.randn(1, 16, length, dimension, device="cuda", dtype=dtype) for _ in range(4)]
                         self.check_case((q, k, v), dout, causal=causal)
-        inputs = [torch.randn(1, 16, 1024, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
+        inputs = [torch.randn(1, 16, 4096, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
         dout = torch.randn_like(inputs[0])
         for function in (api.attention, api.automatic_scaled_dot_product_attention):
             if function is api.attention:
@@ -171,7 +192,7 @@ class Sm120PublicKernelTests(unittest.TestCase):
         from kohakufa_cute import api
 
         for dtype, dimension, causal in ((torch.bfloat16, 64, True), (torch.float16, 128, False)):
-            inputs = [torch.randn(1, 16, 1024, dimension, device="cuda", dtype=dtype) for _ in range(3)]
+            inputs = [torch.randn(1, 16, 4096, dimension, device="cuda", dtype=dtype) for _ in range(3)]
             dout = torch.randn_like(inputs[0])
             graph, storage = capture(api.scaled_dot_product_attention, inputs, dout, causal, "joint", keep_graph=True)
             components = graph_kernels(graph)

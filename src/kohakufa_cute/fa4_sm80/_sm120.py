@@ -33,7 +33,7 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.shape != v.shape
         or q.shape[0] != 1
         or q.shape[1] != 16
-        or q.shape[2] not in (1024, 4096)
+        or q.shape[2] != 4096
         or q.shape[3] not in (64, 128)
         or q.device != k.device
         or q.device != v.device

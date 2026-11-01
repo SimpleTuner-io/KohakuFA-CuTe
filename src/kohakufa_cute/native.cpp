@@ -35,12 +35,12 @@ std::mutex cache_mutex;
 
 // The configuration is constructed once, then retained as immutable CPU data
 // through autograd. Hot calls never rebuild Python dictionaries or DLPack views.
-constexpr std::array<const char *, 16> configured_fields = {
+constexpr std::array<const char *, 17> configured_fields = {
     "forward_m", "forward_n", "forward_stages", "query_in_registers", "backward_m", "backward_n",
     "query_stages", "dout_stages", "threads", "score_m_warps", "kv_m_warps", "dq_m_warps", "v_in_regs",
-    "forward_threads", "maximum_multiple", "accumulator_head_dim"};
-constexpr std::array<int64_t, 16> configured_defaults = {
-    128, 64, 1, 0, 64, 128, 2, 2, 256, 2, 2, 2, 0, 128, 1, 0};
+    "forward_threads", "maximum_multiple", "accumulator_head_dim", "causal_head_group"};
+constexpr std::array<int64_t, 17> configured_defaults = {
+    128, 64, 1, 0, 64, 128, 2, 2, 256, 2, 2, 2, 0, 128, 1, 0, 1};
 constexpr int configuration_backward_m = 5;
 constexpr int configuration_maximum_multiple = 15;
 constexpr int configuration_accumulator_head_dim = 16;
@@ -141,8 +141,11 @@ tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, b
     if (configuration.defined()) {
         const auto *values = configuration.const_data_ptr<int64_t>();
         py::dict parameters;
-        for (size_t i = 0; i < configured_fields.size(); ++i)
+        for (size_t i = 0; i < configured_fields.size(); ++i) {
+            if (values[0] == 2 && i == 16)
+                continue;
             parameters[configured_fields[i]] = values[i + 1];
+        }
         const char *configured_mode = values[0] == 1 ? (backward ? "warp_backward" : "warp_forward")
                                                     : (backward ? "hopper_backward" : "hopper_forward");
         name = compiler(configured_mode, inputs, causal, masked, parameters).cast<std::string>();
@@ -382,6 +385,11 @@ class AttentionRunner {
                           "Maximum padding must be a power of two up to 1024.");
         TORCH_CHECK_VALUE(values[16] == 0 || (values[16] >= 32 && values[16] <= 512 && values[16] % 32 == 0),
                           "Accumulator width must be zero or a multiple of 32 up to 512.");
+        TORCH_CHECK_VALUE(values[17] == 1 || values[17] == 2 || values[17] == 4 ||
+                              values[17] == 8 || values[17] == 16,
+                          "Causal head groups must be one of 1, 2, 4, 8 or 16.");
+        TORCH_CHECK_VALUE(family == "warp" || values[17] == 1,
+                          "Causal head grouping requires the warp kernel family.");
         if (family == "warp") {
             TORCH_CHECK_VALUE(values[9] == 256 && (values[14] == 128 || values[14] == 256),
                               "Warp experiments require 256 backward threads and 128/256 forward threads.");

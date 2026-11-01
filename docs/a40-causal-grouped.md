@@ -1,5 +1,9 @@
 # A40 causal scheduling and public-entry overhead
 
+The [native-predicate follow-up](a40-native-predicate.md) resolves the short
+eager eligibility overhead measured here. This page retains the preceding
+scheduling and Python-predicate measurements.
+
 The explicit `kohakufa_cute.fa4_sm80.a40.scaled_dot_product_attention` entry
 extends its measured family to causal D64 and groups causal backward CTAs across
 heads. It also caches immutable device classification. The default attention API

@@ -86,6 +86,7 @@ class Rtx4090SharedTests(unittest.TestCase):
         self.assertEqual((dense.backward_m, dense.backward_n, dense.v_in_regs), (32, 128, False))
         self.assertEqual((causal.backward_m, causal.backward_n, causal.v_in_regs), (64, 64, True))
         self.assertEqual((dense.query_stages, dense.dout_stages), (1, 1))
+        self.assertEqual((dense.causal_head_group, causal.causal_head_group), (1, 16))
         self.assertEqual(rtx4090.schedule(64, True).forward_m, 64)
         self.assertEqual(rtx4090.schedule(64, False).forward_m, 128)
 

@@ -4392,5 +4392,23 @@
       "97a91cf5288dbbf1497792788d63d72c3184f4fd62b16775a4b35611dd9137cf",
       "e74fd764b3103a450301cf7dd47c5ef20f5602daf8f1408457d4f412421f2d81"
     ]
+  },
+  "sdpa_backend_provenance": {
+    "hardware": "Full NVIDIA B200, compute capability 10.0 (SM100)",
+    "selected_backend": "PyTorch CUTLASS memory-efficient attention",
+    "kernel_template_tag": "cutlass::arch::Sm80",
+    "binary_architecture_version": 100,
+    "ptx_virtual_architecture_version": 100,
+    "scope": "All recorded SDPA attention-function attribute queries report SM100; the Sm80 template tag is not the binary target or measurement hardware.",
+    "attribute_definition": "https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/group__CUDA__EXEC.html",
+    "fa4_default_trial": {
+      "revision": "4616f5116d33e3ba3cbb71d582caffcfcb49649c",
+      "head_dimension": 512,
+      "status": "execution_error",
+      "stage": "forward_setup",
+      "resource_error_summary": "Score/output accumulator layout exceeded TMEM capacity.",
+      "successful_timing_recorded": false,
+      "scope": "Tested pinned default configuration; other FA4 configurations were not qualified for this D512 comparison."
+    }
   }
 }

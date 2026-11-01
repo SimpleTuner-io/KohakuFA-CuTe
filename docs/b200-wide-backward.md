@@ -34,10 +34,24 @@ compared with 128 preceding-owner CTAs; H16/S512 has 128 versus 256. The H8
 selector therefore starts at the measured 1024-token case. Its smaller calls
 retain the preceding owner.
 
-SDPA selects PyTorch's packaged SM80 memory-efficient kernels for these D512
-calls. Its numbers compare complete implementations. The pinned ordinary FA4
-backend failed D512 with its score/output TMEM capacity error; these results
-make no successful D512 timing claim for that backend.
+All measurements above ran on the full B200, compute capability 10.0 (SM100).
+For these D512 calls, default SDPA selected PyTorch's CUTLASS-based
+memory-efficient attention implementation. Its function names contain
+`_sm80` and the C++ template tag `cutlass::arch::Sm80`. Those names identify
+the implementation family; the actual forward and backward functions both
+report `BINARY_VERSION=100` and `PTX_VERSION=100` through CUDA's function
+attributes. The recorded code therefore targets SM100. These are B200 timings,
+not measurements from an A100 or evidence of an SM80 binary running on B200.
+[CUDA defines these attributes](https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/group__CUDA__EXEC.html)
+as the binary and PTX virtual architecture targets; `PTX_VERSION` here does not
+mean the PTX instruction-set release number.
+
+The SDPA columns compare against that selected memory-efficient backend. They
+do not establish performance against a Blackwell-specific FlashAttention path.
+Separately, the pinned FA4 default configuration failed D512 during forward
+setup because its score/output accumulators exceeded TMEM capacity. No
+successful FA4 D512 timing was recorded. This is a limitation of the tested
+configuration, not a claim that every possible FA4 configuration fails D512.
 
 ## Work and ownership
 
@@ -116,8 +130,9 @@ python -m benchmarks.compare_flashattention --backends cute sdpa \
   --export-code ../b200-captures/code
 ```
 
-Integration on the current main base passes both GPU tests and 225 CPU tests
-(139 GPU skips). Both actual loaded cubins remain byte-identical to the measured
-source captures after the unrelated SM80/GB10 host-dispatch updates.
+Integration on the current main base passes both GPU tests. CPU discovery
+passes: 225 tests total, including 139 GPU skips. Both actual loaded cubins
+remain byte-identical to the measured source captures after the unrelated
+SM80/GB10 host-dispatch updates.
 
 Raw profiler and sanitizer captures remain outside the tracked tree.

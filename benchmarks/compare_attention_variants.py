@@ -24,6 +24,7 @@ def main():
     parser.add_argument("--warmup-ms", type=float, default=1000)
     parser.add_argument("--window-ms", type=float, default=100)
     parser.add_argument("--repeats", type=int, default=7)
+    parser.add_argument("--seed", type=int, default=371, help="Use an independent input seed for final evaluation.")
     parser.add_argument("--source-revision", help="Full revision label supplied by the frozen-snapshot installer.")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -74,13 +75,13 @@ def main():
             if path.is_file() and path.suffix in (".py", ".cpp")
         },
         "operations": metadata,
-        "protocol": {key: getattr(args, key) for key in ("warmup_ms", "window_ms", "repeats")},
+        "protocol": {key: getattr(args, key) for key in ("warmup_ms", "window_ms", "repeats", "seed")},
         "rows": [],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     for sequence, dimension, dtype_name, visibility in itertools.product(args.seq, args.dim, args.dtype, args.visibility):
         causal = visibility == "causal"
-        torch.manual_seed(371)
+        torch.manual_seed(args.seed)
         dtype = torch.bfloat16 if dtype_name == "bf16" else torch.float16
         inputs = [
             torch.randn(1, args.heads, sequence, dimension, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)

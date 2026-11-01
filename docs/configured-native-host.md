@@ -53,3 +53,7 @@ PYTHONPATH=src python3 -m benchmarks.compare_sm80_host \
 ```
 
 Add `--graph` for the matched replay control. Large captures remain outside the tracked tree.
+
+The optional [causal head-group control](causal-head-groups.md) changes backward
+CTA traversal with identity group 1 as the default. Its native A40 graph/eager
+measurements and full-device qualification are separate from automatic selection.

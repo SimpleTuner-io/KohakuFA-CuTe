@@ -53,3 +53,46 @@ PYTHONPATH=src python3 -m benchmarks.compare_sm80_host \
 ```
 
 Add `--graph` for the matched replay control. Large captures remain outside the tracked tree.
+
+## Selected API validation and cold loader state
+
+A selected native runner loads through `native.extension()`. This can leave the
+strict API's separate `_extension()` loader cache cold indefinitely. Checking
+that cache before selected dispatch therefore repeated generic Python validation
+on every call, even though the bounded selector and native runner validate the
+selected computation themselves.
+
+The strict `scaled_dot_product_attention` entry now tries qualified selection
+before that generic-cache check. Compilation and unselected calls retain their
+existing validation. A selected execution failure still propagates.
+
+Using the qualified stack in [the L40S report](l40s-warp-training.md), a
+full-device L40S control used four independent copies of the exact old/new API
+body, each with its own cold or explicitly warmed loader cache. All four used
+the same shared GPU methods. The cold copies remained cold, the warmed copies
+remained warm, and graph queries matched launched symbols and resources for all
+32 rows. Nine rotating rounds used 100 ms measurement windows after 500 ms
+warmup. Forward retained gradients; joint included forward and all gradients.
+
+At B1/H16/S1024/D64, complete eager joint wall medians were 101.45 to 95.54 us
+for BF16 and 101.54 to 96.27 us for FP16. The warmed old API measured 95.70 and
+96.36 us respectively, isolating the avoidable cold-cache validation overhead.
+Other families were largely device-bound or tied within variability. This is a
+host-path improvement, with no claim of a GPU pipeline or model-level speedup.
+[All samples and cache-state proof](../results/selected-validation.json) are
+retained separately from the architecture timing grid.
+
+Reproduce on a qualified selected device from a checkout containing the prior
+API revision:
+
+```sh
+python -m benchmarks.compare_attention_variants \
+  --operations '[{"label":"old-cold","factory":"benchmarks.selected_validation_controls:make_attention","kwargs":{"previous":true}},{"label":"new-cold","factory":"benchmarks.selected_validation_controls:make_attention"},{"label":"old-warm","factory":"benchmarks.selected_validation_controls:make_attention","kwargs":{"previous":true,"warm":true}},{"label":"new-warm","factory":"benchmarks.selected_validation_controls:make_attention","kwargs":{"warm":true}}]' \
+  --seq 1024 4096 --dim 64 128 --visibility dense --phases forward joint \
+  --warmup-ms 500 --window-ms 100 --repeats 9 --output ../selected-validation.json
+```
+
+The control defaults to prior API revision `969f1f9`. An explicit `control_file`
+factory argument accepts a retained prior API source file for source-only
+installations. Set `KOH_VALIDATION_CACHE_PROOF` to an output file to retain the
+independent loader states and API source hashes at process exit.

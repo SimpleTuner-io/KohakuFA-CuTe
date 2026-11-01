@@ -20,6 +20,7 @@ def main():
     parser.add_argument("--heads", type=int, default=16)
     parser.add_argument("--dtype", nargs="+", choices=("bf16", "fp16"), default=["bf16", "fp16"])
     parser.add_argument("--phases", nargs="+", choices=("forward", "backward", "joint"), default=["joint"])
+    parser.add_argument("--visibility", nargs="+", choices=("dense", "causal"), default=["dense", "causal"])
     parser.add_argument("--warmup-ms", type=float, default=1000)
     parser.add_argument("--window-ms", type=float, default=100)
     parser.add_argument("--repeats", type=int, default=7)
@@ -77,7 +78,8 @@ def main():
         "rows": [],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    for sequence, dimension, dtype_name, causal in itertools.product(args.seq, args.dim, args.dtype, (False, True)):
+    for sequence, dimension, dtype_name, visibility in itertools.product(args.seq, args.dim, args.dtype, args.visibility):
+        causal = visibility == "causal"
         torch.manual_seed(371)
         dtype = torch.bfloat16 if dtype_name == "bf16" else torch.float16
         inputs = [

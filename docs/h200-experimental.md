@@ -110,6 +110,15 @@ include real global-uninitialized-read flags and bounded long-case timeouts:
   It writes the expected constant. This supports that instruction family and
   does not replace the separate actual-attention 4D evidence.
 
+A separate [standalone rank-4 diagnostic](../benchmarks/diagnostics/README.md)
+now reproduces initialization reports on SM120 with exact uninstrumented loaded
+`UTMASTG.4D` binding. Ordinary stores and poisoned-output controls pass, and a
+full-completion wait retains the reports despite correct physical output. Its
+instrumented runs use the same executable with CUPTI capture explicitly disabled.
+This is evidence about that standalone SM120 producer. H200's unmodified
+initialization status remains unresolved and its attention backend stays
+experimental.
+
 NVIDIA documents unsupported tensormap/tcgen05 global tracking as a possible
 source of initcheck false positives in its
 [Compute Sanitizer limitations](https://docs.nvidia.com/compute-sanitizer/ReleaseNotes/index.html#known-limitations).

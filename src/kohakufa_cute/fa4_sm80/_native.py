@@ -26,7 +26,8 @@ def _bshd(tensor):
 
 
 class FlatForward:
-    def __init__(self, dtype, dimension, causal, capacity, schedule, forward_threads=128):
+    def __init__(self, dtype, dimension, causal, capacity, schedule, forward_threads=128, inference=False):
+        self.inference = inference
         self.forward = FlashAttentionForwardSm80(
             dtype,
             dimension,
@@ -67,7 +68,7 @@ class FlatForward:
             _bshd(k),
             _bshd(v),
             _bshd(out),
-            logsum,
+            None if cutlass.const_expr(self.inference) else logsum,
             scale,
             None,
             None,
@@ -231,10 +232,10 @@ def compile_kernel(mode, tensors, causal, configuration=None):
     capacity = torch.cuda.get_device_properties(q.device).shared_memory_per_block_optin
     if mode == "backward":
         program = FlatBackward(dtypes[q.dtype], q.shape[-1], causal, capacity, schedule, capability[0] * 10 + capability[1])
-    elif mode == "forward":
-        program = FlatForward(dtypes[q.dtype], q.shape[-1], causal, capacity, schedule, forward_threads)
+    elif mode in ("forward", "inference"):
+        program = FlatForward(dtypes[q.dtype], q.shape[-1], causal, capacity, schedule, forward_threads, mode == "inference")
     else:
-        raise ValueError("Select forward or backward for the warp launcher.")
+        raise ValueError("Select forward, backward or explicit inference for the warp launcher.")
     with torch.cuda.device(q.device):
         return cute.compile(
             program,

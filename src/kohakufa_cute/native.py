@@ -17,7 +17,7 @@ _names = count()
 
 
 def compile_kernel(mode, tensors, causal, masked, configuration=None):
-    if mode in ("sm80_forward", "sm80_backward", "warp_forward", "warp_backward"):
+    if mode in ("sm80_forward", "sm80_backward", "warp_forward", "warp_backward", "warp_inference"):
         from .fa4_sm80._native import compile_kernel as compile_sm80
 
         function = compile_sm80(mode.split("_", 1)[1], tensors, causal, configuration)

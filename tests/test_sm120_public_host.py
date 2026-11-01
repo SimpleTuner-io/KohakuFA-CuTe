@@ -83,12 +83,13 @@ class Sm120PublicSelectionTests(unittest.TestCase):
                 self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
 
     def test_public_entry_reuses_the_canonical_host_helper(self):
-        from kohakufa_cute.fa4_sm80 import _host
+        from kohakufa_cute.fa4_sm80 import _host, _l40s
 
         q = operand()
         runner = Mock(return_value=object())
         entry = fa4_sm80.attention
         with (
+            patch.object(_l40s, "is_device", return_value=False),
             patch.object(_sm120, "target_device", return_value=True),
             patch.object(_host, "native_runner", return_value=runner) as factory,
         ):

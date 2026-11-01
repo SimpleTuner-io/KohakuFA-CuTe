@@ -91,7 +91,7 @@ class L40sSelectionTests(unittest.TestCase):
         self.assertIs(_l40s.schedule(128, 4096, False), _l40s.schedule(128, 4096, False))
         _l40s.is_device.cache_clear()
         with patch.object(self.properties, "name", "NVIDIA GeForce RTX 4090"):
-            with patch("kohakufa_cute.fa4_sm80._attention.attention", return_value=object()) as preceding:
+            with patch("kohakufa_cute.fa4_sm80._host.native_runner", return_value=Mock(return_value=object())) as preceding:
                 fa4_sm80.attention(q, q, q)
             preceding.assert_called_once()
 

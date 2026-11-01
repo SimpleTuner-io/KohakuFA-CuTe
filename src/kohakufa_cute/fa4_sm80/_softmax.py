@@ -97,8 +97,13 @@ class Softmax(_Original):
         return row_scale
 
     @cute.jit
-    def finalize(self, final_scale: Float32 = 1.0, sink_val: Float32 | cute.Tensor | None = None) -> cute.Tensor:
-        """Finalize the online softmax by computing the scale and logsumexp."""
+    def finalize(
+        self,
+        final_scale: Float32 = 1.0,
+        sink_val: Float32 | cute.Tensor | None = None,
+        return_lse: cutlass.Constexpr[bool] = True,
+    ) -> cute.Tensor:
+        """Compute the same normalization scale and optionally save logsumexp."""
         if cutlass.const_expr(sink_val is not None and isinstance(sink_val, cute.Tensor)):
             assert cute.size(sink_val) == cute.size(self.row_sum)
         row_sum = self.row_sum
@@ -121,7 +126,7 @@ class Softmax(_Original):
             # if row_sum is zero or nan, set acc_O_mn_row to 1.0
             acc_O_mn_row_is_zero_or_nan = row_sum[r] == 0.0 or row_sum[r] != row_sum[r]
             row_scale[r] = (cute.arch.rcp_approx(row_sum[r] if not acc_O_mn_row_is_zero_or_nan else 1.0)) * final_scale
-            row_sum_cur = row_sum[r]
-            LN2 = math.log(2.0)
-            row_sum[r] = cute.math.log2(row_sum_cur, fastmath=True) if not acc_O_mn_row_is_zero_or_nan else -Float32.inf
+            if cutlass.const_expr(return_lse):
+                row_sum_cur = row_sum[r]
+                row_sum[r] = cute.math.log2(row_sum_cur, fastmath=True) if not acc_O_mn_row_is_zero_or_nan else -Float32.inf
         return row_scale

@@ -92,6 +92,23 @@ attention implementation remains experimental with unresolved unmodified
 initialization checking. Its prior actual-attention 4D controls and independent
 constant 3D diagnostic remain separate evidence.
 
+## Checker-version control
+
+A separate [checker-only comparison](../../results/tma4d-checker-comparison.json)
+reused the identical NVCC 13.2 executable, source/PTX and previously captured
+loaded-code controls. Compute Sanitizer **2026.3.0.0** reproduces the results
+from **2026.1.0.0**: untouched read/full-wait TMA output reports 36,864 errors
+at 256 rows and 37,008 at 257 rows; ordinary untouched output and poisoned
+full-wait TMA output report zero at 257 rows. All twelve physical checks pass.
+
+Only the checker changes. The newer executable comes from the official CUDA
+13.4.3 redistribution, verified against its published SHA256. Compiler, CUDA
+runtime, attention precision and diagnostic executable are unchanged. NVIDIA's
+[release notes](https://docs.nvidia.com/compute-sanitizer/ReleaseNotes/index.html)
+describe newer shared-memory initialization-tracking fixes; this controlled
+comparison shows they do not remove this rank-4 global-store report. No H200
+or B300 attention finding is waived.
+
 ## Reproduce
 
 Use Python 3.13, CUDA Toolkit 13.2 with NVCC/CUPTI, and Compute Sanitizer. The

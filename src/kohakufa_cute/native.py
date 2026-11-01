@@ -17,8 +17,13 @@ _names = count()
 
 
 def compile_kernel(mode, tensors, causal, masked):
-    descriptors = tuple(kernels.descriptor(tensor) for tensor in tensors)
-    function = kernels.compile_kernel(tensors[0].device.index, mode, causal, masked, descriptors)
+    if mode in ("sm80_forward", "sm80_backward"):
+        from .fa4_sm80._native import compile_kernel as compile_sm80
+
+        function = compile_sm80(mode.removeprefix("sm80_"), tensors, causal)
+    else:
+        descriptors = tuple(kernels.descriptor(tensor) for tensor in tensors)
+        function = kernels.compile_kernel(tensors[0].device.index, mode, causal, masked, descriptors)
     name = f"kohakufa_cute.native.{next(_names)}"
     tvm_ffi.register_global_func(name, function.__tvm_ffi_object__())
     return name

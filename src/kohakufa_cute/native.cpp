@@ -9,6 +9,7 @@
 #include <tvm/ffi/function.h>
 
 #include <array>
+#include <cmath>
 #include <cstring>
 #include <list>
 #include <map>
@@ -43,9 +44,22 @@ int split_forward_count(const Tensor &q, const Tensor &k, bool masked, bool caus
     return q.size(2) > 64 || k.size(2) <= 256 ? 4 : 16;
 }
 
-Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool masked) {
-    Key key = {backward, tensors[0].get_device(), causal, masked};
+Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false) {
+    Key key = {backward, tensors[0].get_device(), causal, masked, sm80};
     key.reserve(160);
+    if (sm80) {
+        // Cache exact runtime layouts for the optional entry. Do not reuse
+        // native dispatch's shape/stride equivalence classes.
+        for (const auto &tensor : tensors) {
+            key.push_back(static_cast<int64_t>(tensor.scalar_type()));
+            key.push_back(tensor.dim());
+            for (auto size : tensor.sizes())
+                key.push_back(size);
+            for (auto stride : tensor.strides())
+                key.push_back(stride);
+        }
+        return key;
+    }
     if (!backward && tensors[7].dim() == 5) {
         key.push_back(tensors[0].size(2) > 32);
         key.push_back(tensors[0].size(2) > 64);
@@ -81,8 +95,8 @@ Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool m
     return key;
 }
 
-tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, bool masked) {
-    auto key = configuration_key(backward, tensors, causal, masked);
+tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false) {
+    auto key = configuration_key(backward, tensors, causal, masked, sm80);
     std::unique_lock<std::mutex> lock(cache_mutex);
     auto found = programs.find(key);
     if (found != programs.end()) {
@@ -100,8 +114,9 @@ tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, b
     py::tuple inputs(tensors.size());
     for (size_t i = 0; i < tensors.size(); ++i)
         inputs[i] = py::cast(tensors[i]);
+    const char *mode = sm80 ? (backward ? "sm80_backward" : "sm80_forward") : (backward ? "backward" : "forward");
     auto name = py::module_::import("kohakufa_cute.native")
-                    .attr("compile_kernel")(backward ? "backward" : "forward", inputs, causal, masked)
+                    .attr("compile_kernel")(mode, inputs, causal, masked)
                     .cast<std::string>();
     auto function = tvm::ffi::Function::GetGlobalRequired(name);
     tvm::ffi::Function::RemoveGlobal(name);
@@ -126,8 +141,8 @@ class StreamScope {
     ~StreamScope() { TVMFFIEnvSetStream(kDLCUDA, device, previous, nullptr); }
 };
 
-void launch(bool backward, const Tensors &tensors, double scale, bool causal, bool masked) {
-    auto function = program(backward, tensors, causal, masked);
+void launch(bool backward, const Tensors &tensors, double scale, bool causal, bool masked, bool sm80 = false) {
+    auto function = program(backward, tensors, causal, masked, sm80);
     std::array<DLTensor, 14> dl;
     std::array<tvm::ffi::AnyView, 15> arguments;
     for (size_t i = 0; i < tensors.size(); ++i) {
@@ -224,6 +239,42 @@ class Attention : public torch::autograd::Function<Attention> {
         return {output[0], output[1], output[2], Tensor(), Tensor(), Tensor(), Tensor(), Tensor()};
     }
 };
+
+class Sm80Attention : public torch::autograd::Function<Sm80Attention> {
+  public:
+    static Tensor forward(AutogradContext *ctx, Tensor q, Tensor k, Tensor v, double scale, bool causal) {
+        c10::cuda::CUDAGuard guard(q.device());
+        auto out = at::empty_like(q);
+        auto maximum = at::empty({q.size(0), q.size(1), q.size(2)}, q.options().dtype(at::kFloat));
+        auto logsum = at::empty_like(maximum);
+        launch(false, {q, k, v, q, out, maximum, logsum, out, maximum, out, out, out, maximum, maximum},
+               scale, causal, false, true);
+        ctx->save_for_backward({q, k, v, out, maximum, logsum});
+        ctx->saved_data["scale"] = scale;
+        ctx->saved_data["causal"] = causal;
+        return out;
+    }
+
+    static variable_list backward(AutogradContext *ctx, variable_list gradients) {
+        auto saved = ctx->get_saved_variables();
+        const auto &q = saved[0];
+        c10::cuda::CUDAGuard guard(q.device());
+        auto dout = gradients[0].contiguous();
+        if (reinterpret_cast<uintptr_t>(dout.data_ptr()) % 16 != 0)
+            dout = dout.clone(at::MemoryFormat::Contiguous);
+        auto dq = at::empty_like(q), dk = at::empty_like(saved[1]), dv = at::empty_like(saved[2]);
+        constexpr int64_t tile_m = 64;
+        const auto rounded = (q.size(2) + tile_m - 1) / tile_m * tile_m;
+        auto delta = at::empty({q.size(0), q.size(1), rounded}, q.options().dtype(at::kFloat));
+        auto lognorm = at::empty_like(delta);
+        auto scratch = at::empty({q.size(0), q.size(1), rounded * q.size(3)}, delta.options());
+        // Preparation initializes the complete scratch on each invocation,
+        // including graph replay. No tensor pointer is cached in a program.
+        launch(true, {q, saved[1], saved[2], q, saved[3], saved[4], saved[5], dout, delta, dq, dk, dv, scratch, lognorm},
+               ctx->saved_data["scale"].toDouble(), ctx->saved_data["causal"].toBool(), false, true);
+        return {dq, dk, dv, Tensor(), Tensor()};
+    }
+};
 std::pair<int, int> device_capability(int device) {
     static std::map<int, std::pair<int, int>> capabilities;
     static std::mutex capability_mutex;
@@ -275,6 +326,20 @@ bool validate(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask) {
 } // namespace
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
+    module.def("sm80_attention", [](Tensor q, Tensor k, Tensor v, double scale, bool causal) {
+        py::gil_scoped_release release;
+        validate(q, k, v, std::nullopt);
+        TORCH_CHECK_VALUE(device_capability(q.get_device()) == std::make_pair(8, 0) &&
+                              q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
+                              q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&
+                              reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
+                              reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
+                              reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
+                              (q.size(3) == 64 || q.size(3) == 128) &&
+                              std::isfinite(scale) && scale > 0 && scale <= 2e38,
+                          "The native SM80 entry requires aligned contiguous square FP16/BF16 MHA, D64/D128 and a positive scale.");
+        return Sm80Attention::apply(q, k, v, scale, causal);
+    });
     module.def("automatic_sdpa", [](Tensor q, Tensor k, Tensor v, std::optional<Tensor> mask, double dropout, bool causal,
                                     std::optional<double> scale, bool gqa) {
         py::gil_scoped_release release;

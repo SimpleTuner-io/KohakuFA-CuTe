@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scope": "Explicit resident-V control; automatic selection and Schedule defaults unchanged.",
+  "device": "NVIDIA A100-SXM4-40GB",
+  "capability": [
+    8,
+    0
+  ],
+  "torch": "2.15.0+cu132",
+  "base_revision": "ffe1801739af8af1b832717afa416115d999684b",
+  "source_sha256": {
+    "_attention.py": "112df7b2c89bc71ae556b2dfc8da7b5a8002995b587a4d8114250abc5e7bfe10",
+    "_preprocess.py": "9beb2c7280ee5b583023611a4e94122cd1b05a4517b2b66665b4e0eb7f30ee60",
+    "_private_api.py": "1b70b88344b0da3c87300a869ae689e68b38482a4dd85518c6d520bed8b4a91e",
+    "_backward.py": "d0693a82101bd241461e03b4acb88ca026311a6624034832db8fc95648e876ed",
+    "_forward.py": "4c895d89559a16b19f5eebdcf998d6d9a14e316cc03397a57539f2827c69aad4",
+    "_softmax.py": "f68f05ad0dfde4b2a826d9160f64f197fcc45aad457aa740f89af5c7ff329284",
+    "__init__.py": "01f30829c5860def8e8e792c970193dd4e1ea22801c25e5a4d72d7347d0f8770"
+  },
+  "schedule": {
+    "forward_m": 128,
+    "forward_n": 64,
+    "forward_stages": 1,
+    "query_in_registers": false,
+    "backward_m": 64,
+    "backward_n": 128,
+    "query_stages": 2,
+    "dout_stages": 1,
+    "threads": 256,
+    "score_m_warps": 2,
+    "kv_m_warps": 4,
+    "dq_m_warps": 4,
+    "v_in_regs": true
+  },
+  "precision_contract": "docs/precision.md",
+  "checks": {
+    "directed_statistic_and_graph_cases": 74,
+    "additional_changed_poisoned_d64_graph_cases": 24,
+    "memcheck": {
+      "errors": 0
+    },
+    "racecheck": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "synccheck": {
+      "errors": 0
+    },
+    "initcheck": {
+      "errors": 0
+    }
+  },
+  "sanitizer_boundary": "Both FP16/BF16, dense/causal, S129, H3, D64, changed inputs and poisoned output/gradients; 8 replay cases per tool. Driver API negotiation reporting disabled; device memory and synchronization errors remain enabled.",
+  "limitations": [
+    "A100 qualification does not activate another target or qualify a different tile.",
+    "Q/V storage reuse requires the resident register operand in the dP GEMM.",
+    "Host entries must derive scratch and postprocess layouts from the selected schedule."
+  ]
+}

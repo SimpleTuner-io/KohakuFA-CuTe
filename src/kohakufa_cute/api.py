@@ -6,7 +6,7 @@ from importlib.metadata import PackageNotFoundError, version
 import torch
 from packaging.version import Version
 
-from . import _ops
+from . import _ops, fa4_sm80
 
 _CAPABILITIES = {(8, 0), (8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)}
 _CENTERED_CAPABILITIES = {(8, 0), (8, 6), (8, 9), (9, 0), (10, 0), (10, 3), (12, 0), (12, 1)}
@@ -102,6 +102,8 @@ def attention(q, k, v, *, mask=None, causal=False, scale=None, center_keys=False
         k = _center_keys(k)
     if torch.compiler.is_compiling():
         return _ops.attention(q, k, v, mask=mask, causal=causal, scale=scale)
+    if fa4_sm80.compatible(q, k, v, mask, 0, causal, scale, True):
+        return fa4_sm80.attention(q, k, v, causal=causal, scale=scale)
     return _extension().attention(q, k, v, mask, scale, causal)
 
 
@@ -113,6 +115,8 @@ def scaled_dot_product_attention(
         _validate(query, key, value, attn_mask, dropout_p, is_causal, enable_gqa)
         if torch.compiler.is_compiling():
             return _ops.attention(query, key, value, mask=attn_mask, causal=is_causal, scale=scale)
+    if fa4_sm80.compatible(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa):
+        return fa4_sm80.attention(query, key, value, causal=is_causal, scale=scale)
     return _extension().sdpa(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
 
 
@@ -121,6 +125,10 @@ def automatic_scaled_dot_product_attention(
 ):
     """Select centered CuTe kernels on supported GPUs, native SDPA for unsupported calls."""
     if query.device.type == "cuda":
+        if not torch.compiler.is_compiling() and fa4_sm80.compatible(
+            query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa
+        ):
+            return fa4_sm80.attention(query, key, value, causal=is_causal, scale=scale)
         if not torch.compiler.is_compiling() and _extension.cache_info().currsize:
             return _extension().automatic_sdpa(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
         if _compatible(query, key, value, attn_mask, dropout_p, is_causal, enable_gqa) and _runtime_available():

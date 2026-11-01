@@ -1,4 +1,11 @@
-# A100 support
+# A100 support and native fallback
+
+The [tuned A100 installation](a100-sm80-fa4.md) enables the shared static
+forward and joint-backward schedule for qualified long D64/D128 calls.
+Its measured boundaries, installation requirements, SDPA comparison, and eager
+host costs are recorded separately. Broader D16/D256 and short/compiled tuning
+remain outstanding; architecture acceptance is not a claim that those cases
+match SDPA.
 
 SM80 is accepted by the strict and automatic APIs and the native runtime. The
 generic schedule preserves the same [arithmetic](precision.md) as the other
@@ -24,7 +31,7 @@ Qualification used a full A100-SXM4-40GB with 108 SMs, a 300 W power limit, Pyth
 - CPU unittest discovery: 210 tests with 136 GPU-dependent skips. Publication
   guard tests: 20 passed.
 
-## Baseline performance
+## Generic fallback performance
 
 Five timing rounds with 100 ms measurement windows compared complete forward,
 backward, and joint calls in the same process. Compilation, allocation, and graph

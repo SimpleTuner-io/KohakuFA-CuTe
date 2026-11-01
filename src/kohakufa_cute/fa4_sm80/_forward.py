@@ -485,7 +485,7 @@ class FlashAttentionForwardSm80(_Original):
             # TODO: local
 
             # normalize acc_O by row_sum and calculate the lse
-            row_scale = softmax.finalize()
+            row_scale = softmax.finalize(return_lse=mLSE is not None)
             softmax.rescale_O(acc_O, row_scale)
 
             # ///////////////////////////////////////////////////////////////////////////////

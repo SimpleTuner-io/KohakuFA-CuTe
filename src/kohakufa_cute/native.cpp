@@ -2,6 +2,7 @@
 #include <ATen/ops/scaled_dot_product_attention.h>
 #include <c10/cuda/CUDAGuard.h>
 #include <c10/cuda/CUDAStream.h>
+#include <c10/core/GradMode.h>
 #include <torch/csrc/autograd/custom_function.h>
 #include <torch/extension.h>
 #include <pybind11/stl.h>
@@ -59,10 +60,14 @@ int split_forward_count(const Tensor &q, const Tensor &k, bool masked, bool caus
 }
 
 Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false,
-                      const Tensor &configuration = Tensor()) {
+                      const Tensor &configuration = Tensor(), bool inference = false) {
     const auto family = configuration.defined() ? configuration.const_data_ptr<int64_t>()[0] : 0;
     Key key = {backward, tensors[0].get_device(), causal, masked, sm80, family};
-    key.reserve(160);
+    // Fourteen rank-four aliases plus the immutable configuration and mode
+    // need 164 integers. Keep the default reservation unchanged.
+    key.reserve(inference ? 176 : 160);
+    if (family == 1)
+        key.push_back(inference);
     if (sm80 || configuration.defined()) {
         if (configuration.defined()) {
             const auto *values = configuration.const_data_ptr<int64_t>();
@@ -116,8 +121,8 @@ Key configuration_key(bool backward, const Tensors &tensors, bool causal, bool m
 }
 
 tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, bool masked, bool sm80 = false,
-                          const Tensor &configuration = Tensor()) {
-    auto key = configuration_key(backward, tensors, causal, masked, sm80, configuration);
+                          const Tensor &configuration = Tensor(), bool inference = false) {
+    auto key = configuration_key(backward, tensors, causal, masked, sm80, configuration, inference);
     std::unique_lock<std::mutex> lock(cache_mutex);
     auto found = programs.find(key);
     if (found != programs.end()) {
@@ -143,7 +148,7 @@ tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, b
         py::dict parameters;
         for (size_t i = 0; i < configured_fields.size(); ++i)
             parameters[configured_fields[i]] = values[i + 1];
-        const char *configured_mode = values[0] == 1 ? (backward ? "warp_backward" : "warp_forward")
+        const char *configured_mode = values[0] == 1 ? (inference ? "warp_inference" : (backward ? "warp_backward" : "warp_forward"))
                                                     : (backward ? "hopper_backward" : "hopper_forward");
         name = compiler(configured_mode, inputs, causal, masked, parameters).cast<std::string>();
     } else {
@@ -173,8 +178,8 @@ class StreamScope {
 };
 
 void launch(bool backward, const Tensors &tensors, double scale, bool causal, bool masked, bool sm80 = false,
-            const Tensor &configuration = Tensor()) {
-    auto function = program(backward, tensors, causal, masked, sm80, configuration);
+            const Tensor &configuration = Tensor(), bool inference = false) {
+    auto function = program(backward, tensors, causal, masked, sm80, configuration, inference);
     std::array<DLTensor, 14> dl;
     std::array<tvm::ffi::AnyView, 15> arguments;
     for (size_t i = 0; i < tensors.size(); ++i) {
@@ -398,7 +403,7 @@ class AttentionRunner {
         configuration = at::tensor(values, at::TensorOptions().dtype(at::kLong).device(at::kCPU));
     }
 
-    Tensor call(Tensor q, Tensor k, Tensor v, std::optional<double> scale, bool causal) const {
+    Tensor call(Tensor q, Tensor k, Tensor v, std::optional<double> scale, bool causal, bool inference = false) const {
         validate(q, k, v, std::nullopt);
         const auto target = device_capability(q.get_device());
         const auto family = configuration.const_data_ptr<int64_t>()[0];
@@ -418,6 +423,29 @@ class AttentionRunner {
         const auto accumulator_width = configuration.const_data_ptr<int64_t>()[configuration_accumulator_head_dim];
         TORCH_CHECK_VALUE(accumulator_width == 0 || accumulator_width == q.size(3),
                           "These D64/D128 experiments require the input head width for accumulation.");
+        if (inference) {
+            TORCH_CHECK_VALUE(family == 1, "Explicit inference is available for the warp family only.");
+            // Keep inference eligibility independent of future training-view
+            // experiments: this mode has only contiguous aligned qualification.
+            TORCH_CHECK_VALUE(q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&
+                                  !q.is_conj() && !k.is_conj() && !v.is_conj() &&
+                                  !q.is_neg() && !k.is_neg() && !v.is_neg() &&
+                                  reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
+                                  reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
+                                  reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0,
+                              "Explicit inference requires contiguous aligned inputs without pending conjugation or negation.");
+            TORCH_CHECK_VALUE(!c10::GradMode::is_enabled() || !(q.requires_grad() || k.requires_grad() || v.requires_grad()),
+                              "Explicit inference cannot discard requested input gradients.");
+            TORCH_CHECK_VALUE(!q._fw_grad(0).defined() && !k._fw_grad(0).defined() && !v._fw_grad(0).defined(),
+                              "Explicit inference does not support forward-AD dual inputs.");
+            c10::cuda::CUDAGuard guard(q.device());
+            auto out = at::empty_like(q);
+            // Every unused argument has the same real/fake dtype and rank as
+            // out. No statistic allocation or autograd context is constructed.
+            launch(false, {q, k, v, q, out, out, out, out, out, out, out, out, out, out},
+                   amount, causal, false, false, configuration, true);
+            return out;
+        }
         return ConfiguredAttention::apply(q, k, v, amount, causal, configuration);
     }
 };
@@ -479,6 +507,11 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
                             std::optional<double> scale, bool causal) {
             py::gil_scoped_release release;
             return runner.call(q, k, v, scale, causal);
+        }, py::arg("q"), py::arg("k"), py::arg("v"), py::arg("scale") = std::nullopt, py::arg("causal") = false)
+        .def("inference", [](const AttentionRunner &runner, Tensor q, Tensor k, Tensor v,
+                              std::optional<double> scale, bool causal) {
+            py::gil_scoped_release release;
+            return runner.call(q, k, v, scale, causal, true);
         }, py::arg("q"), py::arg("k"), py::arg("v"), py::arg("scale") = std::nullopt, py::arg("causal") = false);
     module.def("sm80_attention", [](Tensor q, Tensor k, Tensor v, double scale, bool causal) {
         py::gil_scoped_release release;

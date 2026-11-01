@@ -1,5 +1,10 @@
 # L40S attention schedules and gradient precision
 
+This is a historical compensated-policy report. The current default arithmetic
+is documented in [precision.md](precision.md). The separately qualified
+[shared warp training candidate](l40s-warp-training.md) retains that default
+arithmetic; its measurements do not replace this historical grid.
+
 The L40S work targets a full 142-SM, 48-GB device at its 350 W board limit. It adds a D16 logical-width schedule, compact short attention, and a larger forward query tile for aligned long D64/D128 calls. The final backward path also retains low components of probability and softmax-derivative operands. Those arithmetic corrections have a measurable cost; faster implementations that lose small gradients are diagnostic controls.
 
 The comparison uses Python 3.13.18, PyTorch 2.15.0+cu132, CUDA 13.2, CuTe DSL 4.8.1 and driver 615.71.09. The loaded driver API reports 13040. All four controls use this same qualified stack; loaded library basenames and complete runtime source hashes are retained in the report.

@@ -99,3 +99,11 @@ preprocess methods from FlashAttention at revision
 dependency. Copyright and contributor notices are retained with the derived
 methods; the BSD-3-Clause license and AUTHORS list are reproduced in
 LICENSES/FlashAttention-BSD-3-Clause.txt and LICENSES/FlashAttention-AUTHORS.txt.
+
+The experimental fa4_hopper package derives modified Hopper WGMMA forward,
+softmax, backward, preprocessing and persistent scheduling methods from the
+same FlashAttention revision. It preserves separate unscaled maxima and
+logarithmic normalization, actual rounded-output delta, input-dtype P before
+dS, one dS conversion, FP32 accumulation and late dQ/dK scaling. Unchanged helpers
+use the pinned optional dependency. The derived methods retain copyright and
+contributor notices under the same reproduced BSD-3-Clause license.

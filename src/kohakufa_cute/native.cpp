@@ -196,8 +196,27 @@ void launch(bool backward, const Tensors &tensors, double scale, bool causal, bo
     function.CallPacked(arguments.data(), arguments.size(), &result);
 }
 
-variable_list forward(Tensor q, Tensor k, Tensor v, Tensor mask, bool masked, double scale, bool causal) {
-    c10::cuda::CUDAGuard guard(q.device());
+void canonicalize_input(Tensor &tensor) {
+    // DLPack represents strides/storage, but cannot carry lazy value bits.
+    // Clone the logical values once, before constructing descriptor aliases.
+    if (tensor.is_neg() || tensor.is_conj())
+        tensor = tensor.clone(at::MemoryFormat::Preserve);
+}
+
+void canonicalize_qkv(Tensor &q, Tensor &k, Tensor &v) {
+    canonicalize_input(q);
+    canonicalize_input(k);
+    canonicalize_input(v);
+}
+
+Tensor contiguous_gradient(Tensor gradient) {
+    if (gradient.is_neg() || gradient.is_conj() || !gradient.is_contiguous() ||
+        reinterpret_cast<uintptr_t>(gradient.data_ptr()) % 16 != 0)
+        return gradient.clone(at::MemoryFormat::Contiguous);
+    return gradient;
+}
+
+variable_list forward_canonical(Tensor q, Tensor k, Tensor v, Tensor mask, bool masked, double scale, bool causal) {
     auto out = at::empty_like(q);
     std::vector<int64_t> stats(q.sizes().begin(), q.sizes().end() - 1);
     auto maximum = at::empty(stats, q.options().dtype(at::kFloat));
@@ -217,6 +236,12 @@ variable_list forward(Tensor q, Tensor k, Tensor v, Tensor mask, bool masked, do
     launch(false, {q, k, v, mask, out, maximum, logsum, partial, split_stats, out, out, out, blocks, maximum}, scale, causal,
            masked);
     return {out, maximum, logsum, blocks};
+}
+
+variable_list forward(Tensor q, Tensor k, Tensor v, Tensor mask, bool masked, double scale, bool causal) {
+    c10::cuda::CUDAGuard guard(q.device());
+    canonicalize_qkv(q, k, v);
+    return forward_canonical(q, k, v, masked ? mask : q, masked, scale, causal);
 }
 
 bool packed_statistics_workspace(const Tensor &q, const Tensor &k, bool masked, bool causal) {
@@ -241,6 +266,10 @@ bool packed_statistics_workspace(const Tensor &q, const Tensor &k, bool masked, 
 variable_list backward(Tensor q, Tensor k, Tensor v, Tensor mask, bool masked, Tensor maximum, Tensor logsum, Tensor dout,
                        Tensor blocks, const std::optional<Tensor> &out, double scale, bool causal) {
     c10::cuda::CUDAGuard guard(q.device());
+    canonicalize_qkv(q, k, v);
+    canonicalize_input(dout);
+    if (!masked)
+        mask = q;
     auto dq = at::empty_like(q), dk = at::empty_like(k), dv = at::empty_like(v);
     auto delta = packed_statistics_workspace(q, k, masked, causal)
                      ? at::empty({maximum.size(0), maximum.size(1), 4 * maximum.size(2)}, maximum.options())
@@ -257,7 +286,9 @@ class Attention : public torch::autograd::Function<Attention> {
   public:
     static Tensor forward(AutogradContext *ctx, Tensor q, Tensor k, Tensor v, Tensor mask, bool masked, double scale,
                           bool causal, bool centered) {
-        auto output = ::forward(q, k, v, mask, masked, scale, causal);
+        c10::cuda::CUDAGuard guard(q.device());
+        canonicalize_qkv(q, k, v);
+        auto output = forward_canonical(q, k, v, masked ? mask : q, masked, scale, causal);
         variable_list saved = {q, k, v, output[1], output[2], output[3]};
         if (masked)
             saved.push_back(mask);
@@ -285,6 +316,7 @@ class Sm80Attention : public torch::autograd::Function<Sm80Attention> {
   public:
     static Tensor forward(AutogradContext *ctx, Tensor q, Tensor k, Tensor v, double scale, bool causal) {
         c10::cuda::CUDAGuard guard(q.device());
+        canonicalize_qkv(q, k, v);
         auto out = at::empty_like(q);
         auto maximum = at::empty({q.size(0), q.size(1), q.size(2)}, q.options().dtype(at::kFloat));
         auto logsum = at::empty_like(maximum);
@@ -300,9 +332,7 @@ class Sm80Attention : public torch::autograd::Function<Sm80Attention> {
         auto saved = ctx->get_saved_variables();
         const auto &q = saved[0];
         c10::cuda::CUDAGuard guard(q.device());
-        auto dout = gradients[0].contiguous();
-        if (reinterpret_cast<uintptr_t>(dout.data_ptr()) % 16 != 0)
-            dout = dout.clone(at::MemoryFormat::Contiguous);
+        auto dout = contiguous_gradient(gradients[0]);
         auto dq = at::empty_like(q), dk = at::empty_like(saved[1]), dv = at::empty_like(saved[2]);
         constexpr int64_t tile_m = 64;
         const auto rounded = (q.size(2) + tile_m - 1) / tile_m * tile_m;
@@ -322,6 +352,7 @@ class ConfiguredAttention : public torch::autograd::Function<ConfiguredAttention
     static Tensor forward(AutogradContext *ctx, Tensor q, Tensor k, Tensor v, double scale, bool causal,
                           Tensor configuration) {
         c10::cuda::CUDAGuard guard(q.device());
+        canonicalize_qkv(q, k, v);
         const auto *parameters = configuration.const_data_ptr<int64_t>();
         const auto multiple = parameters[configuration_maximum_multiple];
         const auto padded = (q.size(2) + multiple - 1) / multiple * multiple;
@@ -345,9 +376,7 @@ class ConfiguredAttention : public torch::autograd::Function<ConfiguredAttention
         const auto *parameters = configuration.const_data_ptr<int64_t>();
         const auto &q = saved[0];
         c10::cuda::CUDAGuard guard(q.device());
-        auto dout = gradients[0].contiguous();
-        if (reinterpret_cast<uintptr_t>(dout.data_ptr()) % 16 != 0)
-            dout = dout.clone(at::MemoryFormat::Contiguous);
+        auto dout = contiguous_gradient(gradients[0]);
         auto dq = at::empty_like(q), dk = at::empty_like(saved[1]), dv = at::empty_like(saved[2]);
         const auto tile_m = parameters[configuration_backward_m];
         const auto rounded = (q.size(2) + tile_m - 1) / tile_m * tile_m;

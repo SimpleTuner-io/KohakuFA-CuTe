@@ -23,15 +23,22 @@ def main():
     parser.add_argument("--dense-m32", action="store_true")
     parser.add_argument("--stage1-shared-v", action="store_true")
     parser.add_argument("--public-selected", action="store_true")
+    parser.add_argument("--long-causal-only", action="store_true", help="Exercise only the new H4/S4096 FP16 public route.")
     parser.add_argument("--heads", type=int, choices=(4, 16), default=4)
     parser.add_argument(
-        "--cpu-reference", action="store_true", help="Run unchanged FP64 reference gates on CPU copies with four threads."
+        "--cpu-reference",
+        action="store_true",
+        help="Run unchanged FP64 reference gates on CPU copies with four threads.",
     )
     parser.add_argument(
-        "--reference-agreement", action="store_true", help="Outside sanitizers, check both CUDA and CPU reference gates."
+        "--reference-agreement",
+        action="store_true",
+        help="Outside sanitizers, check both CUDA and CPU reference gates.",
     )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    if args.long_causal_only and (not args.public_selected or args.heads != 4):
+        parser.error("--long-causal-only requires --public-selected --heads 4")
     if args.reference_agreement and not args.cpu_reference:
         parser.error("--reference-agreement requires --cpu-reference")
     if args.cpu_reference:
@@ -197,10 +204,40 @@ def main():
         args.output.write_text(json.dumps(report, indent=2) + "\n")
         print(label, tuple(operands[0].shape), str(operands[0].dtype), causal, "pass", flush=True)
 
+    if args.long_causal_only:
+        torch.manual_seed(1709)
+        inputs = tuple(torch.randn(1, 4, 4096, 128, device="cuda", dtype=torch.float16) for _ in range(3))
+        dout = torch.randn_like(inputs[0])
+        retain("random-public", inputs, dout, causal=True)
+        inputs[0].mul_(0.3)
+        inputs[1].mul_(0.3)
+        inputs[0][..., 0], inputs[1][..., 0] = 20, -20
+        retain("negative-common-offset", inputs, dout, causal=True)
+        inputs, dout, scale, _ = square_value_cancellation(128, torch.float16, "cuda", length=4096, heads=4)
+        retain("rounded-value-cancellation", inputs, dout, causal=True, scale=scale)
+        inputs, dout = key_cancellation(128, torch.float16, "cuda", heads=4, square=True)
+        retain("rounded-key-cancellation", inputs, dout, causal=True)
+        inputs, dout, scale, _ = value_residual_underflow(128, "cuda", length=4096, heads=4)
+        # Causal prefixes amplify the fixture's large dO into dV > 400,000.
+        # An exact power-of-two rescaling keeps the same rounded probabilities
+        # and underflow while making the final FP16 gradient representable.
+        dout.mul_(0.125)
+        report["underflow_fixture"] = {"dout_scale": 0.125, "purpose": "Representable causal FP16 output gradient"}
+        retain("rounded-fp16-underflow", inputs, dout, causal=True, scale=scale)
+        inputs = tuple(torch.randn(1, 4, 4096, 128, device="cuda", dtype=torch.float16) for _ in range(3))
+        retain("changed-poisoned-graph", inputs, torch.randn_like(inputs[0]), causal=True, graph=True)
+        report["status"] = "pass"
+        args.output.write_text(json.dumps(report, indent=2) + "\n")
+        return
+
     matrix = itertools.product(
         (torch.bfloat16, torch.float16),
         dimensions,
-        ((512,) if args.smoke else (512, 1024, 4096)) if args.public_selected else ((65,) if args.smoke else (65, 129, 257)),
+        (
+            ((512,) if args.smoke else (512, 1024, 4096))
+            if args.public_selected
+            else ((65,) if args.smoke else (65, 129, 257))
+        ),
         (False, True),
     )
     for dtype, dimension, sequence, causal in matrix:

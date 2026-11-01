@@ -129,8 +129,19 @@ class Gb10SharedTests(unittest.TestCase):
             for heads in (4, 16):
                 for dtype in (torch.bfloat16, torch.float16):
                     for causal in (False, True):
-                        expected = 16 if (sequence, heads, dtype, causal) == (512, 16, torch.bfloat16, True) else 1
+                        expected = (
+                            4
+                            if (sequence, heads, dtype, causal) == (4096, 4, torch.float16, True)
+                            else 16 if (sequence, heads, dtype, causal) == (512, 16, torch.bfloat16, True) else 1
+                        )
                         self.assertEqual(gb10.schedule(sequence, causal, heads, dtype).causal_head_group, expected)
+
+    def test_long_causal_shared_storage_is_bounded_to_h4_fp16(self):
+        for heads in (4, 16):
+            for dtype in (torch.float16, torch.bfloat16):
+                selected = gb10.schedule(4096, True, heads, dtype)
+                expected = (1, False, 4) if heads == 4 and dtype == torch.float16 else (2, True, 1)
+                self.assertEqual((selected.query_stages, selected.v_in_regs, selected.causal_head_group), expected)
 
     def test_selected_errors_propagate_and_fallback_keeps_arguments(self):
         q = operand()

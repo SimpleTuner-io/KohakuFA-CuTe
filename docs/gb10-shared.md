@@ -40,7 +40,8 @@ Forward uses M64/N64, one stage, 128 threads and shared Q. Backward uses
 | Dense S1024, H16 | 64 / 64 | 2 | 4 / 2 / 2 | Registers |
 | Dense S4096, BF16 | 64 / 64 | 2 | 4 / 2 / 2 | Registers |
 | Dense S4096, FP16 | 32 / 128 | 1 | 2 / 2 / 2 | Shared |
-| Qualified causal families | 64 / 64 | 2 | 4 / 2 / 2 | Registers |
+| Causal S4096, H4, FP16 | 64 / 64 | 1 | 4 / 2 / 2 | Shared |
+| Other qualified causal families | 64 / 64 | 2 | 4 / 2 / 2 | Registers |
 
 M32 is a coupled tile, warp-layout and storage change. N128 halves key-owned
 CTA count, logical full-problem Q/dO rereads and partial-dQ updates relative
@@ -270,8 +271,9 @@ wheel, hashes, loaded code and failures remain outside the tracked tree.
 The common scheduler's final configuration field groups heads when ordering
 causal key tiles. It changes CTA order while preserving every tile's ownership,
 masking, stages, rounded operands and reductions. The opt-in GB10 selector uses
-G16 only for batch one, H16/S512/D128 BF16 causal attention. All other qualified
-families retain G1, including FP16 at that same shape.
+G16 only for batch one, H16/S512/D128 BF16 causal attention. The long H4 FP16
+exception below uses G4; other qualified families retain G1, including FP16 at
+the short BF16 shape.
 
 A nine-round same-process G1/2/4/16 study kept the classification cache and
 M64/N64 Q2/register-V geometry fixed. At H16/S512 BF16, backward graph medians
@@ -331,3 +333,93 @@ Selected G16 main:
 `674bd64d9363b85885ffa20eff91844bd8df6714e38fa26570340f0c409dce45`.
 Compute counters remain unavailable under the previously recorded
 `ERR_NVGPUCTRPERM` limitation; no cache-hit or stall explanation is claimed.
+
+## Long causal H4 FP16
+
+The opt-in public entry selects Q1/shared V/G4 only for batch one,
+H4/S4096/D128 FP16 causal attention. Its tile, eight-warp layout, forward,
+rounded operands, output types and arithmetic gates stay fixed. H16, BF16,
+other lengths and other visibility families keep their previous schedules.
+
+Two independent actual-public before/selected/FA2 comparisons use thirteen
+rotating rounds, 1000 ms warmup and 200 ms windows. Times below are microseconds;
+complete calls include forward and all backward preparation.
+
+| Repeat | Boundary | Previous | Selected | FA2 |
+| --- | --- | ---: | ---: | ---: |
+| First | Backward graph | 645.16 | 611.57 | 605.20 |
+| First | Complete graph | 878.64 | 848.64 | 871.99 |
+| First | Complete eager wall | 881.30 | 855.49 | 876.26 |
+| Second | Backward graph | 649.64 | 617.97 | 612.82 |
+| Second | Complete graph | 885.37 | 861.17 | 877.00 |
+| Second | Complete eager wall | 893.40 | 858.21 | 892.58 |
+
+Complete graph latency falls by 2.7–3.4% against the previous public entry.
+The first previous/selected round ranges are 875.72–891.23 and
+846.09–857.98 us; the second ranges are 883.12–899.36 and
+856.95–868.34 us. Selected complete calls beat FA2 in both repeats, while
+backward alone still trails FA2. These results do not establish an eager gain
+for the earlier short families or a long H16 improvement.
+
+The storage/order factorial includes every Q2/register-V, Q1/shared-V and
+Q2/shared-V combination at G1/G4/G16. Complete graph FP16 medians follow,
+again in microseconds, with the same D128/S4096 computation:
+
+| Q stages / V | Group | H4 | H16 |
+| --- | ---: | ---: | ---: |
+| 2 / Registers | 1 | 881.95 | 3484.36 |
+| 2 / Registers | 4 | 879.46 | 3570.86 |
+| 2 / Registers | 16 | 883.82 | 6529.66 |
+| 1 / Shared | 1 | 869.72 | 3439.48 |
+| 1 / Shared | 4 | 852.09 | 3483.23 |
+| 1 / Shared | 16 | 852.82 | 6342.27 |
+| 2 / Shared | 1 | 875.64 | 3448.49 |
+| 2 / Shared | 4 | 862.12 | 3506.39 |
+| 2 / Shared | 16 | 859.58 | 6341.45 |
+| FA2 | — | 867.17 | 3387.33 |
+
+Q2/shared V removes local allocation from the large-group H16 control, yet G16
+still loses heavily. A spill-only explanation is therefore insufficient.
+Counter access remains unavailable; these timings do not establish cache-hit
+rates, traffic or a specific stall cause. The [compact long-causal report](../results/gb10-long-causal-summary.json)
+retains all factorial controls, both actual-public repeats, samples and resources.
+
+The final actual-public route passed seven numerical/statistics cases with
+unchanged CPU and CUDA reference gates: random, common offset, rounded key/value
+cancellation, underflow and two poisoned-data graph replays. Memcheck, racecheck,
+synccheck and initcheck each passed the same seven cases. The new selector's CPU
+boundary test covers both head counts and dtypes; the complete CPU suite passed
+283 tests total with 158 GPU skips, and all 24 publication-guard tests passed.
+
+The original noncausal underflow fixture overflows FP16 when reused with causal
+prefixes: its rounded reference reaches 400934.78, and both the reference's FP16
+cast and the kernel produce 94 positive infinities per head at exactly the same
+coordinates. That failed fixture and its operands remain retained; it is not a
+successful finite-output case. The causal qualification multiplies dO by the
+exact power-of-two factor 1/8, keeping P and its rounding/underflow unchanged
+while bounding dV near 50117. A CPU regression preserves the original overflow
+positions and signs and checks the representable rescaling. No kernel arithmetic,
+reference equation or acceptance tolerance changes.
+
+CUPTI captures bind both changed main kernels uniquely to loaded ELF. Their
+symbols and allocated resources match both actual timing repeats. Q2/register-V
+G1 uses 255 registers and Q1/shared-V G4 uses 215; both have 82944 shared bytes,
+zero local bytes and the same grid/block geometry. Each whole function contains
+160 FP16 HMMA and 96 LDSM instructions; static block barriers change from eight
+to seven. Those counts include prologue, loop and drain and are not runtime
+percentages or an attribution of the measured gain. The unchanged preprocess
+and conversion code appears identically in multiple containing ELFs, leaving
+those container bindings explicitly incomplete.
+
+Loaded previous main ELF SHA256:
+`1bf6f8578195ae1a70a9835867a24464908c01c595172fc7934145b0e38012b7`.
+Selected main:
+`8e30efe88c18b868617cae25804ce4d18b39308ac56affe1828e441d90416009`.
+
+Reproduce the bounded qualification using the pinned installation above:
+
+```bash
+python -m benchmarks.qualify_gb10_shared --public-selected --heads 4 \
+  --long-causal-only --cpu-reference --reference-agreement \
+  --output ../gb10-results/long-causal-h4.json
+```

@@ -14,8 +14,9 @@ Automatic selection checks compatibility; it does **not** predict the fastest ba
 ## Performance
 
 **Forward + backward**, milliseconds; lower is better. B1/H16, BF16, S4096,
-dense attention. All rows below were refreshed after removing the automatic
-compensated arithmetic policy. Compilation is excluded.
+dense attention. The RTX 5090 D128 row uses the [pinned schedule](docs/rtx5090-configured-host.md);
+other rows retain the existing baseline. All use the default rounded arithmetic.
+Compilation is excluded.
 
 | GPU | Head dim | CuTe | Default SDPA | SDPA / CuTe |
 | --- | ---: | ---: | ---: | ---: |
@@ -23,7 +24,7 @@ compensated arithmetic policy. Compilation is excluded.
 | RTX 4090 | 512 | 31.159 | 67.562 | 2.17× |
 | RTX 3090 Ti | 512 | 61.916 | 104.654 | 1.69× |
 | L40S | 512 | 24.781 | 71.017 | 2.87× |
-| RTX 5090 | 128 | 3.320 | 2.674 | 0.81× |
+| RTX 5090 (pinned schedule) | 128 | 2.493 | 2.664 | 1.07× |
 | L40S | 128 | 3.132 | 2.663 | 0.85× |
 
 [Performance details and charts](results/README.md) cover both dtypes, dense/causal
@@ -104,7 +105,7 @@ Supported CuTe inputs:
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
 
-On A100, the [tuned installation](docs/a100-sm80-fa4.md) selects the measured long D64/D128 schedule. Its shape and software bounds are documented; other calls use native CuTe.
+On A100, the [tuned installation](docs/a100-sm80-fa4.md) selects the measured long D64/D128 schedule. Its shape and software bounds are documented; other calls use native CuTe. The same pinned installation enables a [bounded RTX 5090 training schedule](docs/rtx5090-configured-host.md) for B1/H16/S4096 D64/D128.
 
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 

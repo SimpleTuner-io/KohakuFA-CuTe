@@ -1,6 +1,6 @@
 # KohakuFA-CuTe
 
-CuTe DSL attention for **A100, A40, RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
+CuTe DSL attention for **A100, A40, RTX 3090/3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
 
 ## When to use it
 
@@ -120,6 +120,8 @@ D64/D128 schedules. Their shape and software bounds are documented; other CUDA c
 retain standard CuTe dispatch.
 
 GB10 has an [explicit D128 shared entry](docs/gb10-shared.md) with measured shape/dtype schedules and ordinary CuTe fallbacks. It is opt-in.
+
+For an ordinary RTX 3090, the optional [`rtx3090_attention`](docs/rtx3090-optin.md) entry exposes bounded D64/D128 training schedules with the same precision policy.
 
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 

@@ -54,6 +54,12 @@ automatic filename collisions. Exact instruction comparisons additionally need
 an unambiguous binding to the loaded graph function; a matching symbol alone
 can be insufficient across variants. Retain raw captures outside the tracked tree.
 
+## A40 D128 opt-in
+
+The explicit [A40 D128 entry](../docs/a40-d128-shared.md) has separate
+[complete-call measurements and qualification](a40-d128-shared.json), including
+standalone FA2, ordinary CuTe, SDPA and native/Python host controls.
+
 ## B200 D512 backward
 
 The [B200 analysis](../docs/b200-wide-backward.md) and [compact measurements](b200-wide-backward.json) cover the bounded BF16 D512 backward selector, paired complete-call timings against the preceding CuTe owner and SDPA, arithmetic checks, and the remaining profiler/sanitizer limitations. The selected cases are batch 1 with 16 heads at 512–1024 tokens, or 8 heads at 1024 tokens.

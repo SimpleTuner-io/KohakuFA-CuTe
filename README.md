@@ -1,6 +1,6 @@
 # KohakuFA-CuTe
 
-CuTe DSL attention for **A100, RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
+CuTe DSL attention for **A100, A40, RTX 3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
 
 ## When to use it
 
@@ -52,6 +52,9 @@ Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and
 then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the
 [qualified long D64/D128 path](docs/a100-sm80-fa4.md). The base `cuda` extra
 provides generic A100 compatibility; short and compiled calls retain that path.
+
+**A40 D128 opt-in:** the same qualified stack supports an explicit
+[A40 entry with measured dense/causal schedules](docs/a40-d128-shared.md).
 
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
 CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:

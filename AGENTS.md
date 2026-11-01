@@ -32,6 +32,14 @@ Optimize the user's complete computation under a declared low-precision arithmet
 - Define the timing boundary before measuring: kernel only, preparation plus kernel, forward, backward, combined training step, complete model, or serving latency. Distinguish prefill from decoding and resident GPU time from tokenization, transfers, HTTP scheduling, loading, compilation, and graph capture. Include costs required by the advertised API.
 - Record source revisions, framework/compiler/runtime versions, actual loaded libraries, device capability, SM count, partitioning, memory limits, and power limit. A partition or another GPU sharing the same compute capability is not a substitute for full-device performance or qualification.
 
+### Keep GPU campaigns resumable
+
+- Before launching work on an ephemeral machine, save the complete source snapshot, including task patches, exact commands and toolchain/runtime configuration on persistent storage outside that machine. Hashes alone cannot recover missing source. Record owned resources, job identities, budget/deadline and continuation steps in a durable handoff.
+- Checkpoint stage receipts, failing operands, numerical results and timing samples throughout the run. Copy loaded binaries, PTX/SASS and profiler captures off-host as they become available, outside timed windows where possible. Keep raw captures outside the tracked tree.
+- Before deleting an owned resource or its storage, verify a completed final off-host archive against its expected file inventory and hashes. Starting a copy or retaining only a partial checkpoint does not establish completion. If archival fails, stop compute and retain storage for recovery. Leave unrelated resources alone.
+- Record each stage's actual exit status. Mark intentional interruptions explicitly and resume only missing work under a new immutable job identity. Preserve passed checks when the relevant implementation is unchanged; a controller failure does not erase those passes or turn incomplete stages into successes.
+- Keep expensive reference calculations outside sanitizer instrumentation when possible. A CPU reference may evaluate identical rounded operands, actual outputs and gradients using unchanged equations and acceptance criteria; first check its agreement with the device reference outside sanitizers. Continue instrumenting the implementation's GPU kernels, and preserve reference failures and tool limitations.
+
 ### Verify that the intended path executes
 
 - Identify the selected backend and actual launched kernels; an API name or installed package is insufficient. Count expected modules, preparations, GEMMs, normalizations, copies, and fallback calls. Trace both the measured graph path and eager execution when their preparation differs.

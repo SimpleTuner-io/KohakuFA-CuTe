@@ -61,6 +61,7 @@ def schedule(dimension, sequence, causal):
     narrow_query = dimension == 128 and not causal
     return Schedule(
         forward_m=128 if dimension == 64 or (sequence == 4096 and not causal) else 64,
+        forward_n=32 if dimension == 128 and sequence == 4096 and not causal else 64,
         backward_m=32 if narrow_query else 64,
         backward_n=128 if dimension == 64 or narrow_query else 64,
         query_stages=2 if dimension == 64 else 1,

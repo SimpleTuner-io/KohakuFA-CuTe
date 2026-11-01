@@ -263,3 +263,71 @@ backward reuse, operand identity and gradients. An early causal eager-joint
 benchmark omitted the visibility keyword; those measurements are excluded and
 the corrected driver is rerun. Exact frozen source/commands, raw reports,
 wheel, hashes, loaded code and failures remain outside the tracked tree.
+
+
+## Causal head grouping
+
+The common scheduler's final configuration field groups heads when ordering
+causal key tiles. It changes CTA order while preserving every tile's ownership,
+masking, stages, rounded operands and reductions. The opt-in GB10 selector uses
+G16 only for batch one, H16/S512/D128 BF16 causal attention. All other qualified
+families retain G1, including FP16 at that same shape.
+
+A nine-round same-process G1/2/4/16 study kept the classification cache and
+M64/N64 Q2/register-V geometry fixed. At H16/S512 BF16, backward graph medians
+were 75.97 us for G1 and 67.96 us for G16; joint graph was 97.45 versus
+93.86 us. The retained rounds do not overlap: joint G1 ranged 97.02–98.33 us
+and G16 93.33–94.54 us. FP16 at this shape loses with G16. H4/S512 has only
+32 key-owned CTAs on 48 SMs and showed no retained improvement.
+
+The same ordering transfer fails for long FP16. H16/S4096 joint graph measured
+3511.53 us with G1, 3573.44 us with G4 and 6536.82 us with G16, versus
+3408.39 us for FA2. Instantiated FP16 main resources were 255 registers,
+82944 shared bytes, and local allocation of 0/48/88/88 bytes for G1/2/4/16.
+These resources support a follow-up storage intervention; they do not measure
+local-memory traffic or prove a stall percentage. Larger grouping is not
+selected for those cases. [The group summary](../results/gb10-causal-groups-summary.json)
+retains all measured rows, rounds, negative results and source hashes.
+
+G2/G4/G16 each passed 24 partial-head, batch and tail cases, plus all four
+Compute Sanitizer tools over six changed-data/poisoned-graph cases. The
+validator checks O, dQ, dK, dV and the literal saved unscaled statistics
+independently. CPU references copy the identical rounded operands and actual
+O, preserve the existing assessment functions and gates, and use four threads.
+Separate CPU/CUDA oracle controls passed both unchanged gates. These checks
+add no new public shape or precision policy.
+
+The final actual-public before/selected/FA2 pair used nine rotating rounds,
+500 ms warmup and 100 ms windows, with no concurrent compilation. Complete
+joint graph measured 98.47/93.88/114.90 us, respectively: the selected entry
+was 4.7% below its cached public predecessor. Backward graph measured
+71.71/65.06/71.83 us. Complete joint eager wall medians were
+127.98/117.90/461.67 us. The unusually large FA2 eager result is retained;
+earlier short-eager variability remains unresolved and this row does not
+establish a general host-latency gain.
+
+The actual selected public entry passed 17 numerical cases and CPU/CUDA
+reference agreement, plus all four sanitizer tools over 11 cases. Together
+with the unchanged earlier public qualification, this checks the single new
+route without repeating unrelated full-family gates. CPU validation ran 281
+tests total: 123 passed and 158 GPU tests skipped; publication guard tests
+passed all 24 cases.
+
+CUPTI-captured loaded ELF matched both changed main kernels uniquely by
+symbol and graph register resources. G1 used 246 registers, G16 254; both
+used 82944 shared bytes, zero local bytes, binary/PTX version 121, and the
+same CTA grid. Their whole-function SASS each contains 160 BF16 HMMA,
+96 LDSM, 32 FP32 dQ atomic reduction sites, and eight block barriers;
+no LDL/STL instructions appear. The remapping adds integer address work,
+not fewer attention products or atomic updates. Static counts describe equal
+logical attention work and are not runtime stall percentages. The unchanged
+pre/post kernels have identical SASS in both containing ELFs, but cannot be
+bound uniquely to one container by symbol/register matching; the retained
+binding report is explicitly marked incomplete for that ambiguity.
+
+Loaded G1 main ELF SHA256:
+`00ed2661a18a93623db17c38e0c322a15981b976b301e1f70942b6d7c16e3190`.
+Selected G16 main:
+`674bd64d9363b85885ffa20eff91844bd8df6714e38fa26570340f0c409dce45`.
+Compute counters remain unavailable under the previously recorded
+`ERR_NVGPUCTRPERM` limitation; no cache-hit or stall explanation is claimed.

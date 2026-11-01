@@ -49,8 +49,8 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     )
 
 
-@lru_cache(maxsize=2)
-def schedule(dimension):
+@lru_cache(maxsize=4)
+def schedule(dimension, causal=False):
     from ._attention import Schedule
 
     if dimension not in (64, 128):
@@ -68,4 +68,5 @@ def schedule(dimension):
         kv_m_warps=2,
         dq_m_warps=2,
         v_in_regs=False,
+        causal_head_group=16 if causal else 1,
     )

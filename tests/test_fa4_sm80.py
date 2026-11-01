@@ -35,8 +35,9 @@ class Sm80SelectionTests(unittest.TestCase):
             medium = cuda_operand((1, 8, 2048, 128))
             self.assertTrue(fa4_sm80.compatible(medium, medium, medium, None, 0, False, None, False))
             self.assertFalse(fa4_sm80.compatible(medium, medium, medium, None, 0, True, None, False))
-            for scale in (-0.1, 0, 3e38, float("nan"), float("inf")):
+            for scale in (-0.1, 0, 1e-50, torch.finfo(torch.float32).tiny / 2, 3e38, float("nan"), float("inf")):
                 self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, scale, False))
+            self.assertTrue(fa4_sm80.compatible(q, q, q, None, 0, False, torch.finfo(torch.float32).tiny, False))
             for shape in (
                 (1, 16, 2047, 128),
                 (1, 16, 4097, 128),
@@ -105,6 +106,33 @@ class Sm80SelectionTests(unittest.TestCase):
     "Requires the qualified optional A100 schedule",
 )
 class Sm80KernelTests(unittest.TestCase):
+    def test_tiny_positive_scales_retain_native_zero_aware_fallback(self):
+        from benchmarks.reference import metrics
+
+        for dtype in (torch.bfloat16, torch.float16):
+            torch.manual_seed(887)
+            inputs = [torch.randn(1, 8, 2048, 64, device="cuda", dtype=dtype) for _ in range(3)]
+            dout = torch.randn_like(inputs[0])
+            for scale in (1e-50, torch.finfo(torch.float32).tiny / 2):
+                for causal in (False, True):
+                    with self.subTest(dtype=dtype, scale=scale, causal=causal):
+                        operands = [tensor.detach().requires_grad_(True) for tensor in inputs]
+                        self.assertFalse(fa4_sm80.compatible(*operands, None, 0, causal, scale, False))
+                        out = api.scaled_dot_product_attention(*operands, is_causal=causal, scale=scale)
+                        self.assertFalse(hasattr(out.grad_fn, "schedule"))
+                        actual = out, *torch.autograd.grad(out, operands, dout)
+                        operands = [tensor.detach().requires_grad_(True) for tensor in inputs]
+                        with patch.object(fa4_sm80, "compatible", return_value=False):
+                            control = api.scaled_dot_product_attention(*operands, is_causal=causal, scale=scale)
+                            expected = control, *torch.autograd.grad(control, operands, dout)
+                        for got, want in zip(actual, expected):
+                            error = metrics(got, want.double())
+                            self.assertTrue(error["finite"])
+                            if error["reference_norm"]:
+                                self.assertLess(error["relative_error"], 0.01 if dtype == torch.bfloat16 else 0.005)
+                            else:
+                                self.assertEqual(error["max_absolute_error"], 0)
+
     def test_unaligned_inputs_use_native_and_output_gradient_is_materialized(self):
         from benchmarks.reference import fp64_reference, metrics
 

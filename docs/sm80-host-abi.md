@@ -10,7 +10,7 @@ the native extension while retaining the same GPU methods.
 
 The API receives contiguous, 16-byte-aligned `[B,H,S,D]` Q/K/V, with equal shapes
 and input dtype FP16 or BF16. The current selected schedule uses `B=1`, D64/D128, square
-attention, and positive scale. A BSHD view has strides
+attention, and an FP32-normal positive scale. A BSHD view has strides
 `(H*S*D, D, S*D, 1)`; it changes metadata without moving data.
 
 | Buffer | Shape | Dtype | Producer / last consumer |

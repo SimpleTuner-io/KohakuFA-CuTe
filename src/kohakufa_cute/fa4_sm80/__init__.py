@@ -63,7 +63,9 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     # preparation, although its captured joint device time improved.
     if causal and q.shape[-1] == 128 and q.shape[1] < 16 and q.shape[2] < 4096:
         return False
-    if scale is not None and (not isinstance(scale, (float, int)) or not math.isfinite(scale) or not 0 < scale <= 2e38):
+    if scale is not None and (
+        not isinstance(scale, (float, int)) or not math.isfinite(scale) or not 1.1754943508222875e-38 <= scale <= 2e38
+    ):
         return False
     return available()
 

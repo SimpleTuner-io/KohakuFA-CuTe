@@ -38,7 +38,44 @@ from quack.cute_dsl_utils import ParamsBase
 class FlashAttentionBackwardSm80(_Original):
 
     def _get_shared_storage_cls(self):
-        storage = super()._get_shared_storage_cls()
+        sQ_struct, sK_struct, sV_struct, sdO_struct = [
+            cute.struct.Align[cute.struct.MemRange[self.dtype, cute.cosize(layout)], 1024]
+            for layout in (self.sQ_layout, self.sK_layout, self.sV_layout, self.sdO_layout)
+        ]
+        cosize_sQV = max(cute.cosize(self.sQ_layout), cute.cosize(self.sV_layout))
+        sQV_struct = cute.struct.Align[cute.struct.MemRange[self.dtype, cosize_sQV], 1024]
+        sLSE_struct, sdPsum_struct = [
+            cute.struct.Align[cute.struct.MemRange[cutlass.Float32, cute.cosize(layout)], 128]
+            for layout in (self.sLSE_layout, self.sLSE_layout)
+        ]
+        sP_struct, sdS_struct = [
+            cute.struct.Align[cute.struct.MemRange[self.dtype, cute.cosize(layout)], 128]
+            for layout in (self.sPdS_layout, self.sPdS_layout)
+        ]
+
+        @cute.struct
+        class SharedStorageSeparateQV:
+            sK: sK_struct
+            sV: sV_struct
+            sQ: sQ_struct
+            sdO: sdO_struct
+            sLSE: sLSE_struct
+            sdPsum: sdPsum_struct
+            sP: sP_struct
+            sdS: sdS_struct
+            # TODO: the case where there's no sP
+
+        @cute.struct
+        class SharedStorageSharedQV:
+            sK: sK_struct
+            sQ: sQV_struct
+            sdO: sdO_struct
+            sLSE: sLSE_struct
+            sdPsum: sdPsum_struct
+            sP: sP_struct
+            sdS: sdS_struct
+
+        storage = SharedStorageSeparateQV if cutlass.const_expr(not self.share_QV_smem) else SharedStorageSharedQV
         if storage.size_in_bytes() > self.shared_capacity:
             raise ValueError("Backward storage exceeds the actual device limit.")
         return storage
@@ -617,6 +654,7 @@ class FlashAttentionBackwardSm80(_Original):
             smem_copy_params.smem_thr_copy_KV,
             hook_fn=load_Q_next if cutlass.const_expr(self.num_stages_Q > 1) else None,
             swap_AB=self.SdP_swapAB,
+            B_in_regs=self.V_in_regs,
         )
         tLSErdPsum = cute.make_fragment_like(smem_copy_params.tSsdPsumMma[None, 0])
         cute.autovec_copy(

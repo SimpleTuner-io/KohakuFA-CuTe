@@ -24,6 +24,7 @@ class Schedule:
     score_m_warps: int = 2
     kv_m_warps: int = 2
     dq_m_warps: int = 2
+    v_in_regs: bool = False
 
 
 @lru_cache(maxsize=8)
@@ -115,7 +116,7 @@ def _backward(q, k, v, out, dout, maximum, logsum, scale, causal, schedule, capa
             schedule.score_m_warps,
             schedule.kv_m_warps,
             schedule.dq_m_warps,
-            V_in_regs=False,
+            V_in_regs=schedule.v_in_regs,
         )
         program.shared_capacity = capacity
         tensors = [interface.to_cute_tensor(t) for t in (q, k, v, dout, lognorm, delta, scratch, dk, dv)]

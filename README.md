@@ -32,6 +32,9 @@ The [precision-removal report](docs/baseline-precision.md) includes the full H10
 PCIe/B300 checks, previous-policy comparison and model-shape audit. These are
 attention benchmarks, not end-to-end training speedups.
 
+The explicit [experimental H200 WGMMA backend](docs/h200-experimental.md) includes
+joint-backward, native-host and FA3 comparisons, with its validation limits.
+
 **GB10 (DGX / RTX Spark, SM121)** has D512 and short-forward schedules; its
 [recorded comparison](results/README.md#gb10-dgx--rtx-spark) predates this arithmetic
 change and was not requalified in this campaign.

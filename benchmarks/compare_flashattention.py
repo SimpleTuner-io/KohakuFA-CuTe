@@ -8,6 +8,7 @@ import importlib.metadata
 import json
 import os
 import platform
+import re
 import statistics
 import subprocess
 from contextlib import nullcontext
@@ -19,6 +20,58 @@ import torch
 from benchmarks.compiled_artifacts import retain_code
 from benchmarks.flashattention_backends import Backend, UnsupportedCase, configuration_metadata, load_backend
 from benchmarks.reference import fp64_reference, metrics, rounded_reference
+
+
+def revision_label(value):
+    if not isinstance(value, str) or not re.fullmatch(r"(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})", value):
+        raise argparse.ArgumentTypeError("Expected a full 40- or 64-digit hexadecimal revision.")
+    return value.lower()
+
+
+def source_revision(source_root, explicit=None):
+    """Distinguish an installer label from Git belonging to this source tree."""
+    if explicit is not None:
+        return revision_label(explicit), "explicit_installer_label"
+    source_root = Path(source_root).resolve()
+    environment = os.environ.copy()
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE"):
+        environment.pop(name, None)
+    try:
+        top = subprocess.run(
+            ["git", "-C", str(source_root), "rev-parse", "--show-toplevel"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            env=environment,
+        ).stdout.strip()
+        if Path(top).resolve() != source_root:
+            return None, "unavailable"
+        revision = subprocess.run(
+            ["git", "-C", str(source_root), "rev-parse", "--verify", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            env=environment,
+        ).stdout.strip()
+        return revision_label(revision), "source_git"
+    except (OSError, subprocess.SubprocessError, argparse.ArgumentTypeError):
+        return None, "unavailable"
+
+
+def source_metadata(source_root, package_root, explicit=None):
+    revision, origin = source_revision(source_root, explicit)
+    package_root = Path(package_root)
+    return {
+        "base_revision": revision,
+        "base_revision_origin": origin,
+        "source_sha256": {
+            "src/kohakufa_cute/" + path.relative_to(package_root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(package_root.rglob("*"))
+            if path.suffix in (".py", ".cpp")
+        },
+    }
 
 
 def parser():
@@ -41,6 +94,11 @@ def parser():
         "--flash-revision", help="Revision verified by the installer; loaded modules are additionally hashed."
     )
     result.add_argument("--export-code", type=Path)
+    result.add_argument(
+        "--source-revision",
+        type=revision_label,
+        help="Full revision label supplied by the installer; source files are independently hashed.",
+    )
     result.add_argument("--output", type=Path, required=True)
     return result
 
@@ -101,13 +159,7 @@ def main():
     report = {
         "schema_version": 1,
         "date": datetime.now(timezone.utc).isoformat(),
-        "base_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-        "source_sha256": {
-            "src/kohakufa_cute/"
-            + p.relative_to(Path(kernels.__file__).parent).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sorted(Path(kernels.__file__).parent.rglob("*"))
-            if p.suffix in (".py", ".cpp")
-        },
+        **source_metadata(Path(__file__).resolve().parents[1], Path(kernels.__file__).parent, args.source_revision),
         "driver_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "adapter_sha256": hashlib.sha256(Path(__file__).with_name("flashattention_backends.py").read_bytes()).hexdigest(),
         "device": {

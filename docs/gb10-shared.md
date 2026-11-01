@@ -160,6 +160,36 @@ needed for whole-problem normalization. M32 has a larger epilogue per CTA.
 These are static counts, not runtime stall percentages, transferred bytes,
 or counts of executed predicated work.
 
+## Immutable device classification cache
+
+The opt-in predicate now caches only device classification by CUDA ordinal:
+capability, name, full SM count and shared-memory limit. Current device,
+determinism/compile state, tensor metadata, scale and runtime checks still
+execute on every call. The cache owns CPU booleans, not tensors or buffers.
+
+On the same ARM GB10 lease, eleven alternating rounds of 10000 hot calls
+measured predicate medians of 5.166 versus 2.624 us, a 2.542 us reduction.
+Fifty-two complete API rows retained identical graph resources for cached,
+uncached and direct-runner controls and passed the existing FP64 gates.
+The [cache summary](../results/gb10-device-cache-summary.json) keeps every row,
+including regressions and sample ranges. There is no broad API latency gain
+claim: H4/S512 FP16 eager joint improved 60.75 to 58.11 us, while H16/S512
+BF16 changed 184.19 to 274.08 us and H4/S1024 BF16 changed 182.38 to 230.36 us.
+Long H16/S4096 stayed approximately 5.93 ms.
+
+The run kept Torch intra/inter-op thread counts at 20, with no OMP/MKL override
+or affinity/governor changes. The container allows CPUs 0-19 with a 19.2-CPU
+quota. After-run snapshots showed performance governors, heterogeneous
+2.808/3.9 GHz policies, zero recent pressure and very little cumulative
+throttling; the campaign's one-minute load samples ranged 0.07-1.30.
+These snapshots do not identify the cause of individual timing outliers.
+
+CPU cProfile's 64-call forward sample attributes 1.856 ms inclusive to the
+uncached wrapper and 1.215 ms to the cached wrapper; predicate calls dominate
+the difference. Joint samples instead concentrate in autograd's inclusive
+run_backward path and vary substantially. This does not identify a C++ descriptor
+lookup bottleneck or turn profiling samples into latency measurements.
+
 ## Systems timeline and profiler limits
 
 Six repaired Systems captures succeeded for public/ordinary CuTe/FA2, each

@@ -29,6 +29,18 @@ def schedule(sequence, causal, heads=4, dtype=torch.bfloat16):
     )
 
 
+@lru_cache(maxsize=8)
+def _qualified_device(index):
+    """CUDA device properties are immutable within the initialized process."""
+    properties = torch.cuda.get_device_properties(index)
+    return (
+        (properties.major, properties.minor) == (12, 1)
+        and properties.name == "NVIDIA GB10"
+        and properties.multi_processor_count == 48
+        and properties.shared_memory_per_block_optin == 101376
+    )
+
+
 def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=False):
     """Bound the opt-in path to the complete GPU and measured D128 families."""
     if (
@@ -54,15 +66,9 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
         or q.shape[-1] != 128
         or not all(t.is_contiguous() for t in (q, k, v))
         or any(t.data_ptr() % 16 for t in (q, k, v))
-        or torch.cuda.get_device_capability(q.device) != (12, 1)
     ):
         return False
-    properties = torch.cuda.get_device_properties(q.device)
-    if (
-        properties.name != "NVIDIA GB10"
-        or properties.multi_processor_count != 48
-        or properties.shared_memory_per_block_optin != 101376
-    ):
+    if not _qualified_device(q.device.index):
         return False
     if scale is not None and (
         not isinstance(scale, (float, int)) or not math.isfinite(scale) or not 1.1754943508222875e-38 <= scale <= 2e38

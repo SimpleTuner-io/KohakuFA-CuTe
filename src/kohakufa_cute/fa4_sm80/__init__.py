@@ -71,7 +71,8 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
 
 
 def attention(q, k, v, *, causal=False, scale=None):
-    from ._attention import attention as run
+    from ._host import native_runner
     from ._schedules import a100_schedule
 
-    return run(q, k, v, causal=causal, scale=scale, schedule=a100_schedule(q.shape[-1], q.shape[2], causal))
+    runner = native_runner(a100_schedule(q.shape[-1], q.shape[2], causal))
+    return runner(q, k, v, causal=causal, scale=scale)

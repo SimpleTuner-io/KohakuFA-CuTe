@@ -68,6 +68,23 @@ class Sm80SelectionTests(unittest.TestCase):
             with patch.object(torch.cuda, "current_device", return_value=1):
                 self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
 
+    def test_a100_policy_keeps_explicit_schedule_defaults_stable(self):
+        from kohakufa_cute.fa4_sm80._attention import Schedule
+        from kohakufa_cute.fa4_sm80._schedules import a100_schedule
+
+        baseline = Schedule()
+        for sequence in (128, 1024, 2047):
+            self.assertEqual(a100_schedule(64, sequence, False), baseline)
+        for sequence in (2048, 4096):
+            for causal in (False, True):
+                selected = a100_schedule(64, sequence, causal)
+                self.assertEqual((selected.backward_m, selected.query_stages, selected.dout_stages), (128, 1, 1))
+                self.assertEqual((selected.score_m_warps, selected.kv_m_warps, selected.dq_m_warps), (4, 4, 4))
+                self.assertFalse(selected.v_in_regs)
+        self.assertEqual(a100_schedule(128, 4096, False), baseline)
+        self.assertEqual(a100_schedule(128, 4096, True).forward_m, 64)
+        self.assertEqual((Schedule().backward_m, Schedule().dout_stages, Schedule().v_in_regs), (64, 2, False))
+
     def test_missing_optional_dependency_retains_native_schedule(self):
         fa4_sm80.available.cache_clear()
         try:
@@ -94,9 +111,10 @@ class Sm80SelectionTests(unittest.TestCase):
         from kohakufa_cute.fa4_sm80 import _attention
 
         entry = fa4_sm80.attention
+        q = cuda_operand()
         with patch.object(_attention, "attention", return_value=object()) as selected:
             for _ in range(2):
-                fa4_sm80.attention(None, None, None)
+                fa4_sm80.attention(q, q, q)
                 self.assertIs(fa4_sm80.attention, entry)
             self.assertEqual(selected.call_count, 2)
 

@@ -9,16 +9,12 @@ from ._attention import Schedule
 from ._host import native_runner
 
 
-@lru_cache(maxsize=32)
-def _is_device(index):
-    """Device topology is immutable for a CUDA index during this process."""
-    properties = torch.cuda.get_device_properties(index)
-    return (
-        (properties.major, properties.minor) == (8, 6)
-        and properties.name == "NVIDIA A40"
-        and properties.multi_processor_count == 84
-        and properties.shared_memory_per_block_optin == 101376
-    )
+@lru_cache(maxsize=1)
+def _metadata_predicate():
+    """Cache the native function, while checking its tensor arguments each call."""
+    from kohakufa_cute.native import extension
+
+    return extension().a40_metadata_compatible
 
 
 @lru_cache(maxsize=32)
@@ -66,23 +62,6 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
         or dropout != 0
         or gqa
         or torch.are_deterministic_algorithms_enabled()
-        or getattr(q, "ndim", None) != 4
-        or q.shape != k.shape
-        or q.shape != v.shape
-        or q.device.type != "cuda"
-        or q.device != k.device
-        or q.device != v.device
-        or q.device.index != torch.cuda.current_device()
-        or q.dtype not in (torch.float16, torch.bfloat16)
-        or q.dtype != k.dtype
-        or q.dtype != v.dtype
-        or q.shape[0] != 1
-        or q.shape[1] != 16
-        or q.shape[2] not in (1024, 4096)
-        or not (q.shape[-1] == 128 or (q.shape[-1] == 64 and causal))
-        or not all(t.is_contiguous() for t in (q, k, v))
-        or any(t.data_ptr() % 16 for t in (q, k, v))
-        or not _is_device(q.device.index)
     ):
         return False
     if scale is not None and (
@@ -91,7 +70,7 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
         return False
     from . import available
 
-    return available()
+    return available() and _metadata_predicate()(q, k, v, causal)
 
 
 def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):

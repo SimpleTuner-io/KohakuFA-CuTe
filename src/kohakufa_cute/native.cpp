@@ -3,6 +3,7 @@
 #include <c10/cuda/CUDAGuard.h>
 #include <c10/cuda/CUDAStream.h>
 #include <torch/csrc/autograd/custom_function.h>
+#include <torch/csrc/autograd/python_variable.h>
 #include <torch/extension.h>
 #include <pybind11/stl.h>
 #include <tvm/ffi/container/tensor.h>
@@ -447,6 +448,38 @@ bool supported_device(int device) {
     return (major == 8 && (minor == 0 || minor == 6 || minor == 9)) || (major == 9 && minor == 0) || (major == 10 && (minor == 0 || minor == 3)) || (major == 12 && (minor == 0 || minor == 1));
 }
 
+bool full_a40(int device) {
+    static std::map<int, bool> devices;
+    static std::mutex device_mutex;
+    std::lock_guard<std::mutex> lock(device_mutex);
+    auto found = devices.find(device);
+    if (found != devices.end())
+        return found->second;
+    cudaDeviceProp properties;
+    C10_CUDA_CHECK(cudaGetDeviceProperties(&properties, device));
+    const bool selected = properties.major == 8 && properties.minor == 6 &&
+                          std::strcmp(properties.name, "NVIDIA A40") == 0 &&
+                          properties.multiProcessorCount == 84 && properties.sharedMemPerBlockOptin == 101376;
+    return devices.emplace(device, selected).first->second;
+}
+
+bool a40_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v, bool causal) {
+    if (q.dim() != 4 || k.dim() != 4 || v.dim() != 4 || q.sizes() != k.sizes() || q.sizes() != v.sizes() ||
+        !q.is_cuda() || q.device() != k.device() || q.device() != v.device() ||
+        (q.scalar_type() != at::kHalf && q.scalar_type() != at::kBFloat16) ||
+        q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
+        q.size(0) != 1 || q.size(1) != 16 || (q.size(2) != 1024 && q.size(2) != 4096) ||
+        !(q.size(3) == 128 || (q.size(3) == 64 && causal)) ||
+        !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
+        reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 != 0)
+        return false;
+    int current;
+    C10_CUDA_CHECK(cudaGetDevice(&current));
+    return q.get_device() == current && full_a40(q.get_device());
+}
+
 bool compatible(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask, double dropout, bool causal, bool gqa) {
     return dropout == 0.0 && q.dim() == 4 && k.dim() == 4 && v.dim() == 4 && q.is_cuda() && q.device() == k.device() &&
            q.device() == v.device() && (q.scalar_type() == at::kHalf || q.scalar_type() == at::kBFloat16) &&
@@ -480,6 +513,12 @@ bool validate(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask) {
 } // namespace
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
+    module.def("a40_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
+        if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
+            return false;
+        return a40_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
+                                       THPVariable_Unpack(v.ptr()), causal);
+    });
     py::class_<AttentionRunner>(module, "AttentionRunner", py::module_local())
         .def(py::init<const std::string &, const std::map<std::string, int64_t> &>(),
              py::arg("family"), py::arg("configuration") = std::map<std::string, int64_t>{})

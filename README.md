@@ -60,7 +60,7 @@ then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounde
 Other CUDA calls retain the standard CuTe dispatch.
 
 **A40 opt-in:** the same qualified stack supports an explicit
-[A40 entry for dense D128 and causal D64/D128](docs/a40-causal-grouped.md),
+[A40 entry for dense D128 and causal D64/D128](docs/a40-native-predicate.md),
 with separate graph and complete eager measurements.
 
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64

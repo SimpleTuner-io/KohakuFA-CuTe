@@ -66,9 +66,11 @@ can be insufficient across variants. Retain raw captures outside the tracked tre
 
 ## A40 opt-in
 
-The explicit [A40 entry](../docs/a40-causal-grouped.md) selects dense D128 and
-causal D64/D128 with [paired public API measurements](a40-causal-grouped.json),
-including the previous entry, ungrouped public/native controls, FA2 and SDPA.
+The explicit [A40 entry](../docs/a40-native-predicate.md) selects dense D128 and
+causal D64/D128 with [paired public API measurements](a40-native-predicate.json),
+including the preceding Python guard, native metadata guard, direct runners,
+ordinary CuTe, FA2 and SDPA. The [scheduling study](../docs/a40-causal-grouped.md)
+retains the grouped/ungrouped controls.
 The [initial D128 study](../docs/a40-d128-shared.md) retains the dense geometry
 comparison and its qualification.
 

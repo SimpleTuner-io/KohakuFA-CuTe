@@ -36,6 +36,7 @@ from quack.cute_dsl_utils import ParamsBase
 
 
 class FlashAttentionBackwardSm80(_Original):
+    causal_head_group = 1
 
     def _get_shared_storage_cls(self):
         sQ_struct, sK_struct, sV_struct, sdO_struct = [
@@ -128,6 +129,27 @@ class FlashAttentionBackwardSm80(_Original):
         work_tile = tile_scheduler.initial_work_tile_info()
 
         n_block, head_idx, batch_idx, _ = work_tile.tile_idx
+
+        if cutlass.const_expr(self.is_causal and self.causal_head_group > 1):
+            assert mCuSeqlensQ is None and mCuSeqlensK is None
+            assert mSeqUsedQ is None and mSeqUsedK is None
+            heads = mQ.shape[2]
+            total_heads = heads * mQ.shape[0]
+            blocks = cute.ceil_div(mK.shape[1], self.n_block_size)
+            group = self.causal_head_group
+            head_batch = batch_idx * heads + head_idx
+            section = head_batch // group
+            within_section = n_block + blocks * (head_batch % group)
+            mapped_block = within_section // group
+            mapped_head = within_section % group
+            if section >= total_heads // group:
+                remainder = cutlass.max(total_heads % group, 1)
+                mapped_block = within_section // remainder
+                mapped_head = within_section % remainder
+            n_block = mapped_block
+            mapped_head_batch = section * group + mapped_head
+            batch_idx = mapped_head_batch // heads
+            head_idx = mapped_head_batch % heads
 
         if work_tile.is_valid_tile:
             seqlen = SeqlenInfoQK.create(
@@ -584,7 +606,8 @@ class FlashAttentionBackwardSm80(_Original):
         acc_S_pre.store(acc_S.load())
         tLSErLSE = cute.make_fragment_like(smem_copy_params.tSsLSEMma[None, 0])
         cute.autovec_copy(
-            smem_copy_params.tSsLSEMma[None, smem_pipe_read_q if cutlass.const_expr(self.num_stages_Q > 1) else 0], tLSErLSE
+            smem_copy_params.tSsLSEMma[None, smem_pipe_read_q if cutlass.const_expr(self.num_stages_Q > 1) else 0],
+            tLSErLSE,
         )
         acc_S_mn = layout_utils.reshape_acc_to_mn(acc_S)
         acc_S_pre_mn = layout_utils.reshape_acc_to_mn(acc_S_pre)

@@ -1,69 +1,83 @@
 # A100 cached public host entry
 
-The eligible A100 public attention path now calls a cached native
+The eligible A100 public attention path calls a cached native
 `AttentionRunner` with the already selected schedule. C++ allocates owned
 outputs and saved statistics, constructs tensor views, and prepares the flat
-launch arguments. Each invocation still receives its current tensors, scale,
-device and stream. The GPU methods and arithmetic are unchanged.
+launch arguments. Each invocation receives its current tensors, scale, device
+and stream. The GPU method sources and arithmetic are unchanged.
 
-Eligibility remains the qualified full A100 with 108 SMs, batch 1,
-8–16 heads, sequence lengths 2048–4096, D64/D128, aligned contiguous FP16/BF16,
-dense or causal attention and a finite FP32-normal positive scale. The existing
-medium H8/D128 causal exclusion remains. Masks, GQA, dropout, unsupported scales,
-views and compiled calls retain their qualified native CuTe dispatch.
-Installation still uses the pinned `sm80-fa4` extra.
+Eligibility remains the full qualified A100 with 108 SMs, batch 1, 8–16 heads,
+sequence lengths 2048–4096, D64/D128, aligned contiguous FP16/BF16, dense or
+causal attention and a finite FP32-normal positive scale. The medium H8/D128
+causal exclusion remains. Masks, GQA, dropout, unsupported scales, views and
+compiled calls retain their qualified native CuTe dispatch. Installation still
+uses the pinned `sm80-fa4` extra.
 
-## Complete-call controls
+## Actual public API comparison
 
-[Retained controls](../results/a100-public-host-control.json) compare the explicit
-Python wrapper and native runner in the same process on an A100-SXM4-40GB with
-108 SMs and a 350 W limit, using Python 3.13.18, Torch 2.15 CUDA 13.2,
-CUTLASS DSL 4.8.1 and FA2 2.8.4. Seven rotating windows per backend followed
-compilation and a one-second warmup. Each window spans at least 50 ms.
-Forward is measured under `no_grad`; joint includes forward and all gradients.
+[Retained measurements](../results/a100-public-host.json) compare the exact same
+public SDPA API body with isolated previous/new selected-module sources and
+independent generic-loader caches. Both caches remain cold throughout; no
+separate fast-validation improvement is included. Each control executes its
+own exact module, without mutating shared modules per call. The final runtime
+source hashes match the measured candidate exactly.
 
-| Boundary | Eligible rows | Native runner faster | Geometric speedup over Python wrapper |
+The full A100-SXM4-40GB had 108 SMs and a 350 W limit, using Python 3.13.18,
+Torch 2.15 CUDA 13.2, CUTLASS DSL 4.8.1 and FA2 2.8.4. The matrix covers H16,
+S2048/S4096, D64/D128, FP16/BF16 and dense/causal visibility. Seven rotating
+windows target 50 ms each, after compilation and a one-second warmup.
+Forward uses NoGrad; joint includes forward and all three gradients.
+
+| Boundary | Rows | Candidate faster | Geometric speedup over previous public API |
 | --- | ---: | ---: | ---: |
-| Forward | 30 | 18 | 1.44× |
-| Forward + backward | 30 | 22 | 1.64× |
+| Complete eager forward | 16 | 13 | 1.427× |
+| Complete eager forward + backward | 16 | 14 | 1.531× |
+| Graph forward | 16 | 9 | 0.991× |
+| Graph forward + backward | 16 | 10 | 1.002× |
 
-This is a measured host-preparation control, not a new GPU pipeline speedup.
-The individual ratios range from 0.94× to 3.58× for forward and 0.97× to 2.52×
-for joint. Some long calls are neutral or slightly slower. The retained result
-labels these explicit controls separately from the then-current public API;
-it does not rename those old public timings as candidate results. FA2 and
-SDPA launched their actual FlashAttention kernels, recorded per row.
-The graph timing evidence in the earlier A100 performance document remains a
-separate boundary and is not used to claim this eager gain.
+This is a host-preparation improvement. Captured device times do not show a
+broad pipeline gain. Complete eager joint beats SDPA in all 16 measured cases
+(1.051× geometric speedup); graph joint also wins 16/16 (1.062×). Against FA2,
+graph joint wins only 2/16 (0.967× geometric speedup), so the remaining device
+kernel gap is still measurable. Eager FA2 comparisons include that backend's
+host implementation and must not be substituted for graph performance.
+
+There are regressions: S4096/D128 causal forward loses about 3.1% BF16 and
+4.1% FP16 in complete eager time. D128 causal graph-forward losses are about
+4–5% across both lengths. Joint regressions against the previous public API
+are at most about 1%. The retained samples include all cases; this change does
+not claim uniform wins. H8 remains within earlier qualified eligibility but is
+not included in this new actual API timing matrix.
+
+Reproduce the matched boundaries with:
+
+```sh
+python -m benchmarks.compare_attention_variants \
+  --operations '[{"label":"previous_public","factory":"benchmarks.a100_public_api_controls:make_attention","kwargs":{"previous":true}},{"label":"candidate_public","factory":"benchmarks.a100_public_api_controls:make_attention"},{"label":"fa2","backend":"fa2"},{"label":"sdpa","backend":"sdpa"}]' \
+  --seq 2048 4096 --dim 64 128 --heads 16 --dtype bf16 fp16 \
+  --phases forward joint --visibility dense causal --no-grad-forward \
+  --warmup-ms 1000 --window-ms 50 --repeats 7 --output artifacts/public-host.json
+```
 
 ## Correctness and ownership
 
 Six actual-GPU public methods cover repeated API calls, selected boundaries,
 native fallbacks, tiny scales, unaligned inputs/output gradients, changing
 scales, literal saved maxima/log normalization and poisoned graph replay.
-The full 74-case directed suite passed. Trace checks identify the intended
-forward, preparation, joint main and dQ conversion; compiled calls retain their
-native CuTe fallback. The final runtime source matches those qualified runs.
+The full 74-case directed suite passed. Trace checks identify forward,
+preparation, joint main and dQ conversion; compiled calls retain native CuTe.
+Every backend in the 64-row matrix independently passed the per-head output
+and dQ/dK/dV FP64 norm limits (1% BF16, 0.5% FP16), with rounded diagnostics.
 
-Memory, race, synchronization and initialization checks all passed. The original
-reference-heavy racecheck was interrupted with status 143 after its diagnostic
-FP64 GEMMs dominated instrumentation. The previously passed public, directed
-and memcheck stages were retained. Both the original CUDA reference gates and
-bit-preserving CPU copies passed outside sanitizers on the same actual outputs
-and inputs; only the missing three tools then used CPU diagnostic GEMMs.
-No arithmetic or acceptance threshold changed, including the delta from actual
-rounded O. Reproduce this bounded sanitizer boundary with:
+All four sanitizer tools passed. The original reference-heavy racecheck was
+interrupted with status143 while instrumenting diagnostic FP64 GEMMs. The
+passed public, directed and memcheck stages were preserved. Both original
+CUDA and bit-preserving CPU reference gates then passed outside sanitizers on
+the same actual operands, including rounded O. Only missing race/sync/init
+checks continued with unchanged CPU diagnostic equations; no gate changed.
+The `benchmarks.cpu_reference_unittest` wrapper retains this reproducible
+sanitizer boundary.
 
-```sh
-python -m benchmarks.cpu_reference_unittest \
-  --target tests.test_fa4_sm80.Sm80KernelTests.test_cached_public_scales_statistics_and_changed_graph \
-  --agreement --output artifacts/reference-agreement.json
-compute-sanitizer --tool racecheck --report-api-errors no --error-exitcode 86 \
-  python -m benchmarks.cpu_reference_unittest \
-  --target tests.test_fa4_sm80.Sm80KernelTests.test_cached_public_scales_statistics_and_changed_graph \
-  --output artifacts/racecheck.json
-```
-
-The cache forwards all 13 current schedule fields. Additional scheduling
-controls require explicit runner support and their own qualification; silently
-dropping an unknown control is unsupported. See the [host ABI](sm80-host-abi.md).
+The cache forwards all 13 current schedule fields. New scheduling controls need
+explicit runner support and qualification; silently dropping unknown controls
+is unsupported. See the [host ABI](sm80-host-abi.md).

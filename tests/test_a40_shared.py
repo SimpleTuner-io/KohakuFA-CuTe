@@ -1,3 +1,4 @@
+import sys
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -20,13 +21,38 @@ def operand(shape=(1, 16, 4096, 128), *, dtype=torch.bfloat16, pointer=4096, con
 
 
 class A40SharedTests(unittest.TestCase):
+    def reference_metadata(self, q, k, v, causal):
+        """Qualified Python metadata policy used by the mocked CPU boundary."""
+        return (
+            getattr(q, "ndim", None) == 4
+            and q.shape == k.shape == v.shape
+            and q.device.type == "cuda"
+            and q.device == k.device == v.device
+            and q.device.index == torch.cuda.current_device()
+            and q.dtype in (torch.float16, torch.bfloat16)
+            and q.dtype == k.dtype == v.dtype
+            and q.shape[0] == 1
+            and q.shape[1] == 16
+            and q.shape[2] in (1024, 4096)
+            and (q.shape[-1] == 128 or (q.shape[-1] == 64 and causal))
+            and all(t.is_contiguous() for t in (q, k, v))
+            and all(t.data_ptr() % 16 == 0 for t in (q, k, v))
+            and (self.properties.major, self.properties.minor) == (8, 6)
+            and self.properties.name == "NVIDIA A40"
+            and self.properties.multi_processor_count == 84
+            and self.properties.shared_memory_per_block_optin == 101376
+        )
+
     def setUp(self):
         self.properties = SimpleNamespace(
             name="NVIDIA A40", major=8, minor=6, multi_processor_count=84, shared_memory_per_block_optin=101376
         )
-        a40._is_device.cache_clear()
-        self.addCleanup(a40._is_device.cache_clear)
+        self.original_predicate = a40._metadata_predicate
+        self.original_predicate.cache_clear()
+        self.addCleanup(self.original_predicate.cache_clear)
+        self.native_predicate = Mock(side_effect=self.reference_metadata)
         self.patches = [
+            patch.object(a40, "_metadata_predicate", return_value=self.native_predicate),
             patch.object(torch.cuda, "current_device", return_value=0),
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 6)),
             patch.object(torch.cuda, "get_device_properties", return_value=self.properties),
@@ -81,9 +107,7 @@ class A40SharedTests(unittest.TestCase):
             ("shared_memory_per_block_optin", 98304),
         ):
             with patch.object(self.properties, name, value):
-                a40._is_device.cache_clear()
                 self.assertFalse(a40.compatible(q, q, q))
-        a40._is_device.cache_clear()
         with patch.object(fa4_sm80, "available", return_value=False):
             self.assertFalse(a40.compatible(q, q, q))
         with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
@@ -98,19 +122,27 @@ class A40SharedTests(unittest.TestCase):
         self.assertEqual((causal.backward_m, causal.backward_n, causal.v_in_regs), (64, 64, True))
         self.assertEqual((dense.query_stages, dense.dout_stages), (1, 1))
 
-    def test_only_device_classification_is_cached_per_index(self):
+    def test_only_native_function_is_cached_and_metadata_stays_live(self):
         q = operand()
-        with patch.object(torch.cuda, "get_device_properties", return_value=self.properties) as properties:
+        loader = Mock(return_value=SimpleNamespace(a40_metadata_compatible=self.native_predicate))
+        with (
+            patch.object(a40, "_metadata_predicate", self.original_predicate),
+            patch.dict(sys.modules, {"kohakufa_cute.native": SimpleNamespace(extension=loader)}),
+        ):
             self.assertTrue(a40.compatible(q, q, q))
             self.assertTrue(a40.compatible(q, q, q))
-            self.assertEqual(properties.call_count, 1)
+            self.assertEqual(loader.call_count, 1)
+            self.assertEqual(self.native_predicate.call_count, 2)
+            q.data_ptr = lambda: 4098
+            self.assertFalse(a40.compatible(q, q, q))
+            q.data_ptr = lambda: 4096
             q.device = torch.device("cuda", 1)
             self.assertFalse(a40.compatible(q, q, q))
             with patch.object(torch.cuda, "current_device", return_value=1):
                 self.assertTrue(a40.compatible(q, q, q))
-                self.assertEqual(properties.call_count, 2)
                 with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
                     self.assertFalse(a40.compatible(q, q, q))
+            self.assertEqual(loader.call_count, 1)
 
     def test_causal_work_order_presets_preserve_dense(self):
         short = a40.schedule(64, True, 1024)

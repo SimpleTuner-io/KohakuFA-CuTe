@@ -21,7 +21,11 @@ def operand(shape=(1, 16, 4096, 128), *, dtype=torch.bfloat16, pointer=4096, con
 
 class A40SharedTests(unittest.TestCase):
     def setUp(self):
-        self.properties = SimpleNamespace(name="NVIDIA A40", multi_processor_count=84, shared_memory_per_block_optin=101376)
+        self.properties = SimpleNamespace(
+            name="NVIDIA A40", major=8, minor=6, multi_processor_count=84, shared_memory_per_block_optin=101376
+        )
+        a40._is_device.cache_clear()
+        self.addCleanup(a40._is_device.cache_clear)
         self.patches = [
             patch.object(torch.cuda, "current_device", return_value=0),
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 6)),
@@ -39,6 +43,10 @@ class A40SharedTests(unittest.TestCase):
                     for dtype in (torch.float16, torch.bfloat16):
                         q = operand((1, 16, sequence, dimension), dtype=dtype)
                         self.assertTrue(a40.compatible(q, q, q, causal=causal))
+        for sequence in (1024, 4096):
+            q = operand((1, 16, sequence, 64))
+            self.assertTrue(a40.compatible(q, q, q, causal=True))
+            self.assertFalse(a40.compatible(q, q, q, causal=False))
         for shape in (
             (1, 16, 128, 128),
             (1, 16, 1025, 128),
@@ -66,12 +74,16 @@ class A40SharedTests(unittest.TestCase):
     def test_partition_and_runtime_guards(self):
         q = operand()
         for name, value in (
+            ("major", 9),
+            ("minor", 9),
             ("name", "Other SM89 device"),
             ("multi_processor_count", 64),
             ("shared_memory_per_block_optin", 98304),
         ):
             with patch.object(self.properties, name, value):
+                a40._is_device.cache_clear()
                 self.assertFalse(a40.compatible(q, q, q))
+        a40._is_device.cache_clear()
         with patch.object(fa4_sm80, "available", return_value=False):
             self.assertFalse(a40.compatible(q, q, q))
         with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
@@ -85,6 +97,40 @@ class A40SharedTests(unittest.TestCase):
         self.assertEqual((dense.backward_m, dense.backward_n, dense.v_in_regs), (32, 128, False))
         self.assertEqual((causal.backward_m, causal.backward_n, causal.v_in_regs), (64, 64, True))
         self.assertEqual((dense.query_stages, dense.dout_stages), (1, 1))
+
+    def test_only_device_classification_is_cached_per_index(self):
+        q = operand()
+        with patch.object(torch.cuda, "get_device_properties", return_value=self.properties) as properties:
+            self.assertTrue(a40.compatible(q, q, q))
+            self.assertTrue(a40.compatible(q, q, q))
+            self.assertEqual(properties.call_count, 1)
+            q.device = torch.device("cuda", 1)
+            self.assertFalse(a40.compatible(q, q, q))
+            with patch.object(torch.cuda, "current_device", return_value=1):
+                self.assertTrue(a40.compatible(q, q, q))
+                self.assertEqual(properties.call_count, 2)
+                with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
+                    self.assertFalse(a40.compatible(q, q, q))
+
+    def test_causal_work_order_presets_preserve_dense(self):
+        short = a40.schedule(64, True, 1024)
+        long = a40.schedule(64, True, 4096)
+        self.assertEqual((short.causal_head_group, long.causal_head_group), (16, 4))
+        self.assertEqual((short.query_stages, short.dout_stages, short.kv_m_warps, short.dq_m_warps), (2, 1, 4, 4))
+        self.assertTrue(short.v_in_regs)
+        self.assertEqual(a40.schedule(128, True, 1024).causal_head_group, 4)
+        self.assertEqual(a40.schedule(128, False, 4096).causal_head_group, 1)
+
+    def test_benchmark_control_retains_public_entry_and_group(self):
+        from benchmarks.a40_shared_candidates import make_attention
+
+        q = operand()
+        with patch.object(a40, "native_runner", return_value=Mock(return_value="selected")) as runner:
+            control = make_attention(head_group=1)
+            self.assertEqual(control(q, q, q, is_causal=True), "selected")
+            self.assertEqual(runner.call_args.args[0].causal_head_group, 1)
+            a40.scaled_dot_product_attention(q, q, q, is_causal=True)
+            self.assertEqual(runner.call_args.args[0].causal_head_group, 4)
 
     def test_selected_errors_propagate_and_fallback_keeps_arguments(self):
         q = operand()
@@ -131,11 +177,31 @@ class A40SharedGpuTests(unittest.TestCase):
 
     def test_selected_scale_cache_reads_changed_inputs(self):
         for dtype in (torch.bfloat16, torch.float16):
-            for causal in (False, True):
+            for dimension, causal in ((128, False), (128, True), (64, True)):
                 for seed, scale in ((109, None), (113, 0.125), (127, 0.0625)):
                     torch.manual_seed(seed)
-                    q, k, v, dout = [torch.randn(1, 16, 1024, 128, dtype=dtype, device="cuda") for _ in range(4)]
+                    q, k, v, dout = [torch.randn(1, 16, 1024, dimension, dtype=dtype, device="cuda") for _ in range(4)]
                     self.check_call((q, k, v), dout, causal=causal, scale=scale, selected=True)
+
+    def test_grouped_public_graphs_read_changed_inputs(self):
+        from benchmarks.compare_ada import capture
+        from benchmarks.validate_sm80_static import assess
+
+        for dtype in (torch.bfloat16, torch.float16):
+            for dimension, sequence in ((64, 1024), (64, 4096), (128, 1024), (128, 4096)):
+                torch.manual_seed(151)
+                q, k, v, dout = [torch.randn(1, 16, sequence, dimension, dtype=dtype, device="cuda") for _ in range(4)]
+                self.assertTrue(a40.compatible(q, k, v, causal=True))
+                graph, storage = capture(a40.scaled_dot_product_attention, (q, k, v), dout, True, "joint")
+                operands, _, _, actual = storage
+                with torch.no_grad():
+                    for tensor in (*operands, dout):
+                        tensor.copy_(torch.randn_like(tensor))
+                    for tensor in actual:
+                        tensor.fill_(float("nan"))
+                graph.replay()
+                torch.cuda.synchronize()
+                assess(actual, operands, dout, causal=True, scale=None, directed=False, pointwise=False)
 
     def test_other_dimensions_keep_native_math(self):
         for dtype in (torch.bfloat16, torch.float16):

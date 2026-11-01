@@ -59,8 +59,9 @@ then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounde
 [A100](docs/a100-sm80-fa4.md) and [L40S](docs/l40s-warp-training.md) D64/D128 schedules.
 Other CUDA calls retain the standard CuTe dispatch.
 
-**A40 D128 opt-in:** the same qualified stack supports an explicit
-[A40 entry with measured dense/causal schedules](docs/a40-d128-shared.md).
+**A40 opt-in:** the same qualified stack supports an explicit
+[A40 entry for dense D128 and causal D64/D128](docs/a40-causal-grouped.md),
+with separate graph and complete eager measurements.
 
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
 CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:

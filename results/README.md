@@ -64,11 +64,13 @@ automatic filename collisions. Exact instruction comparisons additionally need
 an unambiguous binding to the loaded graph function; a matching symbol alone
 can be insufficient across variants. Retain raw captures outside the tracked tree.
 
-## A40 D128 opt-in
+## A40 opt-in
 
-The explicit [A40 D128 entry](../docs/a40-d128-shared.md) has separate
-[complete-call measurements and qualification](a40-d128-shared.json), including
-standalone FA2, ordinary CuTe, SDPA and native/Python host controls.
+The explicit [A40 entry](../docs/a40-causal-grouped.md) selects dense D128 and
+causal D64/D128 with [paired public API measurements](a40-causal-grouped.json),
+including the previous entry, ungrouped public/native controls, FA2 and SDPA.
+The [initial D128 study](../docs/a40-d128-shared.md) retains the dense geometry
+comparison and its qualification.
 
 ## B200 D512 backward
 

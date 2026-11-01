@@ -25,6 +25,7 @@ def main():
     parser.add_argument("--warmup-ms", type=float, default=1000)
     parser.add_argument("--window-ms", type=float, default=100)
     parser.add_argument("--repeats", type=int, default=7)
+    parser.add_argument("--seed", type=int, default=371, help="Use an independent input seed for final evaluation.")
     parser.add_argument("--source-revision", help="Full revision label supplied by the frozen-snapshot installer.")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()

@@ -17,7 +17,9 @@ from kohakufa_cute import ada, kernels, native, scaled_dot_product_attention
 
 
 def capture(function, inputs, dout, causal, phase, *, keep_graph=False):
-    operands = [tensor.clone().requires_grad_(True) for tensor in inputs]
+    # External autograd history can retain a default-stream CloneBackward node.
+    # The benchmark owns independent leaves for its warmup and capture stream.
+    operands = [tensor.detach().clone().requires_grad_(True) for tensor in inputs]
     stream = torch.cuda.Stream()
     stream.wait_stream(torch.cuda.current_stream())
     with torch.cuda.stream(stream):

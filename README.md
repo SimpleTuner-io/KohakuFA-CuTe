@@ -117,6 +117,8 @@ The optional tuned installation selects bounded [A100](docs/a100-sm80-fa4.md) an
 [L40S training](docs/l40s-warp-training.md) D64/D128 schedules. Their shape and
 software bounds are documented; other CUDA calls retain standard CuTe dispatch.
 
+GB10 has an [explicit D128 shared entry](docs/gb10-shared.md) with measured shape/dtype schedules and ordinary CuTe fallbacks. It is opt-in.
+
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 
 ## Validate and benchmark

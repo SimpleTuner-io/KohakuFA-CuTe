@@ -1,0 +1,6177 @@
+{
+  "scope": "Same-process complete strict API comparison; independent old/new API loader caches; unchanged GPU methods.",
+  "event_scope": "The eager CUDA-event interval includes launch gaps; graph replay is a separate device-path control.",
+  "device": "NVIDIA L40S",
+  "torch": "2.15.0+cu132",
+  "source_revision": "2104255ec92065b294c0a0403cbdc0f6340b3799",
+  "source_sha256": {
+    "src/kohakufa_cute/__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+    "src/kohakufa_cute/_ops.py": "0fc0519202f8b4b3eef68b0ff4e0ecb23909efbc727055530f60b47ca641b4ca",
+    "src/kohakufa_cute/ada.py": "b875706983267097f1ec335d077438888037aa88146213363b641b5b47498a91",
+    "src/kohakufa_cute/api.py": "7cb471df4998c5b8d3b2860cb7f151bba28b2febbe8d2d69f171847ab7c85734",
+    "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "src/kohakufa_cute/blackwell_pipeline.py": "93c0df74a609af7702284a2ee9e1a5aee49a58bfb287ae74bcc4bc3db9c27387",
+    "src/kohakufa_cute/blackwell_register_aux.py": "9b12f76a1eac7a2824a81e5251bc4ce8673218e4559ce392c2edb44398184b19",
+    "src/kohakufa_cute/fa4_hopper/__init__.py": "bba1ee77f3a30e4f270b0b3456839c346f6ba7266652c2768113927d599cc466",
+    "src/kohakufa_cute/fa4_hopper/_attention.py": "95d17724f3bcf0b824cb8e68f43772238b815f7a9314ff7083ee0905f144d219",
+    "src/kohakufa_cute/fa4_hopper/_backward.py": "075f47b462e7af2e9728b5622091599a00459185761e6ca282c8f21cdad1a3bf",
+    "src/kohakufa_cute/fa4_hopper/_forward.py": "3a8a6361a0f1917a83f906aec0010b11719a1902112638caa7045f2482f6fcc4",
+    "src/kohakufa_cute/fa4_hopper/_native.py": "0c71ec83e3c93d6b18e13894d4b095c04c4033c8bf16d6ade18a77a614fa6318",
+    "src/kohakufa_cute/fa4_hopper/_persistent.py": "903d4732df88142fbbcb79506b0b59c54eff60952dd59fd09b2756e18f87bba1",
+    "src/kohakufa_cute/fa4_hopper/_preprocess.py": "5db6b16485a601a1416fbd0edab0760e2b2a3925101966437c4cc61ea163b9a0",
+    "src/kohakufa_cute/fa4_hopper/_private_api.py": "94ae436c1d85884feaab898c047923342424a2b8feaad232e768c3301e6e2b1c",
+    "src/kohakufa_cute/fa4_hopper/_softmax.py": "f9bd803b4bd706188eaac5d29f8b6c6b226878730ed986b2aff02bfebdbd7e08",
+    "src/kohakufa_cute/fa4_sm80/__init__.py": "8bed4df7acb0a5bdb59f838fd74e65d5c833871089cbe50da982d44c04aea637",
+    "src/kohakufa_cute/fa4_sm80/_attention.py": "112df7b2c89bc71ae556b2dfc8da7b5a8002995b587a4d8114250abc5e7bfe10",
+    "src/kohakufa_cute/fa4_sm80/_backward.py": "d0693a82101bd241461e03b4acb88ca026311a6624034832db8fc95648e876ed",
+    "src/kohakufa_cute/fa4_sm80/_forward.py": "4c895d89559a16b19f5eebdcf998d6d9a14e316cc03397a57539f2827c69aad4",
+    "src/kohakufa_cute/fa4_sm80/_host.py": "c84a0eb443f6783f03cd7f4c7ed29047d4eef4ca243dfc8cd6013f87e5d11ec0",
+    "src/kohakufa_cute/fa4_sm80/_l40s.py": "423789cc8b9cd51755ca28251b192e62206326a6520eef022e2fc274b7f14349",
+    "src/kohakufa_cute/fa4_sm80/_native.py": "1c97d30908acf462a6ec99c0262b94b3216f16dd5cfc39154dd7fe08e54c3302",
+    "src/kohakufa_cute/fa4_sm80/_preprocess.py": "9beb2c7280ee5b583023611a4e94122cd1b05a4517b2b66665b4e0eb7f30ee60",
+    "src/kohakufa_cute/fa4_sm80/_private_api.py": "1b70b88344b0da3c87300a869ae689e68b38482a4dd85518c6d520bed8b4a91e",
+    "src/kohakufa_cute/fa4_sm80/_schedules.py": "1256921615ceffdae91c1eddc0851f322379ade092c3b8c595df6af9abe2a4ec",
+    "src/kohakufa_cute/fa4_sm80/_softmax.py": "f68f05ad0dfde4b2a826d9160f64f197fcc45aad457aa740f89af5c7ff329284",
+    "src/kohakufa_cute/hopper_forward.py": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+    "src/kohakufa_cute/kernels.py": "64bc4a098a5e61a19698e01d77a8c23f4a3611b16aba5b76f2a20c5ddc4c86fd",
+    "src/kohakufa_cute/l40s.py": "97b34f5bc2e7020fb1a7545d373b916c80f55bfa6487669eff0499848bace406",
+    "src/kohakufa_cute/launch.py": "450b6d27ed26346e2174c49fe40a652d7b78076bf116970bd4b7ddcbd2982a70",
+    "src/kohakufa_cute/medium_backward.py": "4df4b7b1c369c7ddf4cafafb9e2afecad2ebb5241ebcaab76bdff0d9d74cbd48",
+    "src/kohakufa_cute/native.cpp": "8e953b77792b49d49a299f1ee11a622c0963b3ae7130321ccf675d31ec6f8733",
+    "src/kohakufa_cute/native.py": "5d0d8485ab19493f9c39dc54b6be17b721b13f45eba2c963bfc4f7f844c7454f",
+    "src/kohakufa_cute/precision.py": "c60f4a0430567865a454c849799966bc01f45a5536f040a52dc170046ff038a9",
+    "src/kohakufa_cute/short_forward.py": "4b08931d4978d3b70be4f419db50661695c937944e9ad3b9b854fa3a9c219fdb",
+    "src/kohakufa_cute/sm103.py": "0c310638eda9c17a157091ca3dcf51ea08cd83baf34778c415e080d9d77a57e6",
+    "src/kohakufa_cute/sm120_backward.py": "34bc6d05dd40eaeaec73f867ff3b03073b5cd5ae67d649e17bde1e6b7f5492fd",
+    "src/kohakufa_cute/sm120_schedule.py": "e5c2ecd79a80582203a9913d0c4bfb2b5323229699920c661b23e44374fe9244",
+    "src/kohakufa_cute/sm86.py": "49f8b8b50809315f77978425420d65fa76729f20ace0f1a118b1e31574fc5d37",
+    "src/kohakufa_cute/sm86_backward.py": "2381cb376b2a1490e2ef488c8f768f0283e9b2f21fa83834b2627ea591c5ef35",
+    "src/kohakufa_cute/split_forward.py": "75f7d43144b200d9caedb6fbf713aed6335ec4005d1a3ba8b801dafa74818578",
+    "src/kohakufa_cute/weight_precision.py": "e33312450a22d65a3752522483e3910f2f38042b6e3a27aa73cc778e89d90884",
+    "src/kohakufa_cute/wide_backward.py": "5ce2d2b9039b5b33253b28c1e72f57a239e3540c09b6b343ae2af2f57d2d6b47"
+  },
+  "protocol": {
+    "warmup_ms": 500.0,
+    "window_ms": 100.0,
+    "repeats": 9
+  },
+  "cache_states": [
+    {
+      "previous": true,
+      "warm": false,
+      "expected_cache_size": 0,
+      "source_sha256": "9d2ae77841b15e98041aad43c8174d678175e47ca5fed160a1c85e895fc0a480",
+      "api_bytecode_sha256": "77bc3c0ef34960a3e2253795f21f83deee893d9becccba5bfb8aa7b941d1636c",
+      "actual_cache_size": 0
+    },
+    {
+      "previous": false,
+      "warm": false,
+      "expected_cache_size": 0,
+      "source_sha256": "7cb471df4998c5b8d3b2860cb7f151bba28b2febbe8d2d69f171847ab7c85734",
+      "api_bytecode_sha256": "ea395b60255a4afa57e164687e16b74e8dc3a93df1c6d6f4e7b1ed7c8b3901e8",
+      "actual_cache_size": 0
+    },
+    {
+      "previous": true,
+      "warm": true,
+      "expected_cache_size": 1,
+      "source_sha256": "9d2ae77841b15e98041aad43c8174d678175e47ca5fed160a1c85e895fc0a480",
+      "api_bytecode_sha256": "77bc3c0ef34960a3e2253795f21f83deee893d9becccba5bfb8aa7b941d1636c",
+      "actual_cache_size": 1
+    },
+    {
+      "previous": false,
+      "warm": true,
+      "expected_cache_size": 1,
+      "source_sha256": "7cb471df4998c5b8d3b2860cb7f151bba28b2febbe8d2d69f171847ab7c85734",
+      "api_bytecode_sha256": "ea395b60255a4afa57e164687e16b74e8dc3a93df1c6d6f4e7b1ed7c8b3901e8",
+      "actual_cache_size": 1
+    }
+  ],
+  "matching_launched_symbols_and_resources": true,
+  "rows": [
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 4382,
+        "new-cold": 4377,
+        "old-warm": 4387,
+        "new-warm": 4387
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.02238755637464432,
+            "wall_ms": 0.022390924233880314
+          },
+          {
+            "cuda_event_ms": 0.022695084349415934,
+            "wall_ms": 0.02269728982302312
+          },
+          {
+            "cuda_event_ms": 0.022583148839646745,
+            "wall_ms": 0.02258552190870436
+          },
+          {
+            "cuda_event_ms": 0.022642469036149304,
+            "wall_ms": 0.022644813783606662
+          },
+          {
+            "cuda_event_ms": 0.022945358784761345,
+            "wall_ms": 0.02294774692065016
+          },
+          {
+            "cuda_event_ms": 0.02266190118410989,
+            "wall_ms": 0.022664190093763106
+          },
+          {
+            "cuda_event_ms": 0.02295585921342816,
+            "wall_ms": 0.022957970560970407
+          },
+          {
+            "cuda_event_ms": 0.02269319179992815,
+            "wall_ms": 0.022695529665598166
+          },
+          {
+            "cuda_event_ms": 0.022614923474561236,
+            "wall_ms": 0.02261720630314774
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.022667902039424835,
+            "wall_ms": 0.02267042746426321
+          },
+          {
+            "cuda_event_ms": 0.0229860741116561,
+            "wall_ms": 0.022988363719107622
+          },
+          {
+            "cuda_event_ms": 0.022560285220060115,
+            "wall_ms": 0.022562545582344416
+          },
+          {
+            "cuda_event_ms": 0.02311568317931892,
+            "wall_ms": 0.02311812931439174
+          },
+          {
+            "cuda_event_ms": 0.022912145505246707,
+            "wall_ms": 0.022914311632346758
+          },
+          {
+            "cuda_event_ms": 0.0225280001742507,
+            "wall_ms": 0.02253015764028486
+          },
+          {
+            "cuda_event_ms": 0.022855530761272527,
+            "wall_ms": 0.022857823850225716
+          },
+          {
+            "cuda_event_ms": 0.022530142400862284,
+            "wall_ms": 0.022532568198122528
+          },
+          {
+            "cuda_event_ms": 0.022723582500678262,
+            "wall_ms": 0.022725904498345894
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.022583319109883426,
+            "wall_ms": 0.022585741967904964
+          },
+          {
+            "cuda_event_ms": 0.023473973966606772,
+            "wall_ms": 0.023476147031420445
+          },
+          {
+            "cuda_event_ms": 0.02274950495716214,
+            "wall_ms": 0.02275184248399999
+          },
+          {
+            "cuda_event_ms": 0.02310190576884207,
+            "wall_ms": 0.02310431046310132
+          },
+          {
+            "cuda_event_ms": 0.022650733253856387,
+            "wall_ms": 0.022652974012149666
+          },
+          {
+            "cuda_event_ms": 0.02257795053433796,
+            "wall_ms": 0.022580293594180845
+          },
+          {
+            "cuda_event_ms": 0.023004848809782454,
+            "wall_ms": 0.02300706793143768
+          },
+          {
+            "cuda_event_ms": 0.02259375018086552,
+            "wall_ms": 0.022596118302775088
+          },
+          {
+            "cuda_event_ms": 0.022795730009963742,
+            "wall_ms": 0.02279796193825968
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.02262343821233189,
+            "wall_ms": 0.022625643266388284
+          },
+          {
+            "cuda_event_ms": 0.0228729248046875,
+            "wall_ms": 0.02287520059191857
+          },
+          {
+            "cuda_event_ms": 0.02257771749607327,
+            "wall_ms": 0.022580053114411018
+          },
+          {
+            "cuda_event_ms": 0.022629032869775936,
+            "wall_ms": 0.022631216321532418
+          },
+          {
+            "cuda_event_ms": 0.022668085909118025,
+            "wall_ms": 0.022670501026144266
+          },
+          {
+            "cuda_event_ms": 0.02256784815165457,
+            "wall_ms": 0.02256996238451126
+          },
+          {
+            "cuda_event_ms": 0.022970792180398943,
+            "wall_ms": 0.02297309892503016
+          },
+          {
+            "cuda_event_ms": 0.02280092989363104,
+            "wall_ms": 0.02280338477730328
+          },
+          {
+            "cuda_event_ms": 0.022954453415497848,
+            "wall_ms": 0.022956837022104725
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.02266190118410989,
+          "wall_ms": 0.022664190093763106
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.022723582500678262,
+          "wall_ms": 0.022725904498345894
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.02274950495716214,
+          "wall_ms": 0.02275184248399999
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.022668085909118025,
+          "wall_ms": 0.022670501026144266
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 4139,
+        "new-cold": 4263,
+        "old-warm": 4260,
+        "new-warm": 4214
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.02235030298447315,
+            "wall_ms": 0.022353586617823017
+          },
+          {
+            "cuda_event_ms": 0.023272480933555054,
+            "wall_ms": 0.023275625028333143
+          },
+          {
+            "cuda_event_ms": 0.022967388100542288,
+            "wall_ms": 0.022970484655735667
+          },
+          {
+            "cuda_event_ms": 0.022812991938345614,
+            "wall_ms": 0.022815893933019037
+          },
+          {
+            "cuda_event_ms": 0.022991586866284316,
+            "wall_ms": 0.022994481758919945
+          },
+          {
+            "cuda_event_ms": 0.022882032521135652,
+            "wall_ms": 0.022885297659609498
+          },
+          {
+            "cuda_event_ms": 0.022960212156374577,
+            "wall_ms": 0.022963099546451954
+          },
+          {
+            "cuda_event_ms": 0.0231024683832287,
+            "wall_ms": 0.023105538537485943
+          },
+          {
+            "cuda_event_ms": 0.022914937165198795,
+            "wall_ms": 0.022917968829327354
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.022817876119163992,
+            "wall_ms": 0.022820908748128574
+          },
+          {
+            "cuda_event_ms": 0.022766285090275333,
+            "wall_ms": 0.02276902955573567
+          },
+          {
+            "cuda_event_ms": 0.022895447894102413,
+            "wall_ms": 0.022898253812652352
+          },
+          {
+            "cuda_event_ms": 0.022820091739719866,
+            "wall_ms": 0.022822796619328366
+          },
+          {
+            "cuda_event_ms": 0.023106153766901425,
+            "wall_ms": 0.02310900492374087
+          },
+          {
+            "cuda_event_ms": 0.023144610353738746,
+            "wall_ms": 0.023147455309735054
+          },
+          {
+            "cuda_event_ms": 0.02308864177405876,
+            "wall_ms": 0.023091757446280614
+          },
+          {
+            "cuda_event_ms": 0.023115304387177824,
+            "wall_ms": 0.023118260146638432
+          },
+          {
+            "cuda_event_ms": 0.022904575248573297,
+            "wall_ms": 0.022907288295660126
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.02282032675586396,
+            "wall_ms": 0.022823273942383888
+          },
+          {
+            "cuda_event_ms": 0.022759300554302378,
+            "wall_ms": 0.022762286155145757
+          },
+          {
+            "cuda_event_ms": 0.02335248777004475,
+            "wall_ms": 0.023355514552780895
+          },
+          {
+            "cuda_event_ms": 0.022855631510416665,
+            "wall_ms": 0.022858552116312592
+          },
+          {
+            "cuda_event_ms": 0.023152232282038585,
+            "wall_ms": 0.023155025117145196
+          },
+          {
+            "cuda_event_ms": 0.022926287583901847,
+            "wall_ms": 0.022929146244494516
+          },
+          {
+            "cuda_event_ms": 0.02287462082267367,
+            "wall_ms": 0.022877536148670188
+          },
+          {
+            "cuda_event_ms": 0.02296723379215724,
+            "wall_ms": 0.022970300468128663
+          },
+          {
+            "cuda_event_ms": 0.02288808330123973,
+            "wall_ms": 0.02289098474178507
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.022805748474671483,
+            "wall_ms": 0.02280862624269672
+          },
+          {
+            "cuda_event_ms": 0.022959391879537515,
+            "wall_ms": 0.02296251020465872
+          },
+          {
+            "cuda_event_ms": 0.023221034487673157,
+            "wall_ms": 0.023223963215497183
+          },
+          {
+            "cuda_event_ms": 0.022881077430120394,
+            "wall_ms": 0.022883921215535237
+          },
+          {
+            "cuda_event_ms": 0.023175593060682214,
+            "wall_ms": 0.02317838466937968
+          },
+          {
+            "cuda_event_ms": 0.022900518445420955,
+            "wall_ms": 0.022903566687855398
+          },
+          {
+            "cuda_event_ms": 0.022896386912834264,
+            "wall_ms": 0.022899185097201735
+          },
+          {
+            "cuda_event_ms": 0.02311829837170833,
+            "wall_ms": 0.023121331036811334
+          },
+          {
+            "cuda_event_ms": 0.02291971504490241,
+            "wall_ms": 0.02292273042064494
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.022960212156374577,
+          "wall_ms": 0.022963099546451954
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.022904575248573297,
+          "wall_ms": 0.022907288295660126
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.02288808330123973,
+          "wall_ms": 0.02289098474178507
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.02291971504490241,
+          "wall_ms": 0.02292273042064494
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 1080,
+        "new-cold": 1083,
+        "old-warm": 1079,
+        "new-warm": 1075
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.09193054481788918,
+            "wall_ms": 0.09194277129912128
+          },
+          {
+            "cuda_event_ms": 0.0917276453088831,
+            "wall_ms": 0.09173796203901509
+          },
+          {
+            "cuda_event_ms": 0.09170583795618129,
+            "wall_ms": 0.09171571388530235
+          },
+          {
+            "cuda_event_ms": 0.09182814845332393,
+            "wall_ms": 0.09183745553147876
+          },
+          {
+            "cuda_event_ms": 0.09177884702329282,
+            "wall_ms": 0.0917886490545546
+          },
+          {
+            "cuda_event_ms": 0.09185564253065322,
+            "wall_ms": 0.09186573701703714
+          },
+          {
+            "cuda_event_ms": 0.09180444788049769,
+            "wall_ms": 0.09181626204129618
+          },
+          {
+            "cuda_event_ms": 0.09187176315872758,
+            "wall_ms": 0.09188204443220187
+          },
+          {
+            "cuda_event_ms": 0.0918053944905599,
+            "wall_ms": 0.09181561019633794
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.0921297434404396,
+            "wall_ms": 0.09214031671402617
+          },
+          {
+            "cuda_event_ms": 0.09205220963045721,
+            "wall_ms": 0.09206282640833129
+          },
+          {
+            "cuda_event_ms": 0.09191700097926767,
+            "wall_ms": 0.0919274053446491
+          },
+          {
+            "cuda_event_ms": 0.09205883163494416,
+            "wall_ms": 0.0920693721097231
+          },
+          {
+            "cuda_event_ms": 0.09205126564258354,
+            "wall_ms": 0.09206103879355568
+          },
+          {
+            "cuda_event_ms": 0.09202100871782663,
+            "wall_ms": 0.09203036566736178
+          },
+          {
+            "cuda_event_ms": 0.0920266796897543,
+            "wall_ms": 0.09203672115923192
+          },
+          {
+            "cuda_event_ms": 0.09204559467065587,
+            "wall_ms": 0.09205499909033901
+          },
+          {
+            "cuda_event_ms": 0.09209449183357499,
+            "wall_ms": 0.09210350877985475
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.09199012706852047,
+            "wall_ms": 0.0919998581946307
+          },
+          {
+            "cuda_event_ms": 0.09178988197757978,
+            "wall_ms": 0.0918000092847744
+          },
+          {
+            "cuda_event_ms": 0.09183922909939035,
+            "wall_ms": 0.0918487395894428
+          },
+          {
+            "cuda_event_ms": 0.09172415888011179,
+            "wall_ms": 0.09173315293108138
+          },
+          {
+            "cuda_event_ms": 0.09175666335338349,
+            "wall_ms": 0.09176617606838197
+          },
+          {
+            "cuda_event_ms": 0.09180977921225165,
+            "wall_ms": 0.09181921131239101
+          },
+          {
+            "cuda_event_ms": 0.09176900190153643,
+            "wall_ms": 0.0917791705375729
+          },
+          {
+            "cuda_event_ms": 0.09180684482973964,
+            "wall_ms": 0.09181616959797324
+          },
+          {
+            "cuda_event_ms": 0.09182214604360954,
+            "wall_ms": 0.09183251804761085
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.09215318546738735,
+            "wall_ms": 0.0921627041764644
+          },
+          {
+            "cuda_event_ms": 0.09201997269031613,
+            "wall_ms": 0.09202985861880142
+          },
+          {
+            "cuda_event_ms": 0.09206188822901526,
+            "wall_ms": 0.09207152184857012
+          },
+          {
+            "cuda_event_ms": 0.09206093721611555,
+            "wall_ms": 0.09207194511302162
+          },
+          {
+            "cuda_event_ms": 0.09203616829805596,
+            "wall_ms": 0.09204570512655516
+          },
+          {
+            "cuda_event_ms": 0.09213808991188227,
+            "wall_ms": 0.09214801767970933
+          },
+          {
+            "cuda_event_ms": 0.09205236390579578,
+            "wall_ms": 0.09206371441440181
+          },
+          {
+            "cuda_event_ms": 0.09206093721611555,
+            "wall_ms": 0.09207073025145503
+          },
+          {
+            "cuda_event_ms": 0.09204283248546512,
+            "wall_ms": 0.09205235907439749
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.0918053944905599,
+          "wall_ms": 0.09181626204129618
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.09205126564258354,
+          "wall_ms": 0.09206103879355568
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.09180684482973964,
+          "wall_ms": 0.09181616959797324
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.09206093721611555,
+          "wall_ms": 0.09207073025145503
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 931,
+        "new-cold": 1001,
+        "old-warm": 988,
+        "new-warm": 1007
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.10232961062586013,
+            "wall_ms": 0.10234640814187895
+          },
+          {
+            "cuda_event_ms": 0.10173566512979575,
+            "wall_ms": 0.10175352632148126
+          },
+          {
+            "cuda_event_ms": 0.10159487780643713,
+            "wall_ms": 0.10161354886988132
+          },
+          {
+            "cuda_event_ms": 0.10091400965968213,
+            "wall_ms": 0.10093100536909759
+          },
+          {
+            "cuda_event_ms": 0.10143099742852528,
+            "wall_ms": 0.10144960580500709
+          },
+          {
+            "cuda_event_ms": 0.10183905121079065,
+            "wall_ms": 0.1018573651935557
+          },
+          {
+            "cuda_event_ms": 0.10104713480915598,
+            "wall_ms": 0.10106475188128779
+          },
+          {
+            "cuda_event_ms": 0.1012893168677833,
+            "wall_ms": 0.10130723308627798
+          },
+          {
+            "cuda_event_ms": 0.1010812253368144,
+            "wall_ms": 0.10109828677774677
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.09505195884437828,
+            "wall_ms": 0.09506823478515943
+          },
+          {
+            "cuda_event_ms": 0.09916739601950783,
+            "wall_ms": 0.09918382317948897
+          },
+          {
+            "cuda_event_ms": 0.09626181618674294,
+            "wall_ms": 0.09627680518789092
+          },
+          {
+            "cuda_event_ms": 0.09512452574281187,
+            "wall_ms": 0.09514074225409457
+          },
+          {
+            "cuda_event_ms": 0.09552661998645885,
+            "wall_ms": 0.09554197004490107
+          },
+          {
+            "cuda_event_ms": 0.09615677291458541,
+            "wall_ms": 0.09617233267086525
+          },
+          {
+            "cuda_event_ms": 0.09503251570207137,
+            "wall_ms": 0.09504920678221612
+          },
+          {
+            "cuda_event_ms": 0.0952709399975025,
+            "wall_ms": 0.09528738162764064
+          },
+          {
+            "cuda_event_ms": 0.09628055050418331,
+            "wall_ms": 0.09629676323411958
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.09597409205880725,
+            "wall_ms": 0.09599015183736445
+          },
+          {
+            "cuda_event_ms": 0.09546415815469224,
+            "wall_ms": 0.09548073682933103
+          },
+          {
+            "cuda_event_ms": 0.09543825064593481,
+            "wall_ms": 0.09545457893690314
+          },
+          {
+            "cuda_event_ms": 0.0961480468873553,
+            "wall_ms": 0.09616428644722516
+          },
+          {
+            "cuda_event_ms": 0.09590386765205908,
+            "wall_ms": 0.09591984414110934
+          },
+          {
+            "cuda_event_ms": 0.09553774937927,
+            "wall_ms": 0.09555344839004408
+          },
+          {
+            "cuda_event_ms": 0.09575436086307171,
+            "wall_ms": 0.09577071254951351
+          },
+          {
+            "cuda_event_ms": 0.09568699361824314,
+            "wall_ms": 0.09570259415060998
+          },
+          {
+            "cuda_event_ms": 0.09519352314443241,
+            "wall_ms": 0.09520967306096959
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.09640027134278799,
+            "wall_ms": 0.09641669114428279
+          },
+          {
+            "cuda_event_ms": 0.09532892100268821,
+            "wall_ms": 0.09534587489293986
+          },
+          {
+            "cuda_event_ms": 0.09516469582308605,
+            "wall_ms": 0.09517925422080971
+          },
+          {
+            "cuda_event_ms": 0.09657717934904884,
+            "wall_ms": 0.09659256405995229
+          },
+          {
+            "cuda_event_ms": 0.0957269981103952,
+            "wall_ms": 0.09574264449450301
+          },
+          {
+            "cuda_event_ms": 0.09551993619128987,
+            "wall_ms": 0.09553580935175097
+          },
+          {
+            "cuda_event_ms": 0.09519539523385132,
+            "wall_ms": 0.09521202484488879
+          },
+          {
+            "cuda_event_ms": 0.09546683348397157,
+            "wall_ms": 0.09548381031532481
+          },
+          {
+            "cuda_event_ms": 0.095246043200526,
+            "wall_ms": 0.09526081928079753
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.10143099742852528,
+          "wall_ms": 0.10144960580500709
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.09552661998645885,
+          "wall_ms": 0.09554197004490107
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.09568699361824314,
+          "wall_ms": 0.09570259415060998
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.09546683348397157,
+          "wall_ms": 0.09548381031532481
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 4224,
+        "new-cold": 4223,
+        "old-warm": 4217,
+        "new-warm": 4219
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.023488727482882412,
+            "wall_ms": 0.023491612451338864
+          },
+          {
+            "cuda_event_ms": 0.023920727498603588,
+            "wall_ms": 0.023923463307558752
+          },
+          {
+            "cuda_event_ms": 0.023544484918767757,
+            "wall_ms": 0.023547170926438852
+          },
+          {
+            "cuda_event_ms": 0.023904908787120472,
+            "wall_ms": 0.023907362219688366
+          },
+          {
+            "cuda_event_ms": 0.023920947855169124,
+            "wall_ms": 0.023923355587557482
+          },
+          {
+            "cuda_event_ms": 0.023941802256035084,
+            "wall_ms": 0.023944173528544718
+          },
+          {
+            "cuda_event_ms": 0.023896000602028587,
+            "wall_ms": 0.02389866666486672
+          },
+          {
+            "cuda_event_ms": 0.02361575762430827,
+            "wall_ms": 0.02361810085417484
+          },
+          {
+            "cuda_event_ms": 0.023811622099442917,
+            "wall_ms": 0.02381392566045785
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.023676878350791054,
+            "wall_ms": 0.023679351404063596
+          },
+          {
+            "cuda_event_ms": 0.02411067708815101,
+            "wall_ms": 0.024113269716196015
+          },
+          {
+            "cuda_event_ms": 0.023532116777265126,
+            "wall_ms": 0.023534680087780507
+          },
+          {
+            "cuda_event_ms": 0.02405727132643226,
+            "wall_ms": 0.024059789012175863
+          },
+          {
+            "cuda_event_ms": 0.023918836567883465,
+            "wall_ms": 0.023921331518759505
+          },
+          {
+            "cuda_event_ms": 0.023667406194615978,
+            "wall_ms": 0.023669903623928183
+          },
+          {
+            "cuda_event_ms": 0.02392105691500137,
+            "wall_ms": 0.02392358418142548
+          },
+          {
+            "cuda_event_ms": 0.02353187468897074,
+            "wall_ms": 0.023534303571188193
+          },
+          {
+            "cuda_event_ms": 0.02391936771682786,
+            "wall_ms": 0.023921965903697592
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.02369526751606222,
+            "wall_ms": 0.023697857485051852
+          },
+          {
+            "cuda_event_ms": 0.02418118595144097,
+            "wall_ms": 0.02418385819511659
+          },
+          {
+            "cuda_event_ms": 0.023834127200449817,
+            "wall_ms": 0.023836692908508466
+          },
+          {
+            "cuda_event_ms": 0.024041295023305966,
+            "wall_ms": 0.024043724445435326
+          },
+          {
+            "cuda_event_ms": 0.023935180041697854,
+            "wall_ms": 0.02393757268569556
+          },
+          {
+            "cuda_event_ms": 0.023636989579936863,
+            "wall_ms": 0.023639583355323793
+          },
+          {
+            "cuda_event_ms": 0.023954120551858547,
+            "wall_ms": 0.023956616556650448
+          },
+          {
+            "cuda_event_ms": 0.023670742006869517,
+            "wall_ms": 0.02367324353295551
+          },
+          {
+            "cuda_event_ms": 0.023935909149119264,
+            "wall_ms": 0.023938508418359733
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.023699326208909844,
+            "wall_ms": 0.023701722683677724
+          },
+          {
+            "cuda_event_ms": 0.023921361662364454,
+            "wall_ms": 0.023923916329136798
+          },
+          {
+            "cuda_event_ms": 0.02367383401296127,
+            "wall_ms": 0.02367636477626581
+          },
+          {
+            "cuda_event_ms": 0.023629410285524746,
+            "wall_ms": 0.023631774355443495
+          },
+          {
+            "cuda_event_ms": 0.023692492484820343,
+            "wall_ms": 0.023694919175255368
+          },
+          {
+            "cuda_event_ms": 0.023700516097888643,
+            "wall_ms": 0.023703007108354632
+          },
+          {
+            "cuda_event_ms": 0.023920625667205833,
+            "wall_ms": 0.023923095523857213
+          },
+          {
+            "cuda_event_ms": 0.02391699270830247,
+            "wall_ms": 0.023919399385677147
+          },
+          {
+            "cuda_event_ms": 0.023914611122002955,
+            "wall_ms": 0.023917269018399443
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.023896000602028587,
+          "wall_ms": 0.02389866666486672
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.023918836567883465,
+          "wall_ms": 0.023921331518759505
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.023935180041697854,
+          "wall_ms": 0.02393757268569556
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.023700516097888643,
+          "wall_ms": 0.023703007108354632
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 3905,
+        "new-cold": 4019,
+        "old-warm": 4075,
+        "new-warm": 4083
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.023255420250105033,
+            "wall_ms": 0.023259310623888457
+          },
+          {
+            "cuda_event_ms": 0.02444331209424516,
+            "wall_ms": 0.024446618693156903
+          },
+          {
+            "cuda_event_ms": 0.02400880195725132,
+            "wall_ms": 0.02401203789692205
+          },
+          {
+            "cuda_event_ms": 0.02412811552821903,
+            "wall_ms": 0.024131648401967066
+          },
+          {
+            "cuda_event_ms": 0.02394744052471791,
+            "wall_ms": 0.02395093956605678
+          },
+          {
+            "cuda_event_ms": 0.023878678286426657,
+            "wall_ms": 0.02388189628448399
+          },
+          {
+            "cuda_event_ms": 0.02413886701556998,
+            "wall_ms": 0.024142141104228652
+          },
+          {
+            "cuda_event_ms": 0.023929313630361715,
+            "wall_ms": 0.023932685278399004
+          },
+          {
+            "cuda_event_ms": 0.023925863307508403,
+            "wall_ms": 0.023929266834145032
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.02381290455723497,
+            "wall_ms": 0.02381618114082413
+          },
+          {
+            "cuda_event_ms": 0.023716530060702873,
+            "wall_ms": 0.023719684497941526
+          },
+          {
+            "cuda_event_ms": 0.023848120505965804,
+            "wall_ms": 0.023851275197122525
+          },
+          {
+            "cuda_event_ms": 0.023774176695122,
+            "wall_ms": 0.02377745584036963
+          },
+          {
+            "cuda_event_ms": 0.024328098453731493,
+            "wall_ms": 0.024331497140221797
+          },
+          {
+            "cuda_event_ms": 0.023848065454350625,
+            "wall_ms": 0.023851121668804657
+          },
+          {
+            "cuda_event_ms": 0.02445548409459365,
+            "wall_ms": 0.024458827071935106
+          },
+          {
+            "cuda_event_ms": 0.02392169983715049,
+            "wall_ms": 0.023924783282651643
+          },
+          {
+            "cuda_event_ms": 0.02391711346810657,
+            "wall_ms": 0.023920375960488564
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.02376459039793424,
+            "wall_ms": 0.02376791411165171
+          },
+          {
+            "cuda_event_ms": 0.023826846257309242,
+            "wall_ms": 0.023829853012186528
+          },
+          {
+            "cuda_event_ms": 0.024426239575345093,
+            "wall_ms": 0.02442937472869465
+          },
+          {
+            "cuda_event_ms": 0.02377585943491181,
+            "wall_ms": 0.023778984537405286
+          },
+          {
+            "cuda_event_ms": 0.024326651169478526,
+            "wall_ms": 0.02433000589532355
+          },
+          {
+            "cuda_event_ms": 0.023842739737106978,
+            "wall_ms": 0.023845770300588816
+          },
+          {
+            "cuda_event_ms": 0.02391033710877588,
+            "wall_ms": 0.023913419386943333
+          },
+          {
+            "cuda_event_ms": 0.02391787663559241,
+            "wall_ms": 0.023921042455051757
+          },
+          {
+            "cuda_event_ms": 0.02392214722428585,
+            "wall_ms": 0.02392545668836797
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.023763106787814948,
+            "wall_ms": 0.023766179033777486
+          },
+          {
+            "cuda_event_ms": 0.0243475243883509,
+            "wall_ms": 0.024350615968551835
+          },
+          {
+            "cuda_event_ms": 0.02436834032150743,
+            "wall_ms": 0.024371631642800814
+          },
+          {
+            "cuda_event_ms": 0.02384388718335266,
+            "wall_ms": 0.023846960810275198
+          },
+          {
+            "cuda_event_ms": 0.02422112458598342,
+            "wall_ms": 0.02422428459461442
+          },
+          {
+            "cuda_event_ms": 0.023980358608674687,
+            "wall_ms": 0.023984693116176542
+          },
+          {
+            "cuda_event_ms": 0.02391866384520707,
+            "wall_ms": 0.02392176879569204
+          },
+          {
+            "cuda_event_ms": 0.024277553703164225,
+            "wall_ms": 0.024281051918862425
+          },
+          {
+            "cuda_event_ms": 0.02398136203381877,
+            "wall_ms": 0.023984412684411215
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.02394744052471791,
+          "wall_ms": 0.02395093956605678
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.023848120505965804,
+          "wall_ms": 0.023851275197122525
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.02391033710877588,
+          "wall_ms": 0.023913419386943333
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.02398136203381877,
+          "wall_ms": 0.023984693116176542
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 1074,
+        "new-cold": 1079,
+        "old-warm": 1075,
+        "new-warm": 1074
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.09291417638682786,
+            "wall_ms": 0.09292608473425665
+          },
+          {
+            "cuda_event_ms": 0.09321355553312674,
+            "wall_ms": 0.09322443110820641
+          },
+          {
+            "cuda_event_ms": 0.09316302677772564,
+            "wall_ms": 0.09317350932297226
+          },
+          {
+            "cuda_event_ms": 0.09323071811896241,
+            "wall_ms": 0.09324152326754172
+          },
+          {
+            "cuda_event_ms": 0.0931801893635613,
+            "wall_ms": 0.09319029421197837
+          },
+          {
+            "cuda_event_ms": 0.09325074350367711,
+            "wall_ms": 0.09326264153805247
+          },
+          {
+            "cuda_event_ms": 0.0932564619977159,
+            "wall_ms": 0.09326830635205417
+          },
+          {
+            "cuda_event_ms": 0.0931981830845554,
+            "wall_ms": 0.09320786964665106
+          },
+          {
+            "cuda_event_ms": 0.09322404772653704,
+            "wall_ms": 0.0932345139866459
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.09312136334550944,
+            "wall_ms": 0.093132685819223
+          },
+          {
+            "cuda_event_ms": 0.09323144864991818,
+            "wall_ms": 0.0932425171479089
+          },
+          {
+            "cuda_event_ms": 0.09325885507550032,
+            "wall_ms": 0.09326899629297725
+          },
+          {
+            "cuda_event_ms": 0.09323240320808475,
+            "wall_ms": 0.0932425347612558
+          },
+          {
+            "cuda_event_ms": 0.09317356000021722,
+            "wall_ms": 0.093184402220053
+          },
+          {
+            "cuda_event_ms": 0.09316596595969213,
+            "wall_ms": 0.09317629287870423
+          },
+          {
+            "cuda_event_ms": 0.09325423077149343,
+            "wall_ms": 0.09326471918973764
+          },
+          {
+            "cuda_event_ms": 0.09322480916755967,
+            "wall_ms": 0.09323584336176363
+          },
+          {
+            "cuda_event_ms": 0.09322386168019434,
+            "wall_ms": 0.09323415941251502
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.0931173209256904,
+            "wall_ms": 0.0931287134813448
+          },
+          {
+            "cuda_event_ms": 0.09319066956985829,
+            "wall_ms": 0.09320141861301869
+          },
+          {
+            "cuda_event_ms": 0.09320876720339753,
+            "wall_ms": 0.09322018324679067
+          },
+          {
+            "cuda_event_ms": 0.0931678097747093,
+            "wall_ms": 0.0931784735050399
+          },
+          {
+            "cuda_event_ms": 0.09319733375726744,
+            "wall_ms": 0.09320864464741113
+          },
+          {
+            "cuda_event_ms": 0.09319635435592297,
+            "wall_ms": 0.09320707442130634
+          },
+          {
+            "cuda_event_ms": 0.09320305402888808,
+            "wall_ms": 0.09321336837507091
+          },
+          {
+            "cuda_event_ms": 0.09323442326035611,
+            "wall_ms": 0.09324439533249756
+          },
+          {
+            "cuda_event_ms": 0.09324115132176598,
+            "wall_ms": 0.09325172094260017
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.09319830384778355,
+            "wall_ms": 0.09320926814803115
+          },
+          {
+            "cuda_event_ms": 0.093190432926796,
+            "wall_ms": 0.09320055306832752
+          },
+          {
+            "cuda_event_ms": 0.09322023302927142,
+            "wall_ms": 0.09322974206949107
+          },
+          {
+            "cuda_event_ms": 0.09321230527852944,
+            "wall_ms": 0.093222037250405
+          },
+          {
+            "cuda_event_ms": 0.09322785532008336,
+            "wall_ms": 0.09323861266770773
+          },
+          {
+            "cuda_event_ms": 0.09325145387560739,
+            "wall_ms": 0.0932618035428448
+          },
+          {
+            "cuda_event_ms": 0.09324788070479807,
+            "wall_ms": 0.09325852700434556
+          },
+          {
+            "cuda_event_ms": 0.09325741389610248,
+            "wall_ms": 0.09326809682615372
+          },
+          {
+            "cuda_event_ms": 0.09324883260318464,
+            "wall_ms": 0.09325875883234329
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.09321355553312674,
+          "wall_ms": 0.09322443110820641
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.09322480916755967,
+          "wall_ms": 0.09323584336176363
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.09319733375726744,
+          "wall_ms": 0.09320864464741113
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.09322785532008336,
+          "wall_ms": 0.09323861266770773
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 941,
+        "new-cold": 995,
+        "old-warm": 989,
+        "new-warm": 1000
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.10174816751834817,
+            "wall_ms": 0.10176581084653022
+          },
+          {
+            "cuda_event_ms": 0.10152835014902696,
+            "wall_ms": 0.1015446705404198
+          },
+          {
+            "cuda_event_ms": 0.10103559341998207,
+            "wall_ms": 0.1010527056379602
+          },
+          {
+            "cuda_event_ms": 0.10171024756274492,
+            "wall_ms": 0.10172611368571653
+          },
+          {
+            "cuda_event_ms": 0.10111684120170115,
+            "wall_ms": 0.10113318171896492
+          },
+          {
+            "cuda_event_ms": 0.10154685203884664,
+            "wall_ms": 0.10156306694484415
+          },
+          {
+            "cuda_event_ms": 0.10533597745500133,
+            "wall_ms": 0.10535416258132832
+          },
+          {
+            "cuda_event_ms": 0.10149896765616698,
+            "wall_ms": 0.10151614028120198
+          },
+          {
+            "cuda_event_ms": 0.10150114053367429,
+            "wall_ms": 0.10151765355667125
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.09624261904002435,
+            "wall_ms": 0.09625855477611024
+          },
+          {
+            "cuda_event_ms": 0.09616543563766096,
+            "wall_ms": 0.09618100000021221
+          },
+          {
+            "cuda_event_ms": 0.09645976924417007,
+            "wall_ms": 0.09647560602489241
+          },
+          {
+            "cuda_event_ms": 0.09608091421462783,
+            "wall_ms": 0.09609699999824653
+          },
+          {
+            "cuda_event_ms": 0.09625806185468358,
+            "wall_ms": 0.09627351557821896
+          },
+          {
+            "cuda_event_ms": 0.09731624737456815,
+            "wall_ms": 0.09733091758437754
+          },
+          {
+            "cuda_event_ms": 0.09624159156377592,
+            "wall_ms": 0.09625773164958473
+          },
+          {
+            "cuda_event_ms": 0.09631260244091551,
+            "wall_ms": 0.09632754875534219
+          },
+          {
+            "cuda_event_ms": 0.09787365323934123,
+            "wall_ms": 0.09788920100773661
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.09634100101112235,
+            "wall_ms": 0.09635600503990793
+          },
+          {
+            "cuda_event_ms": 0.09640198988186457,
+            "wall_ms": 0.09641788169624863
+          },
+          {
+            "cuda_event_ms": 0.09601384732793146,
+            "wall_ms": 0.09603224470137917
+          },
+          {
+            "cuda_event_ms": 0.09652002564093702,
+            "wall_ms": 0.09653524670343097
+          },
+          {
+            "cuda_event_ms": 0.09626945904460787,
+            "wall_ms": 0.09628433266398473
+          },
+          {
+            "cuda_event_ms": 0.0962622153626414,
+            "wall_ms": 0.09627764914147141
+          },
+          {
+            "cuda_event_ms": 0.09613589449767758,
+            "wall_ms": 0.0961521809981407
+          },
+          {
+            "cuda_event_ms": 0.09653778384741926,
+            "wall_ms": 0.09655354904007125
+          },
+          {
+            "cuda_event_ms": 0.09650656427242638,
+            "wall_ms": 0.09652116177372891
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.09668377685546875,
+            "wall_ms": 0.0966984829865396
+          },
+          {
+            "cuda_event_ms": 0.0964290542602539,
+            "wall_ms": 0.09644401399418712
+          },
+          {
+            "cuda_event_ms": 0.09677721405029296,
+            "wall_ms": 0.0967924669967033
+          },
+          {
+            "cuda_event_ms": 0.09633052825927735,
+            "wall_ms": 0.09634519799146801
+          },
+          {
+            "cuda_event_ms": 0.09625385284423828,
+            "wall_ms": 0.09626800499972887
+          },
+          {
+            "cuda_event_ms": 0.09614163208007813,
+            "wall_ms": 0.09615724999457598
+          },
+          {
+            "cuda_event_ms": 0.09617282867431641,
+            "wall_ms": 0.09618808599771
+          },
+          {
+            "cuda_event_ms": 0.09806025695800781,
+            "wall_ms": 0.09807551300036721
+          },
+          {
+            "cuda_event_ms": 0.09614540863037109,
+            "wall_ms": 0.0961603119794745
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.10152835014902696,
+          "wall_ms": 0.1015446705404198
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.09625806185468358,
+          "wall_ms": 0.09627351557821896
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.09634100101112235,
+          "wall_ms": 0.09635600503990793
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.09633052825927735,
+          "wall_ms": 0.09634519799146801
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 2155,
+        "new-cold": 2153,
+        "old-warm": 2163,
+        "new-warm": 2207
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.0448909963090016,
+            "wall_ms": 0.04489686960795259
+          },
+          {
+            "cuda_event_ms": 0.04766280313655561,
+            "wall_ms": 0.047668077501634744
+          },
+          {
+            "cuda_event_ms": 0.04652232725493039,
+            "wall_ms": 0.04652684872911642
+          },
+          {
+            "cuda_event_ms": 0.04870625648587043,
+            "wall_ms": 0.04871128399244871
+          },
+          {
+            "cuda_event_ms": 0.04847677633546621,
+            "wall_ms": 0.048481829703748744
+          },
+          {
+            "cuda_event_ms": 0.04859272189040748,
+            "wall_ms": 0.04859796334641474
+          },
+          {
+            "cuda_event_ms": 0.04810514870486514,
+            "wall_ms": 0.048110128546202786
+          },
+          {
+            "cuda_event_ms": 0.046846454381389575,
+            "wall_ms": 0.04686239536629078
+          },
+          {
+            "cuda_event_ms": 0.04801966054256997,
+            "wall_ms": 0.04802464547765867
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.045229598637575114,
+            "wall_ms": 0.04523487226744267
+          },
+          {
+            "cuda_event_ms": 0.048942254080198776,
+            "wall_ms": 0.048947204359129234
+          },
+          {
+            "cuda_event_ms": 0.04658034874348656,
+            "wall_ms": 0.04658520204028918
+          },
+          {
+            "cuda_event_ms": 0.04919908437627003,
+            "wall_ms": 0.04920543427925161
+          },
+          {
+            "cuda_event_ms": 0.04768483205778456,
+            "wall_ms": 0.04768985694482372
+          },
+          {
+            "cuda_event_ms": 0.046598896003577854,
+            "wall_ms": 0.046604012077067804
+          },
+          {
+            "cuda_event_ms": 0.04749353021673972,
+            "wall_ms": 0.04749861821623954
+          },
+          {
+            "cuda_event_ms": 0.04661187270714193,
+            "wall_ms": 0.046616763123507925
+          },
+          {
+            "cuda_event_ms": 0.04857176246058371,
+            "wall_ms": 0.0485769595811987
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.045217908205833914,
+            "wall_ms": 0.045223711967538015
+          },
+          {
+            "cuda_event_ms": 0.049468715489599586,
+            "wall_ms": 0.04947413453305682
+          },
+          {
+            "cuda_event_ms": 0.04720572702211194,
+            "wall_ms": 0.04721054415702062
+          },
+          {
+            "cuda_event_ms": 0.049149159199101365,
+            "wall_ms": 0.0491541858449909
+          },
+          {
+            "cuda_event_ms": 0.047153619280359674,
+            "wall_ms": 0.047158571430023416
+          },
+          {
+            "cuda_event_ms": 0.046723815946186575,
+            "wall_ms": 0.04672865093822608
+          },
+          {
+            "cuda_event_ms": 0.04886425087091496,
+            "wall_ms": 0.04886954508173282
+          },
+          {
+            "cuda_event_ms": 0.04735390587752471,
+            "wall_ms": 0.04735856911815941
+          },
+          {
+            "cuda_event_ms": 0.04875427189658099,
+            "wall_ms": 0.04875916041534134
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.045405869684880494,
+            "wall_ms": 0.04541093747466583
+          },
+          {
+            "cuda_event_ms": 0.04861319178523767,
+            "wall_ms": 0.04861811689973826
+          },
+          {
+            "cuda_event_ms": 0.04683756169335141,
+            "wall_ms": 0.04684249569814252
+          },
+          {
+            "cuda_event_ms": 0.04671193768009105,
+            "wall_ms": 0.046716884462611
+          },
+          {
+            "cuda_event_ms": 0.04682839743195479,
+            "wall_ms": 0.0468333810562581
+          },
+          {
+            "cuda_event_ms": 0.04775774549130784,
+            "wall_ms": 0.0477624793834883
+          },
+          {
+            "cuda_event_ms": 0.048929291393727696,
+            "wall_ms": 0.04893448028414277
+          },
+          {
+            "cuda_event_ms": 0.04715258620365421,
+            "wall_ms": 0.04715764385586462
+          },
+          {
+            "cuda_event_ms": 0.048558572649037506,
+            "wall_ms": 0.048564078840568466
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.04801966054256997,
+          "wall_ms": 0.04802464547765867
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.04749353021673972,
+          "wall_ms": 0.04749861821623954
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.04735390587752471,
+          "wall_ms": 0.04735856911815941
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.04715258620365421,
+          "wall_ms": 0.04715764385586462
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 2168,
+        "new-cold": 2185,
+        "old-warm": 2220,
+        "new-warm": 2233
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.04436073795895735,
+            "wall_ms": 0.04436734317294133
+          },
+          {
+            "cuda_event_ms": 0.0475432617637944,
+            "wall_ms": 0.04754896632033122
+          },
+          {
+            "cuda_event_ms": 0.04709171984908326,
+            "wall_ms": 0.047097696031454944
+          },
+          {
+            "cuda_event_ms": 0.045287438424311,
+            "wall_ms": 0.045293159592798754
+          },
+          {
+            "cuda_event_ms": 0.04707188271948332,
+            "wall_ms": 0.0470777675191566
+          },
+          {
+            "cuda_event_ms": 0.04546019072022385,
+            "wall_ms": 0.04546622647373332
+          },
+          {
+            "cuda_event_ms": 0.047604223019082605,
+            "wall_ms": 0.047610187717791595
+          },
+          {
+            "cuda_event_ms": 0.04710022197878229,
+            "wall_ms": 0.047106259699324075
+          },
+          {
+            "cuda_event_ms": 0.045286023748756773,
+            "wall_ms": 0.04529237868923718
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.045307576683620565,
+            "wall_ms": 0.04531372815649743
+          },
+          {
+            "cuda_event_ms": 0.045270173445991845,
+            "wall_ms": 0.045276070024298176
+          },
+          {
+            "cuda_event_ms": 0.04621731476598255,
+            "wall_ms": 0.0462236270085787
+          },
+          {
+            "cuda_event_ms": 0.045510591904140446,
+            "wall_ms": 0.045516546916864485
+          },
+          {
+            "cuda_event_ms": 0.04755758115301416,
+            "wall_ms": 0.047563135933484754
+          },
+          {
+            "cuda_event_ms": 0.0466263725228386,
+            "wall_ms": 0.04663213821622443
+          },
+          {
+            "cuda_event_ms": 0.047329757306341175,
+            "wall_ms": 0.04733566865293006
+          },
+          {
+            "cuda_event_ms": 0.04659738780704734,
+            "wall_ms": 0.04660349061661474
+          },
+          {
+            "cuda_event_ms": 0.045533553413722824,
+            "wall_ms": 0.04553966361654228
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.04527615040272206,
+            "wall_ms": 0.045282109918467164
+          },
+          {
+            "cuda_event_ms": 0.04522113284549198,
+            "wall_ms": 0.045227466663974966
+          },
+          {
+            "cuda_event_ms": 0.04768841717694257,
+            "wall_ms": 0.047694516212465496
+          },
+          {
+            "cuda_event_ms": 0.04580680228568412,
+            "wall_ms": 0.04581234504118444
+          },
+          {
+            "cuda_event_ms": 0.04732586628681905,
+            "wall_ms": 0.04733173783107132
+          },
+          {
+            "cuda_event_ms": 0.0461879352191547,
+            "wall_ms": 0.04619333378106423
+          },
+          {
+            "cuda_event_ms": 0.045723473488747536,
+            "wall_ms": 0.0457297612573146
+          },
+          {
+            "cuda_event_ms": 0.04578894537848395,
+            "wall_ms": 0.04579490044118568
+          },
+          {
+            "cuda_event_ms": 0.046118875451990074,
+            "wall_ms": 0.04612461081443791
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.04528937060043943,
+            "wall_ms": 0.045295123594670826
+          },
+          {
+            "cuda_event_ms": 0.04566636450665444,
+            "wall_ms": 0.045672107921776464
+          },
+          {
+            "cuda_event_ms": 0.047689141471237546,
+            "wall_ms": 0.047695195254716695
+          },
+          {
+            "cuda_event_ms": 0.045319221930497436,
+            "wall_ms": 0.0453250402991526
+          },
+          {
+            "cuda_event_ms": 0.04750250317940411,
+            "wall_ms": 0.04750808240158464
+          },
+          {
+            "cuda_event_ms": 0.04530730121508341,
+            "wall_ms": 0.04531320017536012
+          },
+          {
+            "cuda_event_ms": 0.046385010421623095,
+            "wall_ms": 0.04639081819121844
+          },
+          {
+            "cuda_event_ms": 0.04732547935967588,
+            "wall_ms": 0.04733115226579634
+          },
+          {
+            "cuda_event_ms": 0.04683797027410225,
+            "wall_ms": 0.046843315267299776
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.04707188271948332,
+          "wall_ms": 0.0470777675191566
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.04621731476598255,
+          "wall_ms": 0.0462236270085787
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.04580680228568412,
+          "wall_ms": 0.04581234504118444
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.046385010421623095,
+          "wall_ms": 0.04639081819121844
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 606,
+        "new-cold": 607,
+        "old-warm": 605,
+        "new-warm": 602
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.1623884899781482,
+            "wall_ms": 0.16241062709350115
+          },
+          {
+            "cuda_event_ms": 0.16277037516678913,
+            "wall_ms": 0.16279071452259009
+          },
+          {
+            "cuda_event_ms": 0.1630035627006304,
+            "wall_ms": 0.163023668305223
+          },
+          {
+            "cuda_event_ms": 0.16288865596154342,
+            "wall_ms": 0.1629071633666508
+          },
+          {
+            "cuda_event_ms": 0.16284473028906896,
+            "wall_ms": 0.16286581849391962
+          },
+          {
+            "cuda_event_ms": 0.16270785441886473,
+            "wall_ms": 0.16272856434922445
+          },
+          {
+            "cuda_event_ms": 0.16286331277475893,
+            "wall_ms": 0.1628892013085422
+          },
+          {
+            "cuda_event_ms": 0.16271968879322013,
+            "wall_ms": 0.16273919800519268
+          },
+          {
+            "cuda_event_ms": 0.16279704027836867,
+            "wall_ms": 0.1628152112070803
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.16270455575657047,
+            "wall_ms": 0.1627235189870405
+          },
+          {
+            "cuda_event_ms": 0.16289344297405917,
+            "wall_ms": 0.16291385832590954
+          },
+          {
+            "cuda_event_ms": 0.16267767062493566,
+            "wall_ms": 0.16269703459721888
+          },
+          {
+            "cuda_event_ms": 0.1628008218730694,
+            "wall_ms": 0.16282017630811849
+          },
+          {
+            "cuda_event_ms": 0.16286154280384446,
+            "wall_ms": 0.16288150742855628
+          },
+          {
+            "cuda_event_ms": 0.16268947293377395,
+            "wall_ms": 0.1627073640596809
+          },
+          {
+            "cuda_event_ms": 0.16268778868522832,
+            "wall_ms": 0.1627100971826587
+          },
+          {
+            "cuda_event_ms": 0.16264730387503862,
+            "wall_ms": 0.16266701977371653
+          },
+          {
+            "cuda_event_ms": 0.16264730387503862,
+            "wall_ms": 0.16266615322754216
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.16332207041338456,
+            "wall_ms": 0.16334220826672005
+          },
+          {
+            "cuda_event_ms": 0.1632407322402828,
+            "wall_ms": 0.1632631322453645
+          },
+          {
+            "cuda_event_ms": 0.16314436226836906,
+            "wall_ms": 0.16316395370320472
+          },
+          {
+            "cuda_event_ms": 0.16322897918953383,
+            "wall_ms": 0.1632524049583022
+          },
+          {
+            "cuda_event_ms": 0.16317989885314438,
+            "wall_ms": 0.16319943632360948
+          },
+          {
+            "cuda_event_ms": 0.16331531114814696,
+            "wall_ms": 0.16333296859429086
+          },
+          {
+            "cuda_event_ms": 0.16321205580530088,
+            "wall_ms": 0.16323274548919794
+          },
+          {
+            "cuda_event_ms": 0.16322051749741737,
+            "wall_ms": 0.16323894051611731
+          },
+          {
+            "cuda_event_ms": 0.16312573645725723,
+            "wall_ms": 0.16314513718686258
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.16347938360169875,
+            "wall_ms": 0.16349902326446894
+          },
+          {
+            "cuda_event_ms": 0.16336542427341805,
+            "wall_ms": 0.16338549004372618
+          },
+          {
+            "cuda_event_ms": 0.16330929372793812,
+            "wall_ms": 0.1633285996453849
+          },
+          {
+            "cuda_event_ms": 0.16341123866084406,
+            "wall_ms": 0.16343208972404888
+          },
+          {
+            "cuda_event_ms": 0.16342666220427352,
+            "wall_ms": 0.16344563953928104
+          },
+          {
+            "cuda_event_ms": 0.163379035518811,
+            "wall_ms": 0.16339806478394758
+          },
+          {
+            "cuda_event_ms": 0.16335144549905264,
+            "wall_ms": 0.16337179403250845
+          },
+          {
+            "cuda_event_ms": 0.16346237588166398,
+            "wall_ms": 0.16348162956808096
+          },
+          {
+            "cuda_event_ms": 0.16355248384697493,
+            "wall_ms": 0.1635713521812724
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.16279704027836867,
+          "wall_ms": 0.1628152112070803
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.16268947293377395,
+          "wall_ms": 0.1627100971826587
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.16322051749741737,
+          "wall_ms": 0.16323894051611731
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.16341123866084406,
+          "wall_ms": 0.16343208972404888
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 587,
+        "new-cold": 590,
+        "old-warm": 591,
+        "new-warm": 592
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.16526828226482645,
+            "wall_ms": 0.16530621639179982
+          },
+          {
+            "cuda_event_ms": 0.16645014956212734,
+            "wall_ms": 0.1664849011972388
+          },
+          {
+            "cuda_event_ms": 0.16546584069221146,
+            "wall_ms": 0.16551809029429962
+          },
+          {
+            "cuda_event_ms": 0.1662438699699545,
+            "wall_ms": 0.16629522999715268
+          },
+          {
+            "cuda_event_ms": 0.16568193321942876,
+            "wall_ms": 0.16573364902930288
+          },
+          {
+            "cuda_event_ms": 0.16536291535099687,
+            "wall_ms": 0.16539140885657738
+          },
+          {
+            "cuda_event_ms": 0.16621770647559092,
+            "wall_ms": 0.16625461161050953
+          },
+          {
+            "cuda_event_ms": 0.16578158324987358,
+            "wall_ms": 0.16583628450548896
+          },
+          {
+            "cuda_event_ms": 0.16546186352913383,
+            "wall_ms": 0.16551498639805073
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.16562766382249736,
+            "wall_ms": 0.16567957630949254
+          },
+          {
+            "cuda_event_ms": 0.16484837936142743,
+            "wall_ms": 0.16489140166490637
+          },
+          {
+            "cuda_event_ms": 0.16517786575576007,
+            "wall_ms": 0.16524208644483934
+          },
+          {
+            "cuda_event_ms": 0.16553047309487554,
+            "wall_ms": 0.16558350846210843
+          },
+          {
+            "cuda_event_ms": 0.1653048369844081,
+            "wall_ms": 0.16535571524754988
+          },
+          {
+            "cuda_event_ms": 0.16566063832428496,
+            "wall_ms": 0.1657109067802933
+          },
+          {
+            "cuda_event_ms": 0.16504970485881224,
+            "wall_ms": 0.16509425763230204
+          },
+          {
+            "cuda_event_ms": 0.1661085872326867,
+            "wall_ms": 0.1661419609987761
+          },
+          {
+            "cuda_event_ms": 0.16559294361179158,
+            "wall_ms": 0.16564631354166354
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.16563676295143295,
+            "wall_ms": 0.16568752116793153
+          },
+          {
+            "cuda_event_ms": 0.1650150124796756,
+            "wall_ms": 0.16505975971965972
+          },
+          {
+            "cuda_event_ms": 0.16552414224434223,
+            "wall_ms": 0.1655770913369216
+          },
+          {
+            "cuda_event_ms": 0.16611443275929305,
+            "wall_ms": 0.16614631981141362
+          },
+          {
+            "cuda_event_ms": 0.16589146338138483,
+            "wall_ms": 0.165923615921897
+          },
+          {
+            "cuda_event_ms": 0.16538899481397393,
+            "wall_ms": 0.16544128257179297
+          },
+          {
+            "cuda_event_ms": 0.1654542900382363,
+            "wall_ms": 0.16549655498090546
+          },
+          {
+            "cuda_event_ms": 0.165480663732022,
+            "wall_ms": 0.16553409980860573
+          },
+          {
+            "cuda_event_ms": 0.166132299226351,
+            "wall_ms": 0.1661616954487605
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.16583454286729968,
+            "wall_ms": 0.1658663902187097
+          },
+          {
+            "cuda_event_ms": 0.16570637677166913,
+            "wall_ms": 0.16575938339834417
+          },
+          {
+            "cuda_event_ms": 0.16618550790322795,
+            "wall_ms": 0.16621962670280874
+          },
+          {
+            "cuda_event_ms": 0.16506638398041595,
+            "wall_ms": 0.16509559119751085
+          },
+          {
+            "cuda_event_ms": 0.1656578424814585,
+            "wall_ms": 0.1657066216442193
+          },
+          {
+            "cuda_event_ms": 0.16519438253866658,
+            "wall_ms": 0.16524727195517058
+          },
+          {
+            "cuda_event_ms": 0.1651734532536687,
+            "wall_ms": 0.16522586485882276
+          },
+          {
+            "cuda_event_ms": 0.16511481517070048,
+            "wall_ms": 0.16517066890358095
+          },
+          {
+            "cuda_event_ms": 0.16582919455863335,
+            "wall_ms": 0.16586178547161556
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.16568193321942876,
+          "wall_ms": 0.16573364902930288
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.16553047309487554,
+          "wall_ms": 0.16558350846210843
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.16552414224434223,
+          "wall_ms": 0.1655770913369216
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.1656578424814585,
+          "wall_ms": 0.1657066216442193
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 2073,
+        "new-cold": 2062,
+        "old-warm": 2080,
+        "new-warm": 2090
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.04811367434231601,
+            "wall_ms": 0.0481202112788445
+          },
+          {
+            "cuda_event_ms": 0.05125186550289436,
+            "wall_ms": 0.05125719537258551
+          },
+          {
+            "cuda_event_ms": 0.04843916941310148,
+            "wall_ms": 0.04844375543122922
+          },
+          {
+            "cuda_event_ms": 0.05032951844468878,
+            "wall_ms": 0.050334730344495184
+          },
+          {
+            "cuda_event_ms": 0.05125581821380924,
+            "wall_ms": 0.051261123982552406
+          },
+          {
+            "cuda_event_ms": 0.050515358423876174,
+            "wall_ms": 0.05052049011223421
+          },
+          {
+            "cuda_event_ms": 0.05076579983201052,
+            "wall_ms": 0.0507713077654788
+          },
+          {
+            "cuda_event_ms": 0.04881066535327726,
+            "wall_ms": 0.048815888084594326
+          },
+          {
+            "cuda_event_ms": 0.050141915571154806,
+            "wall_ms": 0.05014695707745437
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.04843887417901499,
+            "wall_ms": 0.048443835606269185
+          },
+          {
+            "cuda_event_ms": 0.051617630700482316,
+            "wall_ms": 0.051622693019284065
+          },
+          {
+            "cuda_event_ms": 0.04865787702203375,
+            "wall_ms": 0.04866304074546862
+          },
+          {
+            "cuda_event_ms": 0.05108917857927679,
+            "wall_ms": 0.05109430455106331
+          },
+          {
+            "cuda_event_ms": 0.0509373565881028,
+            "wall_ms": 0.05094257031954016
+          },
+          {
+            "cuda_event_ms": 0.04873386016756903,
+            "wall_ms": 0.048739193500788335
+          },
+          {
+            "cuda_event_ms": 0.0502564497761768,
+            "wall_ms": 0.050261522789831724
+          },
+          {
+            "cuda_event_ms": 0.04873531796652408,
+            "wall_ms": 0.0487402114432502
+          },
+          {
+            "cuda_event_ms": 0.05078480569745127,
+            "wall_ms": 0.050789592146266445
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.04873649157010592,
+            "wall_ms": 0.048741510097618
+          },
+          {
+            "cuda_event_ms": 0.05163076840914213,
+            "wall_ms": 0.05163570625042597
+          },
+          {
+            "cuda_event_ms": 0.05028233894935021,
+            "wall_ms": 0.05028722644055961
+          },
+          {
+            "cuda_event_ms": 0.05119753984304575,
+            "wall_ms": 0.05120242547910983
+          },
+          {
+            "cuda_event_ms": 0.04943412267244779,
+            "wall_ms": 0.049439420189838316
+          },
+          {
+            "cuda_event_ms": 0.048746340091411884,
+            "wall_ms": 0.04875146490891124
+          },
+          {
+            "cuda_event_ms": 0.05128270662747897,
+            "wall_ms": 0.05128798028845967
+          },
+          {
+            "cuda_event_ms": 0.04918350806603065,
+            "wall_ms": 0.049188274519670255
+          },
+          {
+            "cuda_event_ms": 0.05119458345266489,
+            "wall_ms": 0.05119994759577541
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.04854984922272167,
+            "wall_ms": 0.04855491053569242
+          },
+          {
+            "cuda_event_ms": 0.05153708572022653,
+            "wall_ms": 0.051542037806103815
+          },
+          {
+            "cuda_event_ms": 0.048390124745346146,
+            "wall_ms": 0.04839507846772207
+          },
+          {
+            "cuda_event_ms": 0.048703707462292536,
+            "wall_ms": 0.04870913254094876
+          },
+          {
+            "cuda_event_ms": 0.04877865805009906,
+            "wall_ms": 0.04878378947795721
+          },
+          {
+            "cuda_event_ms": 0.049451362573359,
+            "wall_ms": 0.04945639426191672
+          },
+          {
+            "cuda_event_ms": 0.05117841291655764,
+            "wall_ms": 0.05118350860992509
+          },
+          {
+            "cuda_event_ms": 0.04924891713703648,
+            "wall_ms": 0.04925400813268364
+          },
+          {
+            "cuda_event_ms": 0.05089377809369393,
+            "wall_ms": 0.05089859856943194
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.05032951844468878,
+          "wall_ms": 0.050334730344495184
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.0502564497761768,
+          "wall_ms": 0.050261522789831724
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.05028233894935021,
+          "wall_ms": 0.05028722644055961
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.04924891713703648,
+          "wall_ms": 0.04925400813268364
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 1938,
+        "new-cold": 2006,
+        "old-warm": 2022,
+        "new-warm": 2040
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.04694442827758159,
+            "wall_ms": 0.04695224097482495
+          },
+          {
+            "cuda_event_ms": 0.051241115888943985,
+            "wall_ms": 0.051249868941822034
+          },
+          {
+            "cuda_event_ms": 0.051241214307346086,
+            "wall_ms": 0.051248245089246636
+          },
+          {
+            "cuda_event_ms": 0.048503560793535135,
+            "wall_ms": 0.04851006449767753
+          },
+          {
+            "cuda_event_ms": 0.05014690796780266,
+            "wall_ms": 0.05015334778444186
+          },
+          {
+            "cuda_event_ms": 0.04872506912278686,
+            "wall_ms": 0.04873169763028137
+          },
+          {
+            "cuda_event_ms": 0.05011948072750379,
+            "wall_ms": 0.05012665892616241
+          },
+          {
+            "cuda_event_ms": 0.05123703743036071,
+            "wall_ms": 0.05124358461688727
+          },
+          {
+            "cuda_event_ms": 0.049109200082942304,
+            "wall_ms": 0.0491157843198164
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.04818823710752508,
+            "wall_ms": 0.04819472483626232
+          },
+          {
+            "cuda_event_ms": 0.04838133761557126,
+            "wall_ms": 0.04838767399034599
+          },
+          {
+            "cuda_event_ms": 0.05074156649923277,
+            "wall_ms": 0.050748049351526006
+          },
+          {
+            "cuda_event_ms": 0.048414882610469376,
+            "wall_ms": 0.048421396813420385
+          },
+          {
+            "cuda_event_ms": 0.05075023038793775,
+            "wall_ms": 0.05075630957283013
+          },
+          {
+            "cuda_event_ms": 0.05155834909212791,
+            "wall_ms": 0.0515645473477257
+          },
+          {
+            "cuda_event_ms": 0.050536390553680755,
+            "wall_ms": 0.050543095215580286
+          },
+          {
+            "cuda_event_ms": 0.051070341678820956,
+            "wall_ms": 0.05107797308665248
+          },
+          {
+            "cuda_event_ms": 0.04879518092451162,
+            "wall_ms": 0.04880180259331307
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.04803836192386676,
+            "wall_ms": 0.04804426112486755
+          },
+          {
+            "cuda_event_ms": 0.04807142263350218,
+            "wall_ms": 0.048077873890007214
+          },
+          {
+            "cuda_event_ms": 0.05123442169702607,
+            "wall_ms": 0.05124049259427544
+          },
+          {
+            "cuda_event_ms": 0.048833422561781345,
+            "wall_ms": 0.04883927497395584
+          },
+          {
+            "cuda_event_ms": 0.051018696982122434,
+            "wall_ms": 0.05102478140807581
+          },
+          {
+            "cuda_event_ms": 0.050043315491266,
+            "wall_ms": 0.05004985460241875
+          },
+          {
+            "cuda_event_ms": 0.048554304445532735,
+            "wall_ms": 0.0485602858567078
+          },
+          {
+            "cuda_event_ms": 0.0503877022853591,
+            "wall_ms": 0.05039482492445503
+          },
+          {
+            "cuda_event_ms": 0.04886536263334763,
+            "wall_ms": 0.0488720662683676
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.04803965325449027,
+            "wall_ms": 0.048045332839726194
+          },
+          {
+            "cuda_event_ms": 0.04999830582562615,
+            "wall_ms": 0.050004587740427354
+          },
+          {
+            "cuda_event_ms": 0.05123363195681104,
+            "wall_ms": 0.051240197553495674
+          },
+          {
+            "cuda_event_ms": 0.04902902116962508,
+            "wall_ms": 0.04903513284208363
+          },
+          {
+            "cuda_event_ms": 0.05123162363089767,
+            "wall_ms": 0.05123825735519823
+          },
+          {
+            "cuda_event_ms": 0.049155874813304225,
+            "wall_ms": 0.04916202451568097
+          },
+          {
+            "cuda_event_ms": 0.049314540040259265,
+            "wall_ms": 0.04932061471181976
+          },
+          {
+            "cuda_event_ms": 0.050966558269425935,
+            "wall_ms": 0.050972806867303364
+          },
+          {
+            "cuda_event_ms": 0.04941753686643114,
+            "wall_ms": 0.04942822990557818
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.05011948072750379,
+          "wall_ms": 0.05012665892616241
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.050536390553680755,
+          "wall_ms": 0.050543095215580286
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.04886536263334763,
+          "wall_ms": 0.0488720662683676
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.04941753686643114,
+          "wall_ms": 0.04942822990557818
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 584,
+        "new-cold": 588,
+        "old-warm": 586,
+        "new-warm": 587
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.16630005509886023,
+            "wall_ms": 0.16632209242319956
+          },
+          {
+            "cuda_event_ms": 0.16521118111806374,
+            "wall_ms": 0.16523123117186103
+          },
+          {
+            "cuda_event_ms": 0.16506914896507785,
+            "wall_ms": 0.16508766611255005
+          },
+          {
+            "cuda_event_ms": 0.16524799555948336,
+            "wall_ms": 0.16526739213301495
+          },
+          {
+            "cuda_event_ms": 0.16523715241314613,
+            "wall_ms": 0.1652554880184989
+          },
+          {
+            "cuda_event_ms": 0.16497271028283525,
+            "wall_ms": 0.16499065238087796
+          },
+          {
+            "cuda_event_ms": 0.16531813634585027,
+            "wall_ms": 0.1653386455360953
+          },
+          {
+            "cuda_event_ms": 0.16526729113435093,
+            "wall_ms": 0.16528624658112426
+          },
+          {
+            "cuda_event_ms": 0.1650744137698657,
+            "wall_ms": 0.1650937482649269
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.16476472867589417,
+            "wall_ms": 0.16478457480992134
+          },
+          {
+            "cuda_event_ms": 0.1644368463633012,
+            "wall_ms": 0.164457154786927
+          },
+          {
+            "cuda_event_ms": 0.16454878307524182,
+            "wall_ms": 0.1645679099086932
+          },
+          {
+            "cuda_event_ms": 0.16445996809978874,
+            "wall_ms": 0.16447731631698695
+          },
+          {
+            "cuda_event_ms": 0.1644146977638712,
+            "wall_ms": 0.16443261397182055
+          },
+          {
+            "cuda_event_ms": 0.1645434502841664,
+            "wall_ms": 0.1645630220985547
+          },
+          {
+            "cuda_event_ms": 0.16455554313400164,
+            "wall_ms": 0.16457328402008037
+          },
+          {
+            "cuda_event_ms": 0.16463238203606637,
+            "wall_ms": 0.1646532907964801
+          },
+          {
+            "cuda_event_ms": 0.1645853600534452,
+            "wall_ms": 0.1646050085316786
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.1645215005191113,
+            "wall_ms": 0.16454208193071912
+          },
+          {
+            "cuda_event_ms": 0.16474119062716644,
+            "wall_ms": 0.16475911093271836
+          },
+          {
+            "cuda_event_ms": 0.16472944708814394,
+            "wall_ms": 0.16474842491008201
+          },
+          {
+            "cuda_event_ms": 0.16465255424838018,
+            "wall_ms": 0.16467052388899728
+          },
+          {
+            "cuda_event_ms": 0.16458391573648812,
+            "wall_ms": 0.16460214677360543
+          },
+          {
+            "cuda_event_ms": 0.1647186409491321,
+            "wall_ms": 0.16473702390665512
+          },
+          {
+            "cuda_event_ms": 0.1647643912774304,
+            "wall_ms": 0.16478417404893939
+          },
+          {
+            "cuda_event_ms": 0.16481998430584072,
+            "wall_ms": 0.16483990440769725
+          },
+          {
+            "cuda_event_ms": 0.16469782285722856,
+            "wall_ms": 0.16471692830770762
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.16452208328896933,
+            "wall_ms": 0.16454192501369044
+          },
+          {
+            "cuda_event_ms": 0.16469827421276087,
+            "wall_ms": 0.1647163679691593
+          },
+          {
+            "cuda_event_ms": 0.16473315887191226,
+            "wall_ms": 0.16475225209966113
+          },
+          {
+            "cuda_event_ms": 0.16469129468147758,
+            "wall_ms": 0.16471082450753774
+          },
+          {
+            "cuda_event_ms": 0.16472269607361983,
+            "wall_ms": 0.16474305107488316
+          },
+          {
+            "cuda_event_ms": 0.16479215345756362,
+            "wall_ms": 0.164810586042442
+          },
+          {
+            "cuda_event_ms": 0.1647767776931165,
+            "wall_ms": 0.16479636795360283
+          },
+          {
+            "cuda_event_ms": 0.16477133183909842,
+            "wall_ms": 0.16478927256864712
+          },
+          {
+            "cuda_event_ms": 0.164588369340263,
+            "wall_ms": 0.16460806473270947
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.16523715241314613,
+          "wall_ms": 0.1652554880184989
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.16454878307524182,
+          "wall_ms": 0.1645679099086932
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.1647186409491321,
+          "wall_ms": 0.16473702390665512
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.16472269607361983,
+          "wall_ms": 0.16474305107488316
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        1024,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 578,
+        "new-cold": 583,
+        "old-warm": 580,
+        "new-warm": 582
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.1699645098517923,
+            "wall_ms": 0.16999537545976562
+          },
+          {
+            "cuda_event_ms": 0.16995565289032089,
+            "wall_ms": 0.17000902591153955
+          },
+          {
+            "cuda_event_ms": 0.17021419432748972,
+            "wall_ms": 0.17026753977922382
+          },
+          {
+            "cuda_event_ms": 0.17006726908436284,
+            "wall_ms": 0.17011175603826553
+          },
+          {
+            "cuda_event_ms": 0.17034009253689986,
+            "wall_ms": 0.1703755173064401
+          },
+          {
+            "cuda_event_ms": 0.17090169781219589,
+            "wall_ms": 0.17096043078375459
+          },
+          {
+            "cuda_event_ms": 0.1699694333191974,
+            "wall_ms": 0.17002371800853952
+          },
+          {
+            "cuda_event_ms": 0.17043061569900247,
+            "wall_ms": 0.17048412111989034
+          },
+          {
+            "cuda_event_ms": 0.17076351073373972,
+            "wall_ms": 0.17079516090605742
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.17077406397405662,
+            "wall_ms": 0.17082963810153753
+          },
+          {
+            "cuda_event_ms": 0.17006611374189268,
+            "wall_ms": 0.170119188689606
+          },
+          {
+            "cuda_event_ms": 0.17004700753946453,
+            "wall_ms": 0.17007677187850798
+          },
+          {
+            "cuda_event_ms": 0.16981510273588254,
+            "wall_ms": 0.1698827478231137
+          },
+          {
+            "cuda_event_ms": 0.1697816276223132,
+            "wall_ms": 0.16982575643274095
+          },
+          {
+            "cuda_event_ms": 0.16992076265259837,
+            "wall_ms": 0.16997585931351955
+          },
+          {
+            "cuda_event_ms": 0.16991510931051002,
+            "wall_ms": 0.16996932937244455
+          },
+          {
+            "cuda_event_ms": 0.17031097412109375,
+            "wall_ms": 0.17036343911721805
+          },
+          {
+            "cuda_event_ms": 0.17018763442391188,
+            "wall_ms": 0.17024266895379608
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.17033887402764683,
+            "wall_ms": 0.17039874826501733
+          },
+          {
+            "cuda_event_ms": 0.17005462646484376,
+            "wall_ms": 0.17010970171621262
+          },
+          {
+            "cuda_event_ms": 0.16982157477017107,
+            "wall_ms": 0.16987693444865853
+          },
+          {
+            "cuda_event_ms": 0.17040065896922144,
+            "wall_ms": 0.17044655517032692
+          },
+          {
+            "cuda_event_ms": 0.16996628333782327,
+            "wall_ms": 0.17000933103504237
+          },
+          {
+            "cuda_event_ms": 0.16980392192972119,
+            "wall_ms": 0.16984915002530185
+          },
+          {
+            "cuda_event_ms": 0.16996811176168508,
+            "wall_ms": 0.17002335175518588
+          },
+          {
+            "cuda_event_ms": 0.1703423993340854,
+            "wall_ms": 0.17037440346280947
+          },
+          {
+            "cuda_event_ms": 0.17000341744258485,
+            "wall_ms": 0.17005594307757466
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.17136341108079628,
+            "wall_ms": 0.17141782299813868
+          },
+          {
+            "cuda_event_ms": 0.16987622972206562,
+            "wall_ms": 0.1699313419571793
+          },
+          {
+            "cuda_event_ms": 0.17036536305221087,
+            "wall_ms": 0.17041961687074533
+          },
+          {
+            "cuda_event_ms": 0.17067194148846918,
+            "wall_ms": 0.17070471134302415
+          },
+          {
+            "cuda_event_ms": 0.17043970376765197,
+            "wall_ms": 0.17047097077961257
+          },
+          {
+            "cuda_event_ms": 0.1701704988774565,
+            "wall_ms": 0.17020318383523791
+          },
+          {
+            "cuda_event_ms": 0.17021976221877685,
+            "wall_ms": 0.1702760034192776
+          },
+          {
+            "cuda_event_ms": 0.17002095225750377,
+            "wall_ms": 0.17007553268462433
+          },
+          {
+            "cuda_event_ms": 0.17018809105522445,
+            "wall_ms": 0.17022019242379763
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.17021419432748972,
+          "wall_ms": 0.17026753977922382
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.17004700753946453,
+          "wall_ms": 0.17007677187850798
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.17000341744258485,
+          "wall_ms": 0.17005594307757466
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.17021976221877685,
+          "wall_ms": 0.1702760034192776
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 290,
+        "new-cold": 289,
+        "old-warm": 290,
+        "new-warm": 291
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.33396524889715784,
+            "wall_ms": 0.3340125034747902
+          },
+          {
+            "cuda_event_ms": 0.32787067807953935,
+            "wall_ms": 0.32791128283735876
+          },
+          {
+            "cuda_event_ms": 0.33108744127997036,
+            "wall_ms": 0.3311251379461188
+          },
+          {
+            "cuda_event_ms": 0.32781385224441,
+            "wall_ms": 0.32785249661236743
+          },
+          {
+            "cuda_event_ms": 0.327831847092201,
+            "wall_ms": 0.3278692999597767
+          },
+          {
+            "cuda_event_ms": 0.32785731348498115,
+            "wall_ms": 0.3278979241791791
+          },
+          {
+            "cuda_event_ms": 0.32867928866682383,
+            "wall_ms": 0.32878686214299424
+          },
+          {
+            "cuda_event_ms": 0.32961146913725753,
+            "wall_ms": 0.3296494034343752
+          },
+          {
+            "cuda_event_ms": 0.3297491928626751,
+            "wall_ms": 0.32978966543129806
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.3259640597967128,
+            "wall_ms": 0.3260035121371924
+          },
+          {
+            "cuda_event_ms": 0.3306669611419361,
+            "wall_ms": 0.3307070691866807
+          },
+          {
+            "cuda_event_ms": 0.3290299676281358,
+            "wall_ms": 0.32906914186248215
+          },
+          {
+            "cuda_event_ms": 0.32775794428525085,
+            "wall_ms": 0.3277989169647176
+          },
+          {
+            "cuda_event_ms": 0.32784300279452316,
+            "wall_ms": 0.32788404153988643
+          },
+          {
+            "cuda_event_ms": 0.3295260366684013,
+            "wall_ms": 0.329564674757421
+          },
+          {
+            "cuda_event_ms": 0.3279280349045064,
+            "wall_ms": 0.3279674843366171
+          },
+          {
+            "cuda_event_ms": 0.3296498229346886,
+            "wall_ms": 0.32968632171935947
+          },
+          {
+            "cuda_event_ms": 0.32782127617964696,
+            "wall_ms": 0.3278582492016681
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.32605924935176456,
+            "wall_ms": 0.32609676900078893
+          },
+          {
+            "cuda_event_ms": 0.32628876258587014,
+            "wall_ms": 0.3263246896275287
+          },
+          {
+            "cuda_event_ms": 0.32778925402411097,
+            "wall_ms": 0.32783610684042475
+          },
+          {
+            "cuda_event_ms": 0.32778946449016705,
+            "wall_ms": 0.327828475816079
+          },
+          {
+            "cuda_event_ms": 0.32787057284651133,
+            "wall_ms": 0.3279083689417818
+          },
+          {
+            "cuda_event_ms": 0.32955851061590785,
+            "wall_ms": 0.32959846892105094
+          },
+          {
+            "cuda_event_ms": 0.32778593918372845,
+            "wall_ms": 0.3278260447430135
+          },
+          {
+            "cuda_event_ms": 0.32961765157765355,
+            "wall_ms": 0.32965683785732836
+          },
+          {
+            "cuda_event_ms": 0.3277360587284483,
+            "wall_ms": 0.3277729586537542
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.3260373249906035,
+            "wall_ms": 0.3260781580847896
+          },
+          {
+            "cuda_event_ms": 0.3277887560657619,
+            "wall_ms": 0.3278227525969641
+          },
+          {
+            "cuda_event_ms": 0.3305549490492778,
+            "wall_ms": 0.3305971237416363
+          },
+          {
+            "cuda_event_ms": 0.3276729518195608,
+            "wall_ms": 0.32771068724765223
+          },
+          {
+            "cuda_event_ms": 0.3289319592243208,
+            "wall_ms": 0.3289679862251601
+          },
+          {
+            "cuda_event_ms": 0.32780931086065024,
+            "wall_ms": 0.32784623018693165
+          },
+          {
+            "cuda_event_ms": 0.3282148747919351,
+            "wall_ms": 0.3282514433184466
+          },
+          {
+            "cuda_event_ms": 0.327915755334179,
+            "wall_ms": 0.32795415799168687
+          },
+          {
+            "cuda_event_ms": 0.3276518464498094,
+            "wall_ms": 0.3276877320264354
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.32867928866682383,
+          "wall_ms": 0.32878686214299424
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.3279280349045064,
+          "wall_ms": 0.3279674843366171
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.32778925402411097,
+          "wall_ms": 0.327828475816079
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.32780931086065024,
+          "wall_ms": 0.32784623018693165
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 306,
+        "new-cold": 308,
+        "old-warm": 308,
+        "new-warm": 308
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.32474854413200827,
+            "wall_ms": 0.324799235338753
+          },
+          {
+            "cuda_event_ms": 0.33096355862087673,
+            "wall_ms": 0.33100628753624906
+          },
+          {
+            "cuda_event_ms": 0.3256520788654003,
+            "wall_ms": 0.325695326775495
+          },
+          {
+            "cuda_event_ms": 0.3383956111334508,
+            "wall_ms": 0.33846307190947744
+          },
+          {
+            "cuda_event_ms": 0.3308992323532603,
+            "wall_ms": 0.3309393758327073
+          },
+          {
+            "cuda_event_ms": 0.33954635320925247,
+            "wall_ms": 0.3395870653608071
+          },
+          {
+            "cuda_event_ms": 0.3345696193720001,
+            "wall_ms": 0.3346140522873516
+          },
+          {
+            "cuda_event_ms": 0.32476111019358916,
+            "wall_ms": 0.3248183007254661
+          },
+          {
+            "cuda_event_ms": 0.3339109981761259,
+            "wall_ms": 0.3339535653936598
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.3256719019505885,
+            "wall_ms": 0.3257174513154579
+          },
+          {
+            "cuda_event_ms": 0.34750804653415435,
+            "wall_ms": 0.3475527174758737
+          },
+          {
+            "cuda_event_ms": 0.3257217654934177,
+            "wall_ms": 0.3257627889412673
+          },
+          {
+            "cuda_event_ms": 0.3403868984866452,
+            "wall_ms": 0.34043015254504205
+          },
+          {
+            "cuda_event_ms": 0.330578494381595,
+            "wall_ms": 0.33061914612741705
+          },
+          {
+            "cuda_event_ms": 0.32321496443314984,
+            "wall_ms": 0.3232607240380429
+          },
+          {
+            "cuda_event_ms": 0.3299980163574219,
+            "wall_ms": 0.3300456493841968
+          },
+          {
+            "cuda_event_ms": 0.3231384970925071,
+            "wall_ms": 0.32317883767075717
+          },
+          {
+            "cuda_event_ms": 0.33498689725801545,
+            "wall_ms": 0.335028574687834
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.32596040700937245,
+            "wall_ms": 0.326004561736829
+          },
+          {
+            "cuda_event_ms": 0.33770358098017705,
+            "wall_ms": 0.3377463117312918
+          },
+          {
+            "cuda_event_ms": 0.3289163515165255,
+            "wall_ms": 0.32895835711433274
+          },
+          {
+            "cuda_event_ms": 0.33404010921329647,
+            "wall_ms": 0.334082279231871
+          },
+          {
+            "cuda_event_ms": 0.32600103105817524,
+            "wall_ms": 0.32604430519065564
+          },
+          {
+            "cuda_event_ms": 0.3221211371483741,
+            "wall_ms": 0.3221640649649266
+          },
+          {
+            "cuda_event_ms": 0.3333386012486049,
+            "wall_ms": 0.3333808571688359
+          },
+          {
+            "cuda_event_ms": 0.3252363576517477,
+            "wall_ms": 0.3252772143028991
+          },
+          {
+            "cuda_event_ms": 0.3259877291592685,
+            "wall_ms": 0.3260331785505904
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.342029299054827,
+            "wall_ms": 0.34207631820622325
+          },
+          {
+            "cuda_event_ms": 0.33162639667461447,
+            "wall_ms": 0.3316685227207029
+          },
+          {
+            "cuda_event_ms": 0.3256859222015777,
+            "wall_ms": 0.32573077274341283
+          },
+          {
+            "cuda_event_ms": 0.3282787521164139,
+            "wall_ms": 0.32832303892158865
+          },
+          {
+            "cuda_event_ms": 0.3232810280539773,
+            "wall_ms": 0.32332088316748425
+          },
+          {
+            "cuda_event_ms": 0.32933901501940444,
+            "wall_ms": 0.3293802629658868
+          },
+          {
+            "cuda_event_ms": 0.3295549169763342,
+            "wall_ms": 0.32959728248118025
+          },
+          {
+            "cuda_event_ms": 0.32312519519360033,
+            "wall_ms": 0.3231982467129113
+          },
+          {
+            "cuda_event_ms": 0.33014025006975445,
+            "wall_ms": 0.3301826818406207
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.33096355862087673,
+          "wall_ms": 0.33100628753624906
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.3299980163574219,
+          "wall_ms": 0.3300456493841968
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.32600103105817524,
+          "wall_ms": 0.32604430519065564
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.32933901501940444,
+          "wall_ms": 0.3293802629658868
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 82,
+        "new-cold": 82,
+        "old-warm": 82,
+        "new-warm": 82
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 1.2218919149259242,
+            "wall_ms": 1.2220522802658151
+          },
+          {
+            "cuda_event_ms": 1.2227683648830507,
+            "wall_ms": 1.2229160606582854
+          },
+          {
+            "cuda_event_ms": 1.22270593410585,
+            "wall_ms": 1.2228415484636703
+          },
+          {
+            "cuda_event_ms": 1.2234052332436167,
+            "wall_ms": 1.2235427924812339
+          },
+          {
+            "cuda_event_ms": 1.221842323861471,
+            "wall_ms": 1.2219825364853731
+          },
+          {
+            "cuda_event_ms": 1.2229182545731707,
+            "wall_ms": 1.2230494754564971
+          },
+          {
+            "cuda_event_ms": 1.2231679776819742,
+            "wall_ms": 1.223311463169322
+          },
+          {
+            "cuda_event_ms": 1.2228909004025343,
+            "wall_ms": 1.2230129146567978
+          },
+          {
+            "cuda_event_ms": 1.220557236089939,
+            "wall_ms": 1.2206911707791024
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 1.2211074829101562,
+            "wall_ms": 1.221241585615023
+          },
+          {
+            "cuda_event_ms": 1.2248663553377477,
+            "wall_ms": 1.2250039634215304
+          },
+          {
+            "cuda_event_ms": 1.2249647000940835,
+            "wall_ms": 1.2251014633831092
+          },
+          {
+            "cuda_event_ms": 1.2268144561023246,
+            "wall_ms": 1.2269472680622484
+          },
+          {
+            "cuda_event_ms": 1.225690516029916,
+            "wall_ms": 1.2258218413945743
+          },
+          {
+            "cuda_event_ms": 1.2256780484827554,
+            "wall_ms": 1.2258323901134156
+          },
+          {
+            "cuda_event_ms": 1.2260276980516387,
+            "wall_ms": 1.2261679026201686
+          },
+          {
+            "cuda_event_ms": 1.2279473281488187,
+            "wall_ms": 1.2282046827305926
+          },
+          {
+            "cuda_event_ms": 1.2272764996784489,
+            "wall_ms": 1.2274194631594937
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 1.2210825478158347,
+            "wall_ms": 1.221213841501328
+          },
+          {
+            "cuda_event_ms": 1.2231804452291348,
+            "wall_ms": 1.2233151217337652
+          },
+          {
+            "cuda_event_ms": 1.2239769726264766,
+            "wall_ms": 1.224121621883724
+          },
+          {
+            "cuda_event_ms": 1.2235796858624715,
+            "wall_ms": 1.2237195368492748
+          },
+          {
+            "cuda_event_ms": 1.2226060076457699,
+            "wall_ms": 1.2227497805369927
+          },
+          {
+            "cuda_event_ms": 1.223330334919255,
+            "wall_ms": 1.2234743658265825
+          },
+          {
+            "cuda_event_ms": 1.22410462542278,
+            "wall_ms": 1.2242541706655174
+          },
+          {
+            "cuda_event_ms": 1.2229155563726657,
+            "wall_ms": 1.2230580000394229
+          },
+          {
+            "cuda_event_ms": 1.2237674434010575,
+            "wall_ms": 1.2239055124554419
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 1.2168242291706364,
+            "wall_ms": 1.2169605853581211
+          },
+          {
+            "cuda_event_ms": 1.2172987402939215,
+            "wall_ms": 1.2174365607590028
+          },
+          {
+            "cuda_event_ms": 1.2178205164467417,
+            "wall_ms": 1.217973963343311
+          },
+          {
+            "cuda_event_ms": 1.217545020871046,
+            "wall_ms": 1.217685158580269
+          },
+          {
+            "cuda_event_ms": 1.2184464059224942,
+            "wall_ms": 1.218590243696803
+          },
+          {
+            "cuda_event_ms": 1.2181479291218082,
+            "wall_ms": 1.218295804858094
+          },
+          {
+            "cuda_event_ms": 1.2196838564989043,
+            "wall_ms": 1.2198195486789478
+          },
+          {
+            "cuda_event_ms": 1.2180979658917683,
+            "wall_ms": 1.2182320610807482
+          },
+          {
+            "cuda_event_ms": 1.2175235283084032,
+            "wall_ms": 1.2176692682437644
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 1.2227683648830507,
+          "wall_ms": 1.2229160606582854
+        },
+        "new-cold": {
+          "cuda_event_ms": 1.225690516029916,
+          "wall_ms": 1.2258323901134156
+        },
+        "old-warm": {
+          "cuda_event_ms": 1.223330334919255,
+          "wall_ms": 1.2234743658265825
+        },
+        "new-warm": {
+          "cuda_event_ms": 1.2178205164467417,
+          "wall_ms": 1.217973963343311
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 81,
+        "new-cold": 82,
+        "old-warm": 82,
+        "new-warm": 81
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 1.229078128014082,
+            "wall_ms": 1.2294584939135584
+          },
+          {
+            "cuda_event_ms": 1.228332236961082,
+            "wall_ms": 1.2286350617535917
+          },
+          {
+            "cuda_event_ms": 1.2304920149438174,
+            "wall_ms": 1.2308707777669445
+          },
+          {
+            "cuda_event_ms": 1.2285598001362366,
+            "wall_ms": 1.2289601730981865
+          },
+          {
+            "cuda_event_ms": 1.2264359085648149,
+            "wall_ms": 1.2268356175483837
+          },
+          {
+            "cuda_event_ms": 1.2287873633113908,
+            "wall_ms": 1.2291737653912953
+          },
+          {
+            "cuda_event_ms": 1.225372031882957,
+            "wall_ms": 1.225677456844736
+          },
+          {
+            "cuda_event_ms": 1.2276748845606675,
+            "wall_ms": 1.228057518515184
+          },
+          {
+            "cuda_event_ms": 1.2275989673755787,
+            "wall_ms": 1.2279143456346642
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 1.2270743207233707,
+            "wall_ms": 1.2274563047046796
+          },
+          {
+            "cuda_event_ms": 1.2290747107529059,
+            "wall_ms": 1.2293009512643216
+          },
+          {
+            "cuda_event_ms": 1.2255301126619664,
+            "wall_ms": 1.225777475444441
+          },
+          {
+            "cuda_event_ms": 1.2308593377834414,
+            "wall_ms": 1.2311087438564112
+          },
+          {
+            "cuda_event_ms": 1.2271890407655297,
+            "wall_ms": 1.22757890246093
+          },
+          {
+            "cuda_event_ms": 1.2260152305044778,
+            "wall_ms": 1.2263325610902251
+          },
+          {
+            "cuda_event_ms": 1.2264518737792969,
+            "wall_ms": 1.226843621868572
+          },
+          {
+            "cuda_event_ms": 1.2255137373761433,
+            "wall_ms": 1.2258944632599085
+          },
+          {
+            "cuda_event_ms": 1.2273232995010004,
+            "wall_ms": 1.2276975853970593
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 1.2279898480671207,
+            "wall_ms": 1.2283577195442532
+          },
+          {
+            "cuda_event_ms": 1.2294330131716844,
+            "wall_ms": 1.229798365895432
+          },
+          {
+            "cuda_event_ms": 1.2260401655987996,
+            "wall_ms": 1.2264180855354203
+          },
+          {
+            "cuda_event_ms": 1.227748312601229,
+            "wall_ms": 1.2281481584778238
+          },
+          {
+            "cuda_event_ms": 1.2292994987673875,
+            "wall_ms": 1.2295593290373956
+          },
+          {
+            "cuda_event_ms": 1.225802910037157,
+            "wall_ms": 1.2261819026273926
+          },
+          {
+            "cuda_event_ms": 1.227863404808975,
+            "wall_ms": 1.2281786340924843
+          },
+          {
+            "cuda_event_ms": 1.2267547235256289,
+            "wall_ms": 1.2271346221961899
+          },
+          {
+            "cuda_event_ms": 1.232858518274819,
+            "wall_ms": 1.2332417075124729
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 1.2283701955536266,
+            "wall_ms": 1.2287484323117237
+          },
+          {
+            "cuda_event_ms": 1.225542327504099,
+            "wall_ms": 1.225938037092464
+          },
+          {
+            "cuda_event_ms": 1.2259686316972898,
+            "wall_ms": 1.226353234493599
+          },
+          {
+            "cuda_event_ms": 1.2268784134476274,
+            "wall_ms": 1.227264197681237
+          },
+          {
+            "cuda_event_ms": 1.2247040360062211,
+            "wall_ms": 1.2251499014113236
+          },
+          {
+            "cuda_event_ms": 1.2292171525366513,
+            "wall_ms": 1.2294589010078782
+          },
+          {
+            "cuda_event_ms": 1.2268278333875868,
+            "wall_ms": 1.2272324321078665
+          },
+          {
+            "cuda_event_ms": 1.2262968840422455,
+            "wall_ms": 1.2265278887360092
+          },
+          {
+            "cuda_event_ms": 1.2278261537905093,
+            "wall_ms": 1.2282193580895295
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 1.228332236961082,
+          "wall_ms": 1.2286350617535917
+        },
+        "new-cold": {
+          "cuda_event_ms": 1.2270743207233707,
+          "wall_ms": 1.2274563047046796
+        },
+        "old-warm": {
+          "cuda_event_ms": 1.227863404808975,
+          "wall_ms": 1.2281786340924843
+        },
+        "new-warm": {
+          "cuda_event_ms": 1.2268278333875868,
+          "wall_ms": 1.2272324321078665
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 270,
+        "new-cold": 271,
+        "old-warm": 270,
+        "new-warm": 270
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.3533225448043258,
+            "wall_ms": 0.3533748481896947
+          },
+          {
+            "cuda_event_ms": 0.3523774888780382,
+            "wall_ms": 0.35241858514146535
+          },
+          {
+            "cuda_event_ms": 0.35310448540581596,
+            "wall_ms": 0.3531445556156406
+          },
+          {
+            "cuda_event_ms": 0.3519638626663773,
+            "wall_ms": 0.3520095665913282
+          },
+          {
+            "cuda_event_ms": 0.35091722276475695,
+            "wall_ms": 0.3509600111067778
+          },
+          {
+            "cuda_event_ms": 0.3521003723144531,
+            "wall_ms": 0.352145622255867
+          },
+          {
+            "cuda_event_ms": 0.35122395268192996,
+            "wall_ms": 0.35126739627836895
+          },
+          {
+            "cuda_event_ms": 0.34952912507233797,
+            "wall_ms": 0.34957281852796396
+          },
+          {
+            "cuda_event_ms": 0.3513528894495081,
+            "wall_ms": 0.351393966681186
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.34899508205287133,
+            "wall_ms": 0.3490391770735163
+          },
+          {
+            "cuda_event_ms": 0.3590526228901205,
+            "wall_ms": 0.3590942988716877
+          },
+          {
+            "cuda_event_ms": 0.3509826097101303,
+            "wall_ms": 0.35102480072682773
+          },
+          {
+            "cuda_event_ms": 0.35312128946789956,
+            "wall_ms": 0.35316625090635545
+          },
+          {
+            "cuda_event_ms": 0.3506274346495906,
+            "wall_ms": 0.3506687010777599
+          },
+          {
+            "cuda_event_ms": 0.3495807436559473,
+            "wall_ms": 0.3496407933070967
+          },
+          {
+            "cuda_event_ms": 0.35153429094715755,
+            "wall_ms": 0.3515780295332983
+          },
+          {
+            "cuda_event_ms": 0.3495505357580431,
+            "wall_ms": 0.3495961586632027
+          },
+          {
+            "cuda_event_ms": 0.3552032977452577,
+            "wall_ms": 0.355247354239734
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.34900953504774307,
+            "wall_ms": 0.3490499814722204
+          },
+          {
+            "cuda_event_ms": 0.34965475576895255,
+            "wall_ms": 0.34969810739211327
+          },
+          {
+            "cuda_event_ms": 0.35295051292136864,
+            "wall_ms": 0.35299192219368974
+          },
+          {
+            "cuda_event_ms": 0.3517326354980469,
+            "wall_ms": 0.35177769260136066
+          },
+          {
+            "cuda_event_ms": 0.3518129701967593,
+            "wall_ms": 0.3518590296152979
+          },
+          {
+            "cuda_event_ms": 0.34979838618525755,
+            "wall_ms": 0.3498427037373875
+          },
+          {
+            "cuda_event_ms": 0.35143681278935185,
+            "wall_ms": 0.35148249255682995
+          },
+          {
+            "cuda_event_ms": 0.349696124041522,
+            "wall_ms": 0.349743444476863
+          },
+          {
+            "cuda_event_ms": 0.3498704698350694,
+            "wall_ms": 0.34991374446286094
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.3496083012333623,
+            "wall_ms": 0.34965128148474767
+          },
+          {
+            "cuda_event_ms": 0.35104237309208625,
+            "wall_ms": 0.3510844999389654
+          },
+          {
+            "cuda_event_ms": 0.35382232666015623,
+            "wall_ms": 0.3538709073499949
+          },
+          {
+            "cuda_event_ms": 0.35076929728190104,
+            "wall_ms": 0.35081498143780565
+          },
+          {
+            "cuda_event_ms": 0.3479096871835214,
+            "wall_ms": 0.34803691852613594
+          },
+          {
+            "cuda_event_ms": 0.35200508965386285,
+            "wall_ms": 0.35205060741174277
+          },
+          {
+            "cuda_event_ms": 0.35163082546657987,
+            "wall_ms": 0.3516760481202423
+          },
+          {
+            "cuda_event_ms": 0.3552297521520544,
+            "wall_ms": 0.35527429998317667
+          },
+          {
+            "cuda_event_ms": 0.350025968198423,
+            "wall_ms": 0.350070088838779
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.3519638626663773,
+          "wall_ms": 0.3520095665913282
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.3509826097101303,
+          "wall_ms": 0.35102480072682773
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.3498704698350694,
+          "wall_ms": 0.34991374446286094
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.35104237309208625,
+          "wall_ms": 0.3510844999389654
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 292,
+        "new-cold": 291,
+        "old-warm": 291,
+        "new-warm": 291
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.3443761067847683,
+            "wall_ms": 0.34443199995758444
+          },
+          {
+            "cuda_event_ms": 0.3550013189446436,
+            "wall_ms": 0.35504854795736684
+          },
+          {
+            "cuda_event_ms": 0.3469536402454115,
+            "wall_ms": 0.34700102387681886
+          },
+          {
+            "cuda_event_ms": 0.3620611478204597,
+            "wall_ms": 0.3621100719375472
+          },
+          {
+            "cuda_event_ms": 0.35504746110471963,
+            "wall_ms": 0.3550967225710836
+          },
+          {
+            "cuda_event_ms": 0.359010199977927,
+            "wall_ms": 0.35905570207619786
+          },
+          {
+            "cuda_event_ms": 0.35226301950951144,
+            "wall_ms": 0.35231139380102083
+          },
+          {
+            "cuda_event_ms": 0.3469887041065791,
+            "wall_ms": 0.3470374075520452
+          },
+          {
+            "cuda_event_ms": 0.35617666375147156,
+            "wall_ms": 0.35622618143201157
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.34914177963414145,
+            "wall_ms": 0.3491946838314475
+          },
+          {
+            "cuda_event_ms": 0.36813328274336876,
+            "wall_ms": 0.36820542270116047
+          },
+          {
+            "cuda_event_ms": 0.34986667698601265,
+            "wall_ms": 0.34991442615924806
+          },
+          {
+            "cuda_event_ms": 0.35392042861361683,
+            "wall_ms": 0.353968999995866
+          },
+          {
+            "cuda_event_ms": 0.3515874069580917,
+            "wall_ms": 0.3516309793808104
+          },
+          {
+            "cuda_event_ms": 0.34800515715608893,
+            "wall_ms": 0.3480515463791365
+          },
+          {
+            "cuda_event_ms": 0.347684958546432,
+            "wall_ms": 0.3477316838809164
+          },
+          {
+            "cuda_event_ms": 0.3498133236599952,
+            "wall_ms": 0.34985754987356155
+          },
+          {
+            "cuda_event_ms": 0.3523791598290512,
+            "wall_ms": 0.352425728480514
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.35022208616905603,
+            "wall_ms": 0.35027302405556915
+          },
+          {
+            "cuda_event_ms": 0.3548916688899404,
+            "wall_ms": 0.35493732644069004
+          },
+          {
+            "cuda_event_ms": 0.34616510974582526,
+            "wall_ms": 0.34621665638285815
+          },
+          {
+            "cuda_event_ms": 0.3508097330729167,
+            "wall_ms": 0.35085517187407594
+          },
+          {
+            "cuda_event_ms": 0.3476251294113107,
+            "wall_ms": 0.34766905493810263
+          },
+          {
+            "cuda_event_ms": 0.35240752754342514,
+            "wall_ms": 0.3524545017674668
+          },
+          {
+            "cuda_event_ms": 0.3535087297052862,
+            "wall_ms": 0.35355872169770686
+          },
+          {
+            "cuda_event_ms": 0.35545490697487114,
+            "wall_ms": 0.35550336773936153
+          },
+          {
+            "cuda_event_ms": 0.35512039341877416,
+            "wall_ms": 0.3551990033809057
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.3551907621298459,
+            "wall_ms": 0.3552381683355421
+          },
+          {
+            "cuda_event_ms": 0.35267198700265784,
+            "wall_ms": 0.3527198522911756
+          },
+          {
+            "cuda_event_ms": 0.3455131242365362,
+            "wall_ms": 0.3455596598132459
+          },
+          {
+            "cuda_event_ms": 0.3538993232438654,
+            "wall_ms": 0.3539450996502581
+          },
+          {
+            "cuda_event_ms": 0.34755122129040483,
+            "wall_ms": 0.34759833673063245
+          },
+          {
+            "cuda_event_ms": 0.36074677038028885,
+            "wall_ms": 0.3607927903987442
+          },
+          {
+            "cuda_event_ms": 0.3584633528981422,
+            "wall_ms": 0.35851250168198523
+          },
+          {
+            "cuda_event_ms": 0.34752308953668654,
+            "wall_ms": 0.3475715979114431
+          },
+          {
+            "cuda_event_ms": 0.3560272688718186,
+            "wall_ms": 0.3560729175998071
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.3550013189446436,
+          "wall_ms": 0.35504854795736684
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.34986667698601265,
+          "wall_ms": 0.34991442615924806
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.35240752754342514,
+          "wall_ms": 0.3524545017674668
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.3538993232438654,
+          "wall_ms": 0.3539450996502581
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 80,
+        "new-cold": 78,
+        "old-warm": 79,
+        "new-warm": 78
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 1.2571392059326172,
+            "wall_ms": 1.2573069001518888
+          },
+          {
+            "cuda_event_ms": 1.2674431800842285,
+            "wall_ms": 1.2675977373874048
+          },
+          {
+            "cuda_event_ms": 1.261631965637207,
+            "wall_ms": 1.2617870997928549
+          },
+          {
+            "cuda_event_ms": 1.2608768463134765,
+            "wall_ms": 1.2610326124558924
+          },
+          {
+            "cuda_event_ms": 1.267148780822754,
+            "wall_ms": 1.267308100068476
+          },
+          {
+            "cuda_event_ms": 1.2668543815612794,
+            "wall_ms": 1.2670168125623604
+          },
+          {
+            "cuda_event_ms": 1.2623104095458983,
+            "wall_ms": 1.262466087428038
+          },
+          {
+            "cuda_event_ms": 1.2635135650634766,
+            "wall_ms": 1.2636752875550883
+          },
+          {
+            "cuda_event_ms": 1.2660479545593262,
+            "wall_ms": 1.266205775027629
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 1.2575216048803084,
+            "wall_ms": 1.257677076724716
+          },
+          {
+            "cuda_event_ms": 1.2615019969451122,
+            "wall_ms": 1.2616504615065283
+          },
+          {
+            "cuda_event_ms": 1.2589030143542168,
+            "wall_ms": 1.2590696409087963
+          },
+          {
+            "cuda_event_ms": 1.264718764867538,
+            "wall_ms": 1.2648773334102514
+          },
+          {
+            "cuda_event_ms": 1.2611991686698718,
+            "wall_ms": 1.261357846371352
+          },
+          {
+            "cuda_event_ms": 1.2630646534455128,
+            "wall_ms": 1.2632142438983114
+          },
+          {
+            "cuda_event_ms": 1.2628528888408954,
+            "wall_ms": 1.2629996281481373
+          },
+          {
+            "cuda_event_ms": 1.2645611885266426,
+            "wall_ms": 1.2647378077814118
+          },
+          {
+            "cuda_event_ms": 1.2598875974997497,
+            "wall_ms": 1.2600644232663445
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 1.25364578826518,
+            "wall_ms": 1.2537984175996595
+          },
+          {
+            "cuda_event_ms": 1.2572905142096025,
+            "wall_ms": 1.257443620419554
+          },
+          {
+            "cuda_event_ms": 1.258275671850277,
+            "wall_ms": 1.2584227845337996
+          },
+          {
+            "cuda_event_ms": 1.2578608838817742,
+            "wall_ms": 1.258012480942438
+          },
+          {
+            "cuda_event_ms": 1.2532075326653975,
+            "wall_ms": 1.2533531643603515
+          },
+          {
+            "cuda_event_ms": 1.2570571899414062,
+            "wall_ms": 1.257218569708705
+          },
+          {
+            "cuda_event_ms": 1.2580163690108288,
+            "wall_ms": 1.2581624305082038
+          },
+          {
+            "cuda_event_ms": 1.2557740030409414,
+            "wall_ms": 1.2559320636187927
+          },
+          {
+            "cuda_event_ms": 1.257757162745995,
+            "wall_ms": 1.257907835357009
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 1.2587060194749098,
+            "wall_ms": 1.2588637048163667
+          },
+          {
+            "cuda_event_ms": 1.2738691476675181,
+            "wall_ms": 1.274013807489656
+          },
+          {
+            "cuda_event_ms": 1.2621719164726062,
+            "wall_ms": 1.2623247308417773
+          },
+          {
+            "cuda_event_ms": 1.2612529656825922,
+            "wall_ms": 1.2614145126486294
+          },
+          {
+            "cuda_event_ms": 1.2587979634602864,
+            "wall_ms": 1.2589555255358273
+          },
+          {
+            "cuda_event_ms": 1.2571175404084034,
+            "wall_ms": 1.2572701794292347
+          },
+          {
+            "cuda_event_ms": 1.259677495711889,
+            "wall_ms": 1.2598280124784185
+          },
+          {
+            "cuda_event_ms": 1.2605288578913763,
+            "wall_ms": 1.2606686922924546
+          },
+          {
+            "cuda_event_ms": 1.2630514487242088,
+            "wall_ms": 1.2632053079029832
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 1.2635135650634766,
+          "wall_ms": 1.2636752875550883
+        },
+        "new-cold": {
+          "cuda_event_ms": 1.2615019969451122,
+          "wall_ms": 1.2616504615065283
+        },
+        "old-warm": {
+          "cuda_event_ms": 1.2572905142096025,
+          "wall_ms": 1.257443620419554
+        },
+        "new-warm": {
+          "cuda_event_ms": 1.2605288578913763,
+          "wall_ms": 1.2606686922924546
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        64
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 80,
+        "new-cold": 80,
+        "old-warm": 80,
+        "new-warm": 80
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 1.262937641143799,
+            "wall_ms": 1.2631430876353988
+          },
+          {
+            "cuda_event_ms": 1.267801570892334,
+            "wall_ms": 1.2682147997111315
+          },
+          {
+            "cuda_event_ms": 1.2639488220214843,
+            "wall_ms": 1.264351300051203
+          },
+          {
+            "cuda_event_ms": 1.2843008041381836,
+            "wall_ms": 1.2847008623793954
+          },
+          {
+            "cuda_event_ms": 1.2744447708129882,
+            "wall_ms": 1.2746779124427121
+          },
+          {
+            "cuda_event_ms": 1.270310401916504,
+            "wall_ms": 1.27070683738566
+          },
+          {
+            "cuda_event_ms": 1.267199993133545,
+            "wall_ms": 1.2676101625402225
+          },
+          {
+            "cuda_event_ms": 1.264691162109375,
+            "wall_ms": 1.2650871500227368
+          },
+          {
+            "cuda_event_ms": 1.2683135986328125,
+            "wall_ms": 1.2687035250564804
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 1.265676784515381,
+            "wall_ms": 1.2660672749916557
+          },
+          {
+            "cuda_event_ms": 1.2835424423217774,
+            "wall_ms": 1.2838496375479735
+          },
+          {
+            "cuda_event_ms": 1.267852783203125,
+            "wall_ms": 1.2682546126598027
+          },
+          {
+            "cuda_event_ms": 1.277888011932373,
+            "wall_ms": 1.2783002624928486
+          },
+          {
+            "cuda_event_ms": 1.2692983627319336,
+            "wall_ms": 1.269702412537299
+          },
+          {
+            "cuda_event_ms": 1.2659420013427733,
+            "wall_ms": 1.2663280500419205
+          },
+          {
+            "cuda_event_ms": 1.2692992210388183,
+            "wall_ms": 1.2696874626271892
+          },
+          {
+            "cuda_event_ms": 1.2728447914123535,
+            "wall_ms": 1.2732425126159796
+          },
+          {
+            "cuda_event_ms": 1.2770432472229003,
+            "wall_ms": 1.2774286999047035
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 1.2629976272583008,
+            "wall_ms": 1.2634004502615426
+          },
+          {
+            "cuda_event_ms": 1.2670827865600587,
+            "wall_ms": 1.2673969747993397
+          },
+          {
+            "cuda_event_ms": 1.261888027191162,
+            "wall_ms": 1.2622666126844706
+          },
+          {
+            "cuda_event_ms": 1.2732799530029297,
+            "wall_ms": 1.2736832875816617
+          },
+          {
+            "cuda_event_ms": 1.2653307914733887,
+            "wall_ms": 1.2656452876399271
+          },
+          {
+            "cuda_event_ms": 1.2732660293579101,
+            "wall_ms": 1.273584175214637
+          },
+          {
+            "cuda_event_ms": 1.2659323692321778,
+            "wall_ms": 1.2661762502830243
+          },
+          {
+            "cuda_event_ms": 1.2654848098754883,
+            "wall_ms": 1.265896074983175
+          },
+          {
+            "cuda_event_ms": 1.2732671737670898,
+            "wall_ms": 1.2736550001136493
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 1.30167236328125,
+            "wall_ms": 1.301882437473978
+          },
+          {
+            "cuda_event_ms": 1.2695391654968262,
+            "wall_ms": 1.2699228624114767
+          },
+          {
+            "cuda_event_ms": 1.2635299682617187,
+            "wall_ms": 1.2639202872378519
+          },
+          {
+            "cuda_event_ms": 1.2760704040527344,
+            "wall_ms": 1.2763150123646483
+          },
+          {
+            "cuda_event_ms": 1.2632960319519042,
+            "wall_ms": 1.2636953877517954
+          },
+          {
+            "cuda_event_ms": 1.2756735801696777,
+            "wall_ms": 1.2760633624566253
+          },
+          {
+            "cuda_event_ms": 1.2745739936828613,
+            "wall_ms": 1.2749011875712313
+          },
+          {
+            "cuda_event_ms": 1.2704883575439454,
+            "wall_ms": 1.270888262661174
+          },
+          {
+            "cuda_event_ms": 1.2716768264770508,
+            "wall_ms": 1.2720799626549706
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 1.267801570892334,
+          "wall_ms": 1.2682147997111315
+        },
+        "new-cold": {
+          "cuda_event_ms": 1.2692992210388183,
+          "wall_ms": 1.269702412537299
+        },
+        "old-warm": {
+          "cuda_event_ms": 1.2659323692321778,
+          "wall_ms": 1.2661762502830243
+        },
+        "new-warm": {
+          "cuda_event_ms": 1.2716768264770508,
+          "wall_ms": 1.2720799626549706
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 156,
+        "new-cold": 156,
+        "old-warm": 156,
+        "new-warm": 157
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.6316045125325521,
+            "wall_ms": 0.6316994294115247
+          },
+          {
+            "cuda_event_ms": 0.6368229694855518,
+            "wall_ms": 0.6368988910346675
+          },
+          {
+            "cuda_event_ms": 0.633691885532477,
+            "wall_ms": 0.633763730711041
+          },
+          {
+            "cuda_event_ms": 0.6379388662484976,
+            "wall_ms": 0.6380135319210612
+          },
+          {
+            "cuda_event_ms": 0.6392057369916867,
+            "wall_ms": 0.6392832051810379
+          },
+          {
+            "cuda_event_ms": 0.6369476807423127,
+            "wall_ms": 0.6370186154247046
+          },
+          {
+            "cuda_event_ms": 0.637183605096279,
+            "wall_ms": 0.6372586474007664
+          },
+          {
+            "cuda_event_ms": 0.633972901564378,
+            "wall_ms": 0.6340492756676096
+          },
+          {
+            "cuda_event_ms": 0.6334752791967148,
+            "wall_ms": 0.6335438460481759
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.6300356938288763,
+            "wall_ms": 0.6301107755578601
+          },
+          {
+            "cuda_event_ms": 0.6491038004557291,
+            "wall_ms": 0.6491733589567817
+          },
+          {
+            "cuda_event_ms": 0.6306908925374349,
+            "wall_ms": 0.630757916578426
+          },
+          {
+            "cuda_event_ms": 0.6378397819323417,
+            "wall_ms": 0.6379123203656397
+          },
+          {
+            "cuda_event_ms": 0.6355429918338091,
+            "wall_ms": 0.6356173654263003
+          },
+          {
+            "cuda_event_ms": 0.6303189595540365,
+            "wall_ms": 0.630391762966517
+          },
+          {
+            "cuda_event_ms": 0.6364816518930289,
+            "wall_ms": 0.6365588909456841
+          },
+          {
+            "cuda_event_ms": 0.6339989686623598,
+            "wall_ms": 0.6340647372641027
+          },
+          {
+            "cuda_event_ms": 0.6339872800386869,
+            "wall_ms": 0.6340589998916795
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.6295367998954577,
+            "wall_ms": 0.6296146602835506
+          },
+          {
+            "cuda_event_ms": 0.6342367025522085,
+            "wall_ms": 0.6343159999605865
+          },
+          {
+            "cuda_event_ms": 0.6346830710386618,
+            "wall_ms": 0.6347539165290073
+          },
+          {
+            "cuda_event_ms": 0.6354830815241888,
+            "wall_ms": 0.6355595191379484
+          },
+          {
+            "cuda_event_ms": 0.6338297526041666,
+            "wall_ms": 0.6339048268273473
+          },
+          {
+            "cuda_event_ms": 0.6311384836832682,
+            "wall_ms": 0.6312114999626572
+          },
+          {
+            "cuda_event_ms": 0.6345518063276242,
+            "wall_ms": 0.6346279357482368
+          },
+          {
+            "cuda_event_ms": 0.6336984389867538,
+            "wall_ms": 0.633773339639167
+          },
+          {
+            "cuda_event_ms": 0.6360418368608524,
+            "wall_ms": 0.6361226859063698
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.6396800241652568,
+            "wall_ms": 0.6397528917555383
+          },
+          {
+            "cuda_event_ms": 0.6359486185061703,
+            "wall_ms": 0.6360167642657877
+          },
+          {
+            "cuda_event_ms": 0.6361712316039262,
+            "wall_ms": 0.6363764331100663
+          },
+          {
+            "cuda_event_ms": 0.632961200301055,
+            "wall_ms": 0.6330357515994626
+          },
+          {
+            "cuda_event_ms": 0.6336342392453722,
+            "wall_ms": 0.6337099490616067
+          },
+          {
+            "cuda_event_ms": 0.6346256231806081,
+            "wall_ms": 0.6346985731855225
+          },
+          {
+            "cuda_event_ms": 0.6363277556789908,
+            "wall_ms": 0.6363986942036208
+          },
+          {
+            "cuda_event_ms": 0.6335429294853453,
+            "wall_ms": 0.6336225986415461
+          },
+          {
+            "cuda_event_ms": 0.6380954912513684,
+            "wall_ms": 0.6381664076630192
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.6368229694855518,
+          "wall_ms": 0.6368988910346675
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.6339989686623598,
+          "wall_ms": 0.6340647372641027
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.6342367025522085,
+          "wall_ms": 0.6343159999605865
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.6359486185061703,
+          "wall_ms": 0.6360167642657877
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 159,
+        "new-cold": 159,
+        "old-warm": 159,
+        "new-warm": 159
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.6300627030666519,
+            "wall_ms": 0.630156182443852
+          },
+          {
+            "cuda_event_ms": 0.637879953444379,
+            "wall_ms": 0.6379657108322043
+          },
+          {
+            "cuda_event_ms": 0.6327096231328616,
+            "wall_ms": 0.6328028489091674
+          },
+          {
+            "cuda_event_ms": 0.6450040805264838,
+            "wall_ms": 0.64508786806456
+          },
+          {
+            "cuda_event_ms": 0.6332248711735947,
+            "wall_ms": 0.6333062831245058
+          },
+          {
+            "cuda_event_ms": 0.6410111241370627,
+            "wall_ms": 0.6410936351262221
+          },
+          {
+            "cuda_event_ms": 0.6366124183126965,
+            "wall_ms": 0.6366993647300105
+          },
+          {
+            "cuda_event_ms": 0.6331089427636104,
+            "wall_ms": 0.6331893397237426
+          },
+          {
+            "cuda_event_ms": 0.6409338225358687,
+            "wall_ms": 0.6410209560889821
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.6329028531440399,
+            "wall_ms": 0.632988861740022
+          },
+          {
+            "cuda_event_ms": 0.6542909250319379,
+            "wall_ms": 0.6543749622318238
+          },
+          {
+            "cuda_event_ms": 0.6329736769574243,
+            "wall_ms": 0.6330580629610439
+          },
+          {
+            "cuda_event_ms": 0.6420013139832694,
+            "wall_ms": 0.642078125639965
+          },
+          {
+            "cuda_event_ms": 0.6331686823622985,
+            "wall_ms": 0.6332493082579201
+          },
+          {
+            "cuda_event_ms": 0.6330626385766756,
+            "wall_ms": 0.6331420251323531
+          },
+          {
+            "cuda_event_ms": 0.6356141672194379,
+            "wall_ms": 0.635736452967643
+          },
+          {
+            "cuda_event_ms": 0.6334760174061518,
+            "wall_ms": 0.6335483836127246
+          },
+          {
+            "cuda_event_ms": 0.6391820847613257,
+            "wall_ms": 0.6392589181225231
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.632902037422612,
+            "wall_ms": 0.6329834149306957
+          },
+          {
+            "cuda_event_ms": 0.6397810162238355,
+            "wall_ms": 0.6398663584453365
+          },
+          {
+            "cuda_event_ms": 0.637114758761424,
+            "wall_ms": 0.6372004843671344
+          },
+          {
+            "cuda_event_ms": 0.6366381855130946,
+            "wall_ms": 0.6367168176930936
+          },
+          {
+            "cuda_event_ms": 0.6330187815540241,
+            "wall_ms": 0.6331003962213513
+          },
+          {
+            "cuda_event_ms": 0.6363864154935633,
+            "wall_ms": 0.6364696917604398
+          },
+          {
+            "cuda_event_ms": 0.6402318702553803,
+            "wall_ms": 0.6403208866938012
+          },
+          {
+            "cuda_event_ms": 0.6375078405224303,
+            "wall_ms": 0.6375910378201812
+          },
+          {
+            "cuda_event_ms": 0.6375714188101906,
+            "wall_ms": 0.6376558553453816
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.6417567894893622,
+            "wall_ms": 0.6418396854617944
+          },
+          {
+            "cuda_event_ms": 0.6359619524493907,
+            "wall_ms": 0.6360409182054138
+          },
+          {
+            "cuda_event_ms": 0.6352921971734965,
+            "wall_ms": 0.6353755347187625
+          },
+          {
+            "cuda_event_ms": 0.6387840127045253,
+            "wall_ms": 0.6388658049967397
+          },
+          {
+            "cuda_event_ms": 0.6329722854326356,
+            "wall_ms": 0.6330477988271265
+          },
+          {
+            "cuda_event_ms": 0.6406633389071099,
+            "wall_ms": 0.6407451070552258
+          },
+          {
+            "cuda_event_ms": 0.637526938000565,
+            "wall_ms": 0.6376039560770018
+          },
+          {
+            "cuda_event_ms": 0.6329221425566284,
+            "wall_ms": 0.6330007547732303
+          },
+          {
+            "cuda_event_ms": 0.6371276663534297,
+            "wall_ms": 0.6372105345238328
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.6366124183126965,
+          "wall_ms": 0.6366993647300105
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.6334760174061518,
+          "wall_ms": 0.6335483836127246
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.637114758761424,
+          "wall_ms": 0.6372004843671344
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.6371276663534297,
+          "wall_ms": 0.6372105345238328
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 42,
+        "new-cold": 42,
+        "old-warm": 42,
+        "new-warm": 42
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 2.423832303001767,
+            "wall_ms": 2.424146571207703
+          },
+          {
+            "cuda_event_ms": 2.4253926958356584,
+            "wall_ms": 2.425677928147793
+          },
+          {
+            "cuda_event_ms": 2.4397219703311013,
+            "wall_ms": 2.439971761694843
+          },
+          {
+            "cuda_event_ms": 2.5095801580519903,
+            "wall_ms": 2.50984416648169
+          },
+          {
+            "cuda_event_ms": 2.4264898754301525,
+            "wall_ms": 2.426756405232785
+          },
+          {
+            "cuda_event_ms": 2.4281234741210938,
+            "wall_ms": 2.428382238750124
+          },
+          {
+            "cuda_event_ms": 2.4081553504580544,
+            "wall_ms": 2.4084201431833208
+          },
+          {
+            "cuda_event_ms": 2.4284891401018416,
+            "wall_ms": 2.4287591188026236
+          },
+          {
+            "cuda_event_ms": 2.4305303664434526,
+            "wall_ms": 2.43078757124576
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 2.4331703186035156,
+            "wall_ms": 2.433445594977543
+          },
+          {
+            "cuda_event_ms": 2.429683866954985,
+            "wall_ms": 2.4299572618301246
+          },
+          {
+            "cuda_event_ms": 2.4807862781343006,
+            "wall_ms": 2.4810650945818495
+          },
+          {
+            "cuda_event_ms": 2.4337256295340404,
+            "wall_ms": 2.433992404673648
+          },
+          {
+            "cuda_event_ms": 2.41802978515625,
+            "wall_ms": 2.4182980948050194
+          },
+          {
+            "cuda_event_ms": 2.427367619105748,
+            "wall_ms": 2.4276802619819398
+          },
+          {
+            "cuda_event_ms": 2.418444133940197,
+            "wall_ms": 2.418716643227353
+          },
+          {
+            "cuda_event_ms": 2.4181204296293712,
+            "wall_ms": 2.418381119024984
+          },
+          {
+            "cuda_event_ms": 2.421978723435175,
+            "wall_ms": 2.4222334288337843
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 2.5525394621349515,
+            "wall_ms": 2.5527940237052027
+          },
+          {
+            "cuda_event_ms": 2.416832696823847,
+            "wall_ms": 2.417139261351189
+          },
+          {
+            "cuda_event_ms": 2.4151527768089656,
+            "wall_ms": 2.4154049287539063
+          },
+          {
+            "cuda_event_ms": 2.4273919605073475,
+            "wall_ms": 2.427664119057313
+          },
+          {
+            "cuda_event_ms": 2.431439172653925,
+            "wall_ms": 2.431718737906998
+          },
+          {
+            "cuda_event_ms": 2.430047171456473,
+            "wall_ms": 2.430310333563414
+          },
+          {
+            "cuda_event_ms": 2.4221500215076266,
+            "wall_ms": 2.4224328337281587
+          },
+          {
+            "cuda_event_ms": 2.415079570951916,
+            "wall_ms": 2.415354095449272
+          },
+          {
+            "cuda_event_ms": 2.415006546747117,
+            "wall_ms": 2.4152770950292637
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 2.4513097490583147,
+            "wall_ms": 2.451578214753508
+          },
+          {
+            "cuda_event_ms": 2.426246098109654,
+            "wall_ms": 2.4265784048198147
+          },
+          {
+            "cuda_event_ms": 2.4278796968005953,
+            "wall_ms": 2.4281831429107115
+          },
+          {
+            "cuda_event_ms": 2.529036204020182,
+            "wall_ms": 2.52929233344427
+          },
+          {
+            "cuda_event_ms": 2.4433531988234747,
+            "wall_ms": 2.4436227145737837
+          },
+          {
+            "cuda_event_ms": 2.445919218517485,
+            "wall_ms": 2.446193618760888
+          },
+          {
+            "cuda_event_ms": 2.410130273728144,
+            "wall_ms": 2.4103895238589583
+          },
+          {
+            "cuda_event_ms": 2.439094906761533,
+            "wall_ms": 2.439383142960391
+          },
+          {
+            "cuda_event_ms": 2.430195762997582,
+            "wall_ms": 2.430486666742668
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 2.4281234741210938,
+          "wall_ms": 2.428382238750124
+        },
+        "new-cold": {
+          "cuda_event_ms": 2.427367619105748,
+          "wall_ms": 2.4276802619819398
+        },
+        "old-warm": {
+          "cuda_event_ms": 2.4221500215076266,
+          "wall_ms": 2.4224328337281587
+        },
+        "new-warm": {
+          "cuda_event_ms": 2.439094906761533,
+          "wall_ms": 2.439383142960391
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "bf16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 42,
+        "new-cold": 42,
+        "old-warm": 42,
+        "new-warm": 42
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 2.4316822233654203,
+            "wall_ms": 2.432261095409991
+          },
+          {
+            "cuda_event_ms": 2.4335848490397134,
+            "wall_ms": 2.4342180473641273
+          },
+          {
+            "cuda_event_ms": 2.438966841924758,
+            "wall_ms": 2.4394521668520093
+          },
+          {
+            "cuda_event_ms": 2.449865976969401,
+            "wall_ms": 2.4506447378024903
+          },
+          {
+            "cuda_event_ms": 2.438002268473307,
+            "wall_ms": 2.4387721426873687
+          },
+          {
+            "cuda_event_ms": 2.4645729064941406,
+            "wall_ms": 2.4650591422825876
+          },
+          {
+            "cuda_event_ms": 2.4384122576032365,
+            "wall_ms": 2.439186428784437
+          },
+          {
+            "cuda_event_ms": 2.4556982857840404,
+            "wall_ms": 2.4562950240492465
+          },
+          {
+            "cuda_event_ms": 2.47371582757859,
+            "wall_ms": 2.474197476182044
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 2.4376075381324407,
+            "wall_ms": 2.4383964524271766
+          },
+          {
+            "cuda_event_ms": 2.4679116748628163,
+            "wall_ms": 2.4687110950859883
+          },
+          {
+            "cuda_event_ms": 2.4378758385067893,
+            "wall_ms": 2.438343833394659
+          },
+          {
+            "cuda_event_ms": 2.440905071440197,
+            "wall_ms": 2.44136173846311
+          },
+          {
+            "cuda_event_ms": 2.441703614734468,
+            "wall_ms": 2.44229230988172
+          },
+          {
+            "cuda_event_ms": 2.451431637718564,
+            "wall_ms": 2.45204776209513
+          },
+          {
+            "cuda_event_ms": 2.438460940406436,
+            "wall_ms": 2.439224667059967
+          },
+          {
+            "cuda_event_ms": 2.4389241536458335,
+            "wall_ms": 2.439685833191366
+          },
+          {
+            "cuda_event_ms": 2.450602576846168,
+            "wall_ms": 2.4513438332914594
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 2.4423375810895647,
+            "wall_ms": 2.442798476078592
+          },
+          {
+            "cuda_event_ms": 2.441825503394717,
+            "wall_ms": 2.442447762448518
+          },
+          {
+            "cuda_event_ms": 2.4388716561453685,
+            "wall_ms": 2.439647904663746
+          },
+          {
+            "cuda_event_ms": 2.432388487316313,
+            "wall_ms": 2.433167071320072
+          },
+          {
+            "cuda_event_ms": 2.43963132585798,
+            "wall_ms": 2.4400805240951566
+          },
+          {
+            "cuda_event_ms": 2.441532861618769,
+            "wall_ms": 2.4423284041750732
+          },
+          {
+            "cuda_event_ms": 2.4469698951357888,
+            "wall_ms": 2.4474306188667905
+          },
+          {
+            "cuda_event_ms": 2.490416027250744,
+            "wall_ms": 2.4911654528252605
+          },
+          {
+            "cuda_event_ms": 2.4374613080705916,
+            "wall_ms": 2.4379305001015643
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 2.462256840297154,
+            "wall_ms": 2.462775476271331
+          },
+          {
+            "cuda_event_ms": 2.4390460423060825,
+            "wall_ms": 2.439507452349755
+          },
+          {
+            "cuda_event_ms": 2.4389241536458335,
+            "wall_ms": 2.4397387141583575
+          },
+          {
+            "cuda_event_ms": 2.4423130580357144,
+            "wall_ms": 2.443091619560229
+          },
+          {
+            "cuda_event_ms": 2.432532537551153,
+            "wall_ms": 2.433012928425645
+          },
+          {
+            "cuda_event_ms": 2.4786164419991628,
+            "wall_ms": 2.47908497597867
+          },
+          {
+            "cuda_event_ms": 2.4375831967308406,
+            "wall_ms": 2.4383466190470027
+          },
+          {
+            "cuda_event_ms": 2.433852967761812,
+            "wall_ms": 2.4344569052724787
+          },
+          {
+            "cuda_event_ms": 2.4386803763253346,
+            "wall_ms": 2.4394614759200652
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 2.438966841924758,
+          "wall_ms": 2.4394521668520093
+        },
+        "new-cold": {
+          "cuda_event_ms": 2.440905071440197,
+          "wall_ms": 2.44136173846311
+        },
+        "old-warm": {
+          "cuda_event_ms": 2.441532861618769,
+          "wall_ms": 2.4423284041750732
+        },
+        "new-warm": {
+          "cuda_event_ms": 2.4389241536458335,
+          "wall_ms": 2.439507452349755
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 138,
+        "new-cold": 138,
+        "old-warm": 139,
+        "new-warm": 140
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.6993178215579711,
+            "wall_ms": 0.699428007372763
+          },
+          {
+            "cuda_event_ms": 0.6958896249964617,
+            "wall_ms": 0.6959744711386283
+          },
+          {
+            "cuda_event_ms": 0.6996516904969147,
+            "wall_ms": 0.6997249638779844
+          },
+          {
+            "cuda_event_ms": 0.7002304740574049,
+            "wall_ms": 0.7003093550852297
+          },
+          {
+            "cuda_event_ms": 0.696054043977157,
+            "wall_ms": 0.6961359638649889
+          },
+          {
+            "cuda_event_ms": 0.6999928018321162,
+            "wall_ms": 0.700079601433506
+          },
+          {
+            "cuda_event_ms": 0.6968616540881171,
+            "wall_ms": 0.696944971054293
+          },
+          {
+            "cuda_event_ms": 0.6986054683077163,
+            "wall_ms": 0.6986835507922333
+          },
+          {
+            "cuda_event_ms": 0.6998594532842222,
+            "wall_ms": 0.6999458332691153
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.6962457739788553,
+            "wall_ms": 0.6963329130709441
+          },
+          {
+            "cuda_event_ms": 0.7033470264379529,
+            "wall_ms": 0.7034301666283063
+          },
+          {
+            "cuda_event_ms": 0.6970842886662137,
+            "wall_ms": 0.6971609349737106
+          },
+          {
+            "cuda_event_ms": 0.6986425648564878,
+            "wall_ms": 0.6987217898510963
+          },
+          {
+            "cuda_event_ms": 0.696201269177423,
+            "wall_ms": 0.6962817753209611
+          },
+          {
+            "cuda_event_ms": 0.6991322835286459,
+            "wall_ms": 0.6992211377676711
+          },
+          {
+            "cuda_event_ms": 0.6968171492866848,
+            "wall_ms": 0.6969045146209849
+          },
+          {
+            "cuda_event_ms": 0.697492405988168,
+            "wall_ms": 0.697576695634727
+          },
+          {
+            "cuda_event_ms": 0.7004902051842731,
+            "wall_ms": 0.7005984419568753
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.695222319458886,
+            "wall_ms": 0.6953116042351872
+          },
+          {
+            "cuda_event_ms": 0.6956864501074921,
+            "wall_ms": 0.695765748152697
+          },
+          {
+            "cuda_event_ms": 0.6949202722782711,
+            "wall_ms": 0.6950043381372695
+          },
+          {
+            "cuda_event_ms": 0.6951265403692671,
+            "wall_ms": 0.6952076187615263
+          },
+          {
+            "cuda_event_ms": 0.696385610017845,
+            "wall_ms": 0.6964665108105744
+          },
+          {
+            "cuda_event_ms": 0.6961800554673448,
+            "wall_ms": 0.6962630863422059
+          },
+          {
+            "cuda_event_ms": 0.6972859883479935,
+            "wall_ms": 0.6973723308920271
+          },
+          {
+            "cuda_event_ms": 0.6984416495124213,
+            "wall_ms": 0.6985267265800307
+          },
+          {
+            "cuda_event_ms": 0.6967693850290861,
+            "wall_ms": 0.6968512517239283
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.7034660339355469,
+            "wall_ms": 0.7035915357326823
+          },
+          {
+            "cuda_event_ms": 0.694996098109654,
+            "wall_ms": 0.6950814428689357
+          },
+          {
+            "cuda_event_ms": 0.6994212559291295,
+            "wall_ms": 0.6994994357228279
+          },
+          {
+            "cuda_event_ms": 0.696612548828125,
+            "wall_ms": 0.6966896498592438
+          },
+          {
+            "cuda_event_ms": 0.69754148210798,
+            "wall_ms": 0.6976220713113435
+          },
+          {
+            "cuda_event_ms": 0.6978329249790737,
+            "wall_ms": 0.6979154784598255
+          },
+          {
+            "cuda_event_ms": 0.6951204572405134,
+            "wall_ms": 0.6952084715261923
+          },
+          {
+            "cuda_event_ms": 0.6958372388567243,
+            "wall_ms": 0.6959258429040867
+          },
+          {
+            "cuda_event_ms": 0.6961810520717076,
+            "wall_ms": 0.696259321245764
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.6993178215579711,
+          "wall_ms": 0.699428007372763
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.697492405988168,
+          "wall_ms": 0.697576695634727
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.6961800554673448,
+          "wall_ms": 0.6962630863422059
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.696612548828125,
+          "wall_ms": 0.6966896498592438
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "forward",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 145,
+        "new-cold": 145,
+        "old-warm": 145,
+        "new-warm": 145
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 0.6877455612708783,
+            "wall_ms": 0.6878479998077041
+          },
+          {
+            "cuda_event_ms": 0.7027381107724946,
+            "wall_ms": 0.7028350690861458
+          },
+          {
+            "cuda_event_ms": 0.6931491194100216,
+            "wall_ms": 0.6932496482602738
+          },
+          {
+            "cuda_event_ms": 0.698657542261584,
+            "wall_ms": 0.6987458068861401
+          },
+          {
+            "cuda_event_ms": 0.6994555769295528,
+            "wall_ms": 0.6995520207244132
+          },
+          {
+            "cuda_event_ms": 0.6974640418743265,
+            "wall_ms": 0.6975596758601224
+          },
+          {
+            "cuda_event_ms": 0.697216902108028,
+            "wall_ms": 0.6973099447224803
+          },
+          {
+            "cuda_event_ms": 0.6934589780610183,
+            "wall_ms": 0.6935577929935193
+          },
+          {
+            "cuda_event_ms": 0.6963553066911369,
+            "wall_ms": 0.6964528276825902
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 0.6891873063712285,
+            "wall_ms": 0.6892851517728433
+          },
+          {
+            "cuda_event_ms": 0.7208607114594558,
+            "wall_ms": 0.7209577310653724
+          },
+          {
+            "cuda_event_ms": 0.6925629714439655,
+            "wall_ms": 0.6926542551433347
+          },
+          {
+            "cuda_event_ms": 0.7015874402276401,
+            "wall_ms": 0.7016823241679833
+          },
+          {
+            "cuda_event_ms": 0.695416049299569,
+            "wall_ms": 0.6955101654527645
+          },
+          {
+            "cuda_event_ms": 0.6933956277781519,
+            "wall_ms": 0.6935480552532807
+          },
+          {
+            "cuda_event_ms": 0.694292949808055,
+            "wall_ms": 0.694383599931888
+          },
+          {
+            "cuda_event_ms": 0.6934598725417565,
+            "wall_ms": 0.6935555170739776
+          },
+          {
+            "cuda_event_ms": 0.7007125854492188,
+            "wall_ms": 0.7008040895894299
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 0.6923087284482758,
+            "wall_ms": 0.6923961515361764
+          },
+          {
+            "cuda_event_ms": 0.7151828108162716,
+            "wall_ms": 0.7152736275296273
+          },
+          {
+            "cuda_event_ms": 0.7015600796403556,
+            "wall_ms": 0.7016510000163368
+          },
+          {
+            "cuda_event_ms": 0.7014753144362877,
+            "wall_ms": 0.7015665172165709
+          },
+          {
+            "cuda_event_ms": 0.6970685761550377,
+            "wall_ms": 0.6971666067517523
+          },
+          {
+            "cuda_event_ms": 0.692626532192888,
+            "wall_ms": 0.692714124331893
+          },
+          {
+            "cuda_event_ms": 0.7004510813745959,
+            "wall_ms": 0.7005419172667737
+          },
+          {
+            "cuda_event_ms": 0.6950417880354256,
+            "wall_ms": 0.6951364550081178
+          },
+          {
+            "cuda_event_ms": 0.7016165371598868,
+            "wall_ms": 0.7017072828101187
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 0.7177745424467942,
+            "wall_ms": 0.717862241435796
+          },
+          {
+            "cuda_event_ms": 0.7066023727943157,
+            "wall_ms": 0.7066950966716455
+          },
+          {
+            "cuda_event_ms": 0.6937635224441002,
+            "wall_ms": 0.6938557170636567
+          },
+          {
+            "cuda_event_ms": 0.6930502529801994,
+            "wall_ms": 0.6931426483286738
+          },
+          {
+            "cuda_event_ms": 0.6955076546504579,
+            "wall_ms": 0.6956101794614745
+          },
+          {
+            "cuda_event_ms": 0.6962987965550916,
+            "wall_ms": 0.6963909447096802
+          },
+          {
+            "cuda_event_ms": 0.7016942517510776,
+            "wall_ms": 0.7017912828877312
+          },
+          {
+            "cuda_event_ms": 0.6951953756398168,
+            "wall_ms": 0.6952878137938036
+          },
+          {
+            "cuda_event_ms": 0.697803050074084,
+            "wall_ms": 0.6978981518026056
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 0.697216902108028,
+          "wall_ms": 0.6973099447224803
+        },
+        "new-cold": {
+          "cuda_event_ms": 0.694292949808055,
+          "wall_ms": 0.694383599931888
+        },
+        "old-warm": {
+          "cuda_event_ms": 0.7004510813745959,
+          "wall_ms": 0.7005419172667737
+        },
+        "new-warm": {
+          "cuda_event_ms": 0.6962987965550916,
+          "wall_ms": 0.6963909447096802
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "graph",
+      "calls_per_window": {
+        "old-cold": 39,
+        "new-cold": 39,
+        "old-warm": 39,
+        "new-warm": 39
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 2.580741686698718,
+            "wall_ms": 2.5810564865167134
+          },
+          {
+            "cuda_event_ms": 2.5746749486678686,
+            "wall_ms": 2.5749634361813944
+          },
+          {
+            "cuda_event_ms": 2.6775966546474357,
+            "wall_ms": 2.677858333276489
+          },
+          {
+            "cuda_event_ms": 2.6550449469150643,
+            "wall_ms": 2.6553574865922713
+          },
+          {
+            "cuda_event_ms": 2.6148233658228164,
+            "wall_ms": 2.615111050918364
+          },
+          {
+            "cuda_event_ms": 2.64396726168119,
+            "wall_ms": 2.6442803329047866
+          },
+          {
+            "cuda_event_ms": 2.613169156588041,
+            "wall_ms": 2.6134748208838015
+          },
+          {
+            "cuda_event_ms": 2.671537154760116,
+            "wall_ms": 2.6718602823212936
+          },
+          {
+            "cuda_event_ms": 2.647012172601162,
+            "wall_ms": 2.6473081797564353
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 2.731454311273037,
+            "wall_ms": 2.731750948348632
+          },
+          {
+            "cuda_event_ms": 2.6601419693384414,
+            "wall_ms": 2.6604684102587783
+          },
+          {
+            "cuda_event_ms": 2.6919048994015427,
+            "wall_ms": 2.692173897043969
+          },
+          {
+            "cuda_event_ms": 2.6428915170522838,
+            "wall_ms": 2.6431842311583935
+          },
+          {
+            "cuda_event_ms": 2.5753338153545675,
+            "wall_ms": 2.575636743597734
+          },
+          {
+            "cuda_event_ms": 2.6902843377529044,
+            "wall_ms": 2.6905906665771724
+          },
+          {
+            "cuda_event_ms": 2.642681415264423,
+            "wall_ms": 2.642986051983033
+          },
+          {
+            "cuda_event_ms": 2.6743467282026243,
+            "wall_ms": 2.6746535127481015
+          },
+          {
+            "cuda_event_ms": 2.6364791087615185,
+            "wall_ms": 2.636923769620271
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 2.7236825013772035,
+            "wall_ms": 2.724006154144613
+          },
+          {
+            "cuda_event_ms": 2.612978030473758,
+            "wall_ms": 2.6132496923076896
+          },
+          {
+            "cuda_event_ms": 2.5773291954627404,
+            "wall_ms": 2.577610435531451
+          },
+          {
+            "cuda_event_ms": 2.6179666763696914,
+            "wall_ms": 2.618261204751877
+          },
+          {
+            "cuda_event_ms": 2.5967843471429286,
+            "wall_ms": 2.5970754355419046
+          },
+          {
+            "cuda_event_ms": 2.6866083389673476,
+            "wall_ms": 2.686929794995544
+          },
+          {
+            "cuda_event_ms": 2.632382319523738,
+            "wall_ms": 2.6326788975916897
+          },
+          {
+            "cuda_event_ms": 2.65669915614984,
+            "wall_ms": 2.6569966150698465
+          },
+          {
+            "cuda_event_ms": 2.626428653032352,
+            "wall_ms": 2.6267340006784368
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 2.728119874611879,
+            "wall_ms": 2.728434717611004
+          },
+          {
+            "cuda_event_ms": 2.602925031613081,
+            "wall_ms": 2.603189589885565
+          },
+          {
+            "cuda_event_ms": 2.5886719532502003,
+            "wall_ms": 2.588959718242479
+          },
+          {
+            "cuda_event_ms": 2.6945904462765427,
+            "wall_ms": 2.69489520518945
+          },
+          {
+            "cuda_event_ms": 2.667231241861979,
+            "wall_ms": 2.6675493072849723
+          },
+          {
+            "cuda_event_ms": 2.69333003117488,
+            "wall_ms": 2.69363361533182
+          },
+          {
+            "cuda_event_ms": 2.622621585161258,
+            "wall_ms": 2.6229290509572585
+          },
+          {
+            "cuda_event_ms": 2.659853030473758,
+            "wall_ms": 2.6601702825596125
+          },
+          {
+            "cuda_event_ms": 2.627111386030148,
+            "wall_ms": 2.627420845853451
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 2.64396726168119,
+          "wall_ms": 2.6442803329047866
+        },
+        "new-cold": {
+          "cuda_event_ms": 2.6601419693384414,
+          "wall_ms": 2.6604684102587783
+        },
+        "old-warm": {
+          "cuda_event_ms": 2.626428653032352,
+          "wall_ms": 2.6267340006784368
+        },
+        "new-warm": {
+          "cuda_event_ms": 2.659853030473758,
+          "wall_ms": 2.6601702825596125
+        }
+      }
+    },
+    {
+      "shape": [
+        1,
+        16,
+        4096,
+        128
+      ],
+      "dtype": "fp16",
+      "causal": false,
+      "phase": "joint",
+      "mode": "eager",
+      "calls_per_window": {
+        "old-cold": 39,
+        "new-cold": 39,
+        "old-warm": 39,
+        "new-warm": 39
+      },
+      "samples": {
+        "old-cold": [
+          {
+            "cuda_event_ms": 2.584654783591246,
+            "wall_ms": 2.585332948887625
+          },
+          {
+            "cuda_event_ms": 2.5725242419120593,
+            "wall_ms": 2.5730216920447466
+          },
+          {
+            "cuda_event_ms": 2.579639728252704,
+            "wall_ms": 2.580459153530403
+          },
+          {
+            "cuda_event_ms": 2.6123289450620995,
+            "wall_ms": 2.613151948958731
+          },
+          {
+            "cuda_event_ms": 2.5996471307216544,
+            "wall_ms": 2.600450538104782
+          },
+          {
+            "cuda_event_ms": 2.5962076431665664,
+            "wall_ms": 2.596849718172915
+          },
+          {
+            "cuda_event_ms": 2.5958860348432493,
+            "wall_ms": 2.5964054616335304
+          },
+          {
+            "cuda_event_ms": 2.6004053751627603,
+            "wall_ms": 2.6008780763591997
+          },
+          {
+            "cuda_event_ms": 2.609419406988682,
+            "wall_ms": 2.6102472568312898
+          }
+        ],
+        "new-cold": [
+          {
+            "cuda_event_ms": 2.575963925092648,
+            "wall_ms": 2.5768453592601688
+          },
+          {
+            "cuda_event_ms": 2.6167401044796677,
+            "wall_ms": 2.6172676149051255
+          },
+          {
+            "cuda_event_ms": 2.641966012807993,
+            "wall_ms": 2.6427588465874297
+          },
+          {
+            "cuda_event_ms": 2.615613497220553,
+            "wall_ms": 2.6164875643399474
+          },
+          {
+            "cuda_event_ms": 2.5767252995417667,
+            "wall_ms": 2.577545897414287
+          },
+          {
+            "cuda_event_ms": 2.5818716195913463,
+            "wall_ms": 2.582692691924958
+          },
+          {
+            "cuda_event_ms": 2.5806900415665064,
+            "wall_ms": 2.581239179469263
+          },
+          {
+            "cuda_event_ms": 2.613641787797977,
+            "wall_ms": 2.6144761538419585
+          },
+          {
+            "cuda_event_ms": 2.605839655949519,
+            "wall_ms": 2.6064777951269673
+          }
+        ],
+        "old-warm": [
+          {
+            "cuda_event_ms": 2.680411901229467,
+            "wall_ms": 2.68107084542489
+          },
+          {
+            "cuda_event_ms": 2.6015638693785057,
+            "wall_ms": 2.6020884613852755
+          },
+          {
+            "cuda_event_ms": 2.5823761377579126,
+            "wall_ms": 2.5830380252908722
+          },
+          {
+            "cuda_event_ms": 2.6116201938726964,
+            "wall_ms": 2.6121057431177737
+          },
+          {
+            "cuda_event_ms": 2.585211142515525,
+            "wall_ms": 2.5860298721967503
+          },
+          {
+            "cuda_event_ms": 2.600008255396134,
+            "wall_ms": 2.6008338974908187
+          },
+          {
+            "cuda_event_ms": 2.6191795544746594,
+            "wall_ms": 2.620006359230058
+          },
+          {
+            "cuda_event_ms": 2.622752849872296,
+            "wall_ms": 2.623552333366556
+          },
+          {
+            "cuda_event_ms": 2.621177477714343,
+            "wall_ms": 2.621655358383671
+          }
+        ],
+        "new-warm": [
+          {
+            "cuda_event_ms": 2.678468948755509,
+            "wall_ms": 2.6789546663610215
+          },
+          {
+            "cuda_event_ms": 2.591113750751202,
+            "wall_ms": 2.591795974578231
+          },
+          {
+            "cuda_event_ms": 2.5787208752754407,
+            "wall_ms": 2.579227051823042
+          },
+          {
+            "cuda_event_ms": 2.649579561673678,
+            "wall_ms": 2.6503997177291567
+          },
+          {
+            "cuda_event_ms": 2.5794822497245593,
+            "wall_ms": 2.580317076838886
+          },
+          {
+            "cuda_event_ms": 2.6078917674529247,
+            "wall_ms": 2.60878087227376
+          },
+          {
+            "cuda_event_ms": 2.6194444314027443,
+            "wall_ms": 2.620258897644444
+          },
+          {
+            "cuda_event_ms": 2.6052398681640625,
+            "wall_ms": 2.6060346154293095
+          },
+          {
+            "cuda_event_ms": 2.6117776724008412,
+            "wall_ms": 2.6126803333262125
+          }
+        ]
+      },
+      "median_ms": {
+        "old-cold": {
+          "cuda_event_ms": 2.5962076431665664,
+          "wall_ms": 2.596849718172915
+        },
+        "new-cold": {
+          "cuda_event_ms": 2.605839655949519,
+          "wall_ms": 2.6064777951269673
+        },
+        "old-warm": {
+          "cuda_event_ms": 2.6116201938726964,
+          "wall_ms": 2.6121057431177737
+        },
+        "new-warm": {
+          "cuda_event_ms": 2.6078917674529247,
+          "wall_ms": 2.60878087227376
+        }
+      }
+    }
+  ],
+  "source_revision_role": "Base checkout revision; actual modified source is identified by per-file hashes and frozen snapshot.",
+  "source_snapshot_sha256": "76aced7265c10b92e7aa506cd2421f00ef828399c8e04429f2c46275ca35538e"
+}

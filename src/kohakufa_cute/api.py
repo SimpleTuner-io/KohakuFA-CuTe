@@ -111,12 +111,14 @@ def scaled_dot_product_attention(
     query, key, value, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False
 ):
     """Strict CuTe implementation with the PyTorch SDPA argument convention."""
+    if not torch.compiler.is_compiling() and fa4_sm80.compatible(
+        query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa
+    ):
+        return fa4_sm80.attention(query, key, value, causal=is_causal, scale=scale)
     if torch.compiler.is_compiling() or _extension.cache_info().currsize == 0:
         _validate(query, key, value, attn_mask, dropout_p, is_causal, enable_gqa)
         if torch.compiler.is_compiling():
             return _ops.attention(query, key, value, mask=attn_mask, causal=is_causal, scale=scale)
-    if fa4_sm80.compatible(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa):
-        return fa4_sm80.attention(query, key, value, causal=is_causal, scale=scale)
     return _extension().sdpa(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
 
 

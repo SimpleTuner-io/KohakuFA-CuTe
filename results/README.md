@@ -6,6 +6,16 @@ The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each 
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
+## L40S shared warp training candidate
+
+The [bounded training change](../docs/l40s-warp-training.md),
+[compact paired samples](l40s-warp-training.json) and
+[separate candidate chart](l40s-warp-training.svg) cover full-device L40S
+D64/D128 training at exact qualified lengths. They compare complete eager calls
+and graph replay with the preceding native CuTe path and standalone FA2.
+Inference and unqualified lengths retain their existing path. The historical
+four-device grid above is unchanged.
+
 ## Standalone FlashAttention comparisons
 
 The retained grids below compare default PyTorch SDPA. Use the explicit standalone

@@ -26,6 +26,9 @@ compensated arithmetic policy. Compilation is excluded.
 | RTX 5090 | 128 | 3.320 | 2.674 | 0.81× |
 | L40S | 128 | 3.132 | 2.663 | 0.85× |
 
+The L40S D128 row predates the bounded [shared warp training update](docs/l40s-warp-training.md),
+which retains its separate paired native-CuTe/FA2 measurements.
+
 [Performance details and charts](results/README.md) cover both dtypes, dense/causal
 visibility, all five head widths, forward/backward phases and actual SDPA kernels.
 The [precision-removal report](docs/baseline-precision.md) includes the full H100
@@ -51,10 +54,10 @@ python -m pip install '.[cuda]'
 
 Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and a C++17 compiler. The native launcher builds on first use. `pip install .` installs the API without CUDA extras; automatic selection can then use native SDPA on CPU/MPS.
 
-**A100 tuned installation:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
-then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the
-[qualified long D64/D128 path](docs/a100-sm80-fa4.md). The base `cuda` extra
-provides generic A100 compatibility; short and compiled calls retain that path.
+**Tuned A100 and L40S training:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
+then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounded
+[A100](docs/a100-sm80-fa4.md) and [L40S](docs/l40s-warp-training.md) D64/D128 schedules.
+Other CUDA calls retain the standard CuTe dispatch.
 
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
 CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:
@@ -104,7 +107,9 @@ Supported CuTe inputs:
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
 
-On A100, the [tuned installation](docs/a100-sm80-fa4.md) selects the measured long D64/D128 schedule. Its shape and software bounds are documented; other calls use native CuTe.
+The optional tuned installation selects bounded [A100](docs/a100-sm80-fa4.md) and
+[L40S training](docs/l40s-warp-training.md) D64/D128 schedules. Their shape and
+software bounds are documented; other CUDA calls retain standard CuTe dispatch.
 
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 

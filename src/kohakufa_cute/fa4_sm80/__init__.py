@@ -34,6 +34,15 @@ def available():
 
 def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     """Select only the full-device shape and arithmetic families qualified here."""
+    from . import _l40s
+
+    if (
+        getattr(q, "ndim", None) == 4
+        and q.device.type == "cuda"
+        and not torch.compiler.is_compiling()
+        and _l40s.is_device(q.device)
+    ):
+        return _l40s.compatible(q, k, v, mask, dropout, causal, scale, gqa)
     if (
         torch.compiler.is_compiling()
         or mask is not None
@@ -71,6 +80,10 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
 
 
 def attention(q, k, v, *, causal=False, scale=None):
+    from . import _l40s
+
+    if q.device.type == "cuda" and _l40s.is_device(q.device):
+        return _l40s.attention(q, k, v, causal=causal, scale=scale)
     from ._attention import attention as run
     from ._schedules import a100_schedule
 

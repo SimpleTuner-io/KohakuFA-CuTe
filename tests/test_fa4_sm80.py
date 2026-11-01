@@ -20,6 +20,12 @@ def cuda_operand(shape=(1, 16, 4096, 128), dtype=torch.bfloat16, contiguous=True
 
 
 class Sm80SelectionTests(unittest.TestCase):
+    def setUp(self):
+        from kohakufa_cute.fa4_sm80 import _l40s
+
+        _l40s.is_device.cache_clear()
+        self.addCleanup(_l40s.is_device.cache_clear)
+
     def test_architecture_shape_scale_and_runtime_boundary(self):
         q = cuda_operand()
         with (
@@ -112,7 +118,10 @@ class Sm80SelectionTests(unittest.TestCase):
 
         entry = fa4_sm80.attention
         q = cuda_operand()
-        with patch.object(_attention, "attention", return_value=object()) as selected:
+        with (
+            patch.object(_attention, "attention", return_value=object()) as selected,
+            patch.object(torch.cuda, "get_device_capability", return_value=(8, 0)),
+        ):
             for _ in range(2):
                 fa4_sm80.attention(q, q, q)
                 self.assertIs(fa4_sm80.attention, entry)

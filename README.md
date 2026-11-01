@@ -106,6 +106,8 @@ The SDPA wrappers require `enable_gqa=True` for different head counts. With an e
 
 On A100, the [tuned installation](docs/a100-sm80-fa4.md) selects the measured long D64/D128 schedule. Its shape and software bounds are documented; other calls use native CuTe.
 
+GB10 has an [explicit D128 shared entry](docs/gb10-shared.md) with measured shape/dtype schedules and ordinary CuTe fallbacks. It is opt-in.
+
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 
 ## Validate and benchmark

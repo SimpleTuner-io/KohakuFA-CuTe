@@ -36,6 +36,15 @@ def schedule(sequence, causal, heads=4, dtype=torch.bfloat16):
 
 
 @lru_cache(maxsize=8)
+def inference_schedule(sequence, causal):
+    """Select only the measured H16 D128 forward-only geometries."""
+    if sequence not in (128, 512, 1024, 4096):
+        raise ValueError("The explicit GB10 inference schedule requires a qualified sequence family.")
+    wide = not causal and sequence in (1024, 4096)
+    return Schedule(forward_m=128 if wide else 64, forward_n=32 if wide else 64, query_stages=1, dout_stages=1)
+
+
+@lru_cache(maxsize=8)
 def _qualified_device(index):
     """CUDA device properties are immutable within the initialized process."""
     properties = torch.cuda.get_device_properties(index)
@@ -47,8 +56,7 @@ def _qualified_device(index):
     )
 
 
-def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=False):
-    """Bound the opt-in path to the complete GPU and measured D128 families."""
+def _compatible(q, k, v, mask, dropout, causal, scale, gqa, inference):
     if (
         torch.compiler.is_compiling()
         or mask is not None
@@ -66,9 +74,10 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
         or q.dtype != k.dtype
         or q.dtype != v.dtype
         or q.shape[0] != 1
-        or q.shape[1] not in (4, 16)
-        or q.shape[2] not in (512, 1024, 4096)
-        or (causal and q.shape[2] == 1024)
+        or q.shape[1] not in ((16,) if inference else (4, 16))
+        or q.shape[2] not in ((128, 512, 1024, 4096) if inference else (512, 1024, 4096))
+        or (inference and not causal and q.shape[2] == 512 and q.dtype == torch.bfloat16)
+        or (not inference and causal and q.shape[2] == 1024)
         or q.shape[-1] != 128
         or not all(t.is_contiguous() for t in (q, k, v))
         or any(t.data_ptr() % 16 for t in (q, k, v))
@@ -85,8 +94,26 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
     return available()
 
 
+def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=False):
+    """Bound the training path to the complete GPU and measured D128 families."""
+    return _compatible(q, k, v, mask, dropout, causal, scale, gqa, False)
+
+
+def inference_compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=False):
+    """Use forward-only execution when this call requests no input gradients."""
+    if torch.compiler.is_compiling():
+        return False
+    if torch.is_grad_enabled() and any(getattr(t, "requires_grad", False) for t in (q, k, v)):
+        return False
+    if any(t.is_conj() or t.is_neg() for t in (q, k, v)):
+        return False
+    return _compatible(q, k, v, mask, dropout, causal, scale, gqa, True)
+
+
 def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):
     """Run the explicit measured family and preserve the public fallback API."""
+    if inference_compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
+        return native_runner(inference_schedule(q.shape[2], is_causal)).inference(q, k, v, scale=scale, causal=is_causal)
     if compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
         return native_runner(schedule(q.shape[2], is_causal, q.shape[1], q.dtype))(q, k, v, scale=scale, causal=is_causal)
     from kohakufa_cute import api

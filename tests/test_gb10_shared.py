@@ -8,7 +8,9 @@ from kohakufa_cute import api, fa4_sm80
 from kohakufa_cute.fa4_sm80 import gb10
 
 
-def operand(shape=(1, 16, 4096, 128), *, dtype=torch.bfloat16, pointer=4096, contiguous=True):
+def operand(
+    shape=(1, 16, 4096, 128), *, dtype=torch.bfloat16, pointer=4096, contiguous=True, requires_grad=False, negative=False
+):
     return SimpleNamespace(
         shape=shape,
         ndim=4,
@@ -16,6 +18,9 @@ def operand(shape=(1, 16, 4096, 128), *, dtype=torch.bfloat16, pointer=4096, con
         dtype=dtype,
         data_ptr=lambda: pointer,
         is_contiguous=lambda: contiguous,
+        requires_grad=requires_grad,
+        is_conj=lambda: False,
+        is_neg=lambda: negative,
     )
 
 
@@ -167,6 +172,85 @@ class Gb10SharedTests(unittest.TestCase):
                 "fallback",
             )
             fallback.assert_called_once_with(q, q, q, mask, 0.2, True, scale=-0.125, enable_gqa=True)
+
+    def test_forward_only_domain_and_geometry(self):
+        for sequence in (128, 512, 1024, 4096):
+            for causal in (False, True):
+                for dtype in (torch.float16, torch.bfloat16):
+                    q = operand((1, 16, sequence, 128), dtype=dtype)
+                    self.assertEqual(
+                        gb10.inference_compatible(q, q, q, causal=causal),
+                        not (sequence == 512 and not causal and dtype == torch.bfloat16),
+                    )
+                    selected = gb10.inference_schedule(sequence, causal)
+                    expected = (128, 32) if not causal and sequence >= 1024 else (64, 64)
+                    self.assertEqual((selected.forward_m, selected.forward_n), expected)
+                    self.assertEqual(selected.causal_head_group, 1)
+        for shape in ((1, 4, 128, 128), (1, 16, 129, 128), (1, 16, 2048, 128), (1, 16, 128, 64)):
+            q = operand(shape)
+            self.assertFalse(gb10.inference_compatible(q, q, q))
+        with self.assertRaises(ValueError):
+            gb10.inference_schedule(129, False)
+
+    def test_requested_gradients_and_view_flags_preserve_training_and_fallback(self):
+        runner = Mock(return_value="training")
+        runner.inference.return_value = "inference"
+        fallback = Mock(return_value="fallback")
+        with (
+            patch.object(gb10, "native_runner", return_value=runner),
+            patch.object(api, "scaled_dot_product_attention", fallback),
+        ):
+            q = operand(requires_grad=True)
+            self.assertEqual(gb10.scaled_dot_product_attention(q, q, q), "training")
+            runner.inference.assert_not_called()
+            with torch.no_grad():
+                self.assertEqual(gb10.scaled_dot_product_attention(q, q, q), "inference")
+                dense_short = operand((1, 16, 512, 128))
+                self.assertEqual(gb10.scaled_dot_product_attention(dense_short, dense_short, dense_short), "training")
+            for position in range(3):
+                values = [operand(), operand(), operand()]
+                values[position] = operand(requires_grad=True)
+                self.assertEqual(gb10.scaled_dot_product_attention(*values), "training")
+            negative = operand(negative=True)
+            self.assertEqual(gb10.scaled_dot_product_attention(negative, negative, negative), "training")
+            short = operand((1, 16, 128, 128), requires_grad=True)
+            self.assertEqual(gb10.scaled_dot_product_attention(short, short, short), "fallback")
+            negative_short = operand((1, 16, 128, 128), negative=True)
+            self.assertEqual(gb10.scaled_dot_product_attention(negative_short, negative_short, negative_short), "fallback")
+
+    def test_inference_keeps_scale_mask_and_runtime_guards(self):
+        q = operand((1, 16, 128, 128))
+        for options in (
+            {"scale": 0.0},
+            {"scale": -0.125},
+            {"scale": float("nan")},
+            {"mask": object()},
+            {"gqa": True},
+            {"dropout": 0.1},
+        ):
+            self.assertFalse(gb10.inference_compatible(q, q, q, **options))
+        for position in range(3):
+            for bad in (operand(pointer=4098), operand(contiguous=False), operand(negative=True)):
+                values = [q, q, q]
+                values[position] = bad
+                self.assertFalse(gb10.inference_compatible(*values))
+        with patch.object(torch.compiler, "is_compiling", return_value=True):
+            self.assertFalse(gb10.inference_compatible(q, q, q))
+        with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
+            self.assertFalse(gb10.inference_compatible(q, q, q))
+
+    def test_compiled_calls_fall_back_before_input_metadata(self):
+        q = Mock()
+        q.is_conj.side_effect = AssertionError("Compiled call inspected view flags")
+        q.is_neg.side_effect = AssertionError("Compiled call inspected view flags")
+        fallback = Mock(return_value="compiled fallback")
+        with (
+            patch.object(torch.compiler, "is_compiling", return_value=True),
+            patch.object(torch, "is_grad_enabled", side_effect=AssertionError("Compiled call inspected grad mode")),
+            patch.object(api, "scaled_dot_product_attention", fallback),
+        ):
+            self.assertEqual(gb10.scaled_dot_product_attention(q, q, q), "compiled fallback")
+        fallback.assert_called_once_with(q, q, q, None, 0.0, False, scale=None, enable_gqa=False)
 
 
 @unittest.skipUnless(

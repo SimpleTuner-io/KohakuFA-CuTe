@@ -50,7 +50,7 @@ class Sm80SelectionTests(unittest.TestCase):
                 (2, 16, 4096, 128),
                 (1, 17, 4096, 128),
                 (1, 7, 4096, 128),
-                (1, 16, 4096, 256),
+                (1, 16, 4095, 256),
             ):
                 operand = cuda_operand(shape)
                 self.assertFalse(fa4_sm80.compatible(operand, operand, operand, None, 0, False, None, False))

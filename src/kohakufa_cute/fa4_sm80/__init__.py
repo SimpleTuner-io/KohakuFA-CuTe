@@ -61,9 +61,13 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.dtype != k.dtype
         or q.dtype != v.dtype
         or q.shape[0] != 1
-        or not 8 <= q.shape[1] <= 16
-        or not 2048 <= q.shape[2] <= 4096
-        or q.shape[-1] not in (64, 128)
+        or not (
+            (q.shape[-1] in (64, 128) and 8 <= q.shape[1] <= 16 and 2048 <= q.shape[2] <= 4096)
+            or (
+                q.shape[-1] == 256
+                and ((q.shape[1] in (8, 16) and q.shape[2] == 4096) or (q.shape[1] == 16 and q.shape[2] == 1024))
+            )
+        )
         or not all(t.is_contiguous() for t in (q, k, v))
         or any(t.data_ptr() % 16 for t in (q, k, v))
         or torch.cuda.get_device_capability(q.device) != (8, 0)

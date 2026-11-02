@@ -5,6 +5,7 @@ from functools import lru_cache
 
 import torch
 
+from ..determinism import check_atomic_backward
 from ._private_api import make_private_api
 
 
@@ -59,6 +60,7 @@ _main_cache = {}
 
 def _backward(q, k, v, out, dout, maximum, logsum, scale, causal, schedule, capacity):
     """Bounded square MHA wrapper; include scratch initialization and conversion."""
+    check_atomic_backward()
     import cutlass.cute as cute
     from flash_attn.cute import interface
     from flash_attn.cute.flash_bwd_preprocess import PackGQA

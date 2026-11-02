@@ -1,3 +1,4 @@
+#include <ATen/Context.h>
 #include <ATen/DLConvertor.h>
 #include <ATen/ops/scaled_dot_product_attention.h>
 #include <c10/cuda/CUDAGuard.h>
@@ -192,6 +193,14 @@ class StreamScope {
 
 void launch(bool backward, const Tensors &tensors, double scale, bool causal, bool masked, bool sm80 = false,
             const Tensor &configuration = Tensor(), bool inference = false) {
+    const auto family = configuration.defined() ? configuration.const_data_ptr<int64_t>()[0] : 0;
+    if (backward && (sm80 || family == 1 || family == 2)) {
+        // See Note [Writing Nondeterministic Operations]. The shared warp and
+        // Hopper backward programs accumulate dQ with unordered FP32 atomics.
+        // Check every invocation, including cached programs and policy changes
+        // after forward. Owned-gradient families do not use this reduction.
+        at::globalContext().alertNotDeterministic("kohakufa_cute::atomic_backward");
+    }
     auto function = program(backward, tensors, causal, masked, sm80, configuration, inference);
     std::array<DLTensor, 14> dl;
     std::array<tvm::ffi::AnyView, 15> arguments;

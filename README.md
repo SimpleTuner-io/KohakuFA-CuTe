@@ -2,6 +2,8 @@
 
 CuTe DSL attention for **A100, A40, RTX 3090/3090 Ti, RTX 4090, RTX 5090, B200/B300, GB10, H100, and L40S**, using [KohakuFA's](https://github.com/KohakuBlueleaf/KohakuFA) shifted-score reconstruction and gradient-scale placement. Tensor-core products use FP16/BF16 operands with FP32 accumulation; see the [arithmetic contract](docs/precision.md).
 
+For repeatable execution and explicit-runner restrictions, see [determinism](docs/determinism.md).
+
 ## When to use it
 
 - **Sharp attention or large logits:** separate unscaled softmax statistics, shifted-score reconstruction and gradient scaling after accumulation address lost normalization information and premature underflow. The default uses single-rounded FP16/BF16 operands; see the [precision contract](docs/precision.md).

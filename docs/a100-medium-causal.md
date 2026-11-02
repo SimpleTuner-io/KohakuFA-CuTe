@@ -114,3 +114,7 @@ python -m benchmarks.compare_attention_variants \
   --warmup-ms 1000 --window-ms 100 --repeats 7 --seed 839729 \
   --output artifacts/a100-medium-causal.json
 ```
+
+The subsequent [G4 work-order update](a100-medium-causal-g4.md) improves the
+same training family on the device path and records its backward-only eager
+tradeoff separately.

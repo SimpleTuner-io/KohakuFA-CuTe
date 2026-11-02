@@ -72,8 +72,8 @@ including [short S128](docs/a40-short-d256.md) and [long D256 training](docs/a40
 with separate graph and complete eager measurements.
 
 RTX 4090 automatically selects S128/D16 and S4096/D64/D128 training calls at B1/H16.
-S1024 remains [explicit](docs/rtx4090-shared-joint.md): its graph gains did not
-improve complete eager calls. Other shapes retain ordinary CuTe dispatch.
+[S1024/D64/D128 training](docs/rtx4090-s1024-host.md) also selects the native
+guarded-call path after closing its eager overhead gap. Other shapes retain ordinary CuTe dispatch.
 
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
 CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:

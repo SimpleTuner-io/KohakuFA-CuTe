@@ -15,7 +15,9 @@ grads = torch.autograd.grad(out, (q, k, v), dout)
 
 The selected inputs are contiguous, 16-byte-aligned FP16/BF16 BHSD tensors with
 B1/H16 and equal Q/K/V shapes. The measured training families are S128/D16 and
-S4096 with D64/D128, dense or implicit causal. Gradients must be enabled
+S4096 with D64/D128, dense or implicit causal. The subsequent
+[S1024 guarded-call update](rtx4090-s1024-host.md) extends automatic training
+selection to S1024/D64/D128. Gradients must be enabled
 and at least one input must request a gradient. Equal-head MHA remains eligible
 with either value of `enable_gqa`.
 
@@ -66,9 +68,9 @@ same machine and stack; the earlier 450 W grid is not the speedup control.
 | 4096 | 128 | causal | 2319.80 / 1718.66 | 1773.68 / 1821.62 | 2328.37 / 1724.87 |
 
 S1024 is retained as a measured negative control. Its initial candidate improved
-graph F+B by 1.28–1.76× but made complete eager calls roughly 1–4% slower. It stays
-explicit while that host cost is investigated; graph gains alone did not qualify
-it for automatic selection. The final evaluation uses a separate input seed.
+graph F+B by 1.28–1.76× but made complete eager calls roughly 1–4% slower. That initial candidate stayed
+explicit; the subsequent [host update](rtx4090-s1024-host.md) qualified a separate
+actual public route. Graph gains alone did not qualify the initial candidate. The final evaluation uses a separate input seed.
 
 Exact selected BF16 backward symbols were bound to compiler-returned and loaded
 cubin bytes, with PTX/SASS retained. The mapped native host extension is recorded

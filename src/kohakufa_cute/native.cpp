@@ -49,6 +49,7 @@ constexpr int configuration_accumulator_head_dim = 16;
 
 std::pair<int, int> device_capability(int device);
 bool full_a40(int device);
+bool full_a100(int device);
 
 int split_forward_count(const Tensor &q, const Tensor &k, bool masked, bool causal) {
     // Short schema queries need parallelism along the memory sequence.
@@ -450,6 +451,8 @@ class AttentionRunner {
         const bool a40_width = family == 1 && !inference && q.size(3) == 256 && full_a40(q.get_device());
         const bool warp_device = (target.first == 8 && (target.second == 0 || target.second == 6 || target.second == 9)) ||
                                  (target.first == 12 && (target.second == 0 || target.second == 1));
+        const bool qualified_a100_d256 = !inference && family == 1 && q.size(3) == 256 &&
+                                         target == std::make_pair(8, 0) && full_a100(q.get_device());
         TORCH_CHECK_VALUE((family == 1 && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
                           "The configured attention family does not match the CUDA device.");
         TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
@@ -457,7 +460,7 @@ class AttentionRunner {
                               reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
-                              (q.size(3) == 64 || q.size(3) == 128 || a40_width) && std::isfinite(amount) &&
+                              (q.size(3) == 64 || q.size(3) == 128 || a40_width || qualified_a100_d256) && std::isfinite(amount) &&
                               amount >= std::numeric_limits<float>::min() && amount <= 2e38,
                           "Configured attention requires aligned contiguous square qualified-width FP16/BF16 MHA and a positive normal FP32 scale.");
         const auto accumulator_width = configuration.const_data_ptr<int64_t>()[configuration_accumulator_head_dim];
@@ -505,6 +508,20 @@ std::pair<int, int> device_capability(int device) {
 bool supported_device(int device) {
     auto [major, minor] = device_capability(device);
     return (major == 8 && (minor == 0 || minor == 6 || minor == 9)) || (major == 9 && minor == 0) || (major == 10 && (minor == 0 || minor == 3)) || (major == 12 && (minor == 0 || minor == 1));
+}
+
+bool full_a100(int device) {
+    static std::map<int, bool> devices;
+    static std::mutex device_mutex;
+    std::lock_guard<std::mutex> lock(device_mutex);
+    auto found = devices.find(device);
+    if (found != devices.end())
+        return found->second;
+    cudaDeviceProp properties;
+    C10_CUDA_CHECK(cudaGetDeviceProperties(&properties, device));
+    const bool selected = properties.major == 8 && properties.minor == 0 &&
+                          properties.multiProcessorCount == 108;
+    return devices.emplace(device, selected).first->second;
 }
 
 bool full_a40(int device) {

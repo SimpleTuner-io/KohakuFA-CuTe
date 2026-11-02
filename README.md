@@ -57,7 +57,7 @@ Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and
 
 **Tuned A100 and L40S training:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
 then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounded
-[A100](docs/a100-sm80-fa4.md) and [L40S](docs/l40s-warp-training.md) D64/D128 schedules.
+[A100](docs/a100-sm80-fa4.md), including [long causal ordering](docs/a100-causal-order.md), and [L40S](docs/l40s-warp-training.md) D64/D128 schedules.
 Other CUDA calls retain the standard CuTe dispatch.
 
 **A40 opt-in:** the same qualified stack supports an explicit

@@ -90,5 +90,5 @@ def attention(q, k, v, *, causal=False, scale=None):
         return _l40s.attention(q, k, v, causal=causal, scale=scale)
     if _sm120.target_device(q.device):
         return native_runner(_sm120.schedule(q.shape[-1], causal))(q, k, v, causal=causal, scale=scale)
-    runner = native_runner(a100_schedule(q.shape[-1], q.shape[2], causal))
+    runner = native_runner(a100_schedule(q.shape[-1], q.shape[2], causal, heads=q.shape[1]))
     return runner(q, k, v, causal=causal, scale=scale)

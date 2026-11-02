@@ -117,16 +117,16 @@ non-owning DLTensor views, and call it under the current-device/current-stream
 scope. Allocate buffers in C++ with the shapes above. Constructing the BSHD
 layout inside the host program avoids repeated Python views and DLPack setup.
 
-The cached A100 public-entry candidate passes the current 13 named `Schedule`
+The cached A100 public-entry candidate passes the current 14 named `Schedule`
 fields unchanged to `AttentionRunner("warp", configuration)`. Its helper caches
 the runner by the complete schedule; tensors, device/stream descriptors and
 positive scale remain invocation inputs. Automatic eligibility stays unchanged.
 The existing Python entry remains an explicit scheduling and code-generation
 control during qualification.
 
-This helper is qualified against that 13-field schema. Future controls such as
+This helper is qualified against that 14-field schema. Future controls such as
 packed-probability conversion, early probability stores, probability-barrier
-elision or causal head grouping require explicit support in both the Python
+elision require explicit support in both the Python
 configuration adapter and native runner before activation. Do not silently
 discard unsupported controls or substitute their defaults. Unknown settings
 must fail visibly; a new configuration needs its own source, arithmetic,

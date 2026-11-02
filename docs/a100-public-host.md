@@ -78,6 +78,10 @@ checks continued with unchanged CPU diagnostic equations; no gate changed.
 The `benchmarks.cpu_reference_unittest` wrapper retains this reproducible
 sanitizer boundary.
 
-The cache forwards all 13 current schedule fields. New scheduling controls need
+The cache forwards all 14 current schedule fields. New scheduling controls need
 explicit runner support and qualification; silently dropping unknown controls
 is unsupported. See the [host ABI](sm80-host-abi.md).
+
+The subsequent [long causal ordering](a100-causal-order.md) update selects
+measured head interleaving for S4096/H8 and H16. Its actual API evidence is
+separate from the host-launch comparison above.

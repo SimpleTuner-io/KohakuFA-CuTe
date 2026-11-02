@@ -7,10 +7,10 @@ from ._attention import Schedule
 
 
 @lru_cache(maxsize=32)
-def a100_schedule(dimension, sequence, causal):
+def a100_schedule(dimension, sequence, causal, heads=16):
     schedule = Schedule()
     if dimension == 64 and sequence >= 2048:
-        return replace(
+        schedule = replace(
             schedule,
             backward_m=128,
             query_stages=1,
@@ -20,5 +20,7 @@ def a100_schedule(dimension, sequence, causal):
             dq_m_warps=4,
         )
     if dimension == 128 and causal:
-        return replace(schedule, forward_m=64)
+        schedule = replace(schedule, forward_m=64)
+    if causal and sequence == 4096 and heads in (8, 16):
+        schedule = replace(schedule, causal_head_group=4 if heads == 8 else 16)
     return schedule

@@ -17,8 +17,9 @@ The short specialization requires active gradient recording and at least one
 input requesting gradients. No-grad calls retain ordinary CuTe. Masks, dropout,
 GQA, unsupported scales, other shapes/devices and misaligned or noncontiguous
 inputs retain their existing selection. Gradient flags and mutable tensor
-metadata are checked live. Selected-kernel errors propagate. Default top-level
-attention dispatch is unchanged; this entry remains opt-in.
+metadata are checked live. Selected-kernel errors propagate. The standard top-level
+APIs now [automatically select](rtx4090-automatic.md) this measured training family
+on the pinned runtime; the explicit entry remains available.
 
 ## Ownership and code
 

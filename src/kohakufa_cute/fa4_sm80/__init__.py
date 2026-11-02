@@ -34,7 +34,7 @@ def available():
 
 def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     """Select only the full-device shape and arithmetic families qualified here."""
-    from . import _l40s, _sm120
+    from . import _l40s, _sm120, rtx4090
 
     if (
         isinstance(q, torch.Tensor)
@@ -64,6 +64,13 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         and _l40s.is_device(q.device)
     ):
         return _l40s.compatible(q, k, v, mask, dropout, causal, scale, gqa)
+    if (
+        getattr(q, "ndim", None) == 4
+        and q.device.type == "cuda"
+        and not torch.compiler.is_compiling()
+        and rtx4090._short_device(q.device.index)
+    ):
+        return rtx4090.automatic_compatible(q, k, v, mask, dropout, causal, scale, gqa)
     if _sm120.compatible(q, k, v, mask, dropout, causal, scale, gqa):
         return available()
     if (
@@ -115,12 +122,14 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
 
 
 def attention(q, k, v, *, causal=False, scale=None):
-    from . import _l40s, _sm120
+    from . import _l40s, _sm120, rtx4090
     from ._host import native_runner
     from ._schedules import a100_schedule
 
     if q.device.type == "cuda" and _l40s.is_device(q.device):
         return _l40s.attention(q, k, v, causal=causal, scale=scale)
+    if q.device.type == "cuda" and rtx4090._short_device(q.device.index):
+        return rtx4090.attention(q, k, v, causal=causal, scale=scale)
     if _sm120.target_device(q.device):
         dimension = q.shape[-1]
         if dimension == 256:

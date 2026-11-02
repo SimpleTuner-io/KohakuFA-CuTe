@@ -133,3 +133,59 @@ def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_caus
     from kohakufa_cute import api
 
     return api.scaled_dot_product_attention(q, k, v, attn_mask, dropout_p, is_causal, scale=scale, enable_gqa=enable_gqa)
+
+
+@lru_cache(maxsize=1)
+def _automatic_metadata_predicate():
+    """Cache the native function handle; its tensor checks remain live."""
+    from kohakufa_cute.native import extension
+
+    return extension().rtx4090_automatic_metadata_compatible
+
+
+def _automatic_cold_compatible(q, k, v):
+    if (
+        not torch.is_grad_enabled()
+        or not any(getattr(t, "requires_grad", False) for t in (q, k, v))
+        or getattr(q, "ndim", None) != 4
+        or q.shape != k.shape
+        or q.shape != v.shape
+        or q.device.type != "cuda"
+        or q.device != k.device
+        or q.device != v.device
+        or q.device.index != torch.cuda.current_device()
+        or q.dtype not in (torch.float16, torch.bfloat16)
+        or q.dtype != k.dtype
+        or q.dtype != v.dtype
+        or q.shape[:2] != (1, 16)
+        or not (q.shape[2:] == (128, 16) or (q.shape[2] == 4096 and q.shape[3] in (64, 128)))
+        or not all(t.is_contiguous() and t.data_ptr() % 16 == 0 and not t.is_neg() and not t.is_conj() for t in (q, k, v))
+        or not _short_device(q.device.index)
+    ):
+        return False
+    return True
+
+
+def automatic_compatible(q, k, v, mask, dropout, causal, scale, gqa):
+    """Select the measured training families without repeating Python metadata checks."""
+    if torch.compiler.is_compiling() or torch.are_deterministic_algorithms_enabled() or mask is not None or dropout != 0:
+        return False
+    if scale is not None and (
+        not isinstance(scale, (float, int)) or not math.isfinite(scale) or not 2**-126 <= scale <= 2e38
+    ):
+        return False
+    from . import available
+
+    if not available():
+        return False
+    if _automatic_metadata_predicate.cache_info().currsize == 0 and not _automatic_cold_compatible(q, k, v):
+        return False
+    # Equal-shape MHA is valid with either value of enable_gqa.
+    return _automatic_metadata_predicate()(q, k, v, causal)
+
+
+def attention(q, k, v, *, causal=False, scale=None):
+    """Execute an already qualified automatic selection."""
+    if q.shape[-1] == 16:
+        return _short_runner()(q, k, v, scale=scale, causal=causal)
+    return native_runner(schedule(q.shape[-1], causal, q.shape[-2]))(q, k, v, scale=scale, causal=causal)

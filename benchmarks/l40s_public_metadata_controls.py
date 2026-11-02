@@ -1,4 +1,4 @@
-"""Exact preceding Python predicate and isolated public-API comparison controls."""
+"""Python mirror for live metadata checks and historical comparison controls."""
 
 import math
 from functools import lru_cache
@@ -29,7 +29,6 @@ def python_compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.shape[0] != 1
         or q.shape[1] != 16
         or q.shape[2] not in (1024, 4096)
-        or (causal and q.shape[-1] == 64 and q.shape[2] != 4096)
         or q.shape[-1] not in (64, 128)
         or not all(t.is_contiguous() and t.data_ptr() % 16 == 0 for t in (q, k, v))
         or not _l40s.is_device(q.device)

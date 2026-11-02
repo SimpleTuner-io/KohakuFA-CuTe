@@ -50,7 +50,7 @@ class L40sSelectionTests(unittest.TestCase):
                     for causal in (False, True):
                         self.assertEqual(
                             fa4_sm80.compatible(q, q, q, None, 0, causal, None, False),
-                            not (causal and dimension == 64 and sequence != 4096),
+                            True,
                         )
         for shape in (
             (1, 16, 128, 64),
@@ -122,7 +122,9 @@ class L40sSelectionTests(unittest.TestCase):
             for sequence in (128, 129, 1024, 1152, 1280, 2048, 4096, 4608):
                 for causal in (False, True):
                     expected = 1
-                    if causal and dimension == 64 and sequence == 4096:
+                    if causal and dimension == 64 and sequence == 1024:
+                        expected = 16
+                    elif causal and dimension == 64 and sequence == 4096:
                         expected = 8
                     elif causal and dimension == 128 and sequence in (1024, 4096):
                         expected = 16
@@ -268,7 +270,6 @@ class L40sPublicKernelTests(unittest.TestCase):
 
         for sequence, dimension, causal, inference in (
             (128, 128, False, False),
-            (1024, 64, True, False),
             (1024, 128, False, True),
         ):
             inputs = [

@@ -34,6 +34,16 @@ class Rtx3090RoutingTests(unittest.TestCase):
             self.assertIs(rtx3090_attention(q, q, q, is_causal=True), operation.return_value)
             operation.assert_called_once_with(q, q, q, scale=None, causal=True)
 
+    def test_short_d64_runner_receives_the_public_arguments(self):
+        q = torch.empty(1, 16, 128, 64, dtype=torch.float16)
+        operation = Mock(return_value=object())
+        with (
+            patch("kohakufa_cute.rtx3090._eligible", return_value=True),
+            patch("kohakufa_cute.rtx3090._short_key32_runner", return_value=operation),
+        ):
+            self.assertIs(rtx3090_attention(q, q, q, is_causal=True), operation.return_value)
+            operation.assert_called_once_with(q, q, q, scale=None, causal=True)
+
     def test_only_the_qualified_full_ordinary_device_matches(self):
         for name, sms, expected in (
             ("NVIDIA GeForce RTX 3090", 82, True),

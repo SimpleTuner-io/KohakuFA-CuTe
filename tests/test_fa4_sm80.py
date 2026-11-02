@@ -1,5 +1,8 @@
+import json
+import os
 import unittest
 from importlib.metadata import PackageNotFoundError
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
@@ -15,6 +18,8 @@ def cuda_operand(shape=(1, 16, 4096, 128), dtype=torch.bfloat16, contiguous=True
         dtype=dtype,
         device=torch.device("cuda", 0),
         is_contiguous=lambda: contiguous,
+        is_neg=lambda: False,
+        is_conj=lambda: False,
         data_ptr=lambda: pointer,
     )
 
@@ -50,7 +55,7 @@ class Sm80SelectionTests(unittest.TestCase):
                 (2, 16, 4096, 128),
                 (1, 17, 4096, 128),
                 (1, 7, 4096, 128),
-                (1, 16, 4096, 256),
+                (1, 16, 4095, 256),
             ):
                 operand = cuda_operand(shape)
                 self.assertFalse(fa4_sm80.compatible(operand, operand, operand, None, 0, False, None, False))
@@ -73,6 +78,41 @@ class Sm80SelectionTests(unittest.TestCase):
                 self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
             with patch.object(torch.cuda, "current_device", return_value=1):
                 self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
+
+    def test_medium_causal_training_preserves_other_modes(self):
+        operands = [cuda_operand((1, 8, 2048, 128)) for _ in range(3)]
+        for operand in operands:
+            operand.requires_grad = True
+        with (
+            patch.object(torch.cuda, "get_device_capability", return_value=(8, 0)),
+            patch.object(torch.cuda, "current_device", return_value=0),
+            patch.object(torch.cuda, "get_device_properties", return_value=SimpleNamespace(multi_processor_count=108)),
+            patch.object(fa4_sm80, "available", return_value=True),
+            patch.object(torch.autograd.forward_ad, "unpack_dual", return_value=SimpleNamespace(tangent=None)),
+        ):
+            for dtype in (torch.bfloat16, torch.float16):
+                for operand in operands:
+                    operand.dtype = dtype
+                self.assertTrue(fa4_sm80.compatible(*operands, None, 0, True, None, False))
+            with torch.no_grad():
+                self.assertFalse(fa4_sm80.compatible(*operands, None, 0, True, None, False))
+            for position in range(3):
+                operands[position].requires_grad = False
+                self.assertFalse(fa4_sm80.compatible(*operands, None, 0, True, None, False))
+                operands[position].requires_grad = True
+            for shape in ((1, 9, 2048, 128), (1, 8, 2049, 128), (1, 8, 4095, 128)):
+                for operand in operands:
+                    operand.shape = shape
+                self.assertFalse(fa4_sm80.compatible(*operands, None, 0, True, None, False))
+            for operand in operands:
+                operand.shape = (1, 8, 2048, 128)
+            for flag in ("is_neg", "is_conj"):
+                original = getattr(operands[0], flag)
+                setattr(operands[0], flag, lambda: True)
+                self.assertTrue(fa4_sm80.compatible(*operands, None, 0, True, None, False))
+                setattr(operands[0], flag, original)
+            with patch.object(torch.autograd.forward_ad, "unpack_dual", return_value=SimpleNamespace(tangent=object())):
+                self.assertFalse(fa4_sm80.compatible(*operands, None, 0, True, None, False))
 
     def test_a100_policy_keeps_explicit_schedule_defaults_stable(self):
         from kohakufa_cute.fa4_sm80._attention import Schedule
@@ -184,6 +224,164 @@ class Sm80KernelTests(unittest.TestCase):
             self.assertEqual(len(saved), 6)
             statistics(inputs, saved[-2], saved[-1], causal, inputs[0].shape[-1] ** -0.5 if scale is None else scale)
         return output
+
+    def test_medium_native_metadata_matches_runtime_boundaries(self):
+        from kohakufa_cute.native import extension
+
+        module = extension()
+        values = [torch.randn(1, 8, 2048, 128, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)]
+        self.assertTrue(module.a100_medium_metadata_compatible(*values))
+        with patch.object(
+            module, "a100_medium_metadata_compatible", wraps=module.a100_medium_metadata_compatible
+        ) as selected:
+            output = api.scaled_dot_product_attention(*values, is_causal=True)
+            self.assertEqual(selected.call_count, 1)
+        self.assertEqual(tuple(output.shape), tuple(values[0].shape))
+        with torch.no_grad():
+            self.assertFalse(module.a100_medium_metadata_compatible(*values))
+        for position in range(3):
+            partial = values.copy()
+            partial[position] = partial[position].detach()
+            self.assertFalse(module.a100_medium_metadata_compatible(*partial))
+        self.assertFalse(module.a100_medium_metadata_compatible(values[0][:, :7], values[1], values[2]))
+        self.assertFalse(module.a100_medium_metadata_compatible(values[0].float(), values[1], values[2]))
+        self.assertFalse(module.a100_medium_metadata_compatible(values[0].cpu(), values[1], values[2]))
+        unaligned = (
+            torch.empty(values[0].numel() + 1, device="cuda", dtype=values[0].dtype)[1:]
+            .view_as(values[0])
+            .requires_grad_(True)
+        )
+        self.assertFalse(module.a100_medium_metadata_compatible(unaligned, values[1], values[2]))
+        strided = torch.empty(1, 8, 4096, 128, device="cuda", dtype=values[0].dtype)[:, :, ::2].requires_grad_(True)
+        self.assertFalse(module.a100_medium_metadata_compatible(strided, values[1], values[2]))
+
+    def test_medium_causal_training_replay_and_negative_statistics(self):
+        from benchmarks.compare_ada import capture
+        from benchmarks.validate_sm80_static import assess
+
+        previous_threads = torch.get_num_threads()
+        torch.set_num_threads(4)
+        self.addCleanup(torch.set_num_threads, previous_threads)
+        for dtype in (torch.bfloat16, torch.float16):
+            for negative in (False, True):
+                torch.manual_seed(839723)
+                inputs = [torch.randn(1, 8, 2048, 128, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)]
+                dout = torch.randn_like(inputs[0])
+                if negative:
+                    with torch.no_grad():
+                        inputs[0].mul_(0.3)
+                        inputs[1].mul_(0.3)
+                        inputs[0][..., 0] = 20
+                        inputs[1][..., 0] = -20
+                retained = Path(os.environ.get("KOH_CAPTURE_DIR", "artifacts/a100-medium-causal"))
+                retained.mkdir(parents=True, exist_ok=True)
+                fixture = retained / f"{dtype}-{negative}.pt"
+
+                def checkpoint(stage, operands, values=(), statistics=()):
+                    torch.save(
+                        {
+                            "case": {"dtype": str(dtype), "negative": negative, "stage": stage},
+                            "inputs": tuple(t.detach().cpu() for t in operands),
+                            "dout": dout.detach().cpu(),
+                            "actual": tuple(t.detach().cpu() for t in values),
+                            "statistics": tuple(t.detach().cpu() for t in statistics),
+                        },
+                        fixture,
+                    )
+
+                checkpoint("before-forward", inputs)
+                self.assertTrue(fa4_sm80.compatible(*inputs, None, 0, True, None, False))
+                saved = []
+                with torch.autograd.graph.saved_tensors_hooks(
+                    lambda tensor: saved.append(tensor) or tensor, lambda tensor: tensor
+                ):
+                    output = api.scaled_dot_product_attention(*inputs, is_causal=True)
+                checkpoint("forward", inputs, (output,), saved[-2:])
+                self.assertEqual(len(saved), 6)
+                actual = output, *torch.autograd.grad(output, inputs, dout)
+                checkpoint("backward", inputs, actual, saved[-2:])
+                from benchmarks.validate_sm80_static import statistics
+
+                for head in range(8):
+                    statistics(
+                        tuple(t[:, head : head + 1].detach().cpu() for t in inputs),
+                        saved[-2][:, head : head + 1].cpu(),
+                        saved[-1][:, head : head + 1].cpu(),
+                        True,
+                        128**-0.5,
+                    )
+                recorded_errors = []
+
+                def check(values, operands):
+                    # Offset fixtures check the established rounded equations;
+                    # assess also retains the independent mathematical error.
+                    errors = assess(
+                        tuple(t.detach().cpu() for t in values),
+                        tuple(t.detach().cpu() for t in operands),
+                        dout.detach().cpu(),
+                        causal=True,
+                        scale=None,
+                        directed=negative,
+                        pointwise=False,
+                    )
+                    recorded_errors.append(errors)
+                    fixture.with_suffix(".metrics.json").write_text(json.dumps(recorded_errors, indent=2) + "\n")
+
+                check(actual, inputs)
+                graph, (operands, _, _, results) = capture(
+                    api.scaled_dot_product_attention, inputs, dout, True, "joint", keep_graph=True
+                )
+                with torch.no_grad():
+                    for operand in operands:
+                        operand.add_(0.03125)
+                    for result in results:
+                        result.fill_(float("nan"))
+                checkpoint("before-replay", operands)
+                graph.replay()
+                torch.cuda.synchronize()
+                checkpoint("replay", operands, results)
+                check(results, operands)
+                with torch.no_grad():
+                    self.assertFalse(fa4_sm80.compatible(*inputs, None, 0, True, None, False))
+
+    def test_medium_causal_logical_views_materialize_correctly(self):
+        for dtype in (torch.bfloat16, torch.float16):
+            for position in range(3):
+                torch.manual_seed(839727)
+                bases = [torch.randn(1, 8, 2048, 128, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)]
+                logical = list(bases)
+                logical[position] = torch._neg_view(bases[position])
+                self.assertTrue(fa4_sm80.compatible(*logical, None, 0, True, None, False))
+                materialized = [t.detach().clone().requires_grad_(True) for t in logical]
+                dout = torch.randn_like(bases[0])
+                retained = Path(os.environ.get("KOH_CAPTURE_DIR", "artifacts/a100-medium-causal"))
+                retained.mkdir(parents=True, exist_ok=True)
+                fixture = retained / f"logical-{dtype}-{position}.pt"
+                torch.save(
+                    {"inputs": tuple(t.detach().cpu() for t in logical), "dout": dout.cpu(), "position": position},
+                    fixture,
+                )
+                with patch.object(fa4_sm80, "attention", wraps=fa4_sm80.attention) as selected:
+                    output = api.scaled_dot_product_attention(*logical, is_causal=True)
+                self.assertEqual(selected.call_count, 1)
+                actual = output, *torch.autograd.grad(output, bases, dout)
+                expected_output = api.scaled_dot_product_attention(*materialized, is_causal=True)
+                expected = expected_output, *torch.autograd.grad(expected_output, materialized, dout)
+                torch.save(
+                    {
+                        "inputs": tuple(t.detach().cpu() for t in logical),
+                        "dout": dout.cpu(),
+                        "position": position,
+                        "actual": tuple(t.detach().cpu() for t in actual),
+                        "expected": tuple(t.detach().cpu() for t in expected),
+                    },
+                    fixture,
+                )
+                for index, (got, want) in enumerate(zip(actual, expected)):
+                    got, want = got.detach().cpu(), want.detach().cpu()
+                    if index == position + 1:
+                        want = -want
+                    torch.testing.assert_close(got, want, atol=1e-5, rtol=0.03)
 
     def test_tiny_positive_scales_retain_native_zero_aware_fallback(self):
         from benchmarks.reference import metrics

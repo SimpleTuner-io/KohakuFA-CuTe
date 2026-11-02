@@ -49,6 +49,7 @@ constexpr int configuration_accumulator_head_dim = 16;
 
 std::pair<int, int> device_capability(int device);
 bool full_a40(int device);
+bool full_a100(int device);
 
 int split_forward_count(const Tensor &q, const Tensor &k, bool masked, bool causal) {
     // Short schema queries need parallelism along the memory sequence.
@@ -460,6 +461,8 @@ class AttentionRunner {
         const bool a40_width = family == 1 && !inference && q.size(3) == 256 && full_a40(q.get_device());
         const bool warp_device = (target.first == 8 && (target.second == 0 || target.second == 6 || target.second == 9)) ||
                                  (target.first == 12 && (target.second == 0 || target.second == 1));
+        const bool qualified_a100_d256 = !inference && family == 1 && q.size(3) == 256 &&
+                                         target == std::make_pair(8, 0) && full_a100(q.get_device());
         TORCH_CHECK_VALUE(((family == 1 || family == 3) && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
                           "The configured attention family does not match the CUDA device.");
         if (family == 3) {
@@ -485,7 +488,8 @@ class AttentionRunner {
                               reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
-                              (q.size(3) == 64 || q.size(3) == 128 || a40_width || family == 3) && std::isfinite(amount) &&
+                              (q.size(3) == 64 || q.size(3) == 128 || a40_width || qualified_a100_d256 || family == 3) &&
+                              std::isfinite(amount) &&
                               amount >= std::numeric_limits<float>::min() && amount <= 2e38,
                           "Configured attention requires aligned contiguous square qualified-width FP16/BF16 MHA and a positive normal FP32 scale.");
         const auto accumulator_width = configuration.const_data_ptr<int64_t>()[configuration_accumulator_head_dim];
@@ -535,6 +539,20 @@ bool supported_device(int device) {
     return (major == 8 && (minor == 0 || minor == 6 || minor == 9)) || (major == 9 && minor == 0) || (major == 10 && (minor == 0 || minor == 3)) || (major == 12 && (minor == 0 || minor == 1));
 }
 
+bool full_a100(int device) {
+    static std::map<int, bool> devices;
+    static std::mutex device_mutex;
+    std::lock_guard<std::mutex> lock(device_mutex);
+    auto found = devices.find(device);
+    if (found != devices.end())
+        return found->second;
+    cudaDeviceProp properties;
+    C10_CUDA_CHECK(cudaGetDeviceProperties(&properties, device));
+    const bool selected = properties.major == 8 && properties.minor == 0 &&
+                          properties.multiProcessorCount == 108;
+    return devices.emplace(device, selected).first->second;
+}
+
 bool full_a40(int device) {
     static std::map<int, bool> devices;
     static std::mutex device_mutex;
@@ -548,6 +566,23 @@ bool full_a40(int device) {
                           std::strcmp(properties.name, "NVIDIA A40") == 0 &&
                           properties.multiProcessorCount == 84 && properties.sharedMemPerBlockOptin == 101376;
     return devices.emplace(device, selected).first->second;
+}
+
+bool a100_medium_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v) {
+    if (!c10::GradMode::is_enabled() || !q.requires_grad() || !k.requires_grad() || !v.requires_grad() ||
+        q.dim() != 4 || k.dim() != 4 || v.dim() != 4 || q.sizes() != k.sizes() || q.sizes() != v.sizes() ||
+        !q.is_cuda() || q.device() != k.device() || q.device() != v.device() ||
+        (q.scalar_type() != at::kHalf && q.scalar_type() != at::kBFloat16) ||
+        q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
+        q.size(0) != 1 || q.size(1) != 8 || q.size(2) != 2048 || q.size(3) != 128 ||
+        !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
+        reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 != 0)
+        return false;
+    int current;
+    C10_CUDA_CHECK(cudaGetDevice(&current));
+    return q.get_device() == current && full_a100(q.get_device());
 }
 
 bool full_rtx5090(int device) {
@@ -670,6 +705,38 @@ bool l40s_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v,
     return q.get_device() == current && full_l40s(q.get_device());
 }
 
+bool full_rtx4090(int device) {
+    static std::map<int, bool> devices;
+    static std::mutex device_mutex;
+    std::lock_guard<std::mutex> lock(device_mutex);
+    auto found = devices.find(device);
+    if (found != devices.end())
+        return found->second;
+    cudaDeviceProp properties;
+    C10_CUDA_CHECK(cudaGetDeviceProperties(&properties, device));
+    const bool selected = properties.major == 8 && properties.minor == 9 &&
+                          std::strcmp(properties.name, "NVIDIA GeForce RTX 4090") == 0 &&
+                          properties.multiProcessorCount == 128 && properties.sharedMemPerBlockOptin == 101376;
+    return devices.emplace(device, selected).first->second;
+}
+
+bool rtx4090_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v, bool /*causal*/) {
+    if (q.dim() != 4 || k.dim() != 4 || v.dim() != 4 || q.sizes() != k.sizes() || q.sizes() != v.sizes() ||
+        !q.is_cuda() || q.device() != k.device() || q.device() != v.device() ||
+        (q.scalar_type() != at::kHalf && q.scalar_type() != at::kBFloat16) ||
+        q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
+        q.size(0) != 1 || q.size(1) != 16 || (q.size(2) != 1024 && q.size(2) != 4096) ||
+        (q.size(3) != 64 && q.size(3) != 128) ||
+        !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
+        reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 != 0 ||
+        reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 != 0)
+        return false;
+    int current;
+    C10_CUDA_CHECK(cudaGetDevice(&current));
+    return q.get_device() == current && full_rtx4090(q.get_device());
+}
+
 bool compatible(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask, double dropout, bool causal, bool gqa) {
     return dropout == 0.0 && q.dim() == 4 && k.dim() == 4 && v.dim() == 4 && q.is_cuda() && q.device() == k.device() &&
            q.device() == v.device() && (q.scalar_type() == at::kHalf || q.scalar_type() == at::kBFloat16) &&
@@ -703,23 +770,35 @@ bool validate(Tensor q, Tensor k, Tensor v, const std::optional<Tensor> &mask) {
 } // namespace
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
+    module.def("a100_medium_metadata_compatible", [](py::object q, py::object k, py::object v) {
+        if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
+            return false;
+        return a100_medium_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
+                                               THPVariable_Unpack(v.ptr()));
+    });
     module.def("gb10_inference_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
         if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
             return false;
         return gb10_inference_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
                                                   THPVariable_Unpack(v.ptr()), causal);
     });
-    module.def("sm120_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
-        if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
-            return false;
-        return sm120_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
-                                         THPVariable_Unpack(v.ptr()), causal);
-    });
     module.def("l40s_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
         if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
             return false;
         return l40s_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
                                         THPVariable_Unpack(v.ptr()), causal);
+    });
+    module.def("rtx4090_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
+        if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
+            return false;
+        return rtx4090_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
+                                           THPVariable_Unpack(v.ptr()), causal);
+    });
+    module.def("sm120_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
+        if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
+            return false;
+        return sm120_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
+                                         THPVariable_Unpack(v.ptr()), causal);
     });
     module.def("a40_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
         if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))

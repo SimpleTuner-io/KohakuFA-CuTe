@@ -9,7 +9,12 @@ Times are median milliseconds per attention call unless a table explicitly speci
 ## L40S bounded shared warp training
 
 The [bounded training policy](../docs/l40s-warp-training.md) covers full-device
-L40S D64/D128 training at exact qualified lengths. Its current causal ordering
+L40S D64/D128 training at exact qualified lengths. The latest
+[native metadata analysis](../docs/l40s-native-metadata.md),
+[96-row actual public comparison](l40s-native-metadata.json) and
+[paired-variability chart](l40s-native-metadata.svg) report its host check.
+Short FP16 gains, BF16 ties and mixed long rows remain visible; GPU code is
+byte-identical. Its causal ordering
 has a [November 2 analysis](../docs/l40s-causal-groups.md),
 [96-row paired report](l40s-causal-groups.json) and [matching chart](l40s-causal-groups.svg).
 The native group1 control has a shorter Python guard than the public API;

@@ -49,6 +49,7 @@ constexpr int configuration_accumulator_head_dim = 16;
 
 std::pair<int, int> device_capability(int device);
 bool full_a40(int device);
+bool full_gb10(int device);
 
 int split_forward_count(const Tensor &q, const Tensor &k, bool masked, bool causal) {
     // Short schema queries need parallelism along the memory sequence.
@@ -452,12 +453,16 @@ class AttentionRunner {
                                  (target.first == 12 && (target.second == 0 || target.second == 1));
         TORCH_CHECK_VALUE((family == 1 && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
                           "The configured attention family does not match the CUDA device.");
+        const bool qualified_inference_width = inference && family == 1 &&
+            (q.size(3) == 16 || q.size(3) == 256) && q.size(0) == 1 &&
+            q.size(1) == 16 && q.size(2) == 128 && full_gb10(q.get_device());
         TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
                               q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&
                               reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
-                              (q.size(3) == 64 || q.size(3) == 128 || a40_width) && std::isfinite(amount) &&
+                              (q.size(3) == 64 || q.size(3) == 128 || a40_width || qualified_inference_width) &&
+                              std::isfinite(amount) &&
                               amount >= std::numeric_limits<float>::min() && amount <= 2e38,
                           "Configured attention requires aligned contiguous square qualified-width FP16/BF16 MHA and a positive normal FP32 scale.");
         const auto accumulator_width = configuration.const_data_ptr<int64_t>()[configuration_accumulator_head_dim];
@@ -563,7 +568,9 @@ bool gb10_inference_metadata_compatible(const Tensor &q, const Tensor &k, const 
         q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
         q.size(0) != 1 || q.size(1) != 16 ||
         (q.size(2) != 128 && q.size(2) != 512 && q.size(2) != 1024 && q.size(2) != 4096) ||
-        (!causal && q.size(2) == 512 && q.scalar_type() == at::kBFloat16) || q.size(3) != 128 ||
+        (!causal && q.size(2) == 512 && q.scalar_type() == at::kBFloat16) ||
+        !(q.size(3) == 128 || (q.size(2) == 128 &&
+          (q.size(3) == 16 || q.size(3) == 64 || q.size(3) == 256))) ||
         !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
         q.is_conj() || k.is_conj() || v.is_conj() || q.is_neg() || k.is_neg() || v.is_neg() ||
         reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||

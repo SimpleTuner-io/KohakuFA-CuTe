@@ -71,8 +71,10 @@ decisions = []
 assert gb10._qualified_device(torch.cuda.current_device())
 
 
-def check(values, **kwargs):
+def check(values, expected_override=None, **kwargs):
     expected = parent.inference_compatible(*values, **kwargs)
+    if expected_override is not None:
+        expected = expected_override
     actual = gb10.inference_compatible(*values, **kwargs)
     decisions.append(
         {
@@ -103,7 +105,10 @@ for dtype in (torch.bfloat16, torch.float16):
         (1, 16, 128, 256),
         (1, 16, 128, 512),
     ):
-        check([torch.randn(*shape, device="cuda", dtype=dtype) for _ in range(3)])
+        check(
+            [torch.randn(*shape, device="cuda", dtype=dtype) for _ in range(3)],
+            expected_override=True if shape in ((1, 16, 128, 16), (1, 16, 128, 64), (1, 16, 128, 256)) else None,
+        )
     values = [torch.randn(1, 16, 128, 128, device="cuda", dtype=dtype) for _ in range(3)]
     for options in (
         {"scale": 0.0},
@@ -200,7 +205,8 @@ torch.manual_seed(419431)
 training = [torch.randn(1, 4, 4096, 128, device="cuda", dtype=torch.float16, requires_grad=True) for _ in range(3)]
 dout = torch.randn_like(training[0])
 torch.save(
-    {"inputs": [value.detach().cpu() for value in training], "dout": dout.cpu()}, args.output.parent / "h4-long-training.pt"
+    {"inputs": [value.detach().cpu() for value in training], "dout": dout.cpu()},
+    args.output.parent / "h4-long-training.pt",
 )
 compatibility = []
 for operation in (parent.scaled_dot_product_attention, gb10.scaled_dot_product_attention):

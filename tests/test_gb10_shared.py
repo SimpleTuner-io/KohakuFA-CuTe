@@ -28,6 +28,18 @@ class Gb10SharedTests(unittest.TestCase):
     def setUp(self):
         gb10._qualified_device.cache_clear()
         self.addCleanup(gb10._qualified_device.cache_clear)
+        from benchmarks.gb10_metadata_controls import parent
+
+        reference = parent()
+        reference._qualified_device.cache_clear()
+        self.addCleanup(reference._qualified_device.cache_clear)
+        self.metadata = patch.object(
+            gb10,
+            "_inference_metadata_predicate",
+            return_value=lambda q, k, v, causal: reference.inference_compatible(q, k, v, causal=causal),
+        )
+        self.metadata.start()
+        self.addCleanup(self.metadata.stop)
         self.properties = SimpleNamespace(
             name="NVIDIA GB10", major=12, minor=1, multi_processor_count=48, shared_memory_per_block_optin=101376
         )
@@ -238,6 +250,19 @@ class Gb10SharedTests(unittest.TestCase):
             self.assertFalse(gb10.inference_compatible(q, q, q))
         with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
             self.assertFalse(gb10.inference_compatible(q, q, q))
+
+    def test_cold_unsupported_and_initialization_failure(self):
+        with patch.object(gb10, "_inference_metadata_predicate", side_effect=AssertionError("Unexpected native load")):
+            cpu = torch.randn(1, 16, 128, 128)
+            self.assertFalse(gb10.inference_compatible(cpu, cpu, cpu))
+            q = operand((1, 16, 128, 128))
+            with patch.object(fa4_sm80, "available", return_value=False):
+                self.assertFalse(gb10.inference_compatible(q, q, q))
+            for options in ({"scale": 0.0}, {"mask": object()}, {"gqa": True}):
+                self.assertFalse(gb10.inference_compatible(q, q, q, **options))
+        with patch.object(gb10, "_inference_metadata_predicate", side_effect=RuntimeError("Native adapter failed")):
+            with self.assertRaisesRegex(RuntimeError, "Native adapter failed"):
+                gb10.scaled_dot_product_attention(q, q, q)
 
     def test_compiled_calls_fall_back_before_input_metadata(self):
         q = Mock()

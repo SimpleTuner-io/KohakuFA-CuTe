@@ -99,15 +99,33 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
     return _compatible(q, k, v, mask, dropout, causal, scale, gqa, False)
 
 
+@lru_cache(maxsize=1)
+def _inference_metadata_predicate():
+    """Reuse the native function while checking its tensor arguments every call."""
+    from kohakufa_cute.native import extension
+
+    return extension().gb10_inference_metadata_compatible
+
+
 def inference_compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=False):
-    """Use forward-only execution when this call requests no input gradients."""
-    if torch.compiler.is_compiling():
+    """Use native metadata checks within the preceding forward-only boundary."""
+    if (
+        torch.compiler.is_compiling()
+        or mask is not None
+        or dropout != 0
+        or gqa
+        or torch.are_deterministic_algorithms_enabled()
+    ):
         return False
-    if torch.is_grad_enabled() and any(getattr(t, "requires_grad", False) for t in (q, k, v)):
+    if getattr(q, "device", None) is None or q.device.type != "cuda":
         return False
-    if any(t.is_conj() or t.is_neg() for t in (q, k, v)):
+    if scale is not None and (
+        not isinstance(scale, (float, int)) or not math.isfinite(scale) or not 1.1754943508222875e-38 <= scale <= 2e38
+    ):
         return False
-    return _compatible(q, k, v, mask, dropout, causal, scale, gqa, True)
+    from . import available
+
+    return available() and _inference_metadata_predicate()(q, k, v, causal)
 
 
 def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):

@@ -1,5 +1,8 @@
 # GB10 forward-only attention
 
+The current entry also uses [native host metadata checks](gb10-native-metadata.md).
+The measurements below record the preceding forward-only selection change.
+
 The opt-in `gb10_attention` entry uses the existing native forward-only runner
 when a call requests no input gradients. The new measured family is full-device
 GB10, B1/H16/D128, FP16 or BF16, equal contiguous aligned Q/K/V shapes, and

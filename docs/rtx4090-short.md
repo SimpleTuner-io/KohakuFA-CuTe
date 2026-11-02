@@ -36,7 +36,13 @@ dQ/dK scaling. Shared memory remains 99,840 bytes: four padded input tiles,
 separate P/dS tiles and three FP32 row-statistic arrays. No staging buffers are
 aliased. All gradient coordinates have one writer.
 
-Actual loaded backward code uses 128–174 registers/thread and zero reported
+The measured dtype/visibility policies use register prefetch of immutable row
+statistics, a separate gradient-product MMA layout, or both. The
+[tuning evidence](rtx4090-short-tuning.md) explains the independent controls and
+why they are selected differently. Their arithmetic and shared buffers are
+unchanged.
+
+Actual selected backward code uses 128–174 registers/thread and zero reported
 local bytes across the four cases. Matched FA2 uses 255 registers/thread,
 98,304 shared bytes and 48–80 local bytes. Its selected sequence-parallel
 backward retains global dQ accumulation and separate preprocessing/conversion.
@@ -52,26 +58,32 @@ include all GPU preparation and gradient work; compilation, capture and host
 allocation are excluded. Standalone FA2 and SDPA retain their own arithmetic
 and preparation, so their columns compare complete implementations.
 
-| Dtype | Visibility | Previous public F+B | FA2 F+B | SDPA F+B | New F+B | New backward |
+| Dtype | Visibility | Shared baseline F+B | FA2 F+B | SDPA F+B | Selected F+B | Selected backward |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| bf16 | dense | 14.290 | 14.479 | 17.797 | 10.085 | 6.266 |
-| bf16 | causal | 14.106 | 15.086 | 18.502 | 9.279 | 5.314 |
-| fp16 | dense | 14.105 | 14.498 | 17.901 | 9.596 | 5.737 |
-| fp16 | causal | 13.638 | 15.012 | 18.534 | 9.195 | 5.236 |
+| bf16 | dense | 10.133 | 14.465 | 17.801 | 9.256 | 5.412 |
+| bf16 | causal | 9.249 | 14.991 | 18.469 | 9.132 | 5.186 |
+| fp16 | dense | 9.600 | 14.459 | 17.814 | 9.038 | 5.144 |
+| fp16 | causal | 9.247 | 15.008 | 18.480 | 9.117 | 5.170 |
 
-Combined graph latency falls 29–34% against the preceding public entry and is
-1.44–1.63× faster than standalone FA2 in these four calls. This run selected
+These policies reduce graph latency 1.3–8.7% against the shared class with both
+controls disabled, and are 1.56–1.65× faster than standalone FA2 in these calls.
+The initial four-pass-to-two-pass change is retained in the
+[original dataset](../results/rtx4090-short.json). This run selected
 PyTorch's Flash backend, including two input-copy kernels in its six-pass
 training graph. All preparation is included. Systems independently confirms
-two GPU passes per eager selected call versus four for the preceding entry.
+two GPU passes per eager call for both shared-kernel policies.
 
-The [retained record](../results/rtx4090-short.json) includes 24 graph/eager
+The [current record](../results/rtx4090-short-optimized.json) includes 24 graph/eager
 forward, backward and combined measurements plus eight no-grad controls. Nine
 rotated 100-ms sampling windows followed one second of warmup. Evaluation seed
-82193 differs from prototype seed 196643. Actual synchronized eager F+B also
-improved against the preceding entry in all four calls, but host overhead
-dominates these small workloads; those samples do not establish model or
-serving throughput gains. No-grad forward preserves its previous fallback.
+607931 differs from selection seed 98271. Same-process eager F+B is effectively
+tied; this follow-up claims resident graph gains. Both capture orders with
+shared input storage preserve those gains. A separate persistent-process
+comparison uses the exact initial class through the matched native host,
+including eight original compilation units that match the initial release's
+loaded code. Its timings have a different process boundary and are retained
+separately. No model or serving gain is inferred. No-grad forward preserves
+its previous fallback.
 
 ## Qualification and reproduction
 
@@ -95,16 +107,17 @@ PyTorch 2.15.0/CUDA 13.2, CuTe DSL 4.8.1 and Triton 3.9.0. Official FA2 revision
 `4616f5116d33e3ba3cbb71d582caffcfcb49649c` uses its verified SM80 binary on this
 SM89 device. The GPU's configured power limit was 400 W.
 
-After integration with current main, the rebuilt host extension passed the
-public and directed checks again, followed by a second independent-seed
-joint comparison. All four loaded backward CUBIN/SASS pairs matched the
-original qualified implementation byte for byte. The new actual host binary
-and final evidence inventory are separately recorded and hash-verified.
+The final selected CUBIN/SASS pairs match the qualified per-case experiment
+byte for byte. The basic shared-class defaults were also requalified on
+RTX 3090 and L40S. Some default-false code generation changes, so compatibility
+is established by actual checks and timings rather than a byte-identity claim.
+The actual host binary and final evidence inventories are separately recorded
+and hash-verified.
 
 ```sh
 capture_dir=$(mktemp -d)
 python -m benchmarks.validate_rtx4090_short --output "$capture_dir/qualification.json"
-python -m benchmarks.compare_attention_variants --operations '[{"label":"selected","factory":"benchmarks.rtx4090_short_controls:make_attention"},{"label":"previous","factory":"benchmarks.rtx4090_short_controls:make_attention","kwargs":{"policy":"previous"}},{"label":"fa2","backend":"fa2"},{"label":"sdpa","backend":"sdpa"}]' --seq 128 --dim 16 --heads 16 --dtype bf16 fp16 --visibility dense causal --phases forward backward joint --warmup-ms 1000 --window-ms 100 --repeats 9 --seed 82193 --source-revision "$(git rev-parse HEAD)" --output "$capture_dir/comparison/report.json"
+python -m benchmarks.compare_attention_variants --operations '[{"label":"selected","factory":"benchmarks.rtx4090_short_optimized_controls:make_attention"},{"label":"previous","factory":"benchmarks.rtx4090_short_optimized_controls:make_attention","kwargs":{"policy":"previous"}},{"label":"fa2","backend":"fa2"},{"label":"sdpa","backend":"sdpa"}]' --seq 128 --dim 16 --heads 16 --dtype bf16 fp16 --visibility dense causal --phases forward backward joint --warmup-ms 1000 --window-ms 100 --repeats 9 --seed 607931 --source-revision "$(git rev-parse HEAD)" --output "$capture_dir/comparison/report.json"
 ```
 
 Complete source, exact commands and runtime configuration were saved before

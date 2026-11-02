@@ -58,7 +58,14 @@ def _short_compatible(q, k, v, mask, dropout, causal, scale, gqa):
 def _short_runner():
     from kohakufa_cute.native import extension
 
-    return extension().AttentionRunner("short", {})
+    return extension().AttentionRunner("short-optimized", {})
+
+
+def _short_flags(dtype, causal):
+    """Use independently measured layout/statistics choices per input family."""
+    if dtype not in (torch.bfloat16, torch.float16):
+        raise ValueError("Short attention requires BF16 or FP16 inputs.")
+    return causal or dtype == torch.float16, not causal
 
 
 @lru_cache(maxsize=12)

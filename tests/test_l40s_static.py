@@ -25,11 +25,19 @@ class L40sSelectionTests(unittest.TestCase):
         self.properties = SimpleNamespace(
             name="NVIDIA L40S", multi_processor_count=142, shared_memory_per_block_optin=101376
         )
+        from benchmarks.l40s_public_metadata_controls import python_compatible
+
+        self.native_predicate = Mock(
+            side_effect=lambda q, k, v, causal, short_owned=True: python_compatible(
+                q, k, v, None, 0, causal, None, False
+            )
+        )
         for control in (
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 9)),
             patch.object(torch.cuda, "current_device", return_value=0),
             patch.object(torch.cuda, "get_device_properties", return_value=self.properties),
             patch.object(fa4_sm80, "available", return_value=True),
+            patch.object(_l40s, "_metadata_predicate", return_value=self.native_predicate),
         ):
             control.start()
             self.addCleanup(control.stop)
@@ -91,7 +99,9 @@ class L40sSelectionTests(unittest.TestCase):
         self.assertIs(_l40s.schedule(128, 4096, False), _l40s.schedule(128, 4096, False))
         _l40s.is_device.cache_clear()
         with patch.object(self.properties, "name", "NVIDIA GeForce RTX 4090"):
-            with patch("kohakufa_cute.fa4_sm80._host.native_runner", return_value=Mock(return_value=object())) as preceding:
+            with patch(
+                "kohakufa_cute.fa4_sm80._host.native_runner", return_value=Mock(return_value=object())
+            ) as preceding:
                 fa4_sm80.attention(q, q, q)
             preceding.assert_called_once()
 
@@ -182,7 +192,11 @@ class L40sSelectionTests(unittest.TestCase):
         q = training_operand()
         native = SimpleNamespace(extension=lambda: extension)
         with patch.dict(sys.modules, {"kohakufa_cute.native": native}):
-            for function in (api.attention, api.scaled_dot_product_attention, api.automatic_scaled_dot_product_attention):
+            for function in (
+                api.attention,
+                api.scaled_dot_product_attention,
+                api.automatic_scaled_dot_product_attention,
+            ):
                 function(q, q, q)
         selected = _l40s.schedule(128, 4096, False)
         extension.AttentionRunner.assert_called_once_with("warp", asdict(selected))
@@ -212,7 +226,9 @@ class L40sPublicKernelTests(unittest.TestCase):
                         self.assertTrue(fa4_sm80.compatible(*inputs, None, 0, causal, None, False))
                         saved = []
                         with torch.autograd.graph.saved_tensors_hooks(lambda t: saved.append(t) or t, lambda t: t):
-                            with patch.object(api, "_extension", side_effect=AssertionError("Unexpected native fallback")):
+                            with patch.object(
+                                api, "_extension", side_effect=AssertionError("Unexpected native fallback")
+                            ):
                                 out = api.scaled_dot_product_attention(*inputs, is_causal=causal)
                         self.assertEqual(len(saved), 6)
                         statistics(inputs, saved[-2], saved[-1], causal, dimension**-0.5)
@@ -240,11 +256,12 @@ class L40sPublicKernelTests(unittest.TestCase):
                     (api.attention, {"causal": causal}),
                     (api.scaled_dot_product_attention, {"is_causal": causal}),
                     (api.automatic_scaled_dot_product_attention, {"is_causal": causal}),
+                    (fa4_sm80.attention, {"causal": causal}),
                 ):
                     output = function(*inputs, **kwargs)
                     actual = output, *torch.autograd.grad(output, inputs, dout)
                     assess(actual, inputs, dout, causal=causal, scale=None, directed=False, pointwise=False)
-                self.assertEqual(selected.call_count, 3)
+                self.assertEqual(selected.call_count, 4)
 
     def test_inference_and_short_training_retain_native_fallback(self):
         from kohakufa_cute import native
@@ -255,7 +272,9 @@ class L40sPublicKernelTests(unittest.TestCase):
             (1024, 128, False, True),
         ):
             inputs = [
-                torch.randn(1, 16, sequence, dimension, device="cuda", dtype=torch.bfloat16, requires_grad=not inference)
+                torch.randn(
+                    1, 16, sequence, dimension, device="cuda", dtype=torch.bfloat16, requires_grad=not inference
+                )
                 for _ in range(3)
             ]
             self.assertFalse(fa4_sm80.compatible(*inputs, None, 0, causal, None, False))

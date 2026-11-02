@@ -9,7 +9,12 @@ Times are median milliseconds per attention call unless a table explicitly speci
 ## L40S bounded shared warp training
 
 The [bounded training policy](../docs/l40s-warp-training.md) covers full-device
-L40S D64/D128 training at exact qualified lengths. Its current causal ordering
+L40S D64/D128 training at exact qualified lengths. The latest
+[native metadata analysis](../docs/l40s-native-metadata.md),
+[96-row actual public comparison](l40s-native-metadata.json) and
+[paired-variability chart](l40s-native-metadata.svg) report its host check.
+Short FP16 gains, BF16 ties and mixed long rows remain visible; GPU code is
+byte-identical. Its causal ordering
 has a [November 2 analysis](../docs/l40s-causal-groups.md),
 [96-row paired report](l40s-causal-groups.json) and [matching chart](l40s-causal-groups.svg).
 The native group1 control has a shorter Python guard than the public API;
@@ -18,6 +23,11 @@ The [November 1 dense/initial report](l40s-warp-training.json) and
 [dated chart](l40s-warp-training.svg) retain the earlier native CuTe and FA2
 comparison. Inference and unqualified lengths retain their existing path.
 The historical four-device grid above is unchanged.
+
+The proposed bounded L40S S128 D16 training route has a separate
+[public-call report](../docs/l40s-short-owned.md), [24-row data](l40s-short-owned.json)
+and [matching chart](l40s-short-owned.svg). Its no-grad and long-shape controls
+remain visible; the earlier L40S studies above retain their dated scope.
 
 ## Standalone FlashAttention comparisons
 

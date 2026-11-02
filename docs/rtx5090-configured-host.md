@@ -1,6 +1,6 @@
 # RTX 5090 configured training schedule
 
-The pinned optional installation selects a warp-MMA path on a full 170-SM RTX 5090 for contiguous `[1,16,4096,64]` and `[1,16,4096,128]` FP16/BF16 Q/K/V, for dense or causal training. It also selects causal S1024 calls for D64 FP16/BF16 and D128 BF16. FP16 D128 at S1024 retains its preceding dispatch because complete eager results were inconsistent. All three inputs must require gradients and gradient recording must be enabled. Selection requires equal Q/K/V shapes, no mask or dropout, and a positive normal FP32 scale. Inference, compiled calls, views, unlisted lengths and other devices retain their existing dispatch.
+The pinned optional installation selects a warp-MMA path on a full 170-SM RTX 5090 for contiguous `[1,16,4096,64]` and `[1,16,4096,128]` FP16/BF16 Q/K/V, for dense or causal training. It also selects D256 dense/causal training at S1024/S4096, and causal S1024 calls for D64 FP16/BF16 and D128 BF16. FP16 D128 at S1024 retains its preceding dispatch because complete eager results were inconsistent. All three inputs must require gradients and gradient recording must be enabled. Selection requires equal Q/K/V shapes, no mask or dropout, and a positive normal FP32 scale. Inference, compiled calls, views, unlisted lengths and other devices retain their existing dispatch.
 
 Use the [pinned optional installation](a100-sm80-fa4.md#installation-and-selection). Measurements use Python 3.13, Torch 2.15.0+cu132, CuTe DSL 4.8.1, TVM FFI 0.1.15.post0 and Quack 0.6.5, on a full device with a 600 W power limit. The dependency gate retains this qualified stack to compare matching compilation and arithmetic policies. The optional CuTe dependency is pinned to FlashAttention revision `4616f5116d33e3ba3cbb71d582caffcfcb49649c`. Standalone FA2 2.8.4 was built for SM120; its actual loaded-extension hash is retained in the results.
 
@@ -29,6 +29,45 @@ The [compact evidence](../results/rtx5090-medium-causal.json) retains all 48 fin
 Earlier seven-window 100 ms runs contained substantial eager variability, including regressions; they remain visible rather than being replaced by the newer protocol. A separate in-process attribution study recorded zero CPU quota-throttling events across 3,888 measured windows and both complete processes. Its instrumented Systems traces show the largest inter-kernel gap between forward and backward preparation in all three compared paths. Neither observation establishes the cause of the earlier variability or a hardware performance ceiling.
 
 The final bounded source passed 84 live-policy cases, nine actual public-frontdoor frames with 18 changed-data/poisoned replays, independent output/dQ/dK/dV and literal-statistic checks, CPU/GPU reference agreement, and actual selected/fallback graph checks. Its frozen CPU tree ran 379 tests total, with 180 skips and no failures; executable hook permissions were restored and checked. All four sanitizer passes and 16 pipeline-code bindings were retained for the unchanged wider GPU implementation. Three final main-kernel bindings, including FP16 D64, passed after narrowing eligibility. Loaded ELF, compiler ELF, PTX/SASS and actual host-library bytes were verified off-host. Public and direct-runner forward, preparation, main and conversion binaries match for both BF16 dimensions.
+
+## D256 complete training calls
+
+D256 now uses its own qualified schedule on the same full-device, B1/H16 contiguous training domain: S1024 or S4096, FP16 or BF16, dense or causal. The gradient, scale, layout and API policies above remain enforced. D64/D128 schedules and the FP16 D128 S1024 fallback are preserved. The existing native runner accepts this bounded full-device SM120 training target without an experimental constructor flag or a configuration-ABI change.
+
+Backward uses M64/N32, one query stage, one output-gradient stage, 256 threads, 4/1/2 score/KV/dQ warp geometry and register-resident V. The narrower key tile and coupled MMA geometry fit within the consumer device's shared-memory budget. Forward uses M128/N32 with 256 threads for S1024 dense, and M64/N64 with 128 threads otherwise. These are separately measured architecture-specific choices; the larger M128 forward is slower on the long and causal controls.
+
+![RTX 5090 D256 public comparisons](../results/rtx5090-d256.svg)
+
+Captured complete forward plus all gradients, milliseconds. Ranges retain both independent held-out seed medians; speedup is reference time divided by actual selected public time.
+
+| S | Dtype | Visibility | Public CuTe, ms | Prior CuTe / public | FA2 / public |
+| ---: | --- | --- | ---: | ---: | ---: |
+| 1024 | BF16 | dense | 0.420–0.423 | 1.43–1.43× | 1.19–1.19× |
+| 1024 | BF16 | causal | 0.262–0.263 | 1.49–1.49× | 1.21–1.21× |
+| 1024 | FP16 | dense | 0.423–0.423 | 1.41–1.42× | 1.19–1.20× |
+| 1024 | FP16 | causal | 0.262–0.263 | 1.49–1.50× | 1.20–1.21× |
+| 4096 | BF16 | dense | 5.590–5.639 | 1.44–1.44× | 1.08–1.08× |
+| 4096 | BF16 | causal | 2.896–2.900 | 1.45–1.45× | 1.07–1.07× |
+| 4096 | FP16 | dense | 5.697–5.734 | 1.41–1.42× | 1.07–1.07× |
+| 4096 | FP16 | causal | 2.929–2.930 | 1.44–1.44× | 1.07–1.07× |
+
+Across all eight shapes and both held-out seeds, combined graph calls improve 1.41–1.50× over preceding CuTe, 1.07–1.21× over standalone FA2 and 1.10–1.29× over default SDPA. Complete warmed eager calls improve 1.41–1.50× over preceding CuTe and beat both measured vendor implementations on every row. Some short causal FA2 eager samples vary substantially; the graph comparison gives the more conservative device-path improvement. These are complete implementation comparisons with each backend's arithmetic and host wrapper, not equal-instruction microbenchmarks or model-level throughput.
+
+The [compact evidence](../results/rtx5090-d256.json) includes all 96 forward/backward/joint eager/graph rows, seven samples per backend, independent per-component maximum head errors, actual graph resources, runtime/source hashes and six strict loaded-code bindings. Selection used seed 179424673; evaluation used disjoint seeds 32416190071 and 32416187567. Each process warms for 300 ms and randomizes backend order over seven 50 ms windows. A graph replay contains one complete call. The prior public control loads its original native library as well as its preceding Python selector, so the new metadata allowance cannot silently change the baseline.
+
+Actual API qualification passed 12 frontdoor frames, 44 live-metadata/policy cases, 16 changed-data and poisoned-buffer replays, independent O/dQ/dK/dV norm gates and literal saved-statistic checks. Short/partial calls and legacy D64/D128 selection were checked. The frozen tree ran 381 CPU tests total, with 180 skips and no failures. All four sanitizer tools passed on actual selected public calls; reference equations ran on exact CPU copies while implementation kernels remained instrumented. The private geometry comparison separately passed 39 strong fixtures, changed graphs and all four tools for each of three forward controls. Acceptance criteria and rounding remain unchanged.
+
+The selected short-dense forward uses 98,304 shared bytes, 247 registers/thread and zero local bytes; the other selected forward uses 98,304 shared bytes, 254 registers and zero local bytes. Backward uses 91,136 shared bytes, 255 registers and 72 local bytes. Local allocation is a compiler resource report, not a measured steady-loop spill cost. Exact BF16 dense/causal graph symbols were bound to loaded ELF, compiler-returned CuTe ELF and PTX/SASS, including the actual native host library. All 162 raw output files were verified off-host against their complete SHA inventory. Compute counter access remains unavailable; no stall or utilization percentages are inferred.
+
+Reproduce current public timings against the installed references using the existing driver:
+
+```sh
+PYTHONPATH=src python3 -m benchmarks.compare_attention_variants \
+  --operations '[{"label":"public","backend":"cute"},{"label":"fa2","backend":"fa2"},{"label":"sdpa","backend":"sdpa"}]' \
+  --seq 1024 4096 --dim 256 --heads 16 --dtype bf16 fp16 \
+  --visibility dense causal --phases forward backward joint --repeats 7 \
+  --warmup-ms 300 --window-ms 50 --output rtx5090-d256.json
+```
 
 ## S4096 complete-call comparison
 

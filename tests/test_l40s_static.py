@@ -28,7 +28,9 @@ class L40sSelectionTests(unittest.TestCase):
         from benchmarks.l40s_public_metadata_controls import python_compatible
 
         self.native_predicate = Mock(
-            side_effect=lambda q, k, v, causal: python_compatible(q, k, v, None, 0, causal, None, False)
+            side_effect=lambda q, k, v, causal, short_owned=True: python_compatible(
+                q, k, v, None, 0, causal, None, False
+            )
         )
         for control in (
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 9)),

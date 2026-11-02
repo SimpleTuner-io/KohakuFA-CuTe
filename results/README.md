@@ -24,6 +24,11 @@ The [November 1 dense/initial report](l40s-warp-training.json) and
 comparison. Inference and unqualified lengths retain their existing path.
 The historical four-device grid above is unchanged.
 
+The proposed bounded L40S S128 D16 training route has a separate
+[public-call report](../docs/l40s-short-owned.md), [24-row data](l40s-short-owned.json)
+and [matching chart](l40s-short-owned.svg). Its no-grad and long-shape controls
+remain visible; the earlier L40S studies above retain their dated scope.
+
 ## Standalone FlashAttention comparisons
 
 The retained grids below compare default PyTorch SDPA. Use the explicit standalone

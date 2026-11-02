@@ -14,10 +14,12 @@ from .kernels import Attention
 class ShortOwned(Attention):
     """One CTA owns every query/key row and all three output gradients."""
 
-    def __init__(self, causal):
+    def __init__(self, causal, narrow_product=False, prefetch_statistics=False):
         super().__init__("q", causal, False, columns=128, width=32, warps=8, query_column_warps=1)
         self.rows = 128
-        self.product_width = 32
+        self.product_width = 16 if narrow_product else 32
+        self.narrow_product = narrow_product
+        self.prefetch_statistics = prefetch_statistics
         self.score_b_matrices = 4
 
     @cute.jit
@@ -45,7 +47,14 @@ class ShortOwned(Attention):
             (4, 2, 1),
             permutation_mnk=(64, 32, 16),
         )
-        self.kernel_owned(q, k, v, out, maximum, logsum, dout, dq, dk, dv, scale, mma).launch(
+        product_mma = mma
+        if cutlass.const_expr(self.narrow_product):
+            product_mma = cute.make_tiled_mma(
+                warp.MmaF16BF16Op(q.element_type, cutlass.Float32, (16, 8, 16)),
+                (8, 1, 1),
+                permutation_mnk=(128, 16, 16),
+            )
+        self.kernel_owned(q, k, v, out, maximum, logsum, dout, dq, dk, dv, scale, mma, product_mma).launch(
             grid=(q.shape[0] * q.shape[1], 1, 1), block=(256, 1, 1), stream=stream
         )
 
@@ -66,7 +75,7 @@ class ShortOwned(Attention):
         )
         ta = ca.get_slice(tid)
         sa, da = ta.partition_S(left), ta.retile(ra)
-        right = cute.composition(source, cute.make_layout((32, 128), stride=(128, 1)))
+        right = cute.composition(source, cute.make_layout((self.product_width, 128), stride=(128, 1)))
         rb = thread.make_fragment_B(thread.partition_B(right))
         cb = cute.make_tiled_copy_B(
             cute.make_copy_atom(warp.LdMatrix8x8x16bOp(transpose=True, num_matrices=4), source.element_type), mma
@@ -79,7 +88,7 @@ class ShortOwned(Attention):
             cute.gemm(mma, result, ra[None, None, chunk], rb[None, None, chunk], result)
 
     @cute.kernel
-    def kernel_owned(self, q, k, v, out, maximum, logsum, dout, dq, dk, dv, scale, mma):
+    def kernel_owned(self, q, k, v, out, maximum, logsum, dout, dq, dk, dv, scale, mma, product_mma):
         tid, _, _ = cute.arch.thread_idx()
         bh, _, _ = cute.arch.block_idx()
         batch, head = bh // q.shape[1], bh % q.shape[1]
@@ -115,6 +124,18 @@ class ShortOwned(Attention):
         scores = self.dot(sq, sk, mma, thread, tid)
         derivatives = self.dot(sdo, sv, mma, thread, tid)
         coordinates = thread.partition_C(cute.make_identity_tensor((128, 128)))
+        # Row statistics are immutable after their publication barrier. Load
+        # them before any P/dS stores so shared-store alias analysis cannot
+        # prevent common-subexpression reuse of repeated fragment rows.
+        if cutlass.const_expr(self.prefetch_statistics):
+            row_maximum = cute.make_rmem_tensor(scores.shape, cutlass.Float32)
+            row_logsum = cute.make_rmem_tensor(scores.shape, cutlass.Float32)
+            row_delta = cute.make_rmem_tensor(scores.shape, cutlass.Float32)
+            for i in cutlass.range_constexpr(cute.size(coordinates)):
+                row, _ = coordinates[i]
+                row_maximum[i] = saved_maximum[row]
+                row_logsum[i] = saved_logsum[row]
+                row_delta[i] = delta[row]
         magnitude = scale if scale >= 0 else -scale
         sign = cutlass.Float32(1) if scale >= 0 else cutlass.Float32(-1)
         for i in cutlass.range_constexpr(cute.size(coordinates)):
@@ -124,28 +145,39 @@ class ShortOwned(Attention):
             if cutlass.const_expr(self.causal):
                 visible = column <= row
             if visible:
+                if cutlass.const_expr(self.prefetch_statistics):
+                    maximum_value = row_maximum[i]
+                    logsum_value = row_logsum[i]
+                else:
+                    maximum_value = saved_maximum[row]
+                    logsum_value = saved_logsum[row]
                 probability = cute.math.exp2(
-                    (scores[i] * sign - saved_maximum[row]) * magnitude * 1.4426950408889634 - saved_logsum[row],
+                    (scores[i] * sign - maximum_value) * magnitude * 1.4426950408889634 - logsum_value,
                     fastmath=True,
                 )
             rounded = probability.to(q.element_type)
             sp[row, column] = rounded
-            sds[row, column] = (rounded.to(cutlass.Float32) * (derivatives[i] - delta[row])).to(q.element_type)
+            if cutlass.const_expr(self.prefetch_statistics):
+                delta_value = row_delta[i]
+            else:
+                delta_value = delta[row]
+            sds[row, column] = (rounded.to(cutlass.Float32) * (derivatives[i] - delta_value)).to(q.element_type)
         cute.arch.sync_threads()
-        output_coordinates = thread.partition_C(cute.make_identity_tensor((128, 32)))
-        result = cute.make_rmem_tensor(thread.partition_shape_C((128, 32)), cutlass.Float32)
+        product_thread = product_mma.get_slice(tid)
+        output_coordinates = product_thread.partition_C(cute.make_identity_tensor((128, self.product_width)))
+        result = cute.make_rmem_tensor(product_thread.partition_shape_C((128, self.product_width)), cutlass.Float32)
         result.fill(0.0)
-        self.product(sds, sk, 0, mma, thread, tid, result, shared_weights=True)
+        self.product(sds, sk, 0, product_mma, product_thread, tid, result, shared_weights=True)
         self.store_direct(result, dq, output_coordinates, batch, head, scale)
         result.fill(0.0)
-        self.transposed_product(sds, sq, mma, thread, tid, result)
+        self.transposed_product(sds, sq, product_mma, product_thread, tid, result)
         self.store_direct(result, dk, output_coordinates, batch, head, scale)
         result.fill(0.0)
-        self.transposed_product(sp, sdo, mma, thread, tid, result)
+        self.transposed_product(sp, sdo, product_mma, product_thread, tid, result)
         self.store_direct(result, dv, output_coordinates, batch, head, cutlass.Float32(1))
 
 
-def compile_kernel(mode, tensors, causal):
+def compile_kernel(mode, tensors, causal, narrow_product=False, prefetch_statistics=False):
     """Static native entry; preserve the ordinary training forward calculation."""
     if mode == "forward":
         return kernels.compile_kernel(
@@ -153,7 +185,7 @@ def compile_kernel(mode, tensors, causal):
         )
     if mode != "backward":
         raise ValueError("Select forward or backward for short attention.")
-    program = ShortOwned(causal)
+    program = ShortOwned(causal, narrow_product=narrow_product, prefetch_statistics=prefetch_statistics)
     return cute.compile(
         program,
         *[from_dlpack(t.detach(), assumed_align=16) for t in tensors],

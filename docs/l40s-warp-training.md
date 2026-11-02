@@ -235,3 +235,9 @@ Python host control. An explicit `forward_m` is a tile experiment. A
 `forward_n` limits both forward overrides to dense D128. These controls
 do not expand the public selector. The compact-summary tool consumes the retained
 campaign capture bundle; its JSON/SVG output uses repository-relative metadata.
+
+The bounded S128 D16 training owner has a separate [public-call qualification](l40s-short-owned.md),
+with held-out timings and preserved no-grad/long-shape controls.
+
+The [optimized S128 D16 policy](l40s-short-optimized.md) has independent public
+qualification and preserves the preceding no-grad and long-shape paths.

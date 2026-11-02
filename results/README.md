@@ -24,6 +24,17 @@ The [November 1 dense/initial report](l40s-warp-training.json) and
 comparison. Inference and unqualified lengths retain their existing path.
 The historical four-device grid above is unchanged.
 
+The initial bounded L40S S128 D16 training route has a separate
+[public-call report](../docs/l40s-short-owned.md), [24-row data](l40s-short-owned.json)
+and [matching chart](l40s-short-owned.svg). Its no-grad and long-shape controls
+remain visible; the earlier L40S studies above retain their dated scope.
+
+The independently qualified optimized short policy has its own
+[held-out public-call report](../docs/l40s-short-optimized.md),
+[24-row data and controls](l40s-short-optimized.json), and
+[matching chart](l40s-short-optimized.svg). The flags-disabled and pristine
+original-class baselines are labeled separately; eager variability remains visible.
+
 ## Standalone FlashAttention comparisons
 
 The retained grids below compare default PyTorch SDPA. Use the explicit standalone
@@ -71,6 +82,15 @@ dispatch. Compiler-returned PTX/cubin files are retained by content hash to avoi
 automatic filename collisions. Exact instruction comparisons additionally need
 an unambiguous binding to the loaded graph function; a matching symbol alone
 can be insufficient across variants. Retain raw captures outside the tracked tree.
+
+## A100 D256
+
+The [long shared-V schedule](../docs/a100-d256-shared-v.md) covers batch1/H8 or
+H16/S4096 with FP16/BF16 dense or causal visibility. Its [48-row actual API
+report](a100-d256-shared-v.json) and [chart](a100-d256-shared-v.svg) separate eager
+and graph timing; all eight backward and joint cases beat FA2 and SDPA in both
+boundaries. The [original N32 study](../docs/a100-d256-training.md) retains its
+144 rows and reference-order diagnosis separately.
 
 ## A40 opt-in
 
@@ -510,3 +530,7 @@ python -m benchmarks.clef_forward --model ../clef-27b-weights \
 Use fresh output directories. Replay restores strides and storage offsets, validates every output against a chunked FP64 oracle, checks that captured graphs respond to changed values, and rotates native SDPA/CuTe timing windows. Add `--dtype fp16` for casts of the captures; this does not measure an FP16 model. Replay compares the installed CuTe version with SDPA; reproducing the old-main control requires a separate checkout of the recorded source. The model harness records numerical failures and excludes failed variants from timing rather than changing its correctness bounds.
 
 The public replay uses default SDPA. To check its stronger FlashAttention alternative separately, run the SDPA call inside `torch.nn.attention.sdpa_kernel(torch.nn.attention.SDPBackend.FLASH_ATTENTION)` and verify the actual loaded kernel. The retained H100 comparisons include both backends.
+
+The [RTX 5090 D256 public-path comparison](../docs/rtx5090-configured-host.md#d256-complete-training-calls) adds two independent 48-row forward/backward/joint eager/graph matrices, with [compact samples and code bindings](rtx5090-d256.json) and a [comparison chart](rtx5090-d256.svg). Its qualified B1/H16 S1024/S4096 dense/causal calls beat standalone FA2 and default SDPA in both timing boundaries; the historical grid above remains unchanged.
+
+The [D256 short-causal follow-up](../docs/rtx5090-configured-host.md#d256-short-causal-ordering) selects G16 only for S1024, improving actual public joint calls by approximately 4–5%. Its [held-out matrix and retained negative controls](rtx5090-d256-short-groups.json) preserve why dense/long calls keep G1.

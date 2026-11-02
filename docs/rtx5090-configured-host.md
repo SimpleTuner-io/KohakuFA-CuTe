@@ -6,7 +6,7 @@ Use the [pinned optional installation](a100-sm80-fa4.md#installation-and-selecti
 
 The schedule uses shared V, M64/N64 backward tiles, two query stages, one output-gradient stage, 256 threads and 4/2/2 MMA warp layouts. Forward uses M128/N64 for D64 and M64/N64 for D128. The configured C++ host supplies fresh descriptors and streams. The [default arithmetic contract](precision.md), including operand conversions, normalization statistics and gradient-scale placement, is unchanged.
 
-Causal calls interleave key tiles across groups of 16 heads. Later key tiles have fewer visible query tiles; remapping their assignment spreads that unequal work across heads. The logical tiles, products, tail predicates and per-CTA synchronization remain the same. Dense calls retain group one. This uses the existing [causal head-group control](causal-head-groups.md), qualified separately on SM120.
+These D64/D128 causal calls interleave key tiles across groups of 16 heads. Later key tiles have fewer visible query tiles; remapping their assignment spreads that unequal work across heads. The logical tiles, products, tail predicates and per-CTA synchronization remain the same. Dense calls retain group one. This uses the existing [causal head-group control](causal-head-groups.md), qualified separately on SM120.
 
 ## S1024 causal training
 
@@ -38,7 +38,7 @@ Backward uses M64/N32, one query stage, one output-gradient stage, 256 threads, 
 
 ![RTX 5090 D256 public comparisons](../results/rtx5090-d256.svg)
 
-Captured complete forward plus all gradients, milliseconds. Ranges retain both independent held-out seed medians; speedup is reference time divided by actual selected public time.
+The initial D256 G1 selection is measured below; the short-causal grouping follow-up appears next. Captured complete forward plus all gradients, milliseconds. Ranges retain both independent held-out seed medians; speedup is reference time divided by actual selected public time.
 
 | S | Dtype | Visibility | Public CuTe, ms | Prior CuTe / public | FA2 / public |
 | ---: | --- | --- | ---: | ---: | ---: |
@@ -68,6 +68,25 @@ PYTHONPATH=src python3 -m benchmarks.compare_attention_variants \
   --visibility dense causal --phases forward backward joint --repeats 7 \
   --warmup-ms 300 --window-ms 50 --output rtx5090-d256.json
 ```
+
+## D256 short causal ordering
+
+The D256 selection now interleaves causal key tiles across 16 heads **only at S1024**. Dense calls and S4096 retain group one. This changes CTA work assignment using the existing qualified kernel; operand conversions, statistics, gradient equations, public eligibility and the native ABI are unchanged.
+
+![Public short-causal D256 grouping](../results/rtx5090-d256-short-groups.svg)
+
+Two independent evaluation seeds reproduce the short-call gain through the actual public API:
+
+| Dtype | Graph joint, public / G1, µs | Eager joint, public / G1, µs | Graph FA2 / public | Graph SDPA / public |
+| --- | ---: | ---: | ---: | ---: |
+| BF16 | 251.3–252.3 / 262.5–262.7 | 252.0–252.5 / 263.2–264.0 | 1.26–1.27× | 1.32–1.34× |
+| FP16 | 251.8–252.3 / 262.5–262.7 | 251.0–251.6 / 262.1–262.4 | 1.26–1.27× | 1.33–1.34× |
+
+The complete forward-plus-backward gain over the preceding public G1 path is approximately 4–5% in both boundaries. Larger groups are not a blanket improvement: G4 slightly regressed at S1024, and G4/G16 regressed approximately 4–8% on the S4096 controls. Those negative paired samples remain in the [compact evidence](../results/rtx5090-d256-short-groups.json). The chart also includes held-out dense/long controls whose dispatch is unchanged. Short causal FA2 eager variance is retained; captured comparisons give the more conservative device-path comparison.
+
+Selection used seed 982451653; held-out evaluation used 32452843 and 32452867, with the same seven randomized 50 ms windows after 300 ms warmup as the preceding D256 experiment. All 96 forward/backward/joint eager/graph rows are retained. Parent and candidate public controls use complete separate Python family namespaces and the same byte-identical C++ host source/module; the source identity is checked at runtime. No per-call predicate bypass is used.
+
+G4/G16 each passed 39 strong fixtures, changed/poisoned graphs and all four sanitizer tools before selection. Final actual-public qualification passed 12 API frames, 44 live-policy cases, 16 poisoned replays, independent O/dQ/dK/dV and literal-statistic checks, four sanitizer tools and six strict loaded-code bindings. The frozen CPU run had 391 total tests, 188 skips and no failures. The changed S1024 causal kernel and unchanged S4096 causal control are both bound to loaded ELF/compiler ELF/PTX/SASS, with all 162 raw output files SHA-verified off-host. Backward uses 91,136 shared bytes and 255 registers; local allocation increases from 72 to 96 bytes on the short grouped control, despite the measured latency gain. This does not establish a runtime spill percentage.
 
 ## S4096 complete-call comparison
 

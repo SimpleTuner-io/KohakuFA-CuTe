@@ -21,6 +21,10 @@ strided inputs, signed/zero scales and other supported CuTe calls use the ordina
 CuTe path. Selected-kernel errors propagate. The standard top-level APIs keep
 their existing selection; this entry is opt-in.
 
+The [combined live metadata check](rtx4090-native-metadata.md) reduces host
+overhead for short eager training calls while retaining these eligibility
+rules and the same GPU kernels.
+
 ## Measurements
 
 Milliseconds, lower is better. These are warmed CUDA-graph forward plus backward

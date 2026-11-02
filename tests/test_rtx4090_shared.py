@@ -5,6 +5,7 @@ from unittest.mock import Mock, patch
 
 import torch
 
+from benchmarks.rtx4090_predicate_candidates import python_compatible
 from kohakufa_cute import api, fa4_sm80
 from kohakufa_cute.fa4_sm80 import rtx4090
 
@@ -30,6 +31,11 @@ class Rtx4090SharedTests(unittest.TestCase):
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 9)),
             patch.object(torch.cuda, "get_device_properties", return_value=self.properties),
             patch.object(fa4_sm80, "available", return_value=True),
+            patch.object(
+                rtx4090,
+                "_metadata_predicate",
+                return_value=lambda q, k, v, causal: python_compatible(q, k, v, causal=causal),
+            ),
         ]
         for item in self.patches:
             item.start()
@@ -80,6 +86,14 @@ class Rtx4090SharedTests(unittest.TestCase):
             self.assertFalse(rtx4090.compatible(q, q, q))
         with patch.object(torch.compiler, "is_compiling", return_value=True):
             self.assertFalse(rtx4090.compatible(q, q, q))
+
+    def test_native_handle_does_not_cache_mutable_eligibility(self):
+        q = operand()
+        predicate = Mock(side_effect=(True, False))
+        with patch.object(rtx4090, "_metadata_predicate", return_value=predicate):
+            self.assertTrue(rtx4090.compatible(q, q, q))
+            self.assertFalse(rtx4090.compatible(q, q, q))
+        self.assertEqual(predicate.call_count, 2)
 
     def test_dense_storage_repair_keeps_causal_geometry(self):
         dense = rtx4090.schedule(128, False)

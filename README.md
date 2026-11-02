@@ -30,7 +30,7 @@ Compilation is excluded.
 The L40S D128 row predates the bounded [shared warp training update](docs/l40s-warp-training.md),
 which retains its separate paired native-CuTe/FA2 measurements.
 
-The pinned [RTX 5090 schedule](docs/rtx5090-configured-host.md#s1024-causal-training) also covers selected S1024 causal training calls, with separate captured-device gains and mixed D64 eager results.
+The pinned [RTX 5090 schedule](docs/rtx5090-configured-host.md#s1024-causal-training) also covers selected S1024 causal training calls, with separate captured-device gains and mixed D64 eager results. It also covers [D256 training](docs/rtx5090-configured-host.md#d256-complete-training-calls), with 1.41–1.50× combined-call gains over preceding CuTe on the qualified S1024/S4096 matrix.
 
 [Performance details and charts](results/README.md) cover both dtypes, dense/causal
 visibility, all five head widths, forward/backward phases and actual SDPA kernels.

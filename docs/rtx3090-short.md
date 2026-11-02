@@ -67,7 +67,7 @@ include each implementation's required math and preparation.
 
 The final public source passed 18 finite directed cases, one expected final-cast
 overflow diagnostic, changed/poisoned graph and negative-view checks, six fallback
-cases and eight legacy D16 cases. All eight public CuTe compilation units have
+cases and eight legacy long D64/D128 cases. All eight public CuTe compilation units have
 identical PTX and cubins to their corresponding qualified N32 prototype, with
 every public cubin matched to an actual loaded image. The four retained sanitizer
 runs each covered 24 prototype cases, including 12 D64 calls; none reported a

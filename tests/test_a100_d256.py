@@ -32,7 +32,7 @@ class A100D256PolicyTests(unittest.TestCase):
             with patch.object(fa4_sm80, "available", return_value=False):
                 self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
 
-    def test_resident_n32_schedule_keeps_causal_group_one(self):
+    def test_d256_schedule_keeps_other_families_stable(self):
         from kohakufa_cute.fa4_sm80._attention import Schedule
         from kohakufa_cute.fa4_sm80._schedules import a100_schedule
 
@@ -40,12 +40,14 @@ class A100D256PolicyTests(unittest.TestCase):
             for sequence in (128, 1024, 4096):
                 for causal in (False, True):
                     s = a100_schedule(256, sequence, causal, heads)
-                    self.assertEqual((s.forward_m, s.forward_n, s.backward_m, s.backward_n), (64, 64, 64, 32))
+                    self.assertEqual(
+                        (s.forward_m, s.forward_n, s.backward_m, s.backward_n), (64, 64, 64, 64 if sequence == 4096 else 32)
+                    )
                     self.assertEqual(
                         (s.query_stages, s.dout_stages, s.score_m_warps, s.kv_m_warps, s.dq_m_warps), (1, 1, 4, 1, 2)
                     )
-                    self.assertTrue(s.v_in_regs)
-                    self.assertEqual(s.causal_head_group, 1)
+                    self.assertEqual(s.v_in_regs, sequence != 4096)
+                    self.assertEqual(s.causal_head_group, 4 if causal and sequence == 4096 else 1)
         self.assertEqual(Schedule().backward_n, 128)
 
 

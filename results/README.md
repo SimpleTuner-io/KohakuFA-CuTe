@@ -67,6 +67,15 @@ automatic filename collisions. Exact instruction comparisons additionally need
 an unambiguous binding to the loaded graph function; a matching symbol alone
 can be insufficient across variants. Retain raw captures outside the tracked tree.
 
+## A100 D256
+
+The [long shared-V schedule](../docs/a100-d256-shared-v.md) covers batch1/H8 or
+H16/S4096 with FP16/BF16 dense or causal visibility. Its [48-row actual API
+report](a100-d256-shared-v.json) and [chart](a100-d256-shared-v.svg) separate eager
+and graph timing; all eight backward and joint cases beat FA2 and SDPA in both
+boundaries. The [original N32 study](../docs/a100-d256-training.md) retains its
+144 rows and reference-order diagnosis separately.
+
 ## A40 opt-in
 
 The explicit [A40 entry](../docs/a40-native-predicate.md) selects dense D128/D256 and

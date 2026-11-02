@@ -1,4 +1,8 @@
-# A100 D256 training path
+# Original A100 D256 N32 study
+
+The subsequent [shared-V N64 update](a100-d256-shared-v.md) replaces the long
+4096-token schedule. This page retains the original N32 evidence and reference
+diagnosis without relabelling it as the later measurement.
 
 The full-device A100 path extends to batch1/D256 at H16/S1024 and
 H8 or H16/S4096, for dense or causal FP16/BF16 attention. It uses the

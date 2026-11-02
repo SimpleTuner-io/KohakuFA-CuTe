@@ -80,6 +80,10 @@ The [B200 analysis](../docs/b200-wide-backward.md) and [compact measurements](b2
 
 ## GB10 (DGX / RTX Spark)
 
+Current optional shared-entry measurements include the [long dense forward
+update](../docs/gb10-forward-geometry.md) and [paired samples](gb10-forward-geometry.json).
+The historical default-path tables below retain their recorded scope.
+
 The timings and qualification below describe the recorded pre-removal revision.
 SM121 was unavailable for this precision-removal campaign; these figures do not
 qualify its changed default backward arithmetic.

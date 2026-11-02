@@ -16,8 +16,10 @@ def schedule(sequence, causal, heads=4, dtype=torch.bfloat16):
         raise ValueError("The explicit GB10 schedule requires a qualified sequence family.")
     wide_dense = not causal and ((sequence == 1024 and heads == 4) or (sequence == 4096 and dtype == torch.float16))
     shared_causal = causal and sequence == 4096 and heads == 4 and dtype == torch.float16
+    wide_forward = not causal and heads == 16 and sequence == 4096
     return Schedule(
-        forward_m=64,
+        forward_m=128 if wide_forward else 64,
+        forward_n=32 if wide_forward else 64,
         backward_m=32 if wide_dense else 64,
         backward_n=128 if wide_dense else 64,
         query_stages=1 if wide_dense or shared_causal else 2,
@@ -86,11 +88,7 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
 def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):
     """Run the explicit measured family and preserve the public fallback API."""
     if compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
-        return native_runner(schedule(q.shape[2], is_causal, q.shape[1], q.dtype))(
-            q, k, v, scale=scale, causal=is_causal
-        )
+        return native_runner(schedule(q.shape[2], is_causal, q.shape[1], q.dtype))(q, k, v, scale=scale, causal=is_causal)
     from kohakufa_cute import api
 
-    return api.scaled_dot_product_attention(
-        q, k, v, attn_mask, dropout_p, is_causal, scale=scale, enable_gqa=enable_gqa
-    )
+    return api.scaled_dot_product_attention(q, k, v, attn_mask, dropout_p, is_causal, scale=scale, enable_gqa=enable_gqa)

@@ -136,6 +136,17 @@ class Gb10SharedTests(unittest.TestCase):
                         )
                         self.assertEqual(gb10.schedule(sequence, causal, heads, dtype).causal_head_group, expected)
 
+    def test_dense_forward_geometry_preserves_other_shape_families(self):
+        for sequence in (512, 1024, 4096):
+            for heads in (4, 16):
+                for dtype in (torch.float16, torch.bfloat16):
+                    for causal in (False, True):
+                        if sequence == 1024 and causal:
+                            continue
+                        selected = gb10.schedule(sequence, causal, heads, dtype)
+                        expected = (128, 32) if not causal and heads == 16 and sequence == 4096 else (64, 64)
+                        self.assertEqual((selected.forward_m, selected.forward_n), expected)
+
     def test_long_causal_shared_storage_is_bounded_to_h4_fp16(self):
         for heads in (4, 16):
             for dtype in (torch.float16, torch.bfloat16):

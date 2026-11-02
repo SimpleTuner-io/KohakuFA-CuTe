@@ -5,6 +5,7 @@ from functools import lru_cache
 
 import torch
 
+from ..determinism import check_atomic_backward
 from ._private_api import make_private_api
 
 
@@ -55,6 +56,7 @@ class _Attention(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, dout):
+        check_atomic_backward()
         q, k, v, out, maximum, logsum = ctx.saved_tensors
         padding = (-maximum.shape[-1]) % 640
         if padding:

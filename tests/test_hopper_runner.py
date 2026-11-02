@@ -21,6 +21,15 @@ class HopperRunnerTests(unittest.TestCase):
             for _ in range(3)
         ]
 
+    def test_native_backward_honors_policy_enabled_after_forward(self):
+        from tests.test_determinism import deterministic
+
+        inputs = self.operands()
+        with deterministic(False):
+            output = self.operation(*inputs, is_causal=True)
+        with deterministic(True), self.assertRaisesRegex(RuntimeError, "atomic_backward"):
+            torch.autograd.grad(output, inputs, torch.randn_like(output))
+
     def test_runtime_scale_and_layout_guards(self):
         inputs = self.operands()
         for scale in (0.0, -0.25, float("nan"), float("inf"), 1e-100):

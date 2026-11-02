@@ -19,7 +19,7 @@ TVM FFI 0.1.15.post0, Quack 0.6.5, torch-c-dlpack-ext 0.1.5, and the pinned
 than a claim about newer releases. Other runtimes retain ordinary CuTe.
 Run the qualified target with `CUTE_DSL_ARCH=sm_121a`.
 
-Selection requires aligned, contiguous BHSD FP16/BF16 with equal Q/K/V shapes,
+The training selection requires aligned, contiguous BHSD FP16/BF16 with equal Q/K/V shapes,
 batch one, 4 or 16 heads, and D128. Dense lengths are 512, 1024 and 4096;
 causal lengths are 512 and 4096. It also requires the current CUDA device,
 the reported `NVIDIA GB10` name, 48 SMs, and 101376 bytes of opt-in shared
@@ -28,10 +28,15 @@ inputs, signed/zero/subnormal scales, deterministic mode and compiled calls
 retain the ordinary public CuTe API with the original arguments. Selected
 kernel failures propagate.
 
+Calls requesting no input gradients also have a [forward-only family](gb10-inference.md)
+for B1/H16/D128, S128/S512/S1024/S4096, dense or causal. Its scope and complete
+NoGrad measurements are documented separately.
+
 ## Selected schedules
 
-Forward uses M64/N64, one stage, 128 threads and shared Q. Backward uses
-256 threads and one dO stage. Warp layouts below are score/KV/dQ.
+Training forward uses M64/N64 except dense H16/S4096, which uses
+[M128/N32](gb10-forward-geometry.md). Both use one stage, 128 threads and shared Q.
+Backward uses 256 threads and one dO stage. Warp layouts below are score/KV/dQ.
 
 | Family | Backward M / N | Q stages | Warp layouts | V |
 | --- | --- | --- | --- | --- |

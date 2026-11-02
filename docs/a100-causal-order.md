@@ -52,7 +52,7 @@ this is a backward work-order change.
 
 The measured comparison executes exact public API bodies with independent
 previous/current selected-entry and schedule modules. Both use the same native
-runtime, and each accepts changing operands. The H8 medium causal exclusion can
+runtime, and each accepts changing operands. The H8 medium causal exclusion in this historical matrix can
 warm both generic-loader caches; cache proofs retain the actual state rather
 than assuming every comparison stays cold.
 

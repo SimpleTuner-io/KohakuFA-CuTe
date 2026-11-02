@@ -18,7 +18,33 @@ def target_device(device):
     )
 
 
+@lru_cache(maxsize=1)
+def _metadata_predicate():
+    from ..native import extension
+
+    return extension().sm120_metadata_compatible
+
+
 def compatible(q, k, v, mask, dropout, causal, scale, gqa):
+    if isinstance(q, torch.Tensor):
+        if (
+            torch.compiler.is_compiling()
+            or torch.are_deterministic_algorithms_enabled()
+            or mask is not None
+            or dropout != 0
+            or q.device.type != "cuda"
+            or not target_device(q.device)
+            or (
+                scale is not None
+                and (
+                    not isinstance(scale, (float, int))
+                    or not math.isfinite(scale)
+                    or not 1.1754943508222875e-38 <= scale <= 2e38
+                )
+            )
+        ):
+            return False
+        return _metadata_predicate()(q, k, v, causal)
     if (
         torch.compiler.is_compiling()
         or torch.are_deterministic_algorithms_enabled()
@@ -33,7 +59,7 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.shape != v.shape
         or q.shape[0] != 1
         or q.shape[1] != 16
-        or q.shape[2] != 4096
+        or not (q.shape[2] == 4096 or (causal and q.shape[2] == 1024 and (q.shape[3] == 64 or q.dtype == torch.bfloat16)))
         or q.shape[3] not in (64, 128)
         or q.device != k.device
         or q.device != v.device

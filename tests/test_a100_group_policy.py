@@ -12,7 +12,9 @@ class A100GroupPolicyTests(unittest.TestCase):
             for heads in (8, 9, 15, 16):
                 for sequence in (128, 1024, 2048, 4095, 4096, 4097):
                     for causal in (False, True):
-                        selected = causal and sequence == 4096 and heads in (8, 16)
+                        selected = causal and (
+                            (sequence == 4096 and heads in (8, 16)) or (dimension == 128 and sequence == 2048 and heads == 8)
+                        )
                         self.assertEqual(
                             a100_schedule(dimension, sequence, causal, heads).causal_head_group,
                             (4 if heads == 8 else 16) if selected else 1,

@@ -9,7 +9,10 @@ and stream. The GPU method sources and arithmetic are unchanged.
 Eligibility remains the full qualified A100 with 108 SMs, batch 1, 8–16 heads,
 sequence lengths 2048–4096, D64/D128, aligned contiguous FP16/BF16, dense or
 causal attention and a finite FP32-normal positive scale. The medium H8/D128
-causal exclusion remains. Masks, GQA, dropout, unsupported scales, views and
+causal exclusion applies to the historical comparison below. A subsequent
+[bounded medium training update](a100-medium-causal.md) qualifies H8/S2048
+with all three input gradients; NoGrad and partial-gradient calls retain their
+previous dispatch. Masks, GQA, dropout, unsupported scales, views and
 compiled calls retain their qualified native CuTe dispatch. Installation still
 uses the pinned `sm80-fa4` extra.
 

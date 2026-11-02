@@ -25,10 +25,15 @@ def compile_kernel(mode, tensors, causal, masked, configuration=None):
         from .short_key32_owned import compile_kernel as compile_short_key32
 
         function = compile_short_key32(mode.rsplit("_", 1)[1], tensors, causal)
-    elif mode in ("short_forward", "short_backward"):
+    elif mode in ("short_forward", "short_backward", "shortopt_forward", "shortopt_backward"):
         from .short_owned import compile_kernel as compile_short
 
-        function = compile_short(mode.split("_", 1)[1], tensors, causal)
+        narrow, prefetch = False, False
+        if mode.startswith("shortopt_"):
+            from .fa4_sm80.rtx4090 import _short_flags
+
+            narrow, prefetch = _short_flags(tensors[0].dtype, causal)
+        function = compile_short(mode.split("_", 1)[1], tensors, causal, narrow_product=narrow, prefetch_statistics=prefetch)
     elif mode in ("sm80_forward", "sm80_backward", "warp_forward", "warp_backward", "warp_inference"):
         from .fa4_sm80._native import compile_kernel as compile_sm80
 

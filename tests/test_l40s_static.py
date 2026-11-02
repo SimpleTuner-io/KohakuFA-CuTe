@@ -105,6 +105,19 @@ class L40sSelectionTests(unittest.TestCase):
                     expected = 32 if dimension == 128 and sequence == 4096 and not causal else 64
                     self.assertEqual(selected.forward_n, expected)
 
+    def test_causal_groups_are_limited_to_the_qualified_training_shapes(self):
+        from kohakufa_cute.fa4_sm80 import _l40s
+
+        for dimension in (16, 64, 128, 256, 512):
+            for sequence in (128, 129, 1024, 1152, 1280, 2048, 4096, 4608):
+                for causal in (False, True):
+                    expected = 1
+                    if causal and dimension == 64 and sequence == 4096:
+                        expected = 8
+                    elif causal and dimension == 128 and sequence in (1024, 4096):
+                        expected = 16
+                    self.assertEqual(_l40s.schedule(dimension, sequence, causal).causal_head_group, expected)
+
     def test_forward_m_control_keeps_its_existing_scope(self):
         from benchmarks.l40s_schedules import make_attention
         from kohakufa_cute.fa4_sm80 import _host, _l40s
@@ -122,6 +135,23 @@ class L40sSelectionTests(unittest.TestCase):
                     self.assertEqual((got.forward_m, got.forward_n), (128, 32))
                 else:
                     self.assertEqual(got, expected)
+
+    def test_causal_group_control_preserves_other_schedule_fields(self):
+        from dataclasses import replace
+
+        from benchmarks.l40s_schedules import make_attention
+        from kohakufa_cute.fa4_sm80 import _host, _l40s
+
+        for dimension, causal in ((64, False), (64, True), (128, False), (128, True)):
+            q = training_operand((1, 16, 4096, dimension))
+            with patch.object(_host, "native_runner", return_value=Mock()) as runner:
+                make_attention(head_group=8)(q, q, q, is_causal=causal)
+                self.assertEqual(
+                    runner.call_args.args[0],
+                    replace(_l40s.schedule(dimension, 4096, causal), causal_head_group=8 if causal else 1),
+                )
+        with self.assertRaises(ValueError):
+            make_attention(head_group=3)
 
     def test_a100_does_not_enter_l40s_tensor_validation(self):
         from kohakufa_cute.fa4_sm80 import _l40s
@@ -193,20 +223,27 @@ class L40sPublicKernelTests(unittest.TestCase):
         from benchmarks.validate_sm80_static import assess
         from kohakufa_cute.fa4_sm80 import _l40s
 
-        for sequence in (1024, 4096):
+        for dimension, sequence, causal in (
+            (64, 4096, True),
+            (128, 1024, True),
+            (128, 4096, True),
+            (128, 1024, False),
+            (128, 4096, False),
+        ):
             inputs = [
-                torch.randn(1, 16, sequence, 128, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)
+                torch.randn(1, 16, sequence, dimension, device="cuda", dtype=torch.bfloat16, requires_grad=True)
+                for _ in range(3)
             ]
             dout = torch.randn_like(inputs[0])
             with patch.object(_l40s, "attention", wraps=_l40s.attention) as selected:
-                for function in (
-                    api.attention,
-                    api.scaled_dot_product_attention,
-                    api.automatic_scaled_dot_product_attention,
+                for function, kwargs in (
+                    (api.attention, {"causal": causal}),
+                    (api.scaled_dot_product_attention, {"is_causal": causal}),
+                    (api.automatic_scaled_dot_product_attention, {"is_causal": causal}),
                 ):
-                    output = function(*inputs)
+                    output = function(*inputs, **kwargs)
                     actual = output, *torch.autograd.grad(output, inputs, dout)
-                    assess(actual, inputs, dout, causal=False, scale=None, directed=False, pointwise=False)
+                    assess(actual, inputs, dout, causal=causal, scale=None, directed=False, pointwise=False)
                 self.assertEqual(selected.call_count, 3)
 
     def test_inference_and_short_training_retain_native_fallback(self):
@@ -246,7 +283,7 @@ class L40sPublicKernelTests(unittest.TestCase):
         from benchmarks.validate_sm80_static import assess
 
         for dtype in (torch.bfloat16, torch.float16):
-            for dimension, causal in ((64, True), (128, False)):
+            for dimension, causal in ((64, True), (128, True), (128, False)):
                 inputs = [torch.randn(1, 16, 4096, dimension, device="cuda", dtype=dtype) for _ in range(3)]
                 dout = torch.empty(inputs[0].numel() + 1, device="cuda", dtype=dtype)[1:].view_as(inputs[0])
                 dout.normal_()

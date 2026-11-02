@@ -6,15 +6,18 @@ The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each 
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
-## L40S shared warp training candidate
+## L40S bounded shared warp training
 
-The [bounded training change](../docs/l40s-warp-training.md),
-[compact paired samples](l40s-warp-training.json) and
-[separate candidate chart](l40s-warp-training.svg) cover full-device L40S
-D64/D128 training at exact qualified lengths. They compare complete eager calls
-and graph replay with the preceding native CuTe path and standalone FA2.
-Inference and unqualified lengths retain their existing path. The historical
-four-device grid above is unchanged.
+The [bounded training policy](../docs/l40s-warp-training.md) covers full-device
+L40S D64/D128 training at exact qualified lengths. Its current causal ordering
+has a [November 2 analysis](../docs/l40s-causal-groups.md),
+[96-row paired report](l40s-causal-groups.json) and [matching chart](l40s-causal-groups.svg).
+The native group1 control has a shorter Python guard than the public API;
+short eager overhead and all mixed rows remain explicit.
+The [November 1 dense/initial report](l40s-warp-training.json) and
+[dated chart](l40s-warp-training.svg) retain the earlier native CuTe and FA2
+comparison. Inference and unqualified lengths retain their existing path.
+The historical four-device grid above is unchanged.
 
 ## Standalone FlashAttention comparisons
 

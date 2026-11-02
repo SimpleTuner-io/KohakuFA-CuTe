@@ -3,13 +3,16 @@
 import math
 
 
-def make_attention(*, native=True, forward_m=None, forward_n=None):
+def make_attention(*, native=True, forward_m=None, forward_n=None, head_group=None):
     import torch
 
     from kohakufa_cute import api, fa4_sm80
     from kohakufa_cute.fa4_sm80._attention import attention
     from kohakufa_cute.fa4_sm80._host import native_runner
     from kohakufa_cute.fa4_sm80._l40s import schedule
+
+    if head_group is not None and head_group not in (1, 2, 4, 8, 16):
+        raise ValueError("Select one of the supported causal head groups.")
 
     properties = torch.cuda.get_device_properties(torch.cuda.current_device())
     if (
@@ -26,6 +29,10 @@ def make_attention(*, native=True, forward_m=None, forward_n=None):
         if q.shape != k.shape or q.shape != v.shape:
             raise ValueError("These controls require square MHA.")
         selected = schedule(q.shape[-1], q.shape[2], is_causal)
+        if head_group is not None:
+            from dataclasses import replace
+
+            selected = replace(selected, causal_head_group=head_group if is_causal else 1)
         if forward_n is None and forward_m is not None:
             from dataclasses import replace
 

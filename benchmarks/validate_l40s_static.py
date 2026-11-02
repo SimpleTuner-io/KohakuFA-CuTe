@@ -2,6 +2,7 @@
 
 import argparse
 import hashlib
+import inspect
 import itertools
 import json
 from pathlib import Path
@@ -79,6 +80,7 @@ def main():
     )
     parser.add_argument("--candidate-kwargs", type=json.loads, default={"native": True})
     parser.add_argument("--smoke", action="store_true", help="Small tail and changed-graph probes for sanitizers.")
+    parser.add_argument("--causal-smoke", action="store_true", help="Instrument both causal widths and dtypes.")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     global CPU_REFERENCE
@@ -96,6 +98,10 @@ def main():
         "smoke": args.smoke,
         "reference_device": "cpu" if CPU_REFERENCE else "cuda",
         "candidate_kwargs": args.candidate_kwargs,
+        "candidate_factory": make_attention.__module__ + ":" + make_attention.__name__,
+        "candidate_factory_sha256": hashlib.sha256(Path(inspect.getfile(make_attention)).read_bytes()).hexdigest(),
+        "reference_cpu_threads": torch.get_num_threads() if CPU_REFERENCE else None,
+        "causal_smoke": args.causal_smoke,
         "statistics_checks": STATISTICS,
         "rows": [],
     }
@@ -125,9 +131,13 @@ def main():
         print({key: row[key] for key in ("case", "shape", "dtype", "causal", "scale")}, flush=True)
 
     matrix = (
-        ((torch.bfloat16, 64, 129, True), (torch.float16, 128, 129, False))
-        if args.smoke
-        else itertools.product((torch.bfloat16, torch.float16), (64, 128), (129, 257), (False, True))
+        itertools.product((torch.bfloat16, torch.float16), (64, 128), (129,), (True,))
+        if args.smoke and args.causal_smoke
+        else (
+            ((torch.bfloat16, 64, 129, True), (torch.float16, 128, 129, False))
+            if args.smoke
+            else itertools.product((torch.bfloat16, torch.float16), (64, 128), (129, 257), (False, True))
+        )
     )
     for dtype, dimension, sequence, causal in matrix:
         torch.manual_seed(221)
@@ -178,7 +188,8 @@ def main():
 
     from benchmarks.compare_ada import capture
 
-    for dtype, causal in ((torch.bfloat16, True), (torch.float16, False)):
+    graph_cases = ((torch.bfloat16, True), (torch.float16, args.causal_smoke))
+    for dtype, causal in graph_cases:
         q, k, v, dout = [torch.randn(1, 2, 129, 128, device="cuda", dtype=dtype) for _ in range(4)]
         graph, storage = capture(function, (q, k, v), dout, causal, "joint")
         operands, _, _, actual = storage

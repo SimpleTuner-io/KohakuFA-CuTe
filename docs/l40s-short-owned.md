@@ -75,7 +75,8 @@ byte-identical. No new sanitizer pass is implied by a host-only route change.
 
 Sixteen strict bindings retain the exact public and FA2 forward/backward symbols,
 loaded cubins, PTX and SASS for both dtypes and visibility modes. The selected
-backward uses 174 registers, 99840 bytes shared memory and no local storage.
+backward uses 174 registers for BF16 dense, 154 for FP16 dense, and 128 for
+causal variants; all use 99840 bytes shared memory and no local storage.
 Its grid has 16 CTAs, each owning every row of one head and all three gradients.
 That reduces complete graph calls from four kernels to two. Systems verifies
 five consecutive eager calls per case through runtime/kernel correlation IDs;

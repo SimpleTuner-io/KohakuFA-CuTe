@@ -1,0 +1,338 @@
+{
+  "scope": "Full B200 standalone TMEM allocation controls; no attention, B300 or sanitizer waiver",
+  "device": {
+    "name": "NVIDIA B200",
+    "capability": [
+      10,
+      0
+    ],
+    "sm_count": 148,
+    "driver_api": 13020,
+    "runtime": 13020
+  },
+  "collection_seconds": 22,
+  "processes": 18,
+  "instrumented_elf_captured": false,
+  "source_sha256": "be2b4e20e2dabe868f343e0464aaee5c6d557b802a62d1724086714bba6e3464",
+  "executable_sha256": "04a5fa8b48369db50de2bcfefcd32620f1d321822570ba49864ebf87af834a7e",
+  "compiler_and_all_physical_loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+  "measured_controller_sha256": "41741262e1d31a058e350ee26c1fc7fc6e4bbea93b55afc93bef10421e9a6a77",
+  "old_checker": "2026.1.0.0 build37182542",
+  "new_checker": "2026.3.0.0 build38855100",
+  "final_archive": {
+    "inventory_sha256": "101ef42f53d90907c1fcd607a81cb27e5e9831754942e7a10b4f2cd915e19108",
+    "verified_files": 88,
+    "verified_entries": 108
+  },
+  "physical": [
+    {
+      "label": "physical-allocation-untouched-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 1,
+      "report_sha256": "0f15adada02aa5b4848f634d833394c6f041e6b4c88ba08f667ee04110306a66",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 416,
+      "all_three_generations_match": true
+    },
+    {
+      "label": "physical-allocation-untouched-cta",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 2,
+      "report_sha256": "726cc9dfb142fbd5b1a7e1a100ee7c5ca3f5f353497790af9525dc7b6443b8d7",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 512,
+      "all_three_generations_match": true
+    },
+    {
+      "label": "physical-allocation-sentinel-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 3,
+      "report_sha256": "8978b4cfd4c465cc0c4b8fbb28a5348ac50da2597260c7c46e71e6b3fd05677d",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 416,
+      "all_three_generations_match": true
+    },
+    {
+      "label": "physical-allocation-sentinel-cta",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 4,
+      "report_sha256": "85c69eaf96e326cb0fb645b44fe7818c95fe98dddd52c9eefc2966f54f5dc12b",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 512,
+      "all_three_generations_match": true
+    },
+    {
+      "label": "physical-ordinary-untouched-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 6,
+      "report_sha256": "54c014cb6d377e35e2cc352b2c6eb15db21b65d4e374cacd68e681b8301e912d",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 416,
+      "all_three_generations_match": true
+    },
+    {
+      "label": "physical-ordinary-untouched-cta",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 7,
+      "report_sha256": "214662dc26f9993a45c6f06c2970daaa9cee2a40119fb6ad0fb27b9e8411770e",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 512,
+      "all_three_generations_match": true
+    },
+    {
+      "label": "physical-ordinary-sentinel-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 8,
+      "report_sha256": "e7b845085a1ff1735620d0ae93f7a27630454bfe56bb16a4962e22c275f31778",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 416,
+      "all_three_generations_match": true
+    },
+    {
+      "label": "physical-ordinary-sentinel-cta",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 9,
+      "report_sha256": "15953a9d76d8c51155cf14d453156e4f0fd3dcee9b7b56a3d9439b9f26c5c7bf",
+      "loaded_elf_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+      "participants": 512,
+      "all_three_generations_match": true
+    }
+  ],
+  "checkers": [
+    {
+      "label": "old-allocation-untouched-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 10,
+      "report_sha256": "493efc58601ec37b4e677f65d76d31ae0d0c1ba4a5aad463dcfe98788815d465",
+      "summary_errors": 0,
+      "printed_initialization_reports": 0,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425"
+    },
+    {
+      "label": "old-ordinary-untouched-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 11,
+      "report_sha256": "bb070185be7d465f2e7dedcf0930c35685529d442f7f9b40c03ac66523b90f1d",
+      "summary_errors": 0,
+      "printed_initialization_reports": 0,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425"
+    },
+    {
+      "label": "new-allocation-untouched-roles",
+      "exit_status": 99,
+      "elapsed_collection_seconds": 13,
+      "report_sha256": "493efc58601ec37b4e677f65d76d31ae0d0c1ba4a5aad463dcfe98788815d465",
+      "summary_errors": 102,
+      "printed_initialization_reports": 102,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "cd0e085a40b2c78dcbe46e452ab5418d65b59ff23faf9a1d2c63306f96745225",
+      "report_classes": [
+        {
+          "space": "shared",
+          "bytes": 1,
+          "pc": "0x190",
+          "address": "0x5c",
+          "instruction": "LDS.U8 R3, [R2+0x1c]",
+          "count": 96
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x300",
+          "address": "0x54",
+          "instruction": "ATOMS.OR RZ, [R2+0x14], R5",
+          "count": 3
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x310",
+          "address": "0x58",
+          "instruction": "ATOMS.OR RZ, [R2+0x18], R7",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "label": "new-allocation-untouched-cta",
+      "exit_status": 99,
+      "elapsed_collection_seconds": 14,
+      "report_sha256": "3313c498ed91eca2dbc24326ff920572e54bacd0cb84cb214dfcb07533303828",
+      "summary_errors": 102,
+      "printed_initialization_reports": 102,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "cd0e085a40b2c78dcbe46e452ab5418d65b59ff23faf9a1d2c63306f96745225",
+      "report_classes": [
+        {
+          "space": "shared",
+          "bytes": 1,
+          "pc": "0x190",
+          "address": "0x5c",
+          "instruction": "LDS.U8 R3, [R2+0x1c]",
+          "count": 96
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x300",
+          "address": "0x54",
+          "instruction": "ATOMS.OR RZ, [R2+0x14], R5",
+          "count": 3
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x310",
+          "address": "0x58",
+          "instruction": "ATOMS.OR RZ, [R2+0x18], R7",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "label": "new-allocation-sentinel-roles",
+      "exit_status": 99,
+      "elapsed_collection_seconds": 15,
+      "report_sha256": "26fedb556101cd3388d98c39558f81bd3a9c23a8c0c28fc70c4d7978437ad4d3",
+      "summary_errors": 102,
+      "printed_initialization_reports": 102,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "cd0e085a40b2c78dcbe46e452ab5418d65b59ff23faf9a1d2c63306f96745225",
+      "report_classes": [
+        {
+          "space": "shared",
+          "bytes": 1,
+          "pc": "0x190",
+          "address": "0x5c",
+          "instruction": "LDS.U8 R3, [R2+0x1c]",
+          "count": 96
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x300",
+          "address": "0x54",
+          "instruction": "ATOMS.OR RZ, [R2+0x14], R5",
+          "count": 3
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x310",
+          "address": "0x58",
+          "instruction": "ATOMS.OR RZ, [R2+0x18], R7",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "label": "new-allocation-sentinel-cta",
+      "exit_status": 99,
+      "elapsed_collection_seconds": 17,
+      "report_sha256": "f23c540bc49d68dbe43f46137dfe9c756566cdb2ff2d71cdf88a1bb56e68eff3",
+      "summary_errors": 102,
+      "printed_initialization_reports": 102,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "cd0e085a40b2c78dcbe46e452ab5418d65b59ff23faf9a1d2c63306f96745225",
+      "report_classes": [
+        {
+          "space": "shared",
+          "bytes": 1,
+          "pc": "0x190",
+          "address": "0x5c",
+          "instruction": "LDS.U8 R3, [R2+0x1c]",
+          "count": 96
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x300",
+          "address": "0x54",
+          "instruction": "ATOMS.OR RZ, [R2+0x14], R5",
+          "count": 3
+        },
+        {
+          "space": "shared",
+          "bytes": 4,
+          "pc": "0x310",
+          "address": "0x58",
+          "instruction": "ATOMS.OR RZ, [R2+0x18], R7",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "label": "new-ordinary-untouched-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 18,
+      "report_sha256": "bb070185be7d465f2e7dedcf0930c35685529d442f7f9b40c03ac66523b90f1d",
+      "summary_errors": 0,
+      "printed_initialization_reports": 0,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425"
+    },
+    {
+      "label": "new-ordinary-untouched-cta",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 19,
+      "report_sha256": "921982d24e4843b3bd6178d4862b3174827487291ed4a6ae6220f41771753380",
+      "summary_errors": 0,
+      "printed_initialization_reports": 0,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425"
+    },
+    {
+      "label": "new-ordinary-sentinel-roles",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 21,
+      "report_sha256": "ec5e557ddecf7835db15a713c5040ada1c35be9dfb89d05d57c9b9c520b87afe",
+      "summary_errors": 0,
+      "printed_initialization_reports": 0,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425"
+    },
+    {
+      "label": "new-ordinary-sentinel-cta",
+      "exit_status": 0,
+      "elapsed_collection_seconds": 22,
+      "report_sha256": "c2fb1922550829e2d0221ec5b82f7e0a401ba910dbd6dfb61b91b324124a12e3",
+      "summary_errors": 0,
+      "printed_initialization_reports": 0,
+      "unprinted_errors": 0,
+      "all_errors_are_printed_initialization_reports": true,
+      "log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425"
+    }
+  ],
+  "reserved_shared": {
+    "section": ".nv.shared.reserved.0",
+    "bytes": 96,
+    "reported_ranges": [
+      [
+        "0x54",
+        "0x57"
+      ],
+      [
+        "0x58",
+        "0x5b"
+      ],
+      [
+        "0x5c",
+        "0x5c"
+      ]
+    ],
+    "user_pointer_word": "0x400",
+    "source_mapping": "Exact ELF SASS/source-line association; reserved section declared by retained same-ELF metadata; compiler-reserved role inferred, initialization provenance unresolved"
+  },
+  "conclusion": "Sentinel and full-CTA controls do not remove these reports; ordinary control clean. New tool reports allocator lowering reads. No proof of false positive, no attention qualification, no reserved writes."
+}

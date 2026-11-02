@@ -1,0 +1,30 @@
+{
+  "scope": "Offline public SDK review; actual physical controls recorded separately",
+  "sdk_package": "13.4.92",
+  "tool_version": "2026.3.0.0 build38855100",
+  "instrumented_elf_captured": false,
+  "documented_initcheck_patched_elf_export_found": false,
+  "subscriber_limit": 1,
+  "lazy_patched_payload": [
+    "context",
+    "module",
+    "functions",
+    "numFunctions"
+  ],
+  "module_payload_cubin_guaranteed_instrumented": false,
+  "pc_size_guaranteed_original_to_patched_mapping": false,
+  "custom_collector_built": false,
+  "control_matrix": {
+    "physical": 8,
+    "new_initcheck": 8,
+    "old_initcheck": 2,
+    "print_limit": 0,
+    "status": "measured; see blackwell-allocator-controls.json"
+  },
+  "reviewed_inputs_sha256": {
+    "include/sanitizer_callbacks.h": "2ec7ffb2ab57d60eb598157ae328672b4194648096b792bb478b40b48d72f647",
+    "include/sanitizer_patching.h": "c8f624394e45f942e53ffe7c37e0f0dcc59fd4074d68341e74845a6a34ff4c9d",
+    "include/sanitizer_memory.h": "d09b60e86dd77b1853f04d109dfd82d90f0bd06b772c2327966f080676ec8c36",
+    "docs/SanitizerApiGuide/index.html": "49acaedcca72e47012b9e463b06d49069d9a605b6790fcf733648a744c4fd9c0"
+  }
+}

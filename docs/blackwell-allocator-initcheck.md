@@ -29,8 +29,55 @@ small diagnostic collection time, not an attention latency measurement.
 
 The newer tool printed six reports because `--print-limit 6` was selected.
 They describe one-byte shared reads at `0x5c`, beginning with thread 384. The
-summary counts 102 total errors and 96 unprinted errors. The other 96 instances
-have not been individually classified.
+summary counts 102 total errors and 96 unprinted errors. The other 96 instances were not individually classified in that initial
+collection; the unlimited-report follow-up below classifies all reports.
+
+## Same-executable controls
+
+A follow-up full-B200 collection ran 18 processes in 22 seconds. Its eight
+physical captures all match the same compiler ELF above. Each process verifies
+one eager generation and two changed-data graph replays with zero mismatches.
+The old checker passes the untouched/roles allocation and ordinary pair. The
+new checker reports the following complete factorial:
+
+| User word | Post-allocation barrier | Readers | Allocation | Ordinary write |
+| --- | --- | --- | --- | --- |
+| Untouched | 416 roles | 416 | exit 99, 102 errors | exit 0, 0 errors |
+| Sentinel | 416 roles | 416 | exit 99, 102 errors | exit 0, 0 errors |
+| Untouched | Full CTA | 512 | exit 99, 102 errors | exit 0, 0 errors |
+| Sentinel | Full CTA | 512 | exit 99, 102 errors | exit 0, 0 errors |
+
+All four allocation logs retain all 102 reports, with no unprinted errors.
+The analyzer checks every reported PC against the same retained SASS and inline
+lineage. Each control has these classes:
+
+| PC | Shared address | Width | SASS | Reports |
+| --- | --- | --- | --- | --- |
+| `0x190` | `0x5c` | 1 byte | `LDS.U8 R3, [R2+0x1c]` | 96 |
+| `0x300` | `0x54` | 4 bytes | `ATOMS.OR RZ, [R2+0x14], R5` | 3 |
+| `0x310` | `0x58` | 4 bytes | `ATOMS.OR RZ, [R2+0x18], R7` | 3 |
+
+Every report names source line 75, inlined at kernel line 95. The byte load
+reports threads 384–415 three times each; both atomic sites report thread 384
+three times. The three ranges fit the ELF's explicit 96-byte reserved shared
+section. The user pointer remains at `0x400`. The cluster-adjusted register
+expression requires source/SASS review; the analyzer deliberately refuses to
+infer a constant across its `LEA`.
+
+The [compact controls evidence](../results/blackwell-allocator-controls.json)
+records all 18 statuses, input/log hashes, physical equality and report classes.
+Its final archive contains 108 entries, including 88 files; all recorded sizes
+and hashes were independently rechecked. The measured CUDA source, executable
+and compiler ELF are unchanged from the initial collection. Updated analyzer
+code runs on retained files after collection, without another CUDA execution.
+
+These controls disprove user-word sentinel initialization and the full-CTA
+barrier as fixes for this executable's reports. They leave initialization of
+compiler-reserved allocator state unresolved. The atomic sites show that
+`ATOMS.OR` at shared `0x54` can occur inside standalone SM100a allocation. This
+does not establish the original SM103 attention report's loaded instruction,
+initialization provenance or checker behavior. No memory-qualification waiver
+or attention dispatch change follows.
 
 ## Code and ABI association
 
@@ -87,8 +134,8 @@ The source has no attention, TMA copy, GEMM, tensor-memory data load/store,
 framework allocator, or floating-point reduction. One fully active warp 12
 allocates 512 TMEM columns; the 416-role barrier joins warps 0–12. All readers
 finish before warp 12 deallocates. The ordinary control publishes zero to the
-same legitimate user word. Sentinel and full-CTA options already exist in the
-unchanged measured source, but were not run in this B200 collection.
+same legitimate user word. Sentinel and full-CTA options exist in the
+unchanged measured source and were exercised by the follow-up above.
 
 Use Python 3.13 for the CPU-only builder, a configured Linux CUDA/CUPTI toolkit,
 and an independently checked newer sanitizer directory. Reproduce the recorded
@@ -143,13 +190,65 @@ The original B300 attention report is distinct: four-byte shared read at
 binding. It remains unresolved. The allocator diagnostic cannot waive that
 attention report or downstream output reports.
 
-A future bounded session should first retain **all** newer reports with
-`--print-limit 0`, then compare legitimate user-word sentinel initialization
-and the full 512-thread barrier against the current 416-role control. Keep the
-same executable and paired physical controls; do not write reserved bytes.
-The reported byte load precedes the post-allocation role barrier and addresses
-a different word from the sentinel. If either control changes the report, inspect
-its executed code before attributing the change to repaired ownership. Focused
-memcheck/synccheck can test the source ownership independently. These
-are proposed tests, not completed results. Before another rental, verify that setup, storage, transfer and archival
-fit its authorized budget.
+The completed follow-up retains all newer reports with `--print-limit 0`,
+compares legitimate user-word sentinel initialization and the full 512-thread
+barrier, and preserves paired same-executable physical controls. Neither
+intervention removes the allocator reports. Focused memcheck/synccheck could
+independently test source ownership, but those checks were not performed in
+this collection. Do not write reserved bytes. Any further GPU collection
+requires its own authorized setup, storage, transfer and archival budget.
+
+## Sanitizer API review and optional controls
+
+The reviewed NVIDIA SDK is 13.4.92 (Compute Sanitizer 2026.3.0). Its documented
+interfaces do not establish a supported export of initcheck's patched ELF:
+
+| Interface | Available evidence | Missing evidence |
+| --- | --- | --- |
+| `RESOURCE_MODULE_LOADED` | Associated cubin bytes | No guarantee they contain initcheck patches |
+| `RESOURCE_FUNCTIONS_LAZY_PATCHED` | Context, module, function handles | No byte buffer or reported-PC mapping |
+| `sanitizerGetFunctionPcAndSize` | Function PC and size | No specified original/patched distinction |
+| Custom patch callbacks | PCs for the caller's own patches | Not initcheck's instrumentation |
+
+The [module payload](https://docs.nvidia.com/compute-sanitizer/api/struct_sanitizer___resource_module_data.html),
+[lazy-function payload](https://docs.nvidia.com/compute-sanitizer/api/struct_sanitizer___resource_functions_lazy_loaded_data.html)
+and [patching API](https://docs.nvidia.com/compute-sanitizer/api/group___s_a_n_i_t_i_z_e_r___p_a_t_c_h_i_n_g___a_p_i.html)
+define these boundaries. The
+[API guide](https://docs.nvidia.com/compute-sanitizer/SanitizerApiGuide/index.html)
+also permits only one active subscriber. An additional observer cannot be
+assumed to coexist with the built-in checker. Replacing its subscriber or
+interposing private calls would change the experiment. No such collector was
+built, and no instrumented-image capture is claimed. Code PCs are not assumed
+to be readable CUDA data pointers. This is a limitation of the reviewed public
+interfaces, not proof that no internal extraction mechanism exists.
+
+The optional `controls` runner mode reproduces the independent controls. It
+keeps the measured CUDA source and executable unchanged and selects existing
+runtime branches: allocation/ordinary producer, untouched/sentinel user word,
+and 416-role/512-CTA barrier. Eight physical captures must pass and match the
+provided compiler ELF before any instrumentation. New initcheck runs all eight
+cases with unlimited reports; old initcheck retains the untouched/roles pair.
+This is 18 processes. The measured follow-up above uses this mode. CPU tests
+use synthetic tools and validate collection behavior, not CUDA ownership or
+real lock exclusion.
+The default mode retains the original six-process comparison and print limit.
+
+```sh
+cd "$ARTIFACT_DIR/build"
+timeout --signal=TERM --kill-after=2s 110s \
+  bash run_tmem_init.sh "$ARTIFACT_DIR/controls" controls
+python3 blackwell_init_association.py \
+  --log "$ARTIFACT_DIR/controls/new-allocation-untouched-roles.log" \
+  --counts-only --output "$ARTIFACT_DIR/counts.json"
+```
+
+Use inherited lock descriptor 9, checked input hashes, the same native ELF,
+and the existing portable CUDA libraries. Retain every process status and
+all reports. The count parser requires a complete unique error summary;
+unprinted-error subtotals cannot replace total errors. Count consistency alone
+is not a clean-memory result. Full source association additionally requires
+`--sass`, `--inline-sass`, `--cubin`, `--loaded-cubin` and the selected symbol;
+it groups read reports by address, PC, size and instruction. Association still
+uses the uninstrumented artifact. Changed outcomes from sentinel or CTA barriers
+need instruction-level review; neither permits writing reserved shared state
+or waiving the distinct B300 report.

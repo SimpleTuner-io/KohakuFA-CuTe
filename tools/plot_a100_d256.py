@@ -64,12 +64,14 @@ def main():
         0.05,
         0.02,
         style.get("caption", "Shaded rows: final automatic selection. Other rows: explicit evaluation only.")
-        + "\nBars: ratios of medians; whiskers: seven paired-window ratios. Same inputs and stack; B1, full 108-SM A100.",
+        + "\nBars: ratios of medians; whiskers: "
+        + style.get("whisker_caption", "seven paired-window ratios")
+        + ". Same inputs and stack; B1, full 108-SM A100.",
         fontsize=9,
     )
     fig.subplots_adjust(left=0.2, right=0.98, top=0.84 if compact else 0.88, bottom=0.14 if compact else 0.08, wspace=0.08)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(args.output, metadata={"Date": None, "Creator": "KohakuFA-CuTe measured D256 chart"})
+    fig.savefig(args.output, metadata={"Date": None, "Creator": style.get("creator", "KohakuFA-CuTe measured D256 chart")})
     if args.output.suffix == ".svg":
         args.output.write_text("\n".join(line.rstrip() for line in args.output.read_text().splitlines()) + "\n")
 

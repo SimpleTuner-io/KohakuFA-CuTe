@@ -153,7 +153,8 @@ tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, b
                 continue;
             parameters[configured_fields[i]] = values[i + 1];
         }
-        const char *configured_mode = values[0] == 1 ? (inference ? "warp_inference" : (backward ? "warp_backward" : "warp_forward"))
+        const char *configured_mode = values[0] == 3 ? (backward ? "short_backward" : "short_forward")
+                                      : values[0] == 1 ? (inference ? "warp_inference" : (backward ? "warp_backward" : "warp_forward"))
                                                     : (backward ? "hopper_backward" : "hopper_forward");
         name = compiler(configured_mode, inputs, causal, masked, parameters).cast<std::string>();
     } else {
@@ -379,6 +380,13 @@ class ConfiguredAttention : public torch::autograd::Function<ConfiguredAttention
         c10::cuda::CUDAGuard guard(q.device());
         auto dout = contiguous_gradient(gradients[0]);
         auto dq = at::empty_like(q), dk = at::empty_like(saved[1]), dv = at::empty_like(saved[2]);
+        if (parameters[0] == 3) {
+            // The short kernel owns all rows and uses no global workspace.
+            launch(true, {q, saved[1], saved[2], q, saved[3], saved[4], saved[5], dout,
+                          saved[4], dq, dk, dv, saved[4], saved[4]},
+                   ctx->saved_data["scale"].toDouble(), ctx->saved_data["causal"].toBool(), false, false, configuration);
+            return {dq, dk, dv, Tensor(), Tensor(), Tensor()};
+        }
         const auto tile_m = parameters[configuration_backward_m];
         const auto rounded = (q.size(2) + tile_m - 1) / tile_m * tile_m;
         const auto accumulator_width = parameters[configuration_accumulator_head_dim] == 0
@@ -399,9 +407,11 @@ class AttentionRunner {
 
   public:
     AttentionRunner(const std::string &family, const std::map<std::string, int64_t> &options) {
-        TORCH_CHECK_VALUE(family == "warp" || family == "hopper", "Select the warp or hopper kernel family.");
+        TORCH_CHECK_VALUE(family == "warp" || family == "hopper" || family == "short",
+                          "Select the warp, hopper or short kernel family.");
         std::vector<int64_t> values(1 + configured_fields.size());
-        values[0] = family == "warp" ? 1 : 2;
+        values[0] = family == "short" ? 3 : family == "warp" ? 1 : 2;
+        TORCH_CHECK_VALUE(family != "short" || options.empty(), "The short kernel has one fixed geometry.");
         size_t recognized = 0;
         for (size_t i = 0; i < configured_fields.size(); ++i) {
             auto entry = options.find(configured_fields[i]);
@@ -426,7 +436,7 @@ class AttentionRunner {
                           "Causal head groups must be one of 1, 2, 4, 8 or 16.");
         TORCH_CHECK_VALUE(family == "warp" || values[17] == 1,
                           "Causal head grouping requires the warp kernel family.");
-        if (family == "warp") {
+        if (family != "hopper") {
             TORCH_CHECK_VALUE(values[9] == 256 && (values[14] == 128 || values[14] == 256),
                               "Warp experiments require 256 backward threads and 128/256 forward threads.");
             for (int index : {10, 11, 12})
@@ -450,14 +460,32 @@ class AttentionRunner {
         const bool a40_width = family == 1 && !inference && q.size(3) == 256 && full_a40(q.get_device());
         const bool warp_device = (target.first == 8 && (target.second == 0 || target.second == 6 || target.second == 9)) ||
                                  (target.first == 12 && (target.second == 0 || target.second == 1));
-        TORCH_CHECK_VALUE((family == 1 && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
+        TORCH_CHECK_VALUE(((family == 1 || family == 3) && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
                           "The configured attention family does not match the CUDA device.");
+        if (family == 3) {
+            static std::mutex short_device_mutex;
+            static std::unordered_map<int, bool> short_devices;
+            std::lock_guard<std::mutex> lock(short_device_mutex);
+            auto found = short_devices.find(q.get_device());
+            if (found == short_devices.end()) {
+                cudaDeviceProp properties{};
+                C10_CUDA_CHECK(cudaGetDeviceProperties(&properties, q.get_device()));
+                const bool supported = properties.major == 8 && properties.minor == 6 &&
+                                       properties.multiProcessorCount == 82 &&
+                                       properties.sharedMemPerBlockOptin >= 99840 &&
+                                       std::strcmp(properties.name, "NVIDIA GeForce RTX 3090") == 0;
+                found = short_devices.emplace(q.get_device(), supported).first;
+            }
+            TORCH_CHECK_VALUE(found->second && !inference && q.size(0) == 1 && q.size(1) == 16 &&
+                                  q.size(2) == 128 && q.size(3) == 16,
+                              "Short attention requires full RTX 3090 square B1 H16 S128 D16 training.");
+        }
         TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
                               q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&
                               reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
-                              (q.size(3) == 64 || q.size(3) == 128 || a40_width) && std::isfinite(amount) &&
+                              (q.size(3) == 64 || q.size(3) == 128 || a40_width || family == 3) && std::isfinite(amount) &&
                               amount >= std::numeric_limits<float>::min() && amount <= 2e38,
                           "Configured attention requires aligned contiguous square qualified-width FP16/BF16 MHA and a positive normal FP32 scale.");
         const auto accumulator_width = configuration.const_data_ptr<int64_t>()[configuration_accumulator_head_dim];

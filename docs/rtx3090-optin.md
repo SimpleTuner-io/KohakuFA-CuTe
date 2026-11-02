@@ -12,7 +12,9 @@ out = rtx3090_attention(q, k, v, is_causal=True)
 Use the `sm80-fa4` extra with Python 3.13, PyTorch 2.15.0/CUDA 13.2, and the
 pinned optional runtime described in the [A100 installation](a100-sm80-fa4.md).
 The opt-in selects a full 82-SM GeForce RTX 3090 for contiguous, aligned square
-FP16/BF16 attention with batch 1, 16 equal heads, D64/D128, and 1024–4096 tokens.
+FP16/BF16 attention with batch 1, 16 equal heads, D64/D128, and 1024–4096 tokens. It also selects a
+[full-row backward kernel for S128 D16](rtx3090-short.md) under the same
+batch/head, dtype and device restrictions.
 It supports dense and causal training. Other calls retain ordinary CuTe
 dispatch, including masks, GQA layouts, signed/zero scales and compiled calls.
 
@@ -102,7 +104,7 @@ Revalidation on the current shared runtime passed the same 32 cases, a
 All 12 causal combined graph medians improved in that second comparison
 (1.074× geometric mean over group 1); eager improved in 10/12 (1.050×).
 Three fallback-delegation checks and 28 routing/publication-guard tests passed.
-The CPU suite passed 343 tests with 177 GPU skips.
+The CPU suite ran 343 tests: 166 passed and 177 were skipped.
 
 A separate capture bound all 24 CuTe compilation units from 12 training cases
 to actual loaded module images. Qualified and final source produced identical

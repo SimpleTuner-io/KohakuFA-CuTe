@@ -5,7 +5,10 @@ from functools import lru_cache
 
 
 @lru_cache(maxsize=32)
-def native_runner(schedule):
+def native_runner(schedule, forward_threads=128):
     from kohakufa_cute.native import extension
 
-    return extension().AttentionRunner("warp", asdict(schedule))
+    options = asdict(schedule)
+    if forward_threads != 128:
+        options["forward_threads"] = forward_threads
+    return extension().AttentionRunner("warp", options)

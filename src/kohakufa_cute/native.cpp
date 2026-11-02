@@ -455,7 +455,9 @@ class AttentionRunner {
                           "The configured attention family does not match the CUDA device.");
         const bool qualified_inference_width = inference && family == 1 &&
             (q.size(3) == 16 || q.size(3) == 256) && q.size(0) == 1 &&
-            q.size(1) == 16 && q.size(2) == 128 && full_gb10(q.get_device());
+            q.size(1) == 16 && (q.size(2) == 128 ||
+              (q.size(3) == 256 && (q.size(2) == 512 || q.size(2) == 1024 || q.size(2) == 4096))) &&
+            full_gb10(q.get_device());
         TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
                               q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&
                               reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
@@ -568,8 +570,8 @@ bool gb10_inference_metadata_compatible(const Tensor &q, const Tensor &k, const 
         q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
         q.size(0) != 1 || q.size(1) != 16 ||
         (q.size(2) != 128 && q.size(2) != 512 && q.size(2) != 1024 && q.size(2) != 4096) ||
-        (!causal && q.size(2) == 512 && q.scalar_type() == at::kBFloat16) ||
-        !(q.size(3) == 128 || (q.size(2) == 128 &&
+        (!causal && q.size(2) == 512 && q.size(3) == 128 && q.scalar_type() == at::kBFloat16) ||
+        !(q.size(3) == 128 || q.size(3) == 256 || (q.size(2) == 128 &&
           (q.size(3) == 16 || q.size(3) == 64 || q.size(3) == 256))) ||
         !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
         q.is_conj() || k.is_conj() || v.is_conj() || q.is_neg() || k.is_neg() || v.is_neg() ||

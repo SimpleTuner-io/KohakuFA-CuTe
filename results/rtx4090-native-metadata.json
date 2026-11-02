@@ -419,6 +419,1857 @@
       "scope": "Forward, preprocessing, joint backward and gradient conversion; profiled durations are excluded from timing medians"
     }
   ],
+  "current_main_integration": {
+    "base_revision": "432ade4",
+    "source_snapshot_sha256": "52e4a722f5e0199798166a1ac0fd91c1f33306d7a70e91484fc92f89a678af1d",
+    "source_tar_sha256": "e1ed667b7cc5127664fbd13506d867368a337b3b62d57fbc102cd3e3f69fae34",
+    "scope": "A40 D256 and GB10 helper code preserved; RTX metadata helper/binding byte-identical to original qualified implementation",
+    "all_stages_exit": 0,
+    "actual_metadata_parity_cases": 168,
+    "cpu_total": 379,
+    "cpu_skipped": 179,
+    "host_extension": {
+      "filename": "kohakufa_cute_native_1f3c89ae16e7f21f.so",
+      "sha256": "7ea936a44042ba3b1844d24da147dada2f7e54e2b6a0d27383964b31a7c48238",
+      "cpp_source_sha256": "1f3c89ae16e7f21fb209369f56aa0722b62028d0906bb69d90400720b463a9d2",
+      "mapped_in_receipt_process": true,
+      "scope": "Actual host extension loaded from the immutable job source after timing; source-keyed module cache identity retained"
+    },
+    "protocol": {
+      "warmup_ms": 1000.0,
+      "window_ms": 100.0,
+      "repeats": 9,
+      "seed": 83271
+    },
+    "loaded_code": [
+      {
+        "dimension": 64,
+        "causal": true,
+        "loaded_modules": [
+          {
+            "loaded_cubin_sha256": "6eec8b35aec09cd53c0e27c3236b3443059d3b5a20796ffe247d09b67540e81d",
+            "sass_sha256": "812cb7137586584518215b1fdd63715391a3b417a0f23eeeee5243825cffa5e7",
+            "compiler_artifact": [
+              {
+                "kind": "cubin",
+                "status": "retained",
+                "file": "6eec8b35aec09cd53c0e27c3236b3443059d3b5a20796ffe247d09b67540e81d.cubin",
+                "sha256": "6eec8b35aec09cd53c0e27c3236b3443059d3b5a20796ffe247d09b67540e81d",
+                "bytes": 37536
+              }
+            ]
+          }
+        ],
+        "gpu_binary_and_sass_match_original": true
+      },
+      {
+        "dimension": 128,
+        "causal": false,
+        "loaded_modules": [
+          {
+            "loaded_cubin_sha256": "538a3e9de46ae70bebd1e80df6210609c41e9b5dce8237a1bdcca6ef94c0686f",
+            "sass_sha256": "afd2d8e6eb9d1c030829ab5191965ddcbe925f3945d14ed4f2ba0216e8d2c151",
+            "compiler_artifact": [
+              {
+                "kind": "cubin",
+                "status": "retained",
+                "file": "538a3e9de46ae70bebd1e80df6210609c41e9b5dce8237a1bdcca6ef94c0686f.cubin",
+                "sha256": "538a3e9de46ae70bebd1e80df6210609c41e9b5dce8237a1bdcca6ef94c0686f",
+                "bytes": 38560
+              }
+            ]
+          }
+        ],
+        "gpu_binary_and_sass_match_original": true
+      }
+    ],
+    "archive": {
+      "inventory_sha256": "ed6b6b4d82140bd1c1c55dd6d0b5e2f5f819f5f4d4315d5f8e1f8c3568c7e2aa",
+      "verified": {
+        "inventory_verified_at": 1793588741.759259,
+        "inventory_entry_count": 68,
+        "verified_total_bytes": 5437212
+      }
+    },
+    "rows": [
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "bf16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.10449854666867674,
+              "wall_ms": 0.1045250463509467
+            },
+            {
+              "cuda_event_ms": 0.10449763821600863,
+              "wall_ms": 0.10451593151580035
+            },
+            {
+              "cuda_event_ms": 0.1044965528964494,
+              "wall_ms": 0.10451465545544053
+            },
+            {
+              "cuda_event_ms": 0.1045029281439344,
+              "wall_ms": 0.10452149525428048
+            },
+            {
+              "cuda_event_ms": 0.10449416519341906,
+              "wall_ms": 0.10451268596335209
+            },
+            {
+              "cuda_event_ms": 0.10449969630346911,
+              "wall_ms": 0.10451714329625646
+            },
+            {
+              "cuda_event_ms": 0.1044965528964494,
+              "wall_ms": 0.10451799684505443
+            },
+            {
+              "cuda_event_ms": 0.1044965528964494,
+              "wall_ms": 0.10451412959307926
+            },
+            {
+              "cuda_event_ms": 0.10449871549616373,
+              "wall_ms": 0.10451676393442005
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.10442087029208656,
+              "wall_ms": 0.10444231618351318
+            },
+            {
+              "cuda_event_ms": 0.10441465938792509,
+              "wall_ms": 0.1044354253930838
+            },
+            {
+              "cuda_event_ms": 0.10441788104401917,
+              "wall_ms": 0.10443485820467364
+            },
+            {
+              "cuda_event_ms": 0.10441788104401917,
+              "wall_ms": 0.10443521533802175
+            },
+            {
+              "cuda_event_ms": 0.10441458726129613,
+              "wall_ms": 0.10443268486390579
+            },
+            {
+              "cuda_event_ms": 0.10441680715865448,
+              "wall_ms": 0.1044360976854531
+            },
+            {
+              "cuda_event_ms": 0.10442541426971179,
+              "wall_ms": 0.10444509034106672
+            },
+            {
+              "cuda_event_ms": 0.10441680715865448,
+              "wall_ms": 0.10443424895022284
+            },
+            {
+              "cuda_event_ms": 0.10443831692222788,
+              "wall_ms": 0.10445680252340928
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.10449763821600863,
+            "wall_ms": 0.10451676393442005
+          },
+          "python": {
+            "cuda_event_ms": 0.10441788104401917,
+            "wall_ms": 0.1044354253930838
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.0022752438439070932,
+          "native:dq": 0.0029774523771195077,
+          "native:dk": 0.0029135708683975547,
+          "native:dv": 0.0024143566285657566,
+          "python:out": 0.0022752438439070932,
+          "python:dq": 0.002977453337475984,
+          "python:dk": 0.0029135708683975547,
+          "python:dv": 0.0024143566285657566
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "bf16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.2654386070685658,
+              "wall_ms": 0.2655483603882565
+            },
+            {
+              "cuda_event_ms": 0.26406409617685045,
+              "wall_ms": 0.26417056904338443
+            },
+            {
+              "cuda_event_ms": 0.2743348739334561,
+              "wall_ms": 0.27443005149391525
+            },
+            {
+              "cuda_event_ms": 0.2774152057926829,
+              "wall_ms": 0.2775101409467861
+            },
+            {
+              "cuda_event_ms": 0.26818853859009784,
+              "wall_ms": 0.26828469921516757
+            },
+            {
+              "cuda_event_ms": 0.26338663075351454,
+              "wall_ms": 0.2634799809713765
+            },
+            {
+              "cuda_event_ms": 0.26315967177310934,
+              "wall_ms": 0.26325371280769366
+            },
+            {
+              "cuda_event_ms": 0.26263822643414425,
+              "wall_ms": 0.26273529810659324
+            },
+            {
+              "cuda_event_ms": 0.26651751510496063,
+              "wall_ms": 0.2666113712492987
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.30752992485069575,
+              "wall_ms": 0.30763996046710207
+            },
+            {
+              "cuda_event_ms": 0.3013641450180471,
+              "wall_ms": 0.3014903616954185
+            },
+            {
+              "cuda_event_ms": 0.29938393450797873,
+              "wall_ms": 0.29949310027263876
+            },
+            {
+              "cuda_event_ms": 0.29868430279670877,
+              "wall_ms": 0.2987942066380477
+            },
+            {
+              "cuda_event_ms": 0.3000102173593631,
+              "wall_ms": 0.3001190152119755
+            },
+            {
+              "cuda_event_ms": 0.30014093741095177,
+              "wall_ms": 0.3002485653844104
+            },
+            {
+              "cuda_event_ms": 0.3014512917191062,
+              "wall_ms": 0.30156367778279863
+            },
+            {
+              "cuda_event_ms": 0.3005330975657176,
+              "wall_ms": 0.30064003348865725
+            },
+            {
+              "cuda_event_ms": 0.30916706769299723,
+              "wall_ms": 0.30927636163835737
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.2654386070685658,
+            "wall_ms": 0.2655483603882565
+          },
+          "python": {
+            "cuda_event_ms": 0.3005330975657176,
+            "wall_ms": 0.30064003348865725
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.0022752438439070932,
+          "native:dq": 0.0029774523771195077,
+          "native:dk": 0.0029135708683975547,
+          "native:dv": 0.0024143566285657566,
+          "python:out": 0.0022752438439070932,
+          "python:dq": 0.002977453337475984,
+          "python:dk": 0.0029135708683975547,
+          "python:dv": 0.0024143566285657566
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "bf16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.07623321556696257,
+              "wall_ms": 0.07624825635395106
+            },
+            {
+              "cuda_event_ms": 0.07622848170091777,
+              "wall_ms": 0.07624272210039543
+            },
+            {
+              "cuda_event_ms": 0.07623636364661518,
+              "wall_ms": 0.07624970361417599
+            },
+            {
+              "cuda_event_ms": 0.07623478960678888,
+              "wall_ms": 0.07624851884854508
+            },
+            {
+              "cuda_event_ms": 0.07623006161402701,
+              "wall_ms": 0.07624462355065194
+            },
+            {
+              "cuda_event_ms": 0.07623636364661518,
+              "wall_ms": 0.07625108314470157
+            },
+            {
+              "cuda_event_ms": 0.07623636364661518,
+              "wall_ms": 0.07625144417558992
+            },
+            {
+              "cuda_event_ms": 0.07623626967408824,
+              "wall_ms": 0.0762494888417982
+            },
+            {
+              "cuda_event_ms": 0.07623321556696257,
+              "wall_ms": 0.07624649423912305
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.07603160430392546,
+              "wall_ms": 0.0760456943105171
+            },
+            {
+              "cuda_event_ms": 0.07603081909742224,
+              "wall_ms": 0.07604481182962415
+            },
+            {
+              "cuda_event_ms": 0.07603158086492535,
+              "wall_ms": 0.07604597157926747
+            },
+            {
+              "cuda_event_ms": 0.07603160430392546,
+              "wall_ms": 0.07604446622722577
+            },
+            {
+              "cuda_event_ms": 0.0760323953701787,
+              "wall_ms": 0.07604695467178935
+            },
+            {
+              "cuda_event_ms": 0.07603701285319761,
+              "wall_ms": 0.07605092548933338
+            },
+            {
+              "cuda_event_ms": 0.0760402591547109,
+              "wall_ms": 0.07605269201584132
+            },
+            {
+              "cuda_event_ms": 0.07603003389091902,
+              "wall_ms": 0.07604411291298292
+            },
+            {
+              "cuda_event_ms": 0.07603711246894801,
+              "wall_ms": 0.07605094853545412
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.07623478960678888,
+            "wall_ms": 0.07624851884854508
+          },
+          "python": {
+            "cuda_event_ms": 0.07603160430392546,
+            "wall_ms": 0.07604597157926747
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.0020543455383713436,
+          "native:dq": 0.003073921571315829,
+          "native:dk": 0.003030497810002286,
+          "native:dv": 0.0024000669088560618,
+          "python:out": 0.0020543455383713436,
+          "python:dq": 0.00307392157912335,
+          "python:dk": 0.003030497810002286,
+          "python:dv": 0.0024000669088560618
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "bf16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.2714667440462513,
+              "wall_ms": 0.27164887402601884
+            },
+            {
+              "cuda_event_ms": 0.26713061933757876,
+              "wall_ms": 0.26727908404892264
+            },
+            {
+              "cuda_event_ms": 0.26681560227850903,
+              "wall_ms": 0.26695839909077507
+            },
+            {
+              "cuda_event_ms": 0.26569787995154115,
+              "wall_ms": 0.2658447142379327
+            },
+            {
+              "cuda_event_ms": 0.266158111956941,
+              "wall_ms": 0.26630283616573214
+            },
+            {
+              "cuda_event_ms": 0.2664630633442342,
+              "wall_ms": 0.2666043950158696
+            },
+            {
+              "cuda_event_ms": 0.26655408714999673,
+              "wall_ms": 0.2666976764610335
+            },
+            {
+              "cuda_event_ms": 0.26722957707252826,
+              "wall_ms": 0.26737475628815904
+            },
+            {
+              "cuda_event_ms": 0.26684235324378774,
+              "wall_ms": 0.2669908822672598
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.30402321039244184,
+              "wall_ms": 0.30419722315855324
+            },
+            {
+              "cuda_event_ms": 0.30554358903751816,
+              "wall_ms": 0.3057224279388699
+            },
+            {
+              "cuda_event_ms": 0.30263352504996366,
+              "wall_ms": 0.30279690237325985
+            },
+            {
+              "cuda_event_ms": 0.3024843792582667,
+              "wall_ms": 0.3026483442396099
+            },
+            {
+              "cuda_event_ms": 0.30354216819585755,
+              "wall_ms": 0.3037041395653559
+            },
+            {
+              "cuda_event_ms": 0.3026847307072129,
+              "wall_ms": 0.3028456512892749
+            },
+            {
+              "cuda_event_ms": 0.30462809717932415,
+              "wall_ms": 0.3047946372156053
+            },
+            {
+              "cuda_event_ms": 0.3037708016329033,
+              "wall_ms": 0.303930934886773
+            },
+            {
+              "cuda_event_ms": 0.3031324164811955,
+              "wall_ms": 0.30329296267916295
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.26681560227850903,
+            "wall_ms": 0.26695839909077507
+          },
+          "python": {
+            "cuda_event_ms": 0.30354216819585755,
+            "wall_ms": 0.3037041395653559
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.0020543455383713436,
+          "native:dq": 0.003073921571315829,
+          "native:dk": 0.003030497810002286,
+          "native:dv": 0.0024000669088560618,
+          "python:out": 0.0020543455383713436,
+          "python:dq": 0.00307392157912335,
+          "python:dk": 0.003030497810002286,
+          "python:dv": 0.0024000669088560618
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "fp16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.10339073045907603,
+              "wall_ms": 0.10341140878002224
+            },
+            {
+              "cuda_event_ms": 0.10339837576475332,
+              "wall_ms": 0.10342133576579672
+            },
+            {
+              "cuda_event_ms": 0.10362474363961484,
+              "wall_ms": 0.10364211366047676
+            },
+            {
+              "cuda_event_ms": 0.10441049172060334,
+              "wall_ms": 0.10442820435794842
+            },
+            {
+              "cuda_event_ms": 0.10479289224920979,
+              "wall_ms": 0.10481193848391286
+            },
+            {
+              "cuda_event_ms": 0.10408281757883782,
+              "wall_ms": 0.10410263813688295
+            },
+            {
+              "cuda_event_ms": 0.10415542809383961,
+              "wall_ms": 0.1041747455626466
+            },
+            {
+              "cuda_event_ms": 0.10414475171483968,
+              "wall_ms": 0.10416404794750111
+            },
+            {
+              "cuda_event_ms": 0.10418425909048325,
+              "wall_ms": 0.10420335037925119
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.10326610172204247,
+              "wall_ms": 0.10328356189455577
+            },
+            {
+              "cuda_event_ms": 0.10327056344912526,
+              "wall_ms": 0.10329566596867662
+            },
+            {
+              "cuda_event_ms": 0.10370194577029543,
+              "wall_ms": 0.1037192559882448
+            },
+            {
+              "cuda_event_ms": 0.10394612609037623,
+              "wall_ms": 0.10396431008926578
+            },
+            {
+              "cuda_event_ms": 0.10454176665592889,
+              "wall_ms": 0.10456013318556327
+            },
+            {
+              "cuda_event_ms": 0.10393759958701873,
+              "wall_ms": 0.10395774404100616
+            },
+            {
+              "cuda_event_ms": 0.10400792339217775,
+              "wall_ms": 0.10402665452200156
+            },
+            {
+              "cuda_event_ms": 0.10401312344776356,
+              "wall_ms": 0.10403254318693565
+            },
+            {
+              "cuda_event_ms": 0.1044426718562004,
+              "wall_ms": 0.10446049532858881
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.10414475171483968,
+            "wall_ms": 0.10416404794750111
+          },
+          "python": {
+            "cuda_event_ms": 0.10394612609037623,
+            "wall_ms": 0.10396431008926578
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.00028428644855258344,
+          "native:dq": 0.0003752570679352703,
+          "native:dk": 0.00036457211836525246,
+          "native:dv": 0.00030253164169847797,
+          "python:out": 0.00028428644855258344,
+          "python:dq": 0.0003752817431838345,
+          "python:dk": 0.00036457211836525246,
+          "python:dv": 0.00030253164169847797
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "fp16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.266792900230969,
+              "wall_ms": 0.2668943215378532
+            },
+            {
+              "cuda_event_ms": 0.2653220278040915,
+              "wall_ms": 0.26541915804665406
+            },
+            {
+              "cuda_event_ms": 0.2662874268575975,
+              "wall_ms": 0.2663926730073268
+            },
+            {
+              "cuda_event_ms": 0.26401064506343663,
+              "wall_ms": 0.2641095286577798
+            },
+            {
+              "cuda_event_ms": 0.26336942251761536,
+              "wall_ms": 0.2634669508948689
+            },
+            {
+              "cuda_event_ms": 0.2646272747653057,
+              "wall_ms": 0.26472096460838407
+            },
+            {
+              "cuda_event_ms": 0.26396599127746084,
+              "wall_ms": 0.2640612452444481
+            },
+            {
+              "cuda_event_ms": 0.2632907586786338,
+              "wall_ms": 0.26338474113844357
+            },
+            {
+              "cuda_event_ms": 0.263851591936574,
+              "wall_ms": 0.2639467983566255
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.30049168731406006,
+              "wall_ms": 0.30060573371095534
+            },
+            {
+              "cuda_event_ms": 0.300085888558497,
+              "wall_ms": 0.30019538078439817
+            },
+            {
+              "cuda_event_ms": 0.303107176033705,
+              "wall_ms": 0.30321785142132
+            },
+            {
+              "cuda_event_ms": 0.3162541108972886,
+              "wall_ms": 0.3163673002748597
+            },
+            {
+              "cuda_event_ms": 0.2996325419045085,
+              "wall_ms": 0.2997410000696917
+            },
+            {
+              "cuda_event_ms": 0.2990301976632039,
+              "wall_ms": 0.29913977710472495
+            },
+            {
+              "cuda_event_ms": 0.3010306343574642,
+              "wall_ms": 0.3011376377492105
+            },
+            {
+              "cuda_event_ms": 0.3024984779003604,
+              "wall_ms": 0.3026140897553529
+            },
+            {
+              "cuda_event_ms": 0.3001844801769906,
+              "wall_ms": 0.30029325083910197
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.26401064506343663,
+            "wall_ms": 0.2641095286577798
+          },
+          "python": {
+            "cuda_event_ms": 0.30049168731406006,
+            "wall_ms": 0.30060573371095534
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.00028428644855258344,
+          "native:dq": 0.0003752570679352703,
+          "native:dk": 0.00036457211836525246,
+          "native:dv": 0.00030253164169847797,
+          "python:out": 0.00028428644855258344,
+          "python:dq": 0.0003752817431838345,
+          "python:dk": 0.00036457211836525246,
+          "python:dv": 0.00030253164169847797
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "fp16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.07578227894516283,
+              "wall_ms": 0.07579813408486945
+            },
+            {
+              "cuda_event_ms": 0.0760004153196839,
+              "wall_ms": 0.0760137877369949
+            },
+            {
+              "cuda_event_ms": 0.0760011987211147,
+              "wall_ms": 0.07601479156267511
+            },
+            {
+              "cuda_event_ms": 0.07600345538493775,
+              "wall_ms": 0.07601659999218309
+            },
+            {
+              "cuda_event_ms": 0.07600591082225815,
+              "wall_ms": 0.07601895249605721
+            },
+            {
+              "cuda_event_ms": 0.07599884851682231,
+              "wall_ms": 0.07601620154847816
+            },
+            {
+              "cuda_event_ms": 0.07600591082225815,
+              "wall_ms": 0.07601951265001092
+            },
+            {
+              "cuda_event_ms": 0.07600433817311722,
+              "wall_ms": 0.07601722834499774
+            },
+            {
+              "cuda_event_ms": 0.0760011987211147,
+              "wall_ms": 0.07601427126201263
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.07580880660486986,
+              "wall_ms": 0.0758221426507718
+            },
+            {
+              "cuda_event_ms": 0.07581332255464579,
+              "wall_ms": 0.07582609382320216
+            },
+            {
+              "cuda_event_ms": 0.07580551275490441,
+              "wall_ms": 0.07581832876139832
+            },
+            {
+              "cuda_event_ms": 0.07580880660486986,
+              "wall_ms": 0.07582206637254034
+            },
+            {
+              "cuda_event_ms": 0.07581036623700896,
+              "wall_ms": 0.0758234164705976
+            },
+            {
+              "cuda_event_ms": 0.07581271150474053,
+              "wall_ms": 0.07582954157262467
+            },
+            {
+              "cuda_event_ms": 0.07581193168867098,
+              "wall_ms": 0.07582520061754355
+            },
+            {
+              "cuda_event_ms": 0.07581175710298377,
+              "wall_ms": 0.0758248955046177
+            },
+            {
+              "cuda_event_ms": 0.07581661640461122,
+              "wall_ms": 0.07582947293109624
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.0760011987211147,
+            "wall_ms": 0.07601620154847816
+          },
+          "python": {
+            "cuda_event_ms": 0.07581175710298377,
+            "wall_ms": 0.0758248955046177
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.0002546305256482142,
+          "native:dq": 0.0003955618028866444,
+          "native:dk": 0.00039180296880189533,
+          "native:dv": 0.00029694826282551255,
+          "python:out": 0.0002546305256482142,
+          "python:dq": 0.0003955612986614756,
+          "python:dk": 0.00039180296880189533,
+          "python:dv": 0.00029694826282551255
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          64
+        ],
+        "dtype": "fp16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.2656615798537796,
+              "wall_ms": 0.2657606459940104
+            },
+            {
+              "cuda_event_ms": 0.26485898816907727,
+              "wall_ms": 0.2649542432737763
+            },
+            {
+              "cuda_event_ms": 0.2648781853753167,
+              "wall_ms": 0.26497370539849774
+            },
+            {
+              "cuda_event_ms": 0.263887560045397,
+              "wall_ms": 0.26398170000017696
+            },
+            {
+              "cuda_event_ms": 0.2639794220795503,
+              "wall_ms": 0.2641067054355517
+            },
+            {
+              "cuda_event_ms": 0.26632855389569254,
+              "wall_ms": 0.26642755405486535
+            },
+            {
+              "cuda_event_ms": 0.2678175230283995,
+              "wall_ms": 0.26792192436767287
+            },
+            {
+              "cuda_event_ms": 0.27188029933620145,
+              "wall_ms": 0.2719763648299802
+            },
+            {
+              "cuda_event_ms": 0.2725748835383235,
+              "wall_ms": 0.27267462707665824
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.30198557098950346,
+              "wall_ms": 0.3020939661976967
+            },
+            {
+              "cuda_event_ms": 0.3096911892569138,
+              "wall_ms": 0.30980934049688463
+            },
+            {
+              "cuda_event_ms": 0.3004342529671324,
+              "wall_ms": 0.30054315341496557
+            },
+            {
+              "cuda_event_ms": 0.30122562712686923,
+              "wall_ms": 0.301332012203842
+            },
+            {
+              "cuda_event_ms": 0.301329279238461,
+              "wall_ms": 0.30143931597339824
+            },
+            {
+              "cuda_event_ms": 0.3152380867238425,
+              "wall_ms": 0.31535376384325803
+            },
+            {
+              "cuda_event_ms": 0.30085791839412385,
+              "wall_ms": 0.300966328198513
+            },
+            {
+              "cuda_event_ms": 0.3227641801892614,
+              "wall_ms": 0.32287407061156526
+            },
+            {
+              "cuda_event_ms": 0.3008266987244776,
+              "wall_ms": 0.300939177895719
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.2656615798537796,
+            "wall_ms": 0.2657606459940104
+          },
+          "python": {
+            "cuda_event_ms": 0.301329279238461,
+            "wall_ms": 0.30143931597339824
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.0002546305256482142,
+          "native:dq": 0.0003955618028866444,
+          "native:dk": 0.00039180296880189533,
+          "native:dv": 0.00029694826282551255,
+          "python:out": 0.0002546305256482142,
+          "python:dq": 0.0003955612986614756,
+          "python:dk": 0.00039180296880189533,
+          "python:dv": 0.00029694826282551255
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "bf16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.2007430907218687,
+              "wall_ms": 0.20078245160543556
+            },
+            {
+              "cuda_event_ms": 0.19746051296111075,
+              "wall_ms": 0.19749358668172312
+            },
+            {
+              "cuda_event_ms": 0.19746271256477602,
+              "wall_ms": 0.1974981633177395
+            },
+            {
+              "cuda_event_ms": 0.19714064751901933,
+              "wall_ms": 0.19717696370442414
+            },
+            {
+              "cuda_event_ms": 0.19737792784167874,
+              "wall_ms": 0.197411870988529
+            },
+            {
+              "cuda_event_ms": 0.19846607023669827,
+              "wall_ms": 0.1985034939406755
+            },
+            {
+              "cuda_event_ms": 0.198325680148217,
+              "wall_ms": 0.1983610322748709
+            },
+            {
+              "cuda_event_ms": 0.19755974123554845,
+              "wall_ms": 0.19759447780914693
+            },
+            {
+              "cuda_event_ms": 0.19754942001834994,
+              "wall_ms": 0.19759395364681334
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.19948220205019176,
+              "wall_ms": 0.1995165452761182
+            },
+            {
+              "cuda_event_ms": 0.19819653393996794,
+              "wall_ms": 0.19823017101959745
+            },
+            {
+              "cuda_event_ms": 0.19713133537553446,
+              "wall_ms": 0.1971648873197256
+            },
+            {
+              "cuda_event_ms": 0.19713326958823252,
+              "wall_ms": 0.19716891348624313
+            },
+            {
+              "cuda_event_ms": 0.19812854482854156,
+              "wall_ms": 0.19817035210738615
+            },
+            {
+              "cuda_event_ms": 0.1996058228030291,
+              "wall_ms": 0.199645223382718
+            },
+            {
+              "cuda_event_ms": 0.198241865131217,
+              "wall_ms": 0.19827795980200247
+            },
+            {
+              "cuda_event_ms": 0.19813027947961204,
+              "wall_ms": 0.19816234205395988
+            },
+            {
+              "cuda_event_ms": 0.19753515600438568,
+              "wall_ms": 0.19758244665101604
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.19754942001834994,
+            "wall_ms": 0.19759395364681334
+          },
+          "python": {
+            "cuda_event_ms": 0.19813027947961204,
+            "wall_ms": 0.19817035210738615
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.002263989216546104,
+          "native:dq": 0.0029450653847069397,
+          "native:dk": 0.0029153412189172516,
+          "native:dv": 0.002395232258710549,
+          "python:out": 0.002263989216546104,
+          "python:dq": 0.002945064382826768,
+          "python:dk": 0.0029153412189172516,
+          "python:dv": 0.002395232258710549
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "bf16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.269936500485561,
+              "wall_ms": 0.2700314456746138
+            },
+            {
+              "cuda_event_ms": 0.26764906349288387,
+              "wall_ms": 0.26774235652801176
+            },
+            {
+              "cuda_event_ms": 0.26799990938234464,
+              "wall_ms": 0.2680943482250629
+            },
+            {
+              "cuda_event_ms": 0.26856467584381527,
+              "wall_ms": 0.26865675761675706
+            },
+            {
+              "cuda_event_ms": 0.2713057961636599,
+              "wall_ms": 0.2713993454058875
+            },
+            {
+              "cuda_event_ms": 0.2745403831715703,
+              "wall_ms": 0.274641857878759
+            },
+            {
+              "cuda_event_ms": 0.26819387451851934,
+              "wall_ms": 0.26828518658124095
+            },
+            {
+              "cuda_event_ms": 0.26798849716824075,
+              "wall_ms": 0.2680849303390239
+            },
+            {
+              "cuda_event_ms": 0.26938616399313414,
+              "wall_ms": 0.26947981896836176
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.3042771011496944,
+              "wall_ms": 0.3043817255604859
+            },
+            {
+              "cuda_event_ms": 0.30431536845980384,
+              "wall_ms": 0.3044213501961273
+            },
+            {
+              "cuda_event_ms": 0.30485411923766514,
+              "wall_ms": 0.30496373193482473
+            },
+            {
+              "cuda_event_ms": 0.3037597463710075,
+              "wall_ms": 0.3038631608542231
+            },
+            {
+              "cuda_event_ms": 0.3013499648037017,
+              "wall_ms": 0.30150981704419483
+            },
+            {
+              "cuda_event_ms": 0.32221091959378695,
+              "wall_ms": 0.32232561510802493
+            },
+            {
+              "cuda_event_ms": 0.31618403485896834,
+              "wall_ms": 0.31630588641789764
+            },
+            {
+              "cuda_event_ms": 0.3052262989128426,
+              "wall_ms": 0.3053380631069045
+            },
+            {
+              "cuda_event_ms": 0.339896939154303,
+              "wall_ms": 0.3400283628025853
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.26856467584381527,
+            "wall_ms": 0.26865675761675706
+          },
+          "python": {
+            "cuda_event_ms": 0.30485411923766514,
+            "wall_ms": 0.30496373193482473
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.002263989216546104,
+          "native:dq": 0.0029450653847069397,
+          "native:dk": 0.0029153412189172516,
+          "native:dv": 0.002395232258710549,
+          "python:out": 0.002263989216546104,
+          "python:dq": 0.002945064382826768,
+          "python:dk": 0.0029153412189172516,
+          "python:dv": 0.002395232258710549
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "bf16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.14096288096037468,
+              "wall_ms": 0.14099086446823092
+            },
+            {
+              "cuda_event_ms": 0.14140549467905783,
+              "wall_ms": 0.1414308616158801
+            },
+            {
+              "cuda_event_ms": 0.14139955224052136,
+              "wall_ms": 0.14142523967752635
+            },
+            {
+              "cuda_event_ms": 0.1414098698810572,
+              "wall_ms": 0.14143449930406404
+            },
+            {
+              "cuda_event_ms": 0.14145515648682686,
+              "wall_ms": 0.14147875178206748
+            },
+            {
+              "cuda_event_ms": 0.14139380570655202,
+              "wall_ms": 0.14141910698978274
+            },
+            {
+              "cuda_event_ms": 0.14143909231232168,
+              "wall_ms": 0.14146392867394247
+            },
+            {
+              "cuda_event_ms": 0.14143324782606878,
+              "wall_ms": 0.14146033665510732
+            },
+            {
+              "cuda_event_ms": 0.14140695307972428,
+              "wall_ms": 0.14143435660810788
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.14159021065550542,
+              "wall_ms": 0.14161545662229263
+            },
+            {
+              "cuda_event_ms": 0.14182322734111064,
+              "wall_ms": 0.14184863444193826
+            },
+            {
+              "cuda_event_ms": 0.14179268805773804,
+              "wall_ms": 0.14181748365587257
+            },
+            {
+              "cuda_event_ms": 0.14180123992529228,
+              "wall_ms": 0.1418240981740853
+            },
+            {
+              "cuda_event_ms": 0.1417795780881879,
+              "wall_ms": 0.14180553485679137
+            },
+            {
+              "cuda_event_ms": 0.14180142441989688,
+              "wall_ms": 0.14182741249180206
+            },
+            {
+              "cuda_event_ms": 0.14179122295352506,
+              "wall_ms": 0.14181630298426404
+            },
+            {
+              "cuda_event_ms": 0.14180843521487152,
+              "wall_ms": 0.14183210669539784
+            },
+            {
+              "cuda_event_ms": 0.14177520448079658,
+              "wall_ms": 0.1417995732910878
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.14140695307972428,
+            "wall_ms": 0.14143435660810788
+          },
+          "python": {
+            "cuda_event_ms": 0.14179268805773804,
+            "wall_ms": 0.14181748365587257
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.002042864046418367,
+          "native:dq": 0.0031655392120972584,
+          "native:dk": 0.0031468842460015993,
+          "native:dv": 0.002365914464668014,
+          "python:out": 0.002042864046418367,
+          "python:dq": 0.0031655392124697447,
+          "python:dk": 0.0031468842460015993,
+          "python:dv": 0.002365914464668014
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "bf16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.2720160524161081,
+              "wall_ms": 0.2721176127816257
+            },
+            {
+              "cuda_event_ms": 0.27044724488324773,
+              "wall_ms": 0.2705483203805713
+            },
+            {
+              "cuda_event_ms": 0.26936049182434935,
+              "wall_ms": 0.26946110034122817
+            },
+            {
+              "cuda_event_ms": 0.2691807866428556,
+              "wall_ms": 0.2692776713014417
+            },
+            {
+              "cuda_event_ms": 0.2694460515524352,
+              "wall_ms": 0.26954383280291677
+            },
+            {
+              "cuda_event_ms": 0.28091543298577865,
+              "wall_ms": 0.28101580501547013
+            },
+            {
+              "cuda_event_ms": 0.2705927134224299,
+              "wall_ms": 0.27069069088753156
+            },
+            {
+              "cuda_event_ms": 0.26957441239635926,
+              "wall_ms": 0.26967333982216096
+            },
+            {
+              "cuda_event_ms": 0.26809403358395717,
+              "wall_ms": 0.26819452093421253
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.309283418475457,
+              "wall_ms": 0.30940199047898137
+            },
+            {
+              "cuda_event_ms": 0.3084268629925806,
+              "wall_ms": 0.3085418364711094
+            },
+            {
+              "cuda_event_ms": 0.3063659907886817,
+              "wall_ms": 0.30648178296857775
+            },
+            {
+              "cuda_event_ms": 0.30623396387640034,
+              "wall_ms": 0.30634790882629304
+            },
+            {
+              "cuda_event_ms": 0.3075284418070091,
+              "wall_ms": 0.3076379151528689
+            },
+            {
+              "cuda_event_ms": 0.3081568831917625,
+              "wall_ms": 0.30827305966815416
+            },
+            {
+              "cuda_event_ms": 0.30756066280341,
+              "wall_ms": 0.3076758742355888
+            },
+            {
+              "cuda_event_ms": 0.30686168550695264,
+              "wall_ms": 0.3069739999453121
+            },
+            {
+              "cuda_event_ms": 0.30606652505742676,
+              "wall_ms": 0.3061804528906063
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.26957441239635926,
+            "wall_ms": 0.26967333982216096
+          },
+          "python": {
+            "cuda_event_ms": 0.3075284418070091,
+            "wall_ms": 0.3076379151528689
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.002042864046418367,
+          "native:dq": 0.0031655392120972584,
+          "native:dk": 0.0031468842460015993,
+          "native:dv": 0.002365914464668014,
+          "python:out": 0.002042864046418367,
+          "python:dq": 0.0031655392124697447,
+          "python:dk": 0.0031468842460015993,
+          "python:dv": 0.002365914464668014
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "fp16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.20162642629523025,
+              "wall_ms": 0.2016633178007521
+            },
+            {
+              "cuda_event_ms": 0.19978364952180067,
+              "wall_ms": 0.1998194595275688
+            },
+            {
+              "cuda_event_ms": 0.19832433476621805,
+              "wall_ms": 0.19835935829458043
+            },
+            {
+              "cuda_event_ms": 0.19742256813203757,
+              "wall_ms": 0.19745779149978976
+            },
+            {
+              "cuda_event_ms": 0.19906642465938923,
+              "wall_ms": 0.19909990484814954
+            },
+            {
+              "cuda_event_ms": 0.20151657228045136,
+              "wall_ms": 0.20155015786608252
+            },
+            {
+              "cuda_event_ms": 0.201385976814548,
+              "wall_ms": 0.20141985023729805
+            },
+            {
+              "cuda_event_ms": 0.1986310549593165,
+              "wall_ms": 0.19866590487567126
+            },
+            {
+              "cuda_event_ms": 0.19854198872801745,
+              "wall_ms": 0.19857681374987474
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.20160983931197812,
+              "wall_ms": 0.20164963363920554
+            },
+            {
+              "cuda_event_ms": 0.20169068927224348,
+              "wall_ms": 0.20173046558101845
+            },
+            {
+              "cuda_event_ms": 0.19850883020563165,
+              "wall_ms": 0.19854462550253596
+            },
+            {
+              "cuda_event_ms": 0.19736045188749368,
+              "wall_ms": 0.19739603034365802
+            },
+            {
+              "cuda_event_ms": 0.20021888022480705,
+              "wall_ms": 0.20025230571580485
+            },
+            {
+              "cuda_event_ms": 0.20168032626874052,
+              "wall_ms": 0.201715629520498
+            },
+            {
+              "cuda_event_ms": 0.20023345947265625,
+              "wall_ms": 0.2002696153662556
+            },
+            {
+              "cuda_event_ms": 0.19928614813306553,
+              "wall_ms": 0.19932545747217695
+            },
+            {
+              "cuda_event_ms": 0.19765066231793238,
+              "wall_ms": 0.1976849857801647
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.19906642465938923,
+            "wall_ms": 0.19909990484814954
+          },
+          "python": {
+            "cuda_event_ms": 0.20021888022480705,
+            "wall_ms": 0.20025230571580485
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.00028257745404020745,
+          "native:dq": 0.0003676794463956638,
+          "native:dk": 0.00036440664991137256,
+          "native:dv": 0.0002997655362563477,
+          "python:out": 0.00028257745404020745,
+          "python:dq": 0.00036769050195899894,
+          "python:dk": 0.00036440664991137256,
+          "python:dv": 0.0002997655362563477
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "fp16",
+        "causal": false,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.27068587409125433,
+              "wall_ms": 0.27077877214954543
+            },
+            {
+              "cuda_event_ms": 0.2706545723809136,
+              "wall_ms": 0.2707491332936722
+            },
+            {
+              "cuda_event_ms": 0.2706119961208767,
+              "wall_ms": 0.2707044111351327
+            },
+            {
+              "cuda_event_ms": 0.2709134207831489,
+              "wall_ms": 0.27100616943142897
+            },
+            {
+              "cuda_event_ms": 0.27104434967041013,
+              "wall_ms": 0.2711387277587265
+            },
+            {
+              "cuda_event_ms": 0.27089973025851777,
+              "wall_ms": 0.27099491667791475
+            },
+            {
+              "cuda_event_ms": 0.2710784064398872,
+              "wall_ms": 0.27117142502296093
+            },
+            {
+              "cuda_event_ms": 0.27215076022677953,
+              "wall_ms": 0.27224367497385377
+            },
+            {
+              "cuda_event_ms": 0.2710158242119683,
+              "wall_ms": 0.2711106166922643
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.30721919536590575,
+              "wall_ms": 0.30732582499695127
+            },
+            {
+              "cuda_event_ms": 0.3067039966583252,
+              "wall_ms": 0.3068079937293078
+            },
+            {
+              "cuda_event_ms": 0.30689918994903564,
+              "wall_ms": 0.3070025312808866
+            },
+            {
+              "cuda_event_ms": 0.30782079696655273,
+              "wall_ms": 0.30792711877438705
+            },
+            {
+              "cuda_event_ms": 0.30754880905151366,
+              "wall_ms": 0.30766277186558
+            },
+            {
+              "cuda_event_ms": 0.30732800960540774,
+              "wall_ms": 0.30743160623387666
+            },
+            {
+              "cuda_event_ms": 0.30951681137084963,
+              "wall_ms": 0.30962441878727986
+            },
+            {
+              "cuda_event_ms": 0.3085978031158447,
+              "wall_ms": 0.30870245936966967
+            },
+            {
+              "cuda_event_ms": 0.30808320045471194,
+              "wall_ms": 0.30818697186987265
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.2709134207831489,
+            "wall_ms": 0.27100616943142897
+          },
+          "python": {
+            "cuda_event_ms": 0.30754880905151366,
+            "wall_ms": 0.30766277186558
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.00028257745404020745,
+          "native:dq": 0.0003676794463956638,
+          "native:dk": 0.00036440664991137256,
+          "native:dv": 0.0002997655362563477,
+          "python:out": 0.00028257745404020745,
+          "python:dq": 0.00036769050195899894,
+          "python:dk": 0.00036440664991137256,
+          "python:dv": 0.0002997655362563477
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "fp16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "graph",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.1422405051364105,
+              "wall_ms": 0.1422668120491758
+            },
+            {
+              "cuda_event_ms": 0.14222127293240563,
+              "wall_ms": 0.14224554808914575
+            },
+            {
+              "cuda_event_ms": 0.14226695078517307,
+              "wall_ms": 0.14229183357677969
+            },
+            {
+              "cuda_event_ms": 0.14227870683930013,
+              "wall_ms": 0.14230461838425348
+            },
+            {
+              "cuda_event_ms": 0.14226841755542727,
+              "wall_ms": 0.14229316784334844
+            },
+            {
+              "cuda_event_ms": 0.1422581392176011,
+              "wall_ms": 0.14228316790082224
+            },
+            {
+              "cuda_event_ms": 0.14225941990506188,
+              "wall_ms": 0.14228220659754423
+            },
+            {
+              "cuda_event_ms": 0.1422698843256815,
+              "wall_ms": 0.14229539309633651
+            },
+            {
+              "cuda_event_ms": 0.14230074123125336,
+              "wall_ms": 0.1423253787686805
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.14225993565150669,
+              "wall_ms": 0.14228611573344097
+            },
+            {
+              "cuda_event_ms": 0.14223620823451452,
+              "wall_ms": 0.14225948572857305
+            },
+            {
+              "cuda_event_ms": 0.14223213195800782,
+              "wall_ms": 0.14226192716575628
+            },
+            {
+              "cuda_event_ms": 0.1422950417654855,
+              "wall_ms": 0.14232244425719337
+            },
+            {
+              "cuda_event_ms": 0.14229796273367745,
+              "wall_ms": 0.1423225157278856
+            },
+            {
+              "cuda_event_ms": 0.14222921098981584,
+              "wall_ms": 0.14225374287759354
+            },
+            {
+              "cuda_event_ms": 0.14222629002162387,
+              "wall_ms": 0.14225169999657997
+            },
+            {
+              "cuda_event_ms": 0.14223506382533482,
+              "wall_ms": 0.14226020001972625
+            },
+            {
+              "cuda_event_ms": 0.14228918892996653,
+              "wall_ms": 0.14231574430596083
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.14226695078517307,
+            "wall_ms": 0.14229183357677969
+          },
+          "python": {
+            "cuda_event_ms": 0.14223620823451452,
+            "wall_ms": 0.14226192716575628
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.00025401511911995995,
+          "native:dq": 0.0003931168751087406,
+          "native:dk": 0.0003830824605851119,
+          "native:dv": 0.0002917132318708157,
+          "python:out": 0.00025401511911995995,
+          "python:dq": 0.00039311782317865226,
+          "python:dk": 0.0003830824605851119,
+          "python:dv": 0.0002917132318708157
+        }
+      },
+      {
+        "shape": [
+          1,
+          16,
+          1024,
+          128
+        ],
+        "dtype": "fp16",
+        "causal": true,
+        "phase": "joint",
+        "mode": "eager",
+        "samples": {
+          "native": [
+            {
+              "cuda_event_ms": 0.2701569437329235,
+              "wall_ms": 0.27025904647352
+            },
+            {
+              "cuda_event_ms": 0.2701902545866419,
+              "wall_ms": 0.27029188529555204
+            },
+            {
+              "cuda_event_ms": 0.2700002701556096,
+              "wall_ms": 0.27009502460078283
+            },
+            {
+              "cuda_event_ms": 0.27065214563588624,
+              "wall_ms": 0.2707501803715637
+            },
+            {
+              "cuda_event_ms": 0.270461911060771,
+              "wall_ms": 0.27056003828810354
+            },
+            {
+              "cuda_event_ms": 0.2686433218867401,
+              "wall_ms": 0.2687395218876827
+            },
+            {
+              "cuda_event_ms": 0.2683383545588926,
+              "wall_ms": 0.26846238257060634
+            },
+            {
+              "cuda_event_ms": 0.2704451097165301,
+              "wall_ms": 0.27053779508928705
+            },
+            {
+              "cuda_event_ms": 0.270431310101285,
+              "wall_ms": 0.2705303115084452
+            }
+          ],
+          "python": [
+            {
+              "cuda_event_ms": 0.3072540567528387,
+              "wall_ms": 0.30736643786654916
+            },
+            {
+              "cuda_event_ms": 0.307320257151349,
+              "wall_ms": 0.30743199695618995
+            },
+            {
+              "cuda_event_ms": 0.30712317235721565,
+              "wall_ms": 0.3072362454059991
+            },
+            {
+              "cuda_event_ms": 0.3075309421705163,
+              "wall_ms": 0.3076467235711467
+            },
+            {
+              "cuda_event_ms": 0.3057594062378688,
+              "wall_ms": 0.3058699627409788
+            },
+            {
+              "cuda_event_ms": 0.30586117098790516,
+              "wall_ms": 0.3059687546088493
+            },
+            {
+              "cuda_event_ms": 0.3055622266686481,
+              "wall_ms": 0.3056733446739475
+            },
+            {
+              "cuda_event_ms": 0.30573395912691675,
+              "wall_ms": 0.3058459906750619
+            },
+            {
+              "cuda_event_ms": 0.3079155394749612,
+              "wall_ms": 0.308023444094886
+            }
+          ]
+        },
+        "median_ms": {
+          "native": {
+            "cuda_event_ms": 0.2701902545866419,
+            "wall_ms": 0.27029188529555204
+          },
+          "python": {
+            "cuda_event_ms": 0.30712317235721565,
+            "wall_ms": 0.3072362454059991
+          }
+        },
+        "graph_resources_equal": true,
+        "max_per_head_fp64_relative_error": {
+          "native:out": 0.00025401511911995995,
+          "native:dq": 0.0003931168751087406,
+          "native:dk": 0.0003830824605851119,
+          "native:dv": 0.0002917132318708157,
+          "python:out": 0.00025401511911995995,
+          "python:dq": 0.00039311782317865226,
+          "python:dk": 0.0003830824605851119,
+          "python:dv": 0.0002917132318708157
+        }
+      }
+    ]
+  },
   "training_rows": [
     {"shape":[1,16,1024,64],"dtype":"bf16","causal":false,"phase":"forward","mode":"graph","calls_per_window":{"native":3305,"python":3314,"cute":3129,"sdpa":3163},"samples":{"native":[{"cuda_event_ms":0.029298174651776428,"wall_ms":0.029304255680329027},{"cuda_event_ms":0.029282313359847767,"wall_ms":0.02928735310022977},{"cuda_event_ms":0.029297553681389466,"wall_ms":0.029302563994866478},{"cuda_event_ms":0.02928789978489032,"wall_ms":0.029292944936735524},{"cuda_event_ms":0.029572336540279878,"wall_ms":0.029577474127792713},{"cuda_event_ms":0.0292653301660304,"wall_ms":0.029270472314980856},{"cuda_event_ms":0.029354872249078102,"wall_ms":0.029359900451768273}],"python":[{"cuda_event_ms":0.02931717554344495,"wall_ms":0.02932280145059174},{"cuda_event_ms":0.029294310381560707,"wall_ms":0.02929976826289744},{"cuda_event_ms":0.029306670737396037,"wall_ms":0.029311666864279027},{"cuda_event_ms":0.02928874833654336,"wall_ms":0.029293745324421982},{"cuda_event_ms":0.02932304607936972,"wall_ms":0.029328100481781576},{"cuda_event_ms":0.02935358898137518,"wall_ms":0.029358533191029264},{"cuda_event_ms":0.029369087196216573,"wall_ms":0.02937412191045796}],"cute":[{"cuda_event_ms":0.031882430235392445,"wall_ms":0.031888302332715994},{"cuda_event_ms":0.03177639896323331,"wall_ms":0.0317823544281397},{"cuda_event_ms":0.03185690626544897,"wall_ms":0.03186235059870924},{"cuda_event_ms":0.031839233573994034,"wall_ms":0.031844859057084944},{"cuda_event_ms":0.03187517146021842,"wall_ms":0.03188027101490003},{"cuda_event_ms":0.03194591099174307,"wall_ms":0.03195127038133041},{"cuda_event_ms":0.03189711846570764,"wall_ms":0.031902336210923816}],"sdpa":[{"cuda_event_ms":0.03114604678592688,"wall_ms":0.031151602596340162},{"cuda_event_ms":0.031076118307629227,"wall_ms":0.03108164716460143},{"cuda_event_ms":0.03107320452053035,"wall_ms":0.031079111607239435},{"cuda_event_ms":0.030858177645764998,"wall_ms":0.030863319319436446},{"cuda_event_ms":0.031081297033540893,"wall_ms":0.03108673158445941},{"cuda_event_ms":0.031057017082433854,"wall_ms":0.03106235820760905},{"cuda_event_ms":0.031075469459343138,"wall_ms":0.031080951939145274}]},"median_ms":{"native":{"cuda_event_ms":0.029297553681389466,"wall_ms":0.029302563994866478},"python":{"cuda_event_ms":0.02931717554344495,"wall_ms":0.02932280145059174},"cute":{"cuda_event_ms":0.03187517146021842,"wall_ms":0.03188027101490003},"sdpa":{"cuda_event_ms":0.031075469459343138,"wall_ms":0.031080951939145274}},"native_python_graph_resources_equal":true,"max_per_head_fp64_relative_error":{"native:out":0.0022696193602980423,"native:dq":0.0029738246072682174,"native:dk":0.002903217762530877,"native:dv":0.0023999754075081678,"python:out":0.0022696193602980423,"python:dq":0.0029738412547892917,"python:dk":0.002903217762530877,"python:dv":0.0023999754075081678}},
     {"shape":[1,16,1024,64],"dtype":"bf16","causal":false,"phase":"forward","mode":"eager","calls_per_window":{"native":3019,"python":2097,"cute":2416,"sdpa":2879},"samples":{"native":[{"cuda_event_ms":0.029677685146578182,"wall_ms":0.029684220605417862},{"cuda_event_ms":0.02970210476875621,"wall_ms":0.029709216621564036},{"cuda_event_ms":0.029753660673967217,"wall_ms":0.02976040344370042},{"cuda_event_ms":0.029730936753587952,"wall_ms":0.029737693606220302},{"cuda_event_ms":0.029709906007881075,"wall_ms":0.02971644750149978},{"cuda_event_ms":0.029691930557963625,"wall_ms":0.0296984077539232},{"cuda_event_ms":0.02969599923143011,"wall_ms":0.029702892684081272}],"python":[{"cuda_event_ms":0.04328731815190786,"wall_ms":0.043297367181889194},{"cuda_event_ms":0.04305194932958542,"wall_ms":0.04306168050454591},{"cuda_event_ms":0.04298407427742758,"wall_ms":0.04299334763905898},{"cuda_event_ms":0.0429005693354718,"wall_ms":0.042910345263324386},{"cuda_event_ms":0.04290447680792129,"wall_ms":0.04291425512770069},{"cuda_event_ms":0.043273154473839115,"wall_ms":0.043282903674576906},{"cuda_event_ms":0.043266212707141156,"wall_ms":0.04327562613478024}],"cute":[{"cuda_event_ms":0.03645838491174559,"wall_ms":0.03646672723563511},{"cuda_event_ms":0.03631426640693715,"wall_ms":0.03632242177090367},{"cuda_event_ms":0.03636638376097016,"wall_ms":0.03637451820564302},{"cuda_event_ms":0.036289271929406175,"wall_ms":0.036297239235888346},{"cuda_event_ms":0.03622569469426641,"wall_ms":0.03623375206062453},{"cuda_event_ms":0.036438888271912835,"wall_ms":0.036446962747275706},{"cuda_event_ms":0.03638294043130433,"wall_ms":0.036391435421456654}],"sdpa":[{"cuda_event_ms":0.031151082872640512,"wall_ms":0.031158039252121374},{"cuda_event_ms":0.031158908368316363,"wall_ms":0.031166024659829848},{"cuda_event_ms":0.031164242849452663,"wall_ms":0.03117097811357737},{"cuda_event_ms":0.03114645859564953,"wall_ms":0.031153426188849413},{"cuda_event_ms":0.03116068652869513,"wall_ms":0.03116761930510091},{"cuda_event_ms":0.031138277997901018,"wall_ms":0.031144923230321944},{"cuda_event_ms":0.03115179307678583,"wall_ms":0.031158667587545437}]},"median_ms":{"native":{"cuda_event_ms":0.02970210476875621,"wall_ms":0.029709216621564036},"python":{"cuda_event_ms":0.04305194932958542,"wall_ms":0.04306168050454591},"cute":{"cuda_event_ms":0.03636638376097016,"wall_ms":0.03637451820564302},"sdpa":{"cuda_event_ms":0.03115179307678583,"wall_ms":0.031158667587545437}},"native_python_graph_resources_equal":true,"max_per_head_fp64_relative_error":{"native:out":0.0022696193602980423,"native:dq":0.0029738246072682174,"native:dk":0.002903217762530877,"native:dv":0.0023999754075081678,"python:out":0.0022696193602980423,"python:dq":0.0029738412547892917,"python:dk":0.002903217762530877,"python:dv":0.0023999754075081678}},

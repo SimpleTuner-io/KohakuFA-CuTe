@@ -72,3 +72,10 @@ The qualified stack was Python 3.13.18, PyTorch 2.15.0/CUDA 13.2, CuTe DSL 4.8.1
 and Triton 3.9. Full source, commands, runtime configuration, reports and actual
 loaded code were retained outside Git before and throughout the run. The main
 top-level attention APIs retain their existing selection; this remains opt-in.
+
+Current-main integration retains the A40 D256 and GB10 metadata helpers. The
+RTX helper and binding were preserved byte for byte, then rechecked with 168
+actual metadata decisions and sixteen independent-seed graph/eager joint
+measurements. Two loaded backward CUBIN/SASS pairs match the original code;
+the rebuilt, actually mapped host extension and verified archive are recorded
+separately. The current CPU suite passed 379 tests with 179 GPU skips.

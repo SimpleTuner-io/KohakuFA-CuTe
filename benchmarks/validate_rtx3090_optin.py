@@ -22,16 +22,20 @@ def main():
         "--compare-reference-devices", action="store_true", help="Run both unchanged reference gates outside sanitizers."
     )
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--seq", nargs="+", type=int, help="Explicit sequences within the public eligibility boundary.")
+    parser.add_argument("--seed", type=int, default=4121)
     args = parser.parse_args()
+    if args.seq and any(not 1024 <= sequence <= 4096 for sequence in args.seq):
+        parser.error("Sequences must stay within the public eligibility boundary.")
     from benchmarks.compare_ada import capture
     from benchmarks.validate_sm80_static import assess, statistics
     from kohakufa_cute import rtx3090_attention
-    from kohakufa_cute.rtx3090 import _device_matches, _eligible
+    from kohakufa_cute.rtx3090 import _device_matches, _eligible, _head_group
 
     assert _device_matches(torch.cuda.current_device())
     operation = rtx3090_attention
     layouts = ((1, 16),)
-    sequences = (1024, 1025) if args.smoke else (1024, 1025, 4096)
+    sequences = args.seq or ((1024, 1025) if args.smoke else (1024, 1025, 4096))
     if args.reference_device == "cpu":
         torch.set_num_threads(4)
     report = {
@@ -62,12 +66,17 @@ def main():
     for dtype, dimension, (batch, heads), sequence, causal in itertools.product(
         (torch.bfloat16, torch.float16), (64, 128), layouts, sequences, (False, True)
     ):
-        torch.manual_seed(4121)
+        torch.manual_seed(args.seed)
         inputs = [
             torch.randn(batch, heads, sequence, dimension, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)
         ]
         dout = torch.randn_like(inputs[0])
-        row = {"shape": list(inputs[0].shape), "dtype": str(dtype), "causal": causal}
+        row = {
+            "shape": list(inputs[0].shape),
+            "dtype": str(dtype),
+            "causal": causal,
+            "causal_head_group": _head_group(sequence, causal),
+        }
         report["current"] = row
         args.output.write_text(json.dumps(report, indent=2) + "\n")
         actual, operands = (), inputs

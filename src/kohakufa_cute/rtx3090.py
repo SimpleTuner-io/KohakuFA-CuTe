@@ -49,8 +49,14 @@ def _eligible(q, k, v, mask, dropout, causal, scale, gqa):
     return available()
 
 
-@lru_cache(maxsize=4)
-def _runner(dimension, causal):
+def _head_group(sequence, causal):
+    if not causal:
+        return 1
+    return 16 if sequence == 1024 else 4
+
+
+@lru_cache(maxsize=8)
+def _runner(dimension, causal, head_group=1):
     from .fa4_sm80._attention import Schedule
     from .fa4_sm80._host import native_runner
 
@@ -66,6 +72,7 @@ def _runner(dimension, causal):
             kv_m_warps=4 if wide else 2,
             dq_m_warps=4 if wide else 2,
             v_in_regs=True,
+            causal_head_group=head_group,
         )
     )
 
@@ -77,7 +84,9 @@ def rtx3090_attention(query, key, value, attn_mask=None, dropout_p=0.0, is_causa
     pinned optional warp-kernel runtime and does not change default dispatch.
     """
     if _eligible(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa):
-        return _runner(query.shape[-1], is_causal)(query, key, value, scale=scale, causal=is_causal)
+        return _runner(query.shape[-1], is_causal, _head_group(query.shape[-2], is_causal))(
+            query, key, value, scale=scale, causal=is_causal
+        )
     from .api import scaled_dot_product_attention
 
     return scaled_dot_product_attention(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)

@@ -122,7 +122,8 @@ retain standard CuTe dispatch.
 
 GB10 has an [explicit D128 shared entry](docs/gb10-shared.md) with measured training and [forward-only schedules](docs/gb10-inference.md), plus ordinary CuTe fallbacks. It is opt-in.
 
-For an ordinary RTX 3090, the optional [`rtx3090_attention`](docs/rtx3090-optin.md) entry exposes bounded D64/D128 training schedules with the same precision policy.
+For an ordinary RTX 3090, the optional [`rtx3090_attention`](docs/rtx3090-optin.md) entry exposes bounded D64/D128 schedules and a B1 H16 S128 D16 full-row backward path,
+with the same training precision policy.
 
 `attention(..., center_keys=True)` subtracts each batch/head's mean key in FP32 before rounding once back to the input dtype. This can reduce errors from a shared key component, at the cost of a reduction and temporary storage. It defaults to `False` and is separate from the default output/dO delta calculation.
 

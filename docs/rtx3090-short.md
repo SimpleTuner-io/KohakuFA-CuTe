@@ -111,3 +111,11 @@ SASS are archived outside the tracked tree. All eight CuTe compilation units
 from the four dtype/visibility cases have retained PTX/cubins; each cubin is
 byte-matched to an actual loaded module image. Four safety tools and the
 unchanged-code capture are retained separately from uninstrumented timings.
+
+The integration with the merged A40 and GB10 paths retains their guards and the
+identical short-kernel, native Python bridge and RTX 3090 selector. The rebuilt
+C++ bridge passed all 18 finite cases, the expected overflow diagnostic and six
+fallback cases again; its loaded library and build configuration were retained.
+The integration CPU suite ran 377 tests with 177 skipped and no failures;
+24 publication-guard tests passed. Original timing samples retain their original
+source hashes in the result file.

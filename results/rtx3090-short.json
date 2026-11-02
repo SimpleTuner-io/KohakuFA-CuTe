@@ -8537,5 +8537,26 @@
       },
       "frozen_source_tar_sha256": "e012ce0c91c26684af618dc639d796c711a1112a2c6698d24c3acc26a40b6b22"
     }
+  },
+  "merged_main_integration": {
+    "base_revision": "432ade4",
+    "scope": "Preserve merged A40 D256 and GB10 inference guards alongside the identical short attention implementation. Original timings remain associated with their original source snapshot.",
+    "native_cpp_source_sha256": "a4b8725287880b2b03064dcf9138499a942c51bde8886bb81387c5f181015354",
+    "unchanged_runtime_source_sha256": {
+      "src/kohakufa_cute/native.py": "661d8602c0360207cf17cca81c1739bb4264c5c7c4aa49bc4f6e699e885b6468",
+      "src/kohakufa_cute/rtx3090.py": "751caf9d78a0092c9b18a204afff8466fc0104015b13ff72045a11a509c54d60",
+      "src/kohakufa_cute/short_owned.py": "98aa3ecd91bc87c4f394314f655b072ea0772153e6388f9f3ab99de73d3ddd50",
+      "src/kohakufa_cute/kernels.py": "64bc4a098a5e61a19698e01d77a8c23f4a3611b16aba5b76f2a20c5ddc4c86fd"
+    },
+    "fresh_finite_cases": 18,
+    "fresh_expected_overflow_diagnostics": 1,
+    "fresh_fallback_cases": 6,
+    "actual_native_bridge_loaded_and_retained": true,
+    "cpu_suite": {
+      "total": 377,
+      "skipped": 177,
+      "failures": 0
+    },
+    "publication_guard_tests": 24
   }
 }

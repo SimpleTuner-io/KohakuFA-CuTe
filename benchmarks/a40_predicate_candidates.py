@@ -39,7 +39,7 @@ def python_compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None,
         or q.shape[0] != 1
         or q.shape[1] != 16
         or q.shape[2] not in (1024, 4096)
-        or not (q.shape[-1] == 128 or (q.shape[-1] == 64 and causal))
+        or not (q.shape[-1] in (128, 256) or (q.shape[-1] == 64 and causal))
         or not all(t.is_contiguous() for t in (q, k, v))
         or any(t.data_ptr() % 16 for t in (q, k, v))
         or not _python_device(q.device.index)

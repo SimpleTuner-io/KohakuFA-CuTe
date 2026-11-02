@@ -61,7 +61,8 @@ then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounde
 Other CUDA calls retain the standard CuTe dispatch.
 
 **A40 opt-in:** the same qualified stack supports an explicit
-[A40 entry for dense D128 and causal D64/D128](docs/a40-native-predicate.md),
+[A40 entry](docs/a40-native-predicate.md) for dense D128/D256 and causal D64/D128/D256,
+including the [D256 training comparison](docs/a40-d256.md),
 with separate graph and complete eager measurements.
 
 The same pinned installation provides an opt-in [RTX 4090 joint-backward path](docs/rtx4090-shared-joint.md), with measured D64/D128 schedules and ordinary CuTe fallbacks.

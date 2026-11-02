@@ -20,8 +20,21 @@ def _metadata_predicate():
 @lru_cache(maxsize=32)
 def schedule(dimension, causal, sequence=4096):
     """Keep the wider dense key tile separate from causal work distribution."""
-    if dimension not in (64, 128):
-        raise ValueError("The explicit A40 schedule requires D64 or D128.")
+    if dimension not in (64, 128, 256):
+        raise ValueError("The explicit A40 schedule requires D64, D128 or D256.")
+    if dimension == 256:
+        return Schedule(
+            forward_m=64,
+            forward_n=64,
+            backward_m=64,
+            backward_n=32,
+            query_stages=1,
+            dout_stages=1,
+            score_m_warps=4,
+            kv_m_warps=1,
+            dq_m_warps=2,
+            v_in_regs=True,
+        )
     if dimension == 64:
         return Schedule(
             forward_m=64,
@@ -73,10 +86,14 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
     return available() and _metadata_predicate()(q, k, v, causal)
 
 
-def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):
+def scaled_dot_product_attention(
+    q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False
+):
     """Use the explicit measured family; retain ordinary CuTe for other calls."""
     if compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
         return native_runner(schedule(q.shape[-1], is_causal, q.shape[2]))(q, k, v, scale=scale, causal=is_causal)
     from kohakufa_cute import api
 
-    return api.scaled_dot_product_attention(q, k, v, attn_mask, dropout_p, is_causal, scale=scale, enable_gqa=enable_gqa)
+    return api.scaled_dot_product_attention(
+        q, k, v, attn_mask, dropout_p, is_causal, scale=scale, enable_gqa=enable_gqa
+    )

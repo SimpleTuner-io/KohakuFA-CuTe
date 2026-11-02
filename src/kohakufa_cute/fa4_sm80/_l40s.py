@@ -18,7 +18,7 @@ def is_device(device):
     )
 
 
-def compatible(q, k, v, mask, dropout, causal, scale, gqa):
+def _cold_compatible(q, k, v, mask, dropout, causal, scale, gqa):
     from . import available
 
     if (
@@ -52,6 +52,41 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     ):
         return False
     return available()
+
+
+@lru_cache(maxsize=1)
+def _metadata_predicate():
+    """Cache only the function handle; every tensor is checked on each call."""
+    from kohakufa_cute.native import extension
+
+    return extension().l40s_metadata_compatible
+
+
+def compatible(q, k, v, mask, dropout, causal, scale, gqa):
+    if (
+        torch.compiler.is_compiling()
+        or torch.are_deterministic_algorithms_enabled()
+        or mask is not None
+        or dropout != 0
+    ):
+        return False
+    if scale is not None and (
+        not isinstance(scale, (float, int)) or not math.isfinite(scale) or not 1.1754943508222875e-38 <= scale <= 2e38
+    ):
+        return False
+    from . import available
+
+    if not available():
+        return False
+    # Unsupported cold calls keep the preceding fallback without loading a
+    # native extension merely to reject their metadata. The hot path checks all
+    # tensor metadata in C++; only the immutable function handle is cached.
+    if _metadata_predicate.cache_info().currsize == 0 and not _cold_compatible(
+        q, k, v, mask, dropout, causal, scale, gqa
+    ):
+        return False
+    # Equal-shape MHA remains eligible with either value of enable_gqa.
+    return _metadata_predicate()(q, k, v, causal)
 
 
 @lru_cache(maxsize=32)

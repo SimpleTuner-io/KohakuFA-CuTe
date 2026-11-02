@@ -61,6 +61,13 @@ def _long_d256_runner(sequence, causal):
     return native_runner(selected, forward_threads=threads)
 
 
+@lru_cache(maxsize=2)
+def _long_d64_runner(causal):
+    """Cache the qualified S4096 tile and shared-Q pipeline, never operands."""
+    selected = Schedule(forward_m=128, forward_n=64, forward_stages=1 if causal else 2, query_stages=1, dout_stages=1)
+    return native_runner(selected)
+
+
 @lru_cache(maxsize=8)
 def _qualified_device(index):
     """CUDA device properties are immutable within the initialized process."""
@@ -149,11 +156,12 @@ def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_caus
     """Run the explicit measured family and preserve the public fallback API."""
     if inference_compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
         shape = q.shape
-        selected = (
-            _long_d256_runner(shape[2], is_causal)
-            if shape[3] == 256 and shape[2] != 128
-            else native_runner(inference_schedule(shape[2], is_causal))
-        )
+        if shape[3] == 64 and shape[2] == 4096:
+            selected = _long_d64_runner(is_causal)
+        elif shape[3] == 256 and shape[2] != 128:
+            selected = _long_d256_runner(shape[2], is_causal)
+        else:
+            selected = native_runner(inference_schedule(shape[2], is_causal))
         return selected.inference(q, k, v, scale=scale, causal=is_causal)
     if compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
         return native_runner(schedule(q.shape[2], is_causal, q.shape[1], q.dtype))(q, k, v, scale=scale, causal=is_causal)

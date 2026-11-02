@@ -10,6 +10,27 @@ from kohakufa_cute.fa4_sm80._host import native_runner
 
 
 class Gb10LongInferenceTests(unittest.TestCase):
+    def test_long_d64_cached_configuration_preserves_live_operands(self):
+        gb10._long_d64_runner.cache_clear()
+        calls = []
+        runner = SimpleNamespace(inference=lambda *xs, **kw: calls.append((xs, kw)))
+        with (
+            patch.object(gb10, "native_runner", return_value=runner) as make,
+            patch.object(gb10, "inference_compatible", return_value=True),
+        ):
+            for causal in (False, True):
+                for _ in range(2):
+                    values = [SimpleNamespace(shape=(1, 16, 4096, 64)) for _ in range(3)]
+                    gb10.scaled_dot_product_attention(*values, is_causal=causal)
+                    self.assertEqual(calls[-1][0], tuple(values))
+            self.assertEqual(make.call_count, 2)
+            configs = [call.args[0] for call in make.call_args_list]
+            self.assertEqual(
+                [(c.forward_m, c.forward_n, c.forward_stages, c.query_in_registers) for c in configs],
+                [(128, 64, 2, False), (128, 64, 1, False)],
+            )
+        gb10._long_d64_runner.cache_clear()
+
     def tearDown(self):
         gb10._long_d256_runner.cache_clear()
         native_runner.cache_clear()

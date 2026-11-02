@@ -5,6 +5,10 @@ This reduces complete short causal-call overhead while preserving the
 [selected schedules](a40-causal-grouped.md) and [arithmetic](precision.md).
 The GPU kernels and the default attention API are unchanged.
 
+The later [D256 extension](a40-d256.md) adds dense/causal D256 on the same
+bounded device and sequence families; the measurements below retain their
+original D64/D128 scope.
+
 ## Use and selection
 
 Use Python 3.13, Torch 2.15.0/CUDA 13.2 and `.[cuda,sm80-fa4]`:
@@ -17,7 +21,7 @@ output = scaled_dot_product_attention(q, k, v, is_causal=True)
 
 The measured family remains a full NVIDIA A40, SM86/84 SMs/101376-byte shared
 capacity; contiguous aligned BHSD FP16/BF16 tensors, B1/H16, square S1024 or
-S4096; causal D64/D128 and dense D128. Other calls delegate to ordinary strict
+S4096; causal D64/D128/D256 and dense D128/D256. Other calls delegate to ordinary strict
 CuTe. Default scaling and finite positive scales from `2**-126` through `2e38`
 retain their existing eligibility. Compilation is warmed before timing.
 

@@ -33,8 +33,8 @@ class A40SharedTests(unittest.TestCase):
             and q.dtype == k.dtype == v.dtype
             and q.shape[0] == 1
             and q.shape[1] == 16
-            and q.shape[2] in (1024, 4096)
-            and (q.shape[-1] == 128 or (q.shape[-1] == 64 and causal))
+            and (q.shape[2] in (1024, 4096) or (q.shape[2] == 128 and q.shape[-1] == 256))
+            and (q.shape[-1] in (128, 256) or (q.shape[-1] == 64 and causal))
             and all(t.is_contiguous() for t in (q, k, v))
             and all(t.data_ptr() % 16 == 0 for t in (q, k, v))
             and (self.properties.major, self.properties.minor) == (8, 6)
@@ -63,7 +63,7 @@ class A40SharedTests(unittest.TestCase):
             self.addCleanup(item.stop)
 
     def test_measured_families_and_fallback_boundaries(self):
-        for dimension in (128,):
+        for dimension in (128, 256):
             for sequence in (1024, 4096):
                 for causal in (False, True):
                     for dtype in (torch.float16, torch.bfloat16):
@@ -81,7 +81,6 @@ class A40SharedTests(unittest.TestCase):
             (1, 8, 4096, 128),
             (1, 16, 4096, 16),
             (1, 16, 4096, 64),
-            (1, 16, 4096, 256),
             (1, 16, 4096, 512),
         ):
             q = operand(shape)
@@ -96,6 +95,23 @@ class A40SharedTests(unittest.TestCase):
                 values = [q, q, q]
                 values[position] = bad
                 self.assertFalse(a40.compatible(*values))
+
+    def test_short_d256_keeps_adjacent_domains_unselected(self):
+        for dtype in (torch.float16, torch.bfloat16):
+            for causal in (False, True):
+                q = operand((1, 16, 128, 256), dtype=dtype)
+                self.assertTrue(a40.compatible(q, q, q, causal=causal))
+                for shape in (
+                    (1, 16, 127, 256),
+                    (1, 16, 129, 256),
+                    (1, 16, 512, 256),
+                    (1, 8, 128, 256),
+                    (2, 16, 128, 256),
+                    (1, 16, 128, 64),
+                    (1, 16, 128, 128),
+                ):
+                    q = operand(shape, dtype=dtype)
+                    self.assertFalse(a40.compatible(q, q, q, causal=causal), shape)
 
     def test_partition_and_runtime_guards(self):
         q = operand()
@@ -114,6 +130,16 @@ class A40SharedTests(unittest.TestCase):
             self.assertFalse(a40.compatible(q, q, q))
         with patch.object(torch.compiler, "is_compiling", return_value=True):
             self.assertFalse(a40.compatible(q, q, q))
+
+    def test_d256_presets_keep_qualified_ownership(self):
+        for causal in (False, True):
+            selected = a40.schedule(256, causal)
+            self.assertEqual((selected.forward_m, selected.forward_n), (64, 64))
+            self.assertEqual((selected.backward_m, selected.backward_n), (64, 32))
+            self.assertEqual((selected.query_stages, selected.dout_stages), (1, 1))
+            self.assertEqual((selected.score_m_warps, selected.kv_m_warps, selected.dq_m_warps), (4, 1, 2))
+            self.assertTrue(selected.v_in_regs)
+            self.assertEqual(selected.causal_head_group, 1)
 
     def test_dense_storage_repair_keeps_causal_geometry(self):
         dense = a40.schedule(128, False)

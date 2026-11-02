@@ -69,7 +69,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", required=True)
     parser.add_argument("--dependencies")
-    parser.add_argument("--dimensions", nargs="+", type=int, choices=(64, 128), default=[128])
+    parser.add_argument("--dimensions", nargs="+", type=int, choices=(64, 128, 256), default=[128])
     parser.add_argument("--head-group", type=int, choices=(1, 4, 16))
     parser.add_argument("--reference-device", choices=("cuda", "cpu"), default="cuda")
     parser.add_argument("--smoke", action="store_true", help="Small tail and changed-graph probes for sanitizers.")
@@ -98,7 +98,9 @@ def main():
             str(path.name): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in (Path(__file__).resolve().parents[1] / "src/kohakufa_cute/fa4_sm80").glob("*.py")
         },
-        "candidate_sha256": hashlib.sha256(Path(__file__).with_name("a40_shared_candidates.py").read_bytes()).hexdigest(),
+        "candidate_sha256": hashlib.sha256(
+            Path(__file__).with_name("a40_shared_candidates.py").read_bytes()
+        ).hexdigest(),
         "smoke": args.smoke,
         "dimensions": args.dimensions,
         "head_group_control": args.head_group,
@@ -190,7 +192,9 @@ def main():
             v[..., 0], v[:, :, 0, 0], dout[..., 0] = -1, 1, 1
             actual = run_case((q, k, v), dout, scale=1.0)
             retain("sharp-saturated", (q, k, v), dout, actual, causal=False, scale=1.0, directed=True)
-        for dtype, dimension, heads in itertools.product((torch.bfloat16, torch.float16), args.dimensions, (18, 24, 32)):
+        for dtype, dimension, heads in itertools.product(
+            (torch.bfloat16, torch.float16), args.dimensions, (18, 24, 32)
+        ):
             torch.manual_seed(223)
             q, k, v, dout = [torch.randn(1, heads, 257, dimension, device="cuda", dtype=dtype) for _ in range(4)]
             actual = run_case((q, k, v), dout, causal=True)
@@ -209,7 +213,9 @@ def main():
 
     from benchmarks.compare_ada import capture
 
-    for dimension, (dtype, causal) in itertools.product(args.dimensions, ((torch.bfloat16, True), (torch.float16, False))):
+    for dimension, (dtype, causal) in itertools.product(
+        args.dimensions, ((torch.bfloat16, True), (torch.float16, False))
+    ):
         q, k, v, dout = [torch.randn(1, 2, 129, dimension, device="cuda", dtype=dtype) for _ in range(4)]
         graph, storage = capture(function, (q, k, v), dout, causal, "joint")
         operands, _, _, actual = storage

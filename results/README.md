@@ -69,13 +69,18 @@ can be insufficient across variants. Retain raw captures outside the tracked tre
 
 ## A40 opt-in
 
-The explicit [A40 entry](../docs/a40-native-predicate.md) selects dense D128 and
-causal D64/D128 with [paired public API measurements](a40-native-predicate.json),
+The explicit [A40 entry](../docs/a40-native-predicate.md) selects dense D128/D256 and
+causal D64/D128/D256 with [paired public API measurements](a40-native-predicate.json),
 including the preceding Python guard, native metadata guard, direct runners,
 ordinary CuTe, FA2 and SDPA. The [scheduling study](../docs/a40-causal-grouped.md)
 retains the grouped/ungrouped controls.
 The [initial D128 study](../docs/a40-d128-shared.md) retains the dense geometry
 comparison and its qualification.
+The [D256 comparison](../docs/a40-d256.md), [data](a40-d256.json) and
+[separate chart](a40-d256.svg) cover the actual public forward, backward and
+combined training path against ordinary CuTe, FA2 and SDPA.
+The [S128 extension](../docs/a40-short-d256.md) adds a separate
+[short training/no-grad chart](a40-short-d256.svg) and [32-row report](a40-short-d256.json).
 
 ## B200 D512 backward
 

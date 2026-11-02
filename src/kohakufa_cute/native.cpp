@@ -470,15 +470,16 @@ class AttentionRunner {
             if (found == short_devices.end()) {
                 cudaDeviceProp properties{};
                 C10_CUDA_CHECK(cudaGetDeviceProperties(&properties, q.get_device()));
-                const bool supported = properties.major == 8 && properties.minor == 6 &&
-                                       properties.multiProcessorCount == 82 &&
-                                       properties.sharedMemPerBlockOptin >= 99840 &&
-                                       std::strcmp(properties.name, "NVIDIA GeForce RTX 3090") == 0;
+                const bool supported = properties.sharedMemPerBlockOptin >= 99840 &&
+                    ((properties.major == 8 && properties.minor == 6 && properties.multiProcessorCount == 82 &&
+                      std::strcmp(properties.name, "NVIDIA GeForce RTX 3090") == 0) ||
+                     (properties.major == 8 && properties.minor == 9 && properties.multiProcessorCount == 128 &&
+                      std::strcmp(properties.name, "NVIDIA GeForce RTX 4090") == 0));
                 found = short_devices.emplace(q.get_device(), supported).first;
             }
             TORCH_CHECK_VALUE(found->second && !inference && q.size(0) == 1 && q.size(1) == 16 &&
                                   q.size(2) == 128 && q.size(3) == 16,
-                              "Short attention requires full RTX 3090 square B1 H16 S128 D16 training.");
+                              "Short attention requires a qualified full RTX 3090/4090 square B1 H16 S128 D16 training call.");
         }
         TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
                               q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&

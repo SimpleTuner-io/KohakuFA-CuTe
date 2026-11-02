@@ -189,3 +189,52 @@ def attention(q, k, v, *, causal=False, scale=None):
     if q.shape[-1] == 16:
         return _short_runner()(q, k, v, scale=scale, causal=causal)
     return native_runner(schedule(q.shape[-1], causal, q.shape[-2]))(q, k, v, scale=scale, causal=causal)
+
+
+@lru_cache(maxsize=1)
+def _s1024_guarded_call():
+    from kohakufa_cute.native import extension
+
+    return extension().rtx4090_guarded_call
+
+
+@lru_cache(maxsize=4)
+def _s1024_runner(dimension, causal):
+    return native_runner(schedule(dimension, causal, 1024))
+
+
+def _s1024_cold_compatible(q, k, v):
+    return (
+        any(getattr(t, "requires_grad", False) for t in (q, k, v))
+        and q.shape == k.shape == v.shape
+        and q.shape[:2] == (1, 16)
+        and q.device == k.device == v.device
+        and q.device.index == torch.cuda.current_device()
+        and q.dtype in (torch.float16, torch.bfloat16)
+        and q.dtype == k.dtype == v.dtype
+        and all(t.is_contiguous() and t.data_ptr() % 16 == 0 and not t.is_neg() and not t.is_conj() for t in (q, k, v))
+    )
+
+
+def try_s1024_attention(q, k, v, mask, dropout, causal, scale, gqa):
+    """Check live policies and execute the S1024 native guard in one call."""
+    if (
+        torch.compiler.is_compiling()
+        or not torch.is_grad_enabled()
+        or torch.are_deterministic_algorithms_enabled()
+        or mask is not None
+        or dropout != 0
+    ):
+        return None
+    if scale is not None and (
+        not isinstance(scale, (int, float)) or not math.isfinite(scale) or not 2**-126 <= scale <= 2e38
+    ):
+        return None
+    from . import available
+
+    if not available() or not _short_device(q.device.index):
+        return None
+    if _s1024_guarded_call.cache_info().currsize == 0 and not _s1024_cold_compatible(q, k, v):
+        return None
+    dimension = q.shape[-1]
+    return _s1024_guarded_call()(_s1024_runner(dimension, causal), q, k, v, dimension, scale, causal)

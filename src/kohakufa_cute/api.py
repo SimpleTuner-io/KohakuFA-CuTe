@@ -20,6 +20,20 @@ def _extension():
     return extension()
 
 
+def _try_rtx4090_s1024(q, k, v, mask, dropout, causal, scale, gqa):
+    if (
+        torch.compiler.is_compiling()
+        or getattr(q, "ndim", None) != 4
+        or q.device.type != "cuda"
+        or q.shape[2] != 1024
+        or q.shape[-1] not in (64, 128)
+    ):
+        return None
+    from .fa4_sm80 import rtx4090
+
+    return rtx4090.try_s1024_attention(q, k, v, mask, dropout, causal, scale, gqa)
+
+
 @torch.compiler.assume_constant_result
 def _runtime_available():
     for package, minimum in (
@@ -102,6 +116,9 @@ def attention(q, k, v, *, mask=None, causal=False, scale=None, center_keys=False
         k = _center_keys(k)
     if torch.compiler.is_compiling():
         return _ops.attention(q, k, v, mask=mask, causal=causal, scale=scale)
+    selected = _try_rtx4090_s1024(q, k, v, mask, 0, causal, scale, True)
+    if selected is not None:
+        return selected
     if fa4_sm80.compatible(q, k, v, mask, 0, causal, scale, True):
         return fa4_sm80.attention(q, k, v, causal=causal, scale=scale)
     return _extension().attention(q, k, v, mask, scale, causal)
@@ -111,6 +128,9 @@ def scaled_dot_product_attention(
     query, key, value, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False
 ):
     """Strict CuTe implementation with the PyTorch SDPA argument convention."""
+    selected = _try_rtx4090_s1024(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
+    if selected is not None:
+        return selected
     if not torch.compiler.is_compiling() and fa4_sm80.compatible(
         query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa
     ):
@@ -127,6 +147,9 @@ def automatic_scaled_dot_product_attention(
 ):
     """Select centered CuTe kernels on supported GPUs, native SDPA for unsupported calls."""
     if query.device.type == "cuda":
+        selected = _try_rtx4090_s1024(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa)
+        if selected is not None:
+            return selected
         if not torch.compiler.is_compiling() and fa4_sm80.compatible(
             query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa
         ):

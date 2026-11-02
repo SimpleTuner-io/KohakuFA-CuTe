@@ -252,7 +252,7 @@ these full grids compare default SDPA. The separate
 | GPU | Forward wins | Backward wins | F+B wins | Long D512 SDPA / CuTe F+B |
 | --- | ---: | ---: | ---: | ---: |
 | RTX 5090 | 45/60 | 36/60 | 36/60 | 1.96–4.71× |
-| RTX 4090 | 50/60 | 44/60 | 44/60 | 2.15–4.49× |
+| RTX 4090 | 56/60 | 52/60 | 52/60 | 2.15–4.49× |
 | RTX 3090 Ti | 36/60 | 36/60 | 36/60 | 1.69–2.85× |
 | L40S | 35/60 | 33/60 | 33/60 | 2.80–4.80× |
 
@@ -288,8 +288,9 @@ predicates. See the [arithmetic and model-shape audit](../docs/baseline-precisio
 The RTX 4090 refresh measures the current automatic API and SDPA on a 400 W
 device. Its paired same-precision preceding API comparison is retained in
 [rtx4090-automatic.json](rtx4090-automatic.json); it is distinct from the historical
-compensated-policy control below. S1024 remains opt-in because its complete eager
-calls regressed despite graph gains.
+compensated-policy control below. The subsequent [S1024 host update](../docs/rtx4090-s1024-host.md) closes that eager
+gap and refreshes its eight changed cells. Source cohorts and per-cell protocols
+separate seven 80-ms new windows from five 100-ms retained windows.
 
 The other three grids retain these backends in the same process and stack:
 
@@ -329,7 +330,7 @@ in the per-case samples rather than hidden by these summaries.
 
 Python 3.13.18, PyTorch 2.15.0+cu132, CuTe DSL 4.8.1 and Triton 3.9.0.
 Each report retains runtime and benchmark source hashes, loaded library basenames,
-exact graph functions/resources, five timing samples per phase/backend and board
+exact graph functions/resources, five to seven timing samples per phase/backend and board
 telemetry before/after the campaign. The base revision identifies the source base; snapshot and source hashes identify
 the measured edits. The refreshed RTX 4090 source revision is explicitly supplied
 to its frozen non-Git snapshot.

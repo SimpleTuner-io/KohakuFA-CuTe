@@ -873,6 +873,18 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
         return rtx4090_automatic_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
                                                     THPVariable_Unpack(v.ptr()), causal);
     });
+    module.def("rtx4090_guarded_call", [](const AttentionRunner &runner, Tensor q, Tensor k, Tensor v,
+                                         int64_t dimension, std::optional<double> scale, bool causal)
+                                         -> std::optional<Tensor> {
+        if (!c10::GradMode::is_enabled() || !(q.requires_grad() || k.requires_grad() || v.requires_grad()) ||
+            q.dim() != 4 || q.size(2) != 1024 || q.size(3) != dimension ||
+            q.is_neg() || k.is_neg() || v.is_neg() || q.is_conj() || k.is_conj() || v.is_conj() ||
+            !rtx4090_metadata_compatible(q, k, v, causal))
+            return std::nullopt;
+        py::gil_scoped_release release;
+        return runner.call(q, k, v, scale, causal);
+    }, py::arg("runner"), py::arg("q"), py::arg("k"), py::arg("v"), py::arg("dimension"),
+       py::arg("scale") = std::nullopt, py::arg("causal") = false);
     module.def("rtx4090_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
         if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
             return false;

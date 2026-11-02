@@ -23,7 +23,8 @@ FP32 attention scale. Masks, GQA, other head widths, short lengths, tails,
 strided inputs, signed/zero scales and other supported CuTe calls use the ordinary
 CuTe path. Selected-kernel errors propagate. On the pinned runtime, top-level
 APIs now [automatically select](rtx4090-automatic.md) S4096 training and S128/D16.
-S1024 and the explicit long no-grad behavior remain opt-in.
+The subsequent [S1024 host update](rtx4090-s1024-host.md) also enables automatic
+S1024 training. The explicit long no-grad behavior remains opt-in.
 
 The [combined live metadata check](rtx4090-native-metadata.md) reduces host
 overhead for short eager training calls while retaining these eligibility

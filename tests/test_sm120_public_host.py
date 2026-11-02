@@ -74,7 +74,9 @@ class Sm120PublicSelectionTests(unittest.TestCase):
             for dimension in (64, 128):
                 for dtype in (torch.bfloat16, torch.float16):
                     q = operand((1, 16, 1024, dimension), dtype=dtype)
-                    self.assertTrue(fa4_sm80.compatible(q, q, q, None, 0, True, None, False))
+                    self.assertEqual(
+                        fa4_sm80.compatible(q, q, q, None, 0, True, None, False), dimension == 64 or dtype == torch.bfloat16
+                    )
                     self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
                     for length in (1023, 1025, 2048):
                         tail = operand((1, 16, length, dimension), dtype=dtype)
@@ -143,7 +145,7 @@ class Sm120PublicKernelTests(unittest.TestCase):
                 for length in (1024, 4096):
                     q = torch.empty(1, 16, length, dimension, device="cuda", dtype=dtype, requires_grad=True)
                     for causal in (False, True):
-                        expected = length == 4096 or causal
+                        expected = length == 4096 or (causal and (dimension == 64 or dtype == torch.bfloat16))
                         self.assertEqual(check(q, q, q, causal), expected)
                         self.assertEqual(_sm120.compatible(q, q, q, None, 0, causal, None, False), expected)
                     self.assertFalse(check(q, q.detach(), q, True))
@@ -219,6 +221,10 @@ class Sm120PublicKernelTests(unittest.TestCase):
             graph, _ = capture(api.scaled_dot_product_attention, inputs, dout, True, "joint", keep_graph=True)
             symbols = [row["symbol"] for row in graph_kernels(graph)]
             self.assertEqual(any("fa4_sm80_backward" in symbol for symbol in symbols), length in (1024, 4096))
+        inputs = [torch.randn(1, 16, 1024, 128, device="cuda", dtype=torch.float16) for _ in range(3)]
+        dout = torch.randn_like(inputs[0])
+        graph, _ = capture(api.scaled_dot_product_attention, inputs, dout, True, "joint", keep_graph=True)
+        self.assertFalse(any("fa4_sm80_backward" in row["symbol"] for row in graph_kernels(graph)))
 
     def test_selected_matrix_and_public_frontdoors(self):
         from kohakufa_cute import api

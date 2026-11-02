@@ -543,7 +543,8 @@ bool sm120_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v
         !q.is_cuda() || q.device() != k.device() || q.device() != v.device() ||
         (q.scalar_type() != at::kHalf && q.scalar_type() != at::kBFloat16) ||
         q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
-        q.size(0) != 1 || q.size(1) != 16 || !(q.size(2) == 4096 || (causal && q.size(2) == 1024)) ||
+        q.size(0) != 1 || q.size(1) != 16 ||
+        !(q.size(2) == 4096 || (causal && q.size(2) == 1024 && (q.size(3) == 64 || q.scalar_type() == at::kBFloat16))) ||
         (q.size(3) != 64 && q.size(3) != 128) ||
         !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
         reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||

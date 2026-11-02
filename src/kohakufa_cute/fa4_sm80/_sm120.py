@@ -59,7 +59,7 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.shape != v.shape
         or q.shape[0] != 1
         or q.shape[1] != 16
-        or not (q.shape[2] == 4096 or (causal and q.shape[2] == 1024))
+        or not (q.shape[2] == 4096 or (causal and q.shape[2] == 1024 and (q.shape[3] == 64 or q.dtype == torch.bfloat16)))
         or q.shape[3] not in (64, 128)
         or q.device != k.device
         or q.device != v.device

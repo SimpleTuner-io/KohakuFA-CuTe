@@ -1,6 +1,6 @@
 # Short RTX 4090 layout and statistics tuning
 
-This follow-up reduces resident GPU time for the existing opt-in S128/D16
+This follow-up reduces resident GPU time for the existing S128/D16
 training path. It preserves the [declared arithmetic](precision.md), all five
 tensor products, actual-output delta and the same shared-memory ownership.
 The [current measurements](rtx4090-short.md) separate graph and eager behavior.

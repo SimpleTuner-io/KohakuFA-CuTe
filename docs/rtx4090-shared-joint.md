@@ -21,8 +21,9 @@ The measured family requires matching square Q/K/V, 16-byte alignment, a full
 128-SM device with 101,376 bytes of opt-in shared memory, and a positive normal
 FP32 attention scale. Masks, GQA, other head widths, short lengths, tails,
 strided inputs, signed/zero scales and other supported CuTe calls use the ordinary
-CuTe path. Selected-kernel errors propagate. The standard top-level APIs keep
-their existing selection; this entry is opt-in.
+CuTe path. Selected-kernel errors propagate. On the pinned runtime, top-level
+APIs now [automatically select](rtx4090-automatic.md) S4096 training and S128/D16.
+S1024 and the explicit long no-grad behavior remain opt-in.
 
 ## Measurements
 

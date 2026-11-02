@@ -6,6 +6,7 @@ import importlib.metadata
 import json
 import os
 import platform
+import re
 import statistics
 import subprocess
 from contextlib import nullcontext
@@ -29,10 +30,13 @@ def main():
     parser.add_argument("--window-ms", type=float, default=100)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--label", default="candidate")
+    parser.add_argument("--source-revision", help="Full Git revision supplied with a frozen source snapshot.")
     parser.add_argument("--skip-timing", action="store_true")
     parser.add_argument("--compare-previous", action="store_true")
     parser.add_argument("--export-code", type=Path)
     args = parser.parse_args()
+    if args.source_revision and not re.fullmatch(r"[0-9a-f]{40}", args.source_revision):
+        parser.error("Use a complete hexadecimal source revision.")
     if args.export_code is not None:
         os.environ["CUTE_DSL_KEEP"] = "ptx,cubin"
         os.environ.setdefault("CUTE_DSL_DUMP_DIR", str(args.export_code.resolve()))
@@ -47,7 +51,8 @@ def main():
         "label": args.label,
         "schema_version": 4,
         "date": datetime.now(timezone.utc).date().isoformat(),
-        "base_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+        "base_revision": args.source_revision,
+        "source_revision_origin": "argument" if args.source_revision else "unavailable",
         "device": {
             "name": prop.name,
             "multiprocessors": prop.multi_processor_count,
@@ -58,8 +63,9 @@ def main():
         "stack": {"python": platform.python_version(), "torch": str(torch.__version__), "cuda": torch.version.cuda},
         "packages": {name: importlib.metadata.version(name) for name in ("nvidia-cutlass-dsl", "apache-tvm-ffi", "triton")},
         "source_sha256": {
-            "src/kohakufa_cute/" + p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sorted(Path(kernels.__file__).parent.iterdir())
+            "src/kohakufa_cute/"
+            + p.relative_to(Path(kernels.__file__).parent).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(Path(kernels.__file__).parent.rglob("*"))
             if p.suffix in (".py", ".cpp")
         },
         "protocol": "Independent out/dQ/dK/dV versus FP64 mathematical and single-rounded-P/dS equations. Backward rounded reference uses actual O for delta. CUDA graph changed-input checks; rotate CuTe and default SDPA timing order. Device-event graph replay; compilation excluded.",

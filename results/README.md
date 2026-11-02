@@ -2,7 +2,7 @@
 
 [rtx5090.json](rtx5090.json), [rtx4090.json](rtx4090.json), [rtx3090ti.json](rtx3090ti.json), and [l40s.json](l40s.json) retain the latest four GPU grids, timing samples, source hashes, independent FP64 checks, and software/hardware metadata. The chart reads these reports directly. The current full-device native matrices are in [h100-pcie.json](h100-pcie.json) and [b300.json](b300.json). The October 22 grids in [performance.json](performance.json) are superseded; that file also retains the explicit-mask, B300 MIG, H100 and model comparisons. [gb10.json](gb10.json) retains the GB10 comparison separately.
 
-The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each panel labels its date, PyTorch version and measured power limit. The [RTX 4090 analysis](../docs/rtx4090-tuning.md) details its scheduling changes and remaining backward gap; all four new runs qualify the restored baseline arithmetic on their own devices.
+The four plotted GPUs now cover the same 60 cases, including D16 and S128. Each panel labels its date, PyTorch version and measured power limit. The [RTX 4090 automatic-selection analysis](../docs/rtx4090-automatic.md) records the refreshed default API and its remaining eager limitations; all four new runs qualify the restored baseline arithmetic on their own devices.
 
 Times are median milliseconds per attention call unless a table explicitly specifies microseconds. **Forward + backward includes forward.** Timings use CUDA events around CUDA-graph replay, exclude compilation, and rotate backend order. Profiling measurements are excluded from these tables. Compare backends within a row: hosts, software, and replay counts differ between datasets. Full-model throughput and first-use compilation cost require separate measurements.
 
@@ -222,12 +222,13 @@ panels were measured after removing the automatic compensated arithmetic policy.
 Ratios above one favor CuTe. Counts compare observed medians; consult the retained
 samples for near-ties. These are attention calls, not whole-model speedups.
 Actual default SDPA symbols and resources are retained per graph in each report;
-these runs do not measure the standalone `flash-attn` package.
+these full grids compare default SDPA. The separate
+[RTX 4090 paired API study](../docs/rtx4090-automatic.md) also measures standalone FA2.
 
 | GPU | Forward wins | Backward wins | F+B wins | Long D512 SDPA / CuTe F+B |
 | --- | ---: | ---: | ---: | ---: |
 | RTX 5090 | 45/60 | 36/60 | 36/60 | 1.96–4.71× |
-| RTX 4090 | 46/60 | 36/60 | 36/60 | 2.17–4.57× |
+| RTX 4090 | 50/60 | 44/60 | 44/60 | 2.15–4.49× |
 | RTX 3090 Ti | 36/60 | 36/60 | 36/60 | 1.69–2.85× |
 | L40S | 35/60 | 33/60 | 33/60 | 2.80–4.80× |
 
@@ -239,10 +240,10 @@ Representative **BF16 S4096 dense forward + backward**, milliseconds:
 | RTX 5090 | 128 | 3.320 | 2.674 | 0.81× |
 | RTX 5090 | 256 | 8.147 | 6.153 | 0.76× |
 | RTX 5090 | 512 | 22.354 | 50.147 | 2.24× |
-| RTX 4090 | 16 | 0.654 | 0.886 | 1.35× |
-| RTX 4090 | 128 | 3.881 | 3.163 | 0.81× |
-| RTX 4090 | 256 | 10.537 | 7.781 | 0.74× |
-| RTX 4090 | 512 | 31.159 | 67.562 | 2.17× |
+| RTX 4090 | 16 | 0.635 | 0.842 | 1.33× |
+| RTX 4090 | 128 | 3.003 | 3.116 | 1.04× |
+| RTX 4090 | 256 | 10.108 | 7.734 | 0.77× |
+| RTX 4090 | 512 | 30.142 | 64.845 | 2.15× |
 | RTX 3090 Ti | 16 | 1.325 | 2.055 | 1.55× |
 | RTX 3090 Ti | 128 | 8.875 | 6.880 | 0.78× |
 | RTX 3090 Ti | 256 | 21.539 | 14.531 | 0.67× |
@@ -260,7 +261,13 @@ P/dS products and the final compensated-owner replacement. It retains the
 architecture schedules, separate unscaled softmax statistics, masks and tail
 predicates. See the [arithmetic and model-shape audit](../docs/baseline-precision.md).
 
-The three backends are measured in the same process and stack:
+The RTX 4090 refresh measures the current automatic API and SDPA on a 400 W
+device. Its paired same-precision preceding API comparison is retained in
+[rtx4090-automatic.json](rtx4090-automatic.json); it is distinct from the historical
+compensated-policy control below. S1024 remains opt-in because its complete eager
+calls regressed despite graph gains.
+
+The other three grids retain these backends in the same process and stack:
 
 - **CuTe:** current default arithmetic and architecture schedules.
 - **Previous:** pre-change arithmetic reconstructed on this compiler. Separate
@@ -280,7 +287,6 @@ Previous backward time / current backward time, across the 60-case grid:
 | GPU | Median ratio | Observed range |
 | --- | ---: | ---: |
 | RTX 5090 | 1.26× | 1.00–1.52× |
-| RTX 4090 | 1.10× | 0.89–1.30× |
 | RTX 3090 Ti | 1.22× | 1.03–1.65× |
 | L40S | 1.17× | 0.88–1.47× |
 
@@ -293,15 +299,16 @@ in the per-case samples rather than hidden by these summaries.
 | GPU | SMs | Power limit | Driver | Measured UTC |
 | --- | ---: | ---: | --- | --- |
 | RTX 5090 | 170 | 575 W | 610.57.04 | 2026-10-31 |
-| RTX 4090 | 128 | 450 W | 615.71.09 | 2026-10-31 |
+| RTX 4090 | 128 | 3.003 | 3.116 | 1.04× |
 | RTX 3090 Ti | 84 | 450 W | 595.71.05 | 2026-10-31 |
 | L40S | 142 | 350 W | 615.71.09 | 2026-10-31 |
 
 Python 3.13.18, PyTorch 2.15.0+cu132, CuTe DSL 4.8.1 and Triton 3.9.0.
 Each report retains runtime and benchmark source hashes, loaded library basenames,
 exact graph functions/resources, five timing samples per phase/backend and board
-telemetry before/after the campaign. The base revision identifies the preceding
-checkout; source hashes identify the measured edits.
+telemetry before/after the campaign. The base revision identifies the source base; snapshot and source hashes identify
+the measured edits. The refreshed RTX 4090 source revision is explicitly supplied
+to its frozen non-Git snapshot.
 
 Five rotating rounds target 100 ms per phase with at least 16 warmed graph
 replays. CUDA events cover replay loops, excluding compilation and profiling;

@@ -1,6 +1,7 @@
 # GB10 forward-only attention
 
 The current entry also uses [native host metadata checks](gb10-native-metadata.md).
+It additionally qualifies [S128 head dimensions 16, 64 and 256](gb10-short-forward.md).
 The measurements below record the preceding forward-only selection change.
 
 The opt-in `gb10_attention` entry uses the existing native forward-only runner

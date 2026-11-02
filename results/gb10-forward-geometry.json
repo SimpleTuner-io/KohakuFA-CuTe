@@ -3709,7 +3709,8 @@
           "target_base_matches_graph": true,
           "target_feature_qualifier": "a",
           "feature_qualifier_check": "not_proven_by_numeric_graph_attribute",
-          "instruction_sites": 1647
+          "instruction_sites": 1647,
+          "entry_file_sha256": "5a84c6b41e8e2e9d775c8b8bab683c952e244dfebc57c3693ce86d7156a9d7a9"
         }
       ]
     },
@@ -3755,7 +3756,8 @@
           "target_base_matches_graph": true,
           "target_feature_qualifier": "a",
           "feature_qualifier_check": "not_proven_by_numeric_graph_attribute",
-          "instruction_sites": 1553
+          "instruction_sites": 1553,
+          "entry_file_sha256": "774606e9320830dbecfef79c44c749cb88a0612b3075504bf9d8a31bceb62346"
         }
       ]
     },
@@ -3801,7 +3803,8 @@
           "target_base_matches_graph": true,
           "target_feature_qualifier": null,
           "feature_qualifier_check": "not_proven_by_numeric_graph_attribute",
-          "instruction_sites": 2605
+          "instruction_sites": 2605,
+          "entry_file_sha256": "1e708227f4f675c637ceeab8ad886969c20eecb3d36b4305fe189867ea886781"
         }
       ]
     },
@@ -3847,7 +3850,8 @@
           "target_base_matches_graph": true,
           "target_feature_qualifier": null,
           "feature_qualifier_check": "not_proven_by_numeric_graph_attribute",
-          "instruction_sites": 2477
+          "instruction_sites": 2477,
+          "entry_file_sha256": "2be622f6179027b6c77ffdb776572884633d1c03f525b901e0188b3df05cbe17"
         }
       ]
     },
@@ -3893,7 +3897,8 @@
           "target_base_matches_graph": true,
           "target_feature_qualifier": "a",
           "feature_qualifier_check": "not_proven_by_numeric_graph_attribute",
-          "instruction_sites": 1877
+          "instruction_sites": 1877,
+          "entry_file_sha256": "49f992611e6913826566c67382adc3d3e9f3d4bca391614899290926128b0fc7"
         }
       ]
     },
@@ -3939,7 +3944,8 @@
           "target_base_matches_graph": true,
           "target_feature_qualifier": "a",
           "feature_qualifier_check": "not_proven_by_numeric_graph_attribute",
-          "instruction_sites": 1784
+          "instruction_sites": 1784,
+          "entry_file_sha256": "f5be57ef374fa467b8416a75efcb1d88c711d49394071c2652ce6c1461c63bbc"
         }
       ]
     }
@@ -5028,5 +5034,6 @@
     "qualification.json": "34257d40ae54b11894665740d8ef464402df1fd57d5c9a9fdfa8e73dfce25e04",
     "state.json": "633df428dbe4023ca8c90fe0b7465e382dfd0effbee323abeb481fefca18aa36",
     "code-retention-proof.json": "73727016f0e86ffa9d75eb96732d1d5cc2dfe1187f388e6f5ba6fb21c2f6763a"
-  }
+  },
+  "ptx_hash_scope": "entry_sha256 covers the exact entry body; entry_file_sha256 covers the extracted file including copied compilation-unit directives."
 }

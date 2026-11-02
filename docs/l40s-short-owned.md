@@ -2,9 +2,13 @@
 
 This change selects the basic exclusive-gradient owner for a full NVIDIA L40S
 (142 SMs, SM89, 101376-byte opt-in shared-memory capacity), square B1 H16 S128
-D16 FP16/BF16 training. Dense and causal visibility are qualified. The GPU source
-is unchanged from the basic kernel introduced in PR #76; this report qualifies
-its public selection on L40S separately.
+D16 FP16/BF16 training. Dense and causal visibility are qualified. This page
+retains the initial basic-kernel measurements from PR #76 and its
+separate L40S public qualification. The dependency composition now contains the
+shared class with both L40S controls disabled. Its independent compatibility
+run passes directed math and all four tools, while retaining a 0.7–1.2% graph
+regression against the pristine original class. The optimized L40S selection is
+qualified separately in PR #88.
 
 The native predicate requires active gradient mode and at least one Q/K/V
 requiring gradients, equal shapes and dtypes, contiguous aligned storage, the

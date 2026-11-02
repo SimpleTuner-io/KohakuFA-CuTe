@@ -49,6 +49,7 @@ constexpr int configuration_accumulator_head_dim = 16;
 
 std::pair<int, int> device_capability(int device);
 bool full_a40(int device);
+bool full_rtx5090(int device);
 bool full_gb10(int device);
 bool full_a100(int device);
 
@@ -478,6 +479,9 @@ class AttentionRunner {
         const auto family = configuration.const_data_ptr<int64_t>()[0];
         const auto amount = scale.value_or(std::pow(q.size(3), -0.5));
         const bool a40_width = family == 1 && !inference && q.size(3) == 256 && full_a40(q.get_device());
+        const bool sm120_width = family == 1 && !inference && q.size(3) == 256 &&
+                                 c10::GradMode::is_enabled() && q.requires_grad() && k.requires_grad() &&
+                                 v.requires_grad() && full_rtx5090(q.get_device());
         const bool warp_device = (target.first == 8 && (target.second == 0 || target.second == 6 || target.second == 9)) ||
                                  (target.first == 12 && (target.second == 0 || target.second == 1));
         const bool qualified_a100_d256 = !inference && family == 1 && q.size(3) == 256 &&
@@ -539,7 +543,7 @@ class AttentionRunner {
                               reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 == 0 &&
                               reinterpret_cast<uintptr_t>(v.data_ptr()) % 16 == 0 &&
-                              (q.size(3) == 64 || q.size(3) == 128 || a40_width || qualified_inference_width ||
+                              (q.size(3) == 64 || q.size(3) == 128 || a40_width || sm120_width || qualified_inference_width ||
                                qualified_a100_d256 || family == 3 || family == 4 || family == 9 || family == 12) &&
                               std::isfinite(amount) &&
                               amount >= std::numeric_limits<float>::min() && amount <= 2e38,
@@ -659,8 +663,9 @@ bool sm120_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v
         (q.scalar_type() != at::kHalf && q.scalar_type() != at::kBFloat16) ||
         q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
         q.size(0) != 1 || q.size(1) != 16 ||
-        !(q.size(2) == 4096 || (causal && q.size(2) == 1024 && (q.size(3) == 64 || q.scalar_type() == at::kBFloat16))) ||
-        (q.size(3) != 64 && q.size(3) != 128) ||
+        !(q.size(2) == 4096 || (q.size(2) == 1024 &&
+          (q.size(3) == 256 || (causal && (q.size(3) == 64 || q.scalar_type() == at::kBFloat16))))) ||
+        (q.size(3) != 64 && q.size(3) != 128 && q.size(3) != 256) ||
         !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
         reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||
         reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 != 0 ||

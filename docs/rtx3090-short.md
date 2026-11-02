@@ -1,7 +1,7 @@
 # RTX 3090 short attention backward
 
 The explicit `rtx3090_attention` entry selects a fused backward kernel for
-square B1 H16 S128 D16/D64 FP16/BF16 training on a full, ordinary 82-SM RTX 3090.
+square B1 H16 S128 D16/D64/D128 FP16/BF16 training on a full, ordinary 82-SM RTX 3090.
 Dense and causal attention are supported. The ordinary training forward and
 its saved unscaled maximum/logarithmic normalization remain unchanged.
 Default attention dispatch does not change; the existing long D64/D128 opt-in
@@ -12,6 +12,10 @@ from kohakufa_cute import rtx3090_attention
 
 out = rtx3090_attention(q, k, v, is_causal=True)
 ```
+
+D128 uses [row-reciprocal forward normalization and two key owners](rtx3090-short-d128.md),
+with its own measurements and qualification. Each shape keeps the normal
+low-precision arithmetic contract.
 
 ## D64 key ownership
 
@@ -43,8 +47,8 @@ block was correct but D128 used 472 local bytes/thread and lost badly to FA2.
 Splitting output features reduced some register pressure but repeated QK/dP
 and still lost. Two 64-key owners improved D64; four 32-key owners improved
 its complete call further. These experiments and the D128 measurements are
-retained as negative results. The new selector applies only to D64; D128
-keeps its existing route.
+retained as negative results. The N32 selector applies to D64. D128 uses a separately qualified
+[reciprocal-forward and N64 backward path](rtx3090-short-d128.md).
 
 The independent public evaluation used seed 94329, separate from the prototype's
 seed 61103. Complete graph F+B fell 23–30% versus the preceding explicit entry and
@@ -67,7 +71,7 @@ include each implementation's required math and preparation.
 
 The final public source passed 18 finite directed cases, one expected final-cast
 overflow diagnostic, changed/poisoned graph and negative-view checks, six fallback
-cases and eight legacy D16 cases. All eight public CuTe compilation units have
+cases and eight legacy long D64/D128 cases. All eight public CuTe compilation units have
 identical PTX and cubins to their corresponding qualified N32 prototype, with
 every public cubin matched to an actual loaded image. The four retained sanitizer
 runs each covered 24 prototype cases, including 12 D64 calls; none reported a

@@ -1,9 +1,11 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "target": "a40",
   "label": "A40",
   "precision_contract": "docs/precision.md",
-  "selection": "Latest retained study for each measured workload; distinct evaluation runs are preserved.",
+  "selection": "Latest retained study for each measured workload, evidence series and reference; distinct evaluation runs are preserved.",
+  "series_contract": "current uses docs/precision.md; historical is previous arithmetic or hardware; captured is historical model-input forward only; experimental retains unresolved qualification limits.",
+  "coverage_gaps": [{"family":"D512","status":"No retained per-case timing samples found in repository history or local archives."}],
   "studies": {
     "a40-native-predicate": {
       "provenance": {"revision":"30704427809008e83ad38174e7c1780016c44258","path":"results/a40-native-predicate.json","sha256":"326de7ce38319b3dc669212bea81b0a696da320074316021c9f96b25497f6f98"},

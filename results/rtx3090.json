@@ -1,9 +1,11 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "target": "rtx3090",
   "label": "RTX 3090",
   "precision_contract": "docs/precision.md",
-  "selection": "Latest retained study for each measured workload; distinct evaluation runs are preserved.",
+  "selection": "Latest retained study for each measured workload, evidence series and reference; distinct evaluation runs are preserved.",
+  "series_contract": "current uses docs/precision.md; historical is previous arithmetic or hardware; captured is historical model-input forward only; experimental retains unresolved qualification limits.",
+  "coverage_gaps": [{"family":"D256/D512","status":"No retained per-case timing samples found for the ordinary 82-SM RTX 3090; Ti results are a different target."},{"family":"Current synthetic NoGrad inference","status":"No retained timings; training forward and captured historical model inputs do not qualify this workload."}],
   "studies": {
     "rtx3090-optin": {
       "provenance": {"revision":"30704427809008e83ad38174e7c1780016c44258","path":"results/rtx3090-optin.json","sha256":"bb47100b42b9ea04f6b796459c5efb098134c03ff7aeba8ea667fb0c488bb5cd"},

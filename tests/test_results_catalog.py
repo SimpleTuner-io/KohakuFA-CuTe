@@ -7,9 +7,17 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from benchmarks.plot_performance import TARGETS, graph_cells, render
+from benchmarks.plot_performance import TARGETS, comparison_reference, graph_cells, render
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def chart_comparisons(report):
+    for series in {r.get("series", "current") for r in report["measurements"]}:
+        references = {comparison_reference(r) for r in report["measurements"] if r.get("series", "current") == series}
+        for reference in {"sdpa" if r == "torch_sdpa" else r for r in references if r is not None}:
+            for key, value in graph_cells(report, series=series, reference=reference).items():
+                yield series, reference, key, value
 
 
 class ResultsCatalogTests(unittest.TestCase):
@@ -21,7 +29,7 @@ class ResultsCatalogTests(unittest.TestCase):
         self.assertEqual({p.stem for p in (ROOT / "results").glob("*.json")}, set(TARGETS))
         for target, report in self.reports.items():
             with self.subTest(target=target):
-                self.assertEqual(report["schema_version"], 2)
+                self.assertEqual(report["schema_version"], 3)
                 self.assertEqual(report["target"], target)
                 self.assertEqual(report["precision_contract"], "docs/precision.md")
                 self.assertTrue(report["measurements"])
@@ -34,6 +42,8 @@ class ResultsCatalogTests(unittest.TestCase):
                         row["phase"],
                         row["boundary"],
                         row["workload"],
+                        row.get("series", "current"),
+                        "sdpa" if comparison_reference(row) == "torch_sdpa" else comparison_reference(row),
                     )
                     self.assertNotIn((*case, row["run"]), seen)
                     seen.add((*case, row["run"]))
@@ -62,9 +72,14 @@ class ResultsCatalogTests(unittest.TestCase):
                                 self.assertEqual(original[row["phase"]]["status"], "pass")
                                 expected = original[row["phase"]]["median_ms"]
                         else:
-                            original = raw.get("median_ms", raw.get("medians_ms"))[backend]
+                            original = raw.get("median_ms", raw.get("medians_ms", raw.get("medians")))[backend]
                             if isinstance(original, dict):
-                                expected = original.get(row["metric"], original.get(row["phase"]))
+                                phase_key = {
+                                    "forward": "forward_ms",
+                                    "backward": "backward_ms",
+                                    "joint": "forward_backward_ms",
+                                }[row["phase"]]
+                                expected = original.get(row["metric"], original.get(row["phase"], original.get(phase_key)))
                             else:
                                 expected = original
                         self.assertEqual(value, expected, "Curation must not alter timing values or mix metrics")
@@ -87,21 +102,29 @@ class ResultsCatalogTests(unittest.TestCase):
                     and r["dtype"] == dtype
                     and r["visibility"] == visibility
                     and r["phase"] == "joint"
+                    and r.get("series", "current") == "current"
                 ]
                 self.assertTrue(rows)
                 self.assertEqual({r["study"] for r in rows}, {study})
         self.assertNotIn(
-            "gb10", self.reports["gb10"]["studies"], "The former precision policy is not a current backward result"
+            "gb10",
+            {r["study"] for r in self.reports["gb10"]["measurements"] if r.get("series", "current") == "current"},
+            "The former precision policy is not a current backward result",
+        )
+        latest_fa2 = graph_cells(self.reports["gb10"], reference="fa2")
+        self.assertEqual(
+            latest_fa2[1, 16, 4096, "bf16", "dense", 128, "joint", "training"][1]["study"],
+            "gb10-forward-geometry",
         )
 
     def test_chart_covers_every_target_and_preserves_workload_boundaries(self):
         for report in self.reports.values():
-            cells = graph_cells(report)
+            cells = list(chart_comparisons(report))
             self.assertTrue(cells)
-            for key, (ratio, row) in cells.items():
+            for _, _, key, (ratio, row) in cells:
                 self.assertEqual(row["boundary"], "graph")
                 self.assertEqual(key[-1], row["workload"])
-                reference = row["median_ms"].get("sdpa", row["median_ms"].get("torch_sdpa"))
+                reference = row["median_ms"][comparison_reference(row)]
                 self.assertEqual(ratio, reference / row["median_ms"][row["backend"]])
         svg = ET.fromstring(render(list(self.reports.values())))
         links = {element.attrib["href"] for element in svg.iter() if "href" in element.attrib}
@@ -120,6 +143,115 @@ class ResultsCatalogTests(unittest.TestCase):
         report["measurements"] = [copy.deepcopy(selected)]
         del report["measurements"][0]["median_ms"]["sdpa"]
         self.assertEqual(graph_cells(report), {})
+
+    def test_rendered_chart_shows_every_measurement_once_with_no_placeholders(self):
+        svg = ET.fromstring(render(list(self.reports.values())))
+        expected = {
+            (target, series, reference, key): ratio
+            for target, report in self.reports.items()
+            for series, reference, key, (ratio, _) in chart_comparisons(report)
+        }
+        rendered, inference_targets = {}, set()
+        for panel in svg.iter():
+            if panel.attrib.get("class") != "gpu-panel":
+                continue
+            target, workload = panel.attrib["data-target"], panel.attrib["data-workload"]
+            series, reference = panel.attrib["data-series"], panel.attrib["data-reference"]
+            if workload == "inference" and series == "current":
+                inference_targets.add(target)
+            for cell in panel:
+                if cell.attrib.get("class") != "measurement":
+                    continue
+                key = tuple(json.loads(cell.attrib["data-key"]))
+                self.assertEqual(key[-1], workload)
+                identity = (target, series, reference, key)
+                self.assertNotIn(identity, rendered)
+                text = cell.find("{http://www.w3.org/2000/svg}text").text
+                rendered[identity] = text
+                self.assertEqual(text, f"{expected[identity]:.2f}")
+        self.assertEqual(set(rendered), set(expected))
+        self.assertEqual(len(rendered), 1275)
+        self.assertEqual(inference_targets, {"a100", "a40", "gb10", "rtx4090", "l40s"})
+        for target in ("rtx3090ti", "rtx4090", "rtx5090", "l40s"):
+            self.assertEqual(
+                sum(
+                    t == target and series == "current" and ref == "sdpa" and key[-1] == "training"
+                    for t, series, ref, key in rendered
+                ),
+                120,
+            )
+        texts = [element.text for element in svg.iter() if element.tag.endswith("}text")]
+        self.assertNotIn("–", texts)
+
+    def test_sparse_gpu_table_omits_unmeasured_dimensions_and_phases(self):
+        report = copy.deepcopy(self.reports["rtx5090"])
+        training = next(r for r in report["measurements"] if r["phase"] == "joint" and r["boundary"] == "graph")
+        inference = copy.deepcopy(training)
+        inference.update(phase="forward", workload="inference", shape=[1, 16, 512, 256])
+        report["measurements"] = [training, inference]
+        svg = ET.fromstring(render([report]))
+        panels = [element for element in svg.iter() if element.attrib.get("class") == "gpu-panel"]
+        self.assertEqual(len(panels), 2)
+        for panel, expected_dimension, expected_phase in (
+            (panels[0], training["shape"][3], "F+B"),
+            (panels[1], 256, "I"),
+        ):
+            texts = [element.text for element in panel if element.tag.endswith("}text")]
+            self.assertEqual([s for s in texts if s.startswith("D")], [f"D{expected_dimension}"])
+            self.assertEqual([s for s in texts if s in ("F", "I", "F+B")], [expected_phase])
+            self.assertEqual(sum(element.attrib.get("class") == "measurement" for element in panel), 1)
+
+    def test_recovered_families_keep_their_actual_precision_hardware_and_reference(self):
+        for target, count in (("gb10", 112), ("b200", 64), ("b300", 64), ("h100", 12)):
+            with self.subTest(target=target):
+                historical = graph_cells(self.reports[target], series="historical")
+                self.assertEqual(len(historical), count)
+                self.assertTrue(all("previous arithmetic" in row["series_label"] for _, row in historical.values()))
+        for target in ("b200", "b300"):
+            historical = graph_cells(self.reports[target], series="historical")
+            self.assertEqual({key[5] for key in historical}, {64, 128, 256, 512})
+            self.assertEqual({key[3] for key in historical}, {"bf16", "fp16"})
+        h200 = self.reports["h200"]
+        self.assertEqual(graph_cells(h200), {})
+        self.assertEqual(len(graph_cells(h200, series="experimental", reference="fa3")), 16)
+        self.assertIn("unresolved", h200["qualification_status"])
+        mig = graph_cells(self.reports["b300"], series="historical-mig", reference="gluon")
+        self.assertEqual(len(mig), 36)
+        self.assertTrue(all("18 SMs" in row["series_label"] for _, row in mig.values()))
+        self.assertEqual(len(graph_cells(self.reports["h100"], series="captured")), 6)
+        for target in ("h100", "l40s"):
+            for _, row in graph_cells(self.reports[target], series="captured").values():
+                self.assertEqual(row["workload"], "inference")
+                raw = self.reports[target]["studies"][row["study"]]["records"][row["record"]]
+                self.assertEqual(row["kv_shape"], raw["kv_shape"])
+
+    def test_historical_timings_cannot_replace_current_comparisons(self):
+        report = copy.deepcopy(self.reports["gb10"])
+        current = {key: ratio for key, (ratio, _) in graph_cells(report).items()}
+        for row in report["measurements"]:
+            if row.get("series") == "historical":
+                row["median_ms"][row["backend"]] *= 100
+        self.assertEqual({key: ratio for key, (ratio, _) in graph_cells(report).items()}, current)
+        self.assertTrue(graph_cells(report, series="historical"))
+
+    def test_unrecoverable_timings_are_explicit_gaps(self):
+        svg = render(list(self.reports.values()))
+        self.assertIn("Missing current timing evidence: A100/A40 D512; RTX 3090 D256/D512", svg)
+        for target, dimensions in (("a100", {512}), ("a40", {512}), ("rtx3090", {256, 512})):
+            with self.subTest(target=target):
+                report = self.reports[target]
+                self.assertTrue(report["coverage_gaps"])
+                self.assertTrue(all(row["shape"][3] not in dimensions for row in report["measurements"]))
+        self.assertEqual(self.reports["a100"]["coverage_gaps"][0]["aggregate_matrix"]["cases"], 60)
+        for target in ("rtx3090", "rtx3090ti", "rtx5090", "h100", "h200", "b200", "b300"):
+            report = self.reports[target]
+            self.assertTrue(any(gap["family"] == "Current synthetic NoGrad inference" for gap in report["coverage_gaps"]))
+            self.assertFalse(
+                any(
+                    row["workload"] == "inference" and row.get("series", "current") == "current"
+                    for row in report["measurements"]
+                )
+            )
 
 
 if __name__ == "__main__":

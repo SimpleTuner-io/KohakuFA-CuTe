@@ -37,4 +37,4 @@ The standalone allocator diagnostic does not waive B200 or B300 attention findin
 Captured H100 Clef attention improvements did not pass whole-model logit
 compatibility. Those model results remain [experimental evidence](../../benchmarks/experiments/README.md),
 not an end-to-end performance claim. The explicit [H200 backend](../experimental/h200.md)
-uses a separate experimental path and is excluded from the supported-target chart.
+uses a separate path, shown in an explicitly experimental chart section.

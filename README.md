@@ -58,7 +58,8 @@ fastest backend. Errors from a selected CuTe kernel propagate. See the
 Wide-head attention and selected GPU-specific schedules can outperform default
 SDPA. Other shapes can favor SDPA. The [performance chart](results/performance.svg)
 and [per-GPU reports](results/README.md) show measured wins, losses, and coverage
-across eleven GPU targets. These are attention-call measurements; graph replay,
+across twelve GPU targets, with historical and experimental runs labeled.
+These are attention-call measurements; graph replay,
 eager execution, inference, and training have distinct timing boundaries.
 
 ## Documentation

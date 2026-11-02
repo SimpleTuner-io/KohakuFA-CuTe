@@ -1,0 +1,894 @@
+{
+  "scope": "Retained negative one-factor SM120 pipeline controls. No default dispatch selection or arithmetic change. Raw captures and full frozen source remain outside the tracked tree.",
+  "runtime": {
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cute_dsl": "4.8.1",
+    "tvm_ffi": "0.1.15.post0",
+    "quack": "0.6.5",
+    "device": "RTX 5090",
+    "sms": 170,
+    "power_limit_w": 600
+  },
+  "arithmetic": "Unchanged separate unscaled max/lognorm, P once to input dtype before dS, dS once to input dtype, FP32 products/accumulation and late attention scale.",
+  "experiments": {
+    "dout2": {
+      "source_revision": "053c8b4655f74b1c2529fcfb109f28f56c1b35f0",
+      "paired_report_sha256": "e0f014b646f8e92934af00a5ce9290fc2d6a5128ca129e990335bb0809c52bb3",
+      "timing_rows": 48,
+      "long_graph_rows": [
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": false,
+          "phase": "backward",
+          "control_ms": 0.9387070277951798,
+          "candidate_ms": 1.0054259490966797,
+          "candidate_latency_ratio": 1.0710753401497464,
+          "control_samples_ms": [
+            0.9430714013441553,
+            0.9387070277951798,
+            0.9396075122761276,
+            0.9378653472324587,
+            0.9437430759645858,
+            0.9372208073454084,
+            0.938136766541679
+          ],
+          "candidate_samples_ms": [
+            1.0054259490966797,
+            0.9994147491455078,
+            1.005711669921875,
+            1.0056617736816407,
+            1.0035289764404296,
+            1.0061654663085937,
+            0.998504638671875
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": false,
+          "phase": "joint",
+          "control_ms": 1.34504150390625,
+          "candidate_ms": 1.406876458062066,
+          "candidate_latency_ratio": 1.0459725249936422,
+          "control_samples_ms": [
+            1.3452458699544272,
+            1.3453069051106772,
+            1.34504150390625,
+            1.340275166829427,
+            1.3495936075846353,
+            1.3380787150065103,
+            1.3381294759114584
+          ],
+          "candidate_samples_ms": [
+            1.4071182674831815,
+            1.406876458062066,
+            1.3971901999579535,
+            1.4116911358303494,
+            1.41157955593533,
+            1.399367544386122,
+            1.3990341822306316
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": true,
+          "phase": "backward",
+          "control_ms": 0.4298623512531149,
+          "candidate_ms": 0.46813260065600476,
+          "candidate_latency_ratio": 1.0890290794048982,
+          "control_samples_ms": [
+            0.4259664930146316,
+            0.4294329676134833,
+            0.4300320066254714,
+            0.4306641282706425,
+            0.44462220422152815,
+            0.4295550379259833,
+            0.4298623512531149
+          ],
+          "candidate_samples_ms": [
+            0.46727246340080225,
+            0.44792035021589477,
+            0.46813260065600476,
+            0.4688505164176359,
+            0.47033010576872547,
+            0.4688630039916445,
+            0.4481829656079211
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": true,
+          "phase": "joint",
+          "control_ms": 0.6889734728582975,
+          "candidate_ms": 0.7106102419571138,
+          "candidate_latency_ratio": 1.0314043572810623,
+          "control_samples_ms": [
+            0.6892168768521013,
+            0.6889734728582975,
+            0.6872035059435614,
+            0.6871596237708782,
+            0.6892263478246229,
+            0.6895578318628771,
+            0.6859829080515895
+          ],
+          "candidate_samples_ms": [
+            0.7106102419571138,
+            0.7063565321371589,
+            0.7107747574927101,
+            0.7096349152041154,
+            0.710878184143926,
+            0.7112959740867077,
+            0.707639882262324
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": false,
+          "phase": "backward",
+          "control_ms": 0.9634246092576247,
+          "candidate_ms": 0.9702904774592473,
+          "candidate_latency_ratio": 1.007126523586431,
+          "control_samples_ms": [
+            0.9603723379281851,
+            0.9613427382249099,
+            0.9617012464083158,
+            0.9654387694138747,
+            0.9634246092576247,
+            0.9636753522432767,
+            0.9638793651874249
+          ],
+          "candidate_samples_ms": [
+            0.9671566302959735,
+            0.9647101622361404,
+            0.9706839781541091,
+            0.9702904774592473,
+            0.9705957266000601,
+            0.971066768352802,
+            0.9643941292395959
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": false,
+          "phase": "joint",
+          "control_ms": 1.3687904044373396,
+          "candidate_ms": 1.373060357080747,
+          "candidate_latency_ratio": 1.0031195080193176,
+          "control_samples_ms": [
+            1.3686146148263592,
+            1.3687952120010167,
+            1.3683953481177762,
+            1.3686895501123715,
+            1.3687904044373396,
+            1.3689398569603488,
+            1.3694650310359588
+          ],
+          "candidate_samples_ms": [
+            1.3725711352204624,
+            1.372675020400792,
+            1.3727250817703873,
+            1.373552191747378,
+            1.3730941145387414,
+            1.3738007218870398,
+            1.373060357080747
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": true,
+          "phase": "backward",
+          "control_ms": 0.4378304838609065,
+          "candidate_ms": 0.4609091909308183,
+          "candidate_latency_ratio": 1.0527115126073396,
+          "control_samples_ms": [
+            0.4478316790206842,
+            0.4371933117837108,
+            0.4378304838609065,
+            0.4378198968156319,
+            0.4400019708709045,
+            0.43766172972019546,
+            0.43821491123821243
+          ],
+          "candidate_samples_ms": [
+            0.46065461008172287,
+            0.43845825864557636,
+            0.46124127036646795,
+            0.4609091909308183,
+            0.462527592976888,
+            0.46238721880996436,
+            0.439048265155993
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": true,
+          "phase": "joint",
+          "control_ms": 0.7018242419605524,
+          "candidate_ms": 0.7050334156809986,
+          "candidate_latency_ratio": 1.0045726173713827,
+          "control_samples_ms": [
+            0.7042807995433539,
+            0.7005721616073394,
+            0.7020252388967595,
+            0.6996419127558319,
+            0.7019799460827465,
+            0.6997002615055568,
+            0.7018242419605524
+          ],
+          "candidate_samples_ms": [
+            0.7052520538543487,
+            0.7022527414602,
+            0.7050334156809986,
+            0.7050139420516007,
+            0.7051448155116368,
+            0.7068119715977382,
+            0.7012882899571132
+          ]
+        }
+      ],
+      "code_bindings": [
+        {
+          "case": "do1-c0",
+          "loaded_cubin_sha256": [
+            "f5c823b6a3f131cf07656a571054a68e7a22773ef5cb361fcd6ce218391ad8c1"
+          ],
+          "sass_sha256": [
+            "972beced89ddc3e64d230fadd5054a34a1f1c56dcc2b3f53e5b83f042bf28718"
+          ]
+        },
+        {
+          "case": "do1-c1",
+          "loaded_cubin_sha256": [
+            "098bb0036406ecd771b3f301307df05815eac3b01a76cb702b492f521b30bd4d"
+          ],
+          "sass_sha256": [
+            "76cdf21a2cef9c2454adde80538b9f23714c5e7a4251922b17436f9f73abcddc"
+          ]
+        },
+        {
+          "case": "do2-c0",
+          "loaded_cubin_sha256": [
+            "0a8768361451130292fe3f7dd83e47ee012587c68d7cacd99698df8b478a4d4c"
+          ],
+          "sass_sha256": [
+            "2c46cde6473291a2ba06ffb725b8908cb3243be21e840cd168ac4e118c297ce7"
+          ]
+        },
+        {
+          "case": "do2-c1",
+          "loaded_cubin_sha256": [
+            "965844d825bb136c4ddf28e8743201e3df977abe1b1ff67d7714288d07d9126c"
+          ],
+          "sass_sha256": [
+            "43b594d0a3815775fc5d12c074a4237cbd4d6ca04cfc51afb4308212621d3a27"
+          ]
+        }
+      ],
+      "qualification": "96 strong fixtures, changed/poisoned graphs, four sanitizers and strict machine-code bindings passed.",
+      "selection": "Not selected; measured long backward latency regressed.",
+      "configuration": "D64 M64/N64 Q2, dO1 -> dO2, shared V; causal G16/dense G1. Forward unchanged.",
+      "shared_bytes_control": 58368,
+      "shared_bytes_candidate": 66560,
+      "steady_loop": {
+        "equal_HMMA": 80,
+        "equal_LDSM": 60,
+        "equal_BAR": 4,
+        "equal_DEPBAR": 2,
+        "dense_static_sites": [
+          528,
+          606
+        ],
+        "causal_static_sites": [
+          609,
+          632
+        ]
+      },
+      "reproduction_factory": "benchmarks.sm120_dout_experiments:make_attention"
+    },
+    "maximum": {
+      "source_revision": "7e5d8f70e32e5a80d78e6c37864401d5c15b3c0c",
+      "paired_report_sha256": "664feaf1a578cad9debf24ee3648abe3d4a050f391df83680ee3b4898fee749c",
+      "timing_rows": 96,
+      "long_graph_rows": [
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": false,
+          "phase": "backward",
+          "control_ms": 0.9417762756347656,
+          "candidate_ms": 0.9547879900251116,
+          "candidate_latency_ratio": 1.0138161416113143,
+          "control_samples_ms": [
+            0.944358321855653,
+            0.9443293877367703,
+            0.9408796778265035,
+            0.9402593216806088,
+            0.9417762756347656,
+            0.9369409669120357,
+            0.9426258015182784
+          ],
+          "candidate_samples_ms": [
+            0.9547879900251116,
+            0.9505615234375,
+            0.9556492396763393,
+            0.9559110369001116,
+            0.9562877110072545,
+            0.9483529227120536,
+            0.9523635864257812
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": false,
+          "phase": "joint",
+          "control_ms": 1.341832987467448,
+          "candidate_ms": 1.3609249877929688,
+          "candidate_latency_ratio": 1.0142282985318125,
+          "control_samples_ms": [
+            1.3380637613932291,
+            1.3457399495442708,
+            1.3503620402018228,
+            1.3502822875976563,
+            1.3387788899739583,
+            1.341832987467448,
+            1.3400929768880208
+          ],
+          "candidate_samples_ms": [
+            1.3609249877929688,
+            1.3501567586263021,
+            1.361200663248698,
+            1.361438700358073,
+            1.3554295857747396,
+            1.3613461303710936,
+            1.3507742309570312
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": true,
+          "phase": "backward",
+          "control_ms": 0.43043544374663256,
+          "candidate_ms": 0.4557498434315557,
+          "candidate_latency_ratio": 1.0588111412586738,
+          "control_samples_ms": [
+            0.4375602787938611,
+            0.4301991627134126,
+            0.4296994373716157,
+            0.43043544374663256,
+            0.4316408223119275,
+            0.42992591857910156,
+            0.4309005408451475
+          ],
+          "candidate_samples_ms": [
+            0.4551212476647418,
+            0.4359724625297215,
+            0.4568936223569124,
+            0.4566091122834579,
+            0.4557498434315557,
+            0.45728583957837976,
+            0.4356975389563519
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "bf16",
+          "causal": true,
+          "phase": "joint",
+          "control_ms": 0.6892069986421768,
+          "candidate_ms": 0.697087536119435,
+          "candidate_latency_ratio": 1.0114342098858309,
+          "control_samples_ms": [
+            0.6860021826339094,
+            0.6892069986421768,
+            0.6884894175072239,
+            0.6889286825101669,
+            0.6901595755799176,
+            0.6911199909366973,
+            0.6901247207432577
+          ],
+          "candidate_samples_ms": [
+            0.6918397668289812,
+            0.6922428705920912,
+            0.6977041061610392,
+            0.697087536119435,
+            0.6979953818125267,
+            0.6975886201205319,
+            0.6955412773236836
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": false,
+          "phase": "backward",
+          "control_ms": 0.9620150786179763,
+          "candidate_ms": 0.9724212059607873,
+          "candidate_latency_ratio": 1.0108170106416214,
+          "control_samples_ms": [
+            0.9609292103694036,
+            0.9616701419536884,
+            0.9620150786179763,
+            0.9583165828998272,
+            0.9641689153817984,
+            0.964171996483436,
+            0.9630196644709661
+          ],
+          "candidate_samples_ms": [
+            0.9694612209613507,
+            0.967449848468487,
+            0.9724212059607873,
+            0.9731769561767578,
+            0.9729341360238882,
+            0.973358154296875,
+            0.9709756557758038
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": false,
+          "phase": "joint",
+          "control_ms": 1.368784002355627,
+          "candidate_ms": 1.3754981054018622,
+          "candidate_latency_ratio": 1.0049051589108877,
+          "control_samples_ms": [
+            1.3687004914154877,
+            1.3689042168694574,
+            1.368784002355627,
+            1.3690703108504012,
+            1.3689980378022064,
+            1.3663744539827913,
+            1.366708807043127
+          ],
+          "candidate_samples_ms": [
+            1.3752184306105522,
+            1.3753175082272047,
+            1.3755905987465218,
+            1.3754981054018622,
+            1.375822511437821,
+            1.375957436757545,
+            1.3752390195245612
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": true,
+          "phase": "backward",
+          "control_ms": 0.43834827439900537,
+          "candidate_ms": 0.4631750731341607,
+          "candidate_latency_ratio": 1.0566371540282529,
+          "control_samples_ms": [
+            0.4472744307328951,
+            0.4367709727014214,
+            0.4377852452483996,
+            0.43773365440872797,
+            0.4406911707134499,
+            0.43841959411352216,
+            0.43834827439900537
+          ],
+          "candidate_samples_ms": [
+            0.4626810529590708,
+            0.44122250312197525,
+            0.4631750731341607,
+            0.463529772463098,
+            0.4642995986263309,
+            0.4644770326867568,
+            0.44170987289563746
+          ]
+        },
+        {
+          "dimension": 64,
+          "dtype": "fp16",
+          "causal": true,
+          "phase": "joint",
+          "control_ms": 0.7015853666923415,
+          "candidate_ms": 0.7067080752950319,
+          "candidate_latency_ratio": 1.0073016183716055,
+          "control_samples_ms": [
+            0.703688769273355,
+            0.70138388620296,
+            0.6985994258397062,
+            0.7024784356775419,
+            0.7015853666923415,
+            0.701248222673443,
+            0.7016563415527344
+          ],
+          "candidate_samples_ms": [
+            0.7080374166999065,
+            0.7042717732174296,
+            0.7043659586301991,
+            0.7077401926819707,
+            0.7067080752950319,
+            0.7080930790431063,
+            0.7050697434116417
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "bf16",
+          "causal": false,
+          "phase": "backward",
+          "control_ms": 1.7760842306572093,
+          "candidate_ms": 1.7866261800130208,
+          "candidate_latency_ratio": 1.0059355007909228,
+          "control_samples_ms": [
+            1.7634885018331963,
+            1.7880673324852658,
+            1.7743606567382812,
+            1.775024280213473,
+            1.7766670093201755,
+            1.7896190442537006,
+            1.7760842306572093
+          ],
+          "candidate_samples_ms": [
+            1.7647001032243694,
+            1.7866261800130208,
+            1.7732783535070586,
+            1.7738363701000548,
+            1.789459094666598,
+            1.7889437759131717,
+            1.7890060157106633
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "bf16",
+          "causal": false,
+          "phase": "joint",
+          "control_ms": 2.488234915384432,
+          "candidate_ms": 2.484213107969703,
+          "candidate_latency_ratio": 0.9983836705329296,
+          "control_samples_ms": [
+            2.468991907631479,
+            2.488234915384432,
+            2.488497106040396,
+            2.4890497719369282,
+            2.4882942757955413,
+            2.4681366711128048,
+            2.4680546086008954
+          ],
+          "candidate_samples_ms": [
+            2.484213107969703,
+            2.4878002259789445,
+            2.4960490901295733,
+            2.49722531946694,
+            2.476700015184356,
+            2.478034042730564,
+            2.4678486149485517
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "bf16",
+          "causal": true,
+          "phase": "backward",
+          "control_ms": 0.8263368212487087,
+          "candidate_ms": 0.8456052669808884,
+          "candidate_latency_ratio": 1.023317907706282,
+          "control_samples_ms": [
+            0.8335648213536286,
+            0.8215704043049458,
+            0.8263368212487087,
+            0.822944767218976,
+            0.8281949256077286,
+            0.8319695843152763,
+            0.8245162333338714
+          ],
+          "candidate_samples_ms": [
+            0.8474663348237345,
+            0.8280973198000064,
+            0.8495540146000129,
+            0.8439198643708032,
+            0.8456052669808884,
+            0.8521719057697895,
+            0.8240843843822637
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "bf16",
+          "causal": true,
+          "phase": "joint",
+          "control_ms": 1.2175020884318524,
+          "candidate_ms": 1.2312655161662274,
+          "candidate_latency_ratio": 1.0113046440455,
+          "control_samples_ms": [
+            1.2281599849103444,
+            1.2245347356221763,
+            1.2175020884318524,
+            1.214794756418251,
+            1.2180865184370293,
+            1.2167772959513836,
+            1.2153847016483905
+          ],
+          "candidate_samples_ms": [
+            1.240145304116858,
+            1.2233272690370858,
+            1.2312655161662274,
+            1.2292742441935711,
+            1.2371442863740116,
+            1.2346101324242282,
+            1.216513116675687
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "fp16",
+          "causal": false,
+          "phase": "backward",
+          "control_ms": 1.8140033994402205,
+          "candidate_ms": 1.852205064561632,
+          "candidate_latency_ratio": 1.0210593128619274,
+          "control_samples_ms": [
+            1.8140033994402205,
+            1.8198343004499162,
+            1.8072948455810547,
+            1.8083862577165877,
+            1.8216423307146346,
+            1.8215462820870536,
+            1.8102908815656389
+          ],
+          "candidate_samples_ms": [
+            1.865955494068287,
+            1.8641042356137876,
+            1.8507715861002605,
+            1.852205064561632,
+            1.866459881817853,
+            1.8350376553005643,
+            1.8518874556929976
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "fp16",
+          "causal": false,
+          "phase": "joint",
+          "control_ms": 2.528824806213379,
+          "candidate_ms": 2.5869301037910657,
+          "candidate_latency_ratio": 1.0229771937679988,
+          "control_samples_ms": [
+            2.533051109313965,
+            2.5270000457763673,
+            2.527673530578613,
+            2.527783966064453,
+            2.5324728012084963,
+            2.532315254211426,
+            2.528824806213379
+          ],
+          "candidate_samples_ms": [
+            2.589769021058694,
+            2.5739544599484177,
+            2.5866930056840944,
+            2.5869301037910657,
+            2.590498508551182,
+            2.589857639410557,
+            2.574701162484976
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "fp16",
+          "causal": true,
+          "phase": "backward",
+          "control_ms": 0.8485311524480836,
+          "candidate_ms": 0.8891152423361074,
+          "candidate_latency_ratio": 1.0478286386668718,
+          "control_samples_ms": [
+            0.8573946178468883,
+            0.8473845913878872,
+            0.8485311524480836,
+            0.8480410453600761,
+            0.8525880340837005,
+            0.8539481529822717,
+            0.8202103182800815
+          ],
+          "candidate_samples_ms": [
+            0.8874131575874661,
+            0.8681196793265965,
+            0.8891152423361074,
+            0.8894299714461616,
+            0.8907828952955164,
+            0.8911930250084918,
+            0.8706284232761549
+          ]
+        },
+        {
+          "dimension": 128,
+          "dtype": "fp16",
+          "causal": true,
+          "phase": "joint",
+          "control_ms": 1.246765042528694,
+          "candidate_ms": 1.291947763177413,
+          "candidate_latency_ratio": 1.0362399643136282,
+          "control_samples_ms": [
+            1.2567905378930362,
+            1.244689753026138,
+            1.2430443469388985,
+            1.2458342563958815,
+            1.251934004418644,
+            1.2526672740041473,
+            1.246765042528694
+          ],
+          "candidate_samples_ms": [
+            1.2918294592748714,
+            1.2662427878078026,
+            1.2920031970060324,
+            1.291947763177413,
+            1.2947726672208761,
+            1.2949707417548457,
+            1.2664801682098001
+          ]
+        }
+      ],
+      "code_bindings": [
+        {
+          "case": "control-d128-c0",
+          "loaded_cubin_sha256": [
+            "9424ad46c67d232fe7c12f92b676cfbf7859b4b889fa6c2ca52bef77b878d04f"
+          ],
+          "sass_sha256": [
+            "b3e9295ee8dc673f512bd7dff11e33dfee90f52bc5e47a10044324d1da2e2801"
+          ]
+        },
+        {
+          "case": "control-d128-c1",
+          "loaded_cubin_sha256": [
+            "0d9ec781a531f7718c4eef66560bd5d96536f77f5b457ba9492ff70ffc39c34d"
+          ],
+          "sass_sha256": [
+            "fee38b4a7f232d99ad2a06017446164fc10a7c37baa812f7670730d27ad7949f"
+          ]
+        },
+        {
+          "case": "control-d64-c0",
+          "loaded_cubin_sha256": [
+            "f5c823b6a3f131cf07656a571054a68e7a22773ef5cb361fcd6ce218391ad8c1"
+          ],
+          "sass_sha256": [
+            "972beced89ddc3e64d230fadd5054a34a1f1c56dcc2b3f53e5b83f042bf28718"
+          ]
+        },
+        {
+          "case": "control-d64-c1",
+          "loaded_cubin_sha256": [
+            "098bb0036406ecd771b3f301307df05815eac3b01a76cb702b492f521b30bd4d"
+          ],
+          "sass_sha256": [
+            "76cdf21a2cef9c2454adde80538b9f23714c5e7a4251922b17436f9f73abcddc"
+          ]
+        },
+        {
+          "case": "fa2-d128-c0",
+          "loaded_cubin_sha256": [
+            "cd54c7c8b6f3af9da5da4f3298483df6545e3970ea553af267dd21f299228625"
+          ],
+          "sass_sha256": [
+            "23f4a0044657638e4c214487c715863dde7cd5e3978c61ce9641604dac070ec7"
+          ]
+        },
+        {
+          "case": "fa2-d128-c1",
+          "loaded_cubin_sha256": [
+            "7dafb3e1ac65b67c1ab089811bcada6bff8971ca27d6a524cbca680c5b5d3937"
+          ],
+          "sass_sha256": [
+            "5f2af942c5f05e8f6ff09bcbdeafd7c67c48dd053814f08082d784f62b7b4dc2"
+          ]
+        },
+        {
+          "case": "fa2-d64-c0",
+          "loaded_cubin_sha256": [
+            "b1a69a800bc5a082da7ae5795feffce6bd09c2c2c7f05ca5c6d1446261ebd5c6"
+          ],
+          "sass_sha256": [
+            "6397a41a34e494453e7c5cd8cd24835730ae2fdf92bcabc765857f7fc060b057"
+          ]
+        },
+        {
+          "case": "fa2-d64-c1",
+          "loaded_cubin_sha256": [
+            "823cbe46a6e9aaad7ac21fcae0f3267f48c934f04c64b5ba1905f75a0f4fa32d"
+          ],
+          "sass_sha256": [
+            "ae4c694804610dc1ba06dc9cf2a4c7cd43c237db19fd19122421c05bbe4dbd86"
+          ]
+        },
+        {
+          "case": "maximum-d128-c0",
+          "loaded_cubin_sha256": [
+            "8b231ddd3c3348c5811193f17a7d695b263818ae7b8d8a53d8054d8a83de1d30"
+          ],
+          "sass_sha256": [
+            "df37e76ee18268b175aa2372d37ccae48638960484b1f1f7d12f1b64ad05ea24"
+          ]
+        },
+        {
+          "case": "maximum-d128-c1",
+          "loaded_cubin_sha256": [
+            "518257ca030439fc427e0f8f7261db7fab8064d0729f0f3710ae36392b2fd0b9"
+          ],
+          "sass_sha256": [
+            "4691394a64cd1f835eb245dbcdb1b5b206b78bee4056263bb15ac13574ddc8b8"
+          ]
+        },
+        {
+          "case": "maximum-d64-c0",
+          "loaded_cubin_sha256": [
+            "2d1bd3464fa6fa2f391087ae96f06d819e3bb39f98c8b229a37308f8480fdab7"
+          ],
+          "sass_sha256": [
+            "0dce8f6495024443b0ae8db0e5d2c67981b25c83c176ed1fd5b4c577288c6efc"
+          ]
+        },
+        {
+          "case": "maximum-d64-c1",
+          "loaded_cubin_sha256": [
+            "eb3165e367b9654895666b70696ab952895fd3eb7af66a22dd2237b4acd1cda6"
+          ],
+          "sass_sha256": [
+            "92f95b7894c61345bbf381a949b3c7afd69718b5b0c1973b2ab561a33a8b3ae9"
+          ]
+        }
+      ],
+      "qualification": "96 strong fixtures, changed/poisoned graphs, four sanitizers and strict machine-code bindings passed.",
+      "selection": "Not selected; measured long backward latency regressed.",
+      "configuration": "M64/N64 Q2/dO1/shared V; prefetch unscaled maximum in its query stage with masked 32-bit copies. D64/D128, causal G16/dense G1.",
+      "shared_bytes_control": {
+        "D64": 58368,
+        "D128": 99328
+      },
+      "shared_bytes_candidate": {
+        "D64": 59392,
+        "D128": 100352
+      },
+      "steady_loop": {
+        "LDG": [
+          2,
+          0
+        ],
+        "LDS": [
+          4,
+          6
+        ],
+        "extra_LDGSTS": 1,
+        "equal_BAR": 4,
+        "equal_DEPBAR": 2,
+        "D64_dense_static_sites": [
+          528,
+          566
+        ],
+        "D64_dense_IMAD": [
+          34,
+          51
+        ],
+        "D64_causal_static_sites": [
+          609,
+          624
+        ],
+        "D128_dense_static_sites": [
+          659,
+          658
+        ],
+        "D128_causal_static_sites": [
+          680,
+          681
+        ]
+      },
+      "reproduction_patch": "benchmarks/experiments/sm120_maximum_staging.patch",
+      "patch_base": "ca0e795982155528e92674813c24b88214d348e2",
+      "patch_sha256": "7baad7cb46ebabc39b2671f4f38c7dc5ead5384e74ffef31b34313c028f6034f"
+    }
+  },
+  "counter_limit": "Compute counter access was denied with ERR_NVGPUCTRPERM. Static instruction sites and instrumented timelines are not runtime stall percentages or a hardware ceiling."
+}

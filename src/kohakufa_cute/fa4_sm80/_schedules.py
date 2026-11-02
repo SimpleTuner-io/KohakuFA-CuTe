@@ -46,6 +46,8 @@ def a100_schedule(dimension, sequence, causal, heads=16):
         )
     if dimension == 128 and causal:
         schedule = replace(schedule, forward_m=64)
+    if dimension == 128 and causal and sequence == 2048 and heads == 8:
+        schedule = replace(schedule, causal_head_group=4)
     if causal and sequence == 4096 and heads in (8, 16):
         schedule = replace(schedule, causal_head_group=4 if heads == 8 else 16)
     return schedule

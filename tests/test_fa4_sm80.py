@@ -131,6 +131,20 @@ class Sm80SelectionTests(unittest.TestCase):
         self.assertEqual(a100_schedule(128, 4096, True).forward_m, 64)
         self.assertEqual((Schedule().backward_m, Schedule().dout_stages, Schedule().v_in_regs), (64, 2, False))
 
+    def test_medium_causal_head_order_is_bounded(self):
+        from kohakufa_cute.fa4_sm80._schedules import a100_schedule
+
+        self.assertEqual(a100_schedule(128, 2048, True, heads=8).causal_head_group, 4)
+        for dimension, length, causal, heads in (
+            (64, 2048, True, 8),
+            (128, 2048, False, 8),
+            (128, 2049, True, 8),
+            (128, 2048, True, 9),
+            (128, 2048, True, 16),
+            (128, 1024, True, 8),
+        ):
+            self.assertEqual(a100_schedule(dimension, length, causal, heads=heads).causal_head_group, 1)
+
     def test_missing_optional_dependency_retains_native_schedule(self):
         fa4_sm80.available.cache_clear()
         try:

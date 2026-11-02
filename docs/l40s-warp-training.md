@@ -1,10 +1,12 @@
 # Qualified L40S training schedules
 
-This change selects the shared warp-MMA implementation for a bounded set of
-training calls on a full 142-SM L40S. The [candidate measurements](../results/l40s-warp-training.json)
-and [separate chart](../results/l40s-warp-training.svg) compare the actual public
-API with the preceding native CuTe dispatch and standalone FA2. The historical
-cross-device chart and its arithmetic-policy measurements are unchanged.
+The shared warp-MMA implementation serves a bounded set of training calls on
+a full 142-SM L40S. The [current causal-ordering measurements](l40s-causal-groups.md)
+and [November 2 chart](../results/l40s-causal-groups.svg) qualify its causal groups.
+The [November 1 dense/initial training measurements](../results/l40s-warp-training.json)
+and [dated chart](../results/l40s-warp-training.svg) retain the preceding native
+CuTe and standalone FA2 comparison. The historical cross-device chart and its
+arithmetic-policy measurements are unchanged.
 
 Automatic selection requires batch 1, 16 heads, aligned contiguous square MHA,
 FP16/BF16, D64/D128 and **exactly S1024 or S4096**. D64 causal selects only
@@ -22,12 +24,12 @@ lengths; endpoint timings do not qualify a continuous interval. Additional
 
 ## Schedules and arithmetic
 
-| Family | Forward M/N | Backward M/N | Q/dO stages | Score/KV/dQ M warps | V in registers |
-| --- | --- | --- | --- | --- | --- |
-| D64 | 128/64 | 64/128 | 2/1 | 2/4/4 | yes |
-| D128 dense S1024 | 64/64 | 32/128 | 1/1 | 2/2/2 | no |
-| D128 dense S4096 | 128/32 | 32/128 | 1/1 | 2/2/2 | no |
-| D128 causal | 64/64 | 64/64 | 1/1 | 4/2/2 | yes |
+| Family | Forward M/N | Backward M/N | Q/dO stages | Score/KV/dQ M warps | V in registers | Causal head group |
+| --- | --- | --- | --- | --- | --- | --- |
+| D64 | 128/64 | 64/128 | 2/1 | 2/4/4 | yes | 8 at causal S4096; otherwise 1 |
+| D128 dense S1024 | 64/64 | 32/128 | 1/1 | 2/2/2 | no | 1 |
+| D128 dense S4096 | 128/32 | 32/128 | 1/1 | 2/2/2 | no | 1 |
+| D128 causal | 64/64 | 64/64 | 1/1 | 4/2/2 | yes | 16 at S1024/S4096 |
 
 Forward uses 128 threads and backward 256. Schedules and native host runners
 are cached without retaining operand pointers. Other SM89 devices do not enter

@@ -70,6 +70,11 @@ def schedule(dimension, sequence, causal):
         kv_m_warps=4 if dimension == 64 else 2,
         dq_m_warps=4 if dimension == 64 else 2,
         v_in_regs=not narrow_query,
+        causal_head_group=(
+            8
+            if causal and dimension == 64 and sequence == 4096
+            else 16 if causal and dimension == 128 and sequence in (1024, 4096) else 1
+        ),
     )
 
 

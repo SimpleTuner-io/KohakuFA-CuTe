@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="white"/>
+<text x="35" y="38" font-family="sans-serif" font-size="25" fill="#253041" text-anchor="start">L40S public short training: B1 H16 S128 D16</text>
+<text x="35" y="64" font-family="sans-serif" font-size="15" fill="#253041" text-anchor="start">November 2, 2026 · held-out seed · 9 alternating rounds · complete forward + backward</text>
+<text x="150" y="104" font-family="sans-serif" font-size="18" fill="#253041" text-anchor="start">Graph replay / CUDA events (µs)</text>
+<path d="M150.0 120 V535" stroke="#e4e8ed"/>
+<text x="150.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">0</text>
+<path d="M250.0 120 V535" stroke="#e4e8ed"/>
+<text x="250.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">5</text>
+<path d="M350.0 120 V535" stroke="#e4e8ed"/>
+<text x="350.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">10</text>
+<path d="M450.0 120 V535" stroke="#e4e8ed"/>
+<text x="450.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">15</text>
+<path d="M550.0 120 V535" stroke="#e4e8ed"/>
+<text x="550.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">20</text>
+<text x="35" y="171" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">BF16</text>
+<text x="35" y="191" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">dense</text>
+<rect x="150" y="143" width="205.06120275417265" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M355.04756342403584 149 H355.08391240807293 M355.04756342403584 145 V153 M355.08391240807293 145 V153" stroke="#1f2937"/>
+<text x="361.06120275417265" y="154" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">10.25</text>
+<rect x="150" y="161" width="299.4954684857339" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M449.4859690362628 167 H449.4987861326598 M449.4859690362628 163 V171 M449.4987861326598 163 V171" stroke="#1f2937"/>
+<text x="455.4954684857339" y="172" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">14.97</text>
+<rect x="150" y="179" width="278.2565212041378" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M428.24756375039834 185 H428.27143547574883 M428.24756375039834 181 V189 M428.27143547574883 181 V189" stroke="#1f2937"/>
+<text x="434.2565212041378" y="190" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">13.91</text>
+<rect x="150" y="197" width="360.27686952327065" height="12" fill="#c97812" opacity=".85"/>
+<path d="M510.2730442001074 203 H510.2806665107068 M510.2730442001074 199 V207 M510.2806665107068 199 V207" stroke="#1f2937"/>
+<text x="516.2768695232706" y="208" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">18.01</text>
+<text x="35" y="269" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">BF16</text>
+<text x="35" y="289" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">causal</text>
+<rect x="150" y="241" width="190.4068056768852" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M340.4046749164284 247 H340.4324066047621 M340.4046749164284 243 V251 M340.4324066047621 243 V251" stroke="#1f2937"/>
+<text x="346.4068056768852" y="252" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">9.52</text>
+<rect x="150" y="259" width="295.12352315304673" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M445.1203383408583 265 H445.12352315304673 M445.1203383408583 261 V269 M445.12352315304673 261 V269" stroke="#1f2937"/>
+<text x="451.12352315304673" y="270" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">14.76</text>
+<rect x="150" y="277" width="291.1514073971352" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M441.14200081347764 283 H441.1608373802547 M441.14200081347764 279 V287 M441.1608373802547 279 V287" stroke="#1f2937"/>
+<text x="447.1514073971352" y="288" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">14.56</text>
+<rect x="150" y="295" width="374.8135406898504" height="12" fill="#c97812" opacity=".85"/>
+<path d="M524.8055426106264 301 H524.8534418880614 M524.8055426106264 297 V305 M524.8534418880614 297 V305" stroke="#1f2937"/>
+<text x="530.8135406898505" y="306" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">18.74</text>
+<text x="35" y="367" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">FP16</text>
+<text x="35" y="387" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">dense</text>
+<rect x="150" y="339" width="197.78258126998924" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M347.775843058295 345 H347.9396668751199 M347.775843058295 341 V349 M347.9396668751199 341 V349" stroke="#1f2937"/>
+<text x="353.78258126998924" y="350" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">9.89</text>
+<rect x="150" y="357" width="301.0756317517326" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M451.0691850511549 363 H451.0981352901803 M451.0691850511549 359 V367 M451.0981352901803 359 V367" stroke="#1f2937"/>
+<text x="457.0756317517326" y="368" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">15.05</text>
+<rect x="150" y="375" width="278.58227578164815" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M428.5733222405995 381 H428.5882299975316 M428.5733222405995 377 V385 M428.5882299975316 377 V385" stroke="#1f2937"/>
+<text x="434.58227578164815" y="386" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">13.93</text>
+<rect x="150" y="393" width="361.18334751139844" height="12" fill="#c97812" opacity=".85"/>
+<path d="M511.1794993206204 399 H511.2024744448206 M511.1794993206204 395 V403 M511.2024744448206 395 V403" stroke="#1f2937"/>
+<text x="517.1833475113984" y="404" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">18.06</text>
+<text x="35" y="465" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">FP16</text>
+<text x="35" y="485" font-family="sans-serif" font-size="14" fill="#253041" text-anchor="start">causal</text>
+<rect x="150" y="437" width="190.6069135521654" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M340.5941010715194 443 H340.6410854725964 M340.5941010715194 439 V447 M340.6410854725964 439 V447" stroke="#1f2937"/>
+<text x="346.6069135521654" y="448" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">9.53</text>
+<rect x="150" y="455" width="286.836847528681" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M436.8307073553045 461 H436.9014339046077 M436.8307073553045 457 V465 M436.9014339046077 457 V465" stroke="#1f2937"/>
+<text x="442.836847528681" y="466" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">14.34</text>
+<rect x="150" y="473" width="289.0938720519367" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M439.0846152523098 479 H439.10002793853727 M439.0846152523098 475 V483 M439.10002793853727 475 V483" stroke="#1f2937"/>
+<text x="445.0938720519367" y="484" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">14.45</text>
+<rect x="150" y="491" width="375.2747706176237" height="12" fill="#c97812" opacity=".85"/>
+<path d="M525.2668128544251 497 H525.2826987980595 M525.2668128544251 493 V501 M525.2826987980595 493 V501" stroke="#1f2937"/>
+<text x="531.2747706176237" y="502" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">18.76</text>
+<text x="710" y="104" font-family="sans-serif" font-size="18" fill="#253041" text-anchor="start">Complete eager call / wall time (µs)</text>
+<path d="M710.0 120 V535" stroke="#e4e8ed"/>
+<text x="710.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">0</text>
+<path d="M810.0 120 V535" stroke="#e4e8ed"/>
+<text x="810.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">150</text>
+<path d="M910.0 120 V535" stroke="#e4e8ed"/>
+<text x="910.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">300</text>
+<path d="M1010.0 120 V535" stroke="#e4e8ed"/>
+<text x="1010.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">450</text>
+<path d="M1110.0 120 V535" stroke="#e4e8ed"/>
+<text x="1110.0" y="558" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="middle">600</text>
+<rect x="710" y="143" width="137.48781445125738" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M808.4398399790128 149 H848.8719892750183 M808.4398399790128 145 V153 M848.8719892750183 145 V153" stroke="#1f2937"/>
+<text x="853.4878144512573" y="154" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">206.23</text>
+<rect x="710" y="161" width="149.4504076522817" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M819.3989756535933 167 H859.84098132743 M819.3989756535933 163 V171 M859.84098132743 163 V171" stroke="#1f2937"/>
+<text x="865.4504076522817" y="172" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">224.18</text>
+<rect x="710" y="179" width="357.2404556689983" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M1021.3976892555866 185 H1068.2810407833142 M1021.3976892555866 181 V189 M1068.2810407833142 181 V189" stroke="#1f2937"/>
+<text x="1073.2404556689983" y="190" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">535.86</text>
+<rect x="710" y="197" width="152.12527828858163" height="12" fill="#c97812" opacity=".85"/>
+<path d="M859.7826443647775 203 H863.250219251501 M859.7826443647775 199 V207 M863.250219251501 199 V207" stroke="#1f2937"/>
+<text x="868.1252782885816" y="208" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">228.19</text>
+<rect x="710" y="241" width="140.35591842647656" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M809.7921395686946 247 H850.8065034609469 M809.7921395686946 243 V251 M850.8065034609469 243 V251" stroke="#1f2937"/>
+<text x="856.3559184264766" y="252" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">210.53</text>
+<rect x="710" y="259" width="152.40551886780642" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M821.7815531902544 265 H863.8267670679247 M821.7815531902544 261 V269 M863.8267670679247 261 V269" stroke="#1f2937"/>
+<text x="868.4055188678064" y="270" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">228.61</text>
+<rect x="710" y="277" width="360.18092303254485" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M1019.3733423463943 283 H1071.649463161107 M1019.3733423463943 279 V287 M1071.649463161107 279 V287" stroke="#1f2937"/>
+<text x="1076.1809230325448" y="288" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">540.27</text>
+<rect x="710" y="295" width="150.60999199733257" height="12" fill="#c97812" opacity=".85"/>
+<path d="M859.6324086532234 301 H861.1001681031846 M859.6324086532234 297 V305 M861.1001681031846 297 V305" stroke="#1f2937"/>
+<text x="866.6099919973326" y="306" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">225.91</text>
+<rect x="710" y="339" width="136.89808323979378" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M808.2498026142517 345 H848.0069216092428 M808.2498026142517 341 V349 M848.0069216092428 341 V349" stroke="#1f2937"/>
+<text x="852.8980832397938" y="350" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">205.35</text>
+<rect x="710" y="357" width="148.48450365930032" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M819.5090073366196 363 H859.0788968104837 M819.5090073366196 359 V367 M859.0788968104837 359 V367" stroke="#1f2937"/>
+<text x="864.4845036593003" y="368" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">222.73</text>
+<rect x="710" y="375" width="358.1302925989279" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M1016.2217586939287 381 H1070.302030084989 M1016.2217586939287 377 V385 M1070.302030084989 377 V385" stroke="#1f2937"/>
+<text x="1074.130292598928" y="386" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">537.20</text>
+<rect x="710" y="393" width="150.93596303671086" height="12" fill="#c97812" opacity=".85"/>
+<path d="M860.535226528372 399 H861.5861225163512 M860.535226528372 395 V403 M861.5861225163512 395 V403" stroke="#1f2937"/>
+<text x="866.9359630367109" y="404" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">226.40</text>
+<rect x="710" y="437" width="137.80754565802977" height="12" fill="#6b47ba" opacity=".85"/>
+<path d="M808.4972033883867 443 H848.6872212792664 M808.4972033883867 439 V447 M848.6872212792664 439 V447" stroke="#1f2937"/>
+<text x="853.8075456580298" y="448" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">206.71</text>
+<rect x="710" y="455" width="149.88282335954798" height="12" fill="#777f8a" opacity=".85"/>
+<path d="M819.7585906530594 461 H861.2967940550625 M819.7585906530594 457 V465 M861.2967940550625 457 V465" stroke="#1f2937"/>
+<text x="865.882823359548" y="466" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">224.82</text>
+<rect x="710" y="473" width="359.03795587795753" height="12" fill="#087f8c" opacity=".85"/>
+<path d="M1014.8401008601543 479 H1070.2184417347114 M1014.8401008601543 475 V483 M1070.2184417347114 475 V483" stroke="#1f2937"/>
+<text x="1075.0379558779575" y="484" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">538.56</text>
+<rect x="710" y="491" width="150.91781376805886" height="12" fill="#c97812" opacity=".85"/>
+<path d="M860.1256074255713 497 H861.6584525379294 M860.1256074255713 493 V501 M861.6584525379294 493 V501" stroke="#1f2937"/>
+<text x="866.9178137680589" y="502" font-family="sans-serif" font-size="11" fill="#253041" text-anchor="start">226.38</text>
+<rect x="120" y="588" width="16" height="12" fill="#6b47ba"/>
+<text x="144" y="600" font-family="sans-serif" font-size="13" fill="#253041" text-anchor="start">L40S short owner</text>
+<rect x="380" y="588" width="16" height="12" fill="#777f8a"/>
+<text x="404" y="600" font-family="sans-serif" font-size="13" fill="#253041" text-anchor="start">Preceding public API</text>
+<rect x="640" y="588" width="16" height="12" fill="#087f8c"/>
+<text x="664" y="600" font-family="sans-serif" font-size="13" fill="#253041" text-anchor="start">Standalone FA2</text>
+<rect x="900" y="588" width="16" height="12" fill="#c97812"/>
+<text x="924" y="600" font-family="sans-serif" font-size="13" fill="#253041" text-anchor="start">PyTorch SDPA</text>
+<text x="35" y="622" font-family="sans-serif" font-size="12" fill="#253041" text-anchor="start">Bars: medians; whiskers: min/max rounds. Eager includes host overhead. This chart covers only the qualified training shape.</text>
+</svg>

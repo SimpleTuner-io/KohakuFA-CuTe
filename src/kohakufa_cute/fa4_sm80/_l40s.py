@@ -40,9 +40,14 @@ def _cold_compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.dtype != v.dtype
         or q.shape[0] != 1
         or q.shape[1] != 16
-        or q.shape[2] not in (1024, 4096)
-        or (causal and q.shape[-1] == 64 and q.shape[2] != 4096)
-        or q.shape[-1] not in (64, 128)
+        or not (
+            q.shape[2:] == (128, 16)
+            or (
+                q.shape[2] in (1024, 4096)
+                and q.shape[-1] in (64, 128)
+                and not (causal and q.shape[-1] == 64 and q.shape[2] != 4096)
+            )
+        )
         or not all(t.is_contiguous() and t.data_ptr() % 16 == 0 for t in (q, k, v))
         or not is_device(q.device)
     ):
@@ -86,7 +91,7 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     ):
         return False
     # Equal-shape MHA remains eligible with either value of enable_gqa.
-    return _metadata_predicate()(q, k, v, causal)
+    return _metadata_predicate()(q, k, v, causal, True)
 
 
 @lru_cache(maxsize=32)
@@ -113,7 +118,16 @@ def schedule(dimension, sequence, causal):
     )
 
 
+@lru_cache(maxsize=1)
+def _short_runner():
+    from kohakufa_cute.native import extension
+
+    return extension().AttentionRunner("short", {})
+
+
 def attention(q, k, v, *, causal=False, scale=None):
     from ._host import native_runner
 
+    if q.shape[-1] == 16:
+        return _short_runner()(q, k, v, causal=causal, scale=scale)
     return native_runner(schedule(q.shape[-1], q.shape[2], causal))(q, k, v, causal=causal, scale=scale)

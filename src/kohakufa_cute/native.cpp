@@ -474,12 +474,15 @@ class AttentionRunner {
                     ((properties.major == 8 && properties.minor == 6 && properties.multiProcessorCount == 82 &&
                       std::strcmp(properties.name, "NVIDIA GeForce RTX 3090") == 0) ||
                      (properties.major == 8 && properties.minor == 9 && properties.multiProcessorCount == 128 &&
-                      std::strcmp(properties.name, "NVIDIA GeForce RTX 4090") == 0));
+                      std::strcmp(properties.name, "NVIDIA GeForce RTX 4090") == 0) ||
+                     (properties.major == 8 && properties.minor == 9 && properties.multiProcessorCount == 142 &&
+                      properties.sharedMemPerBlockOptin == 101376 &&
+                      std::strcmp(properties.name, "NVIDIA L40S") == 0));
                 found = short_devices.emplace(q.get_device(), supported).first;
             }
             TORCH_CHECK_VALUE(found->second && !inference && q.size(0) == 1 && q.size(1) == 16 &&
                                   q.size(2) == 128 && q.size(3) == 16,
-                              "Short attention requires a qualified full RTX 3090/4090 square B1 H16 S128 D16 training call.");
+                              "Short attention requires a qualified full RTX 3090/4090 or L40S square B1 H16 S128 D16 training call.");
         }
         TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&
                               q.is_contiguous() && k.is_contiguous() && v.is_contiguous() &&
@@ -619,14 +622,15 @@ bool full_l40s(int device) {
     return devices.emplace(device, selected).first->second;
 }
 
-bool l40s_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v, bool causal) {
+bool l40s_metadata_compatible(const Tensor &q, const Tensor &k, const Tensor &v, bool causal, bool short_owned = false) {
     if (!c10::GradMode::is_enabled() || !(q.requires_grad() || k.requires_grad() || v.requires_grad()) ||
         q.dim() != 4 || k.dim() != 4 || v.dim() != 4 || q.sizes() != k.sizes() || q.sizes() != v.sizes() ||
         !q.is_cuda() || q.device() != k.device() || q.device() != v.device() ||
         (q.scalar_type() != at::kHalf && q.scalar_type() != at::kBFloat16) ||
         q.scalar_type() != k.scalar_type() || q.scalar_type() != v.scalar_type() ||
-        q.size(0) != 1 || q.size(1) != 16 || (q.size(2) != 1024 && q.size(2) != 4096) ||
-        (q.size(3) != 64 && q.size(3) != 128) || (causal && q.size(3) == 64 && q.size(2) != 4096) ||
+        q.size(0) != 1 || q.size(1) != 16 || !((short_owned && q.size(2) == 128 && q.size(3) == 16) ||
+          ((q.size(2) == 1024 || q.size(2) == 4096) && (q.size(3) == 64 || q.size(3) == 128) &&
+           !(causal && q.size(3) == 64 && q.size(2) != 4096))) ||
         !q.is_contiguous() || !k.is_contiguous() || !v.is_contiguous() ||
         reinterpret_cast<uintptr_t>(q.data_ptr()) % 16 != 0 ||
         reinterpret_cast<uintptr_t>(k.data_ptr()) % 16 != 0 ||
@@ -676,12 +680,12 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
         return gb10_inference_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
                                                   THPVariable_Unpack(v.ptr()), causal);
     });
-    module.def("l40s_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
+    module.def("l40s_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal, bool short_owned) {
         if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
             return false;
         return l40s_metadata_compatible(THPVariable_Unpack(q.ptr()), THPVariable_Unpack(k.ptr()),
-                                        THPVariable_Unpack(v.ptr()), causal);
-    });
+                                        THPVariable_Unpack(v.ptr()), causal, short_owned);
+    }, py::arg("q"), py::arg("k"), py::arg("v"), py::arg("causal"), py::arg("short_owned") = false);
     module.def("a40_metadata_compatible", [](py::object q, py::object k, py::object v, bool causal) {
         if (!THPVariable_Check(q.ptr()) || !THPVariable_Check(k.ptr()) || !THPVariable_Check(v.ptr()))
             return false;

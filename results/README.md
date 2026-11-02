@@ -24,10 +24,16 @@ The [November 1 dense/initial report](l40s-warp-training.json) and
 comparison. Inference and unqualified lengths retain their existing path.
 The historical four-device grid above is unchanged.
 
-The proposed bounded L40S S128 D16 training route has a separate
+The initial bounded L40S S128 D16 training route has a separate
 [public-call report](../docs/l40s-short-owned.md), [24-row data](l40s-short-owned.json)
 and [matching chart](l40s-short-owned.svg). Its no-grad and long-shape controls
 remain visible; the earlier L40S studies above retain their dated scope.
+
+The independently qualified optimized short policy has its own
+[held-out public-call report](../docs/l40s-short-optimized.md),
+[24-row data and controls](l40s-short-optimized.json), and
+[matching chart](l40s-short-optimized.svg). The flags-disabled and pristine
+original-class baselines are labeled separately; eager variability remains visible.
 
 ## Standalone FlashAttention comparisons
 

@@ -118,11 +118,18 @@ def schedule(dimension, sequence, causal):
     )
 
 
+def _short_flags(dtype, causal):
+    """L40S choices qualified independently for each short training family."""
+    if dtype not in (torch.bfloat16, torch.float16):
+        raise ValueError("Short attention requires BF16 or FP16 inputs.")
+    return causal or dtype == torch.float16, not causal
+
+
 @lru_cache(maxsize=1)
 def _short_runner():
     from kohakufa_cute.native import extension
 
-    return extension().AttentionRunner("short", {})
+    return extension().AttentionRunner("short-optimized", {})
 
 
 def attention(q, k, v, *, causal=False, scale=None):

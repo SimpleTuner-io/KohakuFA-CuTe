@@ -59,8 +59,11 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.shape != v.shape
         or q.shape[0] != 1
         or q.shape[1] != 16
-        or not (q.shape[2] == 4096 or (causal and q.shape[2] == 1024 and (q.shape[3] == 64 or q.dtype == torch.bfloat16)))
-        or q.shape[3] not in (64, 128)
+        or not (
+            q.shape[2] == 4096
+            or (q.shape[2] == 1024 and (q.shape[3] == 256 or (causal and (q.shape[3] == 64 or q.dtype == torch.bfloat16))))
+        )
+        or q.shape[3] not in (64, 128, 256)
         or q.device != k.device
         or q.device != v.device
         or q.device.index != torch.cuda.current_device()
@@ -96,3 +99,39 @@ def schedule(dimension, causal=False):
         v_in_regs=False,
         causal_head_group=16 if causal else 1,
     )
+
+
+@lru_cache(maxsize=4)
+def d256_schedule(causal, sequence):
+    from ._attention import Schedule
+
+    if sequence not in (1024, 4096):
+        raise ValueError("The selected D256 schedule requires S1024 or S4096.")
+    short_dense = sequence == 1024 and not causal
+    return Schedule(
+        forward_m=128 if short_dense else 64,
+        forward_n=32 if short_dense else 64,
+        forward_stages=1,
+        query_in_registers=False,
+        backward_m=64,
+        backward_n=32,
+        query_stages=1,
+        dout_stages=1,
+        threads=256,
+        score_m_warps=4,
+        kv_m_warps=1,
+        dq_m_warps=2,
+        v_in_regs=True,
+        causal_head_group=1,
+    )
+
+
+@lru_cache(maxsize=4)
+def d256_runner(causal, sequence):
+    from dataclasses import asdict
+
+    from ..native import extension
+
+    options = asdict(d256_schedule(causal, sequence))
+    options["forward_threads"] = 256 if sequence == 1024 and not causal else 128
+    return extension().AttentionRunner("warp", options)

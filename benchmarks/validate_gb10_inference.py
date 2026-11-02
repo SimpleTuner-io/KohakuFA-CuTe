@@ -102,7 +102,7 @@ def main():
     fallback = []
     for case in ("tail", "negative_view", "negative", "zero", "mask", "hidden", "strided", "gqa", "heads", "dimension"):
         length = 129 if case == "tail" else 128
-        shape = (1, 4 if case == "heads" else 16, length, 64 if case == "dimension" else 128)
+        shape = (1, 4 if case == "heads" else 16, length, 512 if case == "dimension" else 128)
         inputs = [torch.randn(*shape, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
         if case == "negative_view":
             inputs[0] = inputs[0]._neg_view()
@@ -117,7 +117,10 @@ def main():
                 mask.zero_()
         scale = {"negative": -0.125, "zero": 0.0}.get(case)
         options = {"attn_mask": mask, "scale": scale, "enable_gqa": case == "gqa"}
-        with torch.no_grad(), patch.object(gb10, "native_runner", side_effect=AssertionError("Unexpected selected runner")):
+        with (
+            torch.no_grad(),
+            patch.object(gb10, "native_runner", side_effect=AssertionError("Unexpected selected runner")),
+        ):
             output = gb10.scaled_dot_product_attention(*inputs, **options)
         from benchmarks.reference import fp64_reference, metrics
 
@@ -136,7 +139,10 @@ def main():
     compiled = torch.compile(gb10.scaled_dot_product_attention, backend="eager", fullgraph=True)
     for dtype in (torch.bfloat16, torch.float16):
         values = [torch.randn(1, 16, 128, 128, device="cuda", dtype=dtype) for _ in range(3)]
-        with torch.no_grad(), patch.object(gb10, "native_runner", side_effect=AssertionError("Compiled selected runner")):
+        with (
+            torch.no_grad(),
+            patch.object(gb10, "native_runner", side_effect=AssertionError("Compiled selected runner")),
+        ):
             output = compiled(*values)
         error = assess_output(output.cpu(), references(tuple(t.cpu() for t in values)))
         compiled_rows.append({"dtype": str(dtype), "output": error, "status": "pass"})

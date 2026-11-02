@@ -17,7 +17,11 @@ _names = count()
 
 
 def compile_kernel(mode, tensors, causal, masked, configuration=None):
-    if mode in ("short_forward", "short_backward"):
+    if mode in ("short_key32_forward", "short_key32_backward"):
+        from .short_key32_owned import compile_kernel as compile_short_key32
+
+        function = compile_short_key32(mode.rsplit("_", 1)[1], tensors, causal)
+    elif mode in ("short_forward", "short_backward"):
         from .short_owned import compile_kernel as compile_short
 
         function = compile_short(mode.split("_", 1)[1], tensors, causal)

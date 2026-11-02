@@ -1,7 +1,7 @@
-# RTX 3090 short full-row backward
+# RTX 3090 short attention backward
 
 The explicit `rtx3090_attention` entry selects a fused backward kernel for
-square B1 H16 S128 D16 FP16/BF16 training on a full, ordinary 82-SM RTX 3090.
+square B1 H16 S128 D16/D64 FP16/BF16 training on a full, ordinary 82-SM RTX 3090.
 Dense and causal attention are supported. The ordinary training forward and
 its saved unscaled maximum/logarithmic normalization remain unchanged.
 Default attention dispatch does not change; the existing long D64/D128 opt-in
@@ -13,7 +13,77 @@ from kohakufa_cute import rtx3090_attention
 out = rtx3090_attention(q, k, v, is_causal=True)
 ```
 
-## Ownership and arithmetic
+## D64 key ownership
+
+D64 uses four 32-key owners per head. Each 256-thread block processes both
+64-query tiles, carries its complete dK/dV in FP32 registers, and writes those
+32 key rows directly. The four blocks write separate FP32 dQ partials. One
+final kernel combines them pairwise in FP32, applies the attention scale, and
+converts dQ once to the input dtype. There are no gradient atomics or separate
+delta/preprocessing kernels. Forward remains the ordinary training forward.
+
+Global query and key offsets determine causal visibility. Saved score maxima
+and logarithmic normalization describe the full key sequence; they are not
+recomputed independently for each key tile. Delta uses all features of the
+actual rounded forward O and dO. Each block reconstructs its score/derivative
+pairs once and converts P and dS at the maintained boundaries. A CTA barrier
+protects Q/dO/P/dS staging before each query-tile reuse. All four dQ partials
+are written, including zero contributions from hidden tiles, before reduction.
+
+The selected D64 main kernel uses 33,536 shared bytes, 215–218 registers per
+thread and zero reported local bytes. Its grid has 64 blocks instead of the
+original owner's 16. Register allocation limits resident blocks per SM, so
+this is a change in available independent work rather than a claim of high
+occupancy or utilization. The complete graph has three kernels: unchanged
+forward, the key-owner backward, and dQ reduction. Graph timing includes scratch
+writes and reduction; allocation and capture precede graph timing. Complete eager calls include allocation and host work.
+
+This design follows a measured resource repair. Owning all 128 keys in one
+block was correct but D128 used 472 local bytes/thread and lost badly to FA2.
+Splitting output features reduced some register pressure but repeated QK/dP
+and still lost. Two 64-key owners improved D64; four 32-key owners improved
+its complete call further. These experiments and the D128 measurements are
+retained as negative results. The new selector applies only to D64; D128
+keeps its existing route.
+
+The independent public evaluation used seed 94329, separate from the prototype's
+seed 61103. Complete graph F+B fell 23–30% versus the preceding explicit entry and
+was 1.49–1.51× faster than FA2 across all four cases. Values below are microseconds.
+
+![RTX 3090 D64 complete graph comparison](../results/rtx3090-short-d64.svg)
+
+| Dtype | Visibility | Previous F+B | FA2 F+B | SDPA F+B | New F+B | New backward |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| BF16 | Dense | 25.590 | 26.970 | 31.429 | 18.005 | 11.567 |
+| BF16 | Causal | 24.726 | 27.793 | 32.542 | 18.563 | 11.980 |
+| FP16 | Dense | 25.601 | 27.086 | 31.697 | 17.945 | 11.552 |
+| FP16 | Causal | 24.329 | 27.806 | 32.452 | 18.690 | 12.127 |
+
+Eager joint medians also improved in this run, by roughly 6–8% against the parent,
+but host overhead varies strongly between cases and backends. All 24 forward,
+backward and joint graph/eager rows, with seven samples per implementation, remain
+in the [compact D64 data](../results/rtx3090-short-d64.json). These comparisons
+include each implementation's required math and preparation.
+
+The final public source passed 18 finite directed cases, one expected final-cast
+overflow diagnostic, changed/poisoned graph and negative-view checks, six fallback
+cases and eight legacy D16 cases. All eight public CuTe compilation units have
+identical PTX and cubins to their corresponding qualified N32 prototype, with
+every public cubin matched to an actual loaded image. The four retained sanitizer
+runs each covered 24 prototype cases, including 12 D64 calls; none reported a
+device error. The public archive has 654 verified entries (82.9 MB), alongside
+714 verified N32 prototype entries (119.5 MB). The CPU suite ran 378 tests with
+177 skipped and no failures; all 24 publication guard tests passed.
+
+Reproduce D64 qualification and a matched device/eager comparison with:
+
+```sh
+capture_dir=$(mktemp -d)
+python -m benchmarks.validate_rtx3090_short_d64 --compare-reference-devices --output "$capture_dir/qualification.json"
+python -m benchmarks.compare_attention_variants --operations '[{"label":"public","factory":"benchmarks.validate_rtx3090_short_d64:make_attention"},{"label":"native","backend":"cute"},{"label":"fa2","backend":"fa2"},{"label":"sdpa","backend":"sdpa"}]' --seq 128 --dim 64 --heads 16 --dtype bf16 fp16 --visibility dense causal --phases forward backward joint --warmup-ms 1000 --window-ms 100 --repeats 7 --seed 94329 --source-revision "$(git rev-parse HEAD)" --output "$capture_dir/comparison/report.json"
+```
+
+## D16 ownership and arithmetic
 
 One 256-thread CTA per head owns every query and key row. It reconstructs QK
 and dP once, computes delta from the actual rounded forward O and dO, and

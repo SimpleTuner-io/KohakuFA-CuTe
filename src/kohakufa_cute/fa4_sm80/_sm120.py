@@ -122,7 +122,7 @@ def d256_schedule(causal, sequence):
         kv_m_warps=1,
         dq_m_warps=2,
         v_in_regs=True,
-        causal_head_group=1,
+        causal_head_group=16 if causal and sequence == 1024 else 1,
     )
 
 

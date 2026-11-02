@@ -42,7 +42,7 @@ class Sm120D256SelectionTests(unittest.TestCase):
                     self.assertEqual((options["query_stages"], options["dout_stages"]), (1, 1))
                     self.assertEqual((options["score_m_warps"], options["kv_m_warps"], options["dq_m_warps"]), (4, 1, 2))
                     self.assertTrue(options["v_in_regs"])
-                    self.assertEqual(options["causal_head_group"], 1)
+                    self.assertEqual(options["causal_head_group"], 16 if causal and sequence == 1024 else 1)
                     expected = (128, 32, 256) if sequence == 1024 and not causal else (64, 64, 128)
                     self.assertEqual((options["forward_m"], options["forward_n"], options["forward_threads"]), expected)
         _sm120.d256_runner.cache_clear()

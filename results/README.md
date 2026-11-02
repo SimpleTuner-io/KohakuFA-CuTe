@@ -532,3 +532,5 @@ Use fresh output directories. Replay restores strides and storage offsets, valid
 The public replay uses default SDPA. To check its stronger FlashAttention alternative separately, run the SDPA call inside `torch.nn.attention.sdpa_kernel(torch.nn.attention.SDPBackend.FLASH_ATTENTION)` and verify the actual loaded kernel. The retained H100 comparisons include both backends.
 
 The [RTX 5090 D256 public-path comparison](../docs/rtx5090-configured-host.md#d256-complete-training-calls) adds two independent 48-row forward/backward/joint eager/graph matrices, with [compact samples and code bindings](rtx5090-d256.json) and a [comparison chart](rtx5090-d256.svg). Its qualified B1/H16 S1024/S4096 dense/causal calls beat standalone FA2 and default SDPA in both timing boundaries; the historical grid above remains unchanged.
+
+The [D256 short-causal follow-up](../docs/rtx5090-configured-host.md#d256-short-causal-ordering) selects G16 only for S1024, improving actual public joint calls by approximately 4–5%. Its [held-out matrix and retained negative controls](rtx5090-d256-short-groups.json) preserve why dense/long calls keep G1.

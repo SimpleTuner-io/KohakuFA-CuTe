@@ -5,6 +5,9 @@ full RTX 4090. It retains the existing CuTe API for calls outside its qualified
 family. Install the [pinned optional runtime](a100-sm80-fa4.md): Python 3.13,
 PyTorch 2.15.0/CUDA 13.2 and the `cuda,sm80-fa4` extras.
 
+The same entry also supports [S128/D16 full-row training](rtx4090-short.md)
+under its separately qualified short-call conditions.
+
 ```python
 import torch
 from kohakufa_cute.fa4_sm80.rtx4090 import scaled_dot_product_attention
@@ -120,7 +123,5 @@ The optional dependency notes specify the pinned FlashAttention revision. Source
 and qualifier hashes in the compact record identify the measured implementation.
 
 The [causal head-grouping follow-up](rtx4090-causal-head-groups.md) applies the measured G16 ordering to the same bounded causal calls. Its newer record includes separate graph and eager results.
-
-The [long D64 causal follow-up](rtx4090-long-causal.md) uses N128 at S4096 and retains N64 at S1024. Its held-out current-policy record supersedes the earlier long D64 causal timings above.
 
 The [long D64 causal follow-up](rtx4090-long-causal.md) uses N128 at S4096 and retains N64 at S1024. Its held-out current-policy record supersedes the earlier long D64 causal timings above.

@@ -65,7 +65,7 @@ Other CUDA calls retain the standard CuTe dispatch.
 including [short S128](docs/a40-short-d256.md) and [long D256 training](docs/a40-d256.md) comparisons,
 with separate graph and complete eager measurements.
 
-The same pinned installation provides an opt-in [RTX 4090 joint-backward path](docs/rtx4090-shared-joint.md), with measured D64/D128 schedules and ordinary CuTe fallbacks.
+The same pinned installation provides an opt-in [RTX 4090 joint-backward path](docs/rtx4090-shared-joint.md), with measured D64/D128 schedules, [S128/D16 training support](docs/rtx4090-short.md), and ordinary CuTe fallbacks.
 
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
 CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:

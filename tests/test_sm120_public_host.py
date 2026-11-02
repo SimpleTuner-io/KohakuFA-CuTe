@@ -27,6 +27,12 @@ class Sm120PublicSelectionTests(unittest.TestCase):
     def tearDown(self):
         _sm120.target_device.cache_clear()
 
+    def test_cpu_tensors_do_not_initialize_the_native_metadata_helper(self):
+        q = torch.empty(1, 16, 1024, 64, requires_grad=True)
+        with patch.object(_sm120, "_metadata_predicate") as native:
+            self.assertFalse(_sm120.compatible(q, q, q, None, 0, True, None, False))
+            native.assert_not_called()
+
     def runtime(self):
         return (
             patch.object(torch.cuda, "get_device_capability", return_value=(12, 0)),
@@ -61,6 +67,21 @@ class Sm120PublicSelectionTests(unittest.TestCase):
                 self.assertEqual(causal_schedule.causal_head_group, 16)
                 self.assertEqual(causal_schedule.query_stages, schedule.query_stages)
                 self.assertEqual(causal_schedule.backward_n, schedule.backward_n)
+
+    def test_medium_causal_selection_preserves_dense_and_adjacent_fallbacks(self):
+        capability, properties, current, available = self.runtime()
+        with capability, properties, current, available:
+            for dimension in (64, 128):
+                for dtype in (torch.bfloat16, torch.float16):
+                    q = operand((1, 16, 1024, dimension), dtype=dtype)
+                    self.assertTrue(fa4_sm80.compatible(q, q, q, None, 0, True, None, False))
+                    self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, False, None, False))
+                    for length in (1023, 1025, 2048):
+                        tail = operand((1, 16, length, dimension), dtype=dtype)
+                        self.assertFalse(fa4_sm80.compatible(tail, tail, tail, None, 0, True, None, False))
+            q = operand((1, 16, 1024, 64))
+            with torch.no_grad():
+                self.assertFalse(fa4_sm80.compatible(q, q, q, None, 0, True, None, False))
 
     def test_unqualified_shapes_layouts_and_modes_fall_through(self):
         capability, properties, current, available = self.runtime()
@@ -113,6 +134,53 @@ class Sm120PublicSelectionTests(unittest.TestCase):
     "Requires the qualified full RTX 5090 runtime",
 )
 class Sm120PublicKernelTests(unittest.TestCase):
+    def test_native_live_metadata_and_policy_guards(self):
+        from kohakufa_cute.native import extension
+
+        check = extension().sm120_metadata_compatible
+        for dimension in (64, 128):
+            for dtype in (torch.bfloat16, torch.float16):
+                for length in (1024, 4096):
+                    q = torch.empty(1, 16, length, dimension, device="cuda", dtype=dtype, requires_grad=True)
+                    for causal in (False, True):
+                        expected = length == 4096 or causal
+                        self.assertEqual(check(q, q, q, causal), expected)
+                        self.assertEqual(_sm120.compatible(q, q, q, None, 0, causal, None, False), expected)
+                    self.assertFalse(check(q, q.detach(), q, True))
+                    with torch.no_grad():
+                        self.assertFalse(check(q, q, q, True))
+        q = torch.empty(1, 16, 1024, 64, device="cuda", dtype=torch.bfloat16, requires_grad=True)
+        parameter = torch.nn.Parameter(q.detach())
+        self.assertTrue(check(parameter, parameter, parameter, True))
+
+        class TensorSubclass(torch.Tensor):
+            pass
+
+        subclass = q.as_subclass(TensorSubclass)
+        self.assertTrue(check(subclass, subclass, subclass, True))
+        self.assertFalse(check(object(), q, q, True))
+        self.assertFalse(check(q, object(), q, True))
+        for shape in ((1, 16, 1023, 64), (1, 16, 1025, 64), (1, 16, 2048, 64), (2, 16, 1024, 64)):
+            other = torch.empty(shape, device="cuda", dtype=q.dtype, requires_grad=True)
+            self.assertFalse(check(other, other, other, True))
+        unaligned = torch.empty(q.numel() + 1, device="cuda", dtype=q.dtype)[1:].view(q.shape).requires_grad_(True)
+        self.assertTrue(unaligned.is_contiguous())
+        self.assertFalse(check(unaligned, unaligned, unaligned, True))
+        strided = torch.empty(1, 16, 1024, 128, device="cuda", dtype=q.dtype)[..., ::2].requires_grad_(True)
+        self.assertFalse(check(strided, strided, strided, True))
+        cpu = torch.empty(q.shape, dtype=q.dtype, requires_grad=True)
+        self.assertFalse(check(q, cpu, q, True))
+        wrong_dtype = torch.empty(q.shape, device="cuda", dtype=torch.float32, requires_grad=True)
+        self.assertFalse(check(q, wrong_dtype, q, True))
+        for scale in (0, -0.125, 1e-50, float("nan"), float("inf")):
+            self.assertFalse(_sm120.compatible(q, q, q, None, 0, True, scale, False))
+        self.assertFalse(_sm120.compatible(q, q, q, object(), 0, True, None, False))
+        self.assertFalse(_sm120.compatible(q, q, q, None, 0.1, True, None, False))
+        with patch.object(torch.compiler, "is_compiling", return_value=True):
+            self.assertFalse(_sm120.compatible(q, q, q, None, 0, True, None, False))
+        with patch.object(torch, "are_deterministic_algorithms_enabled", return_value=True):
+            self.assertFalse(_sm120.compatible(q, q, q, None, 0, True, None, False))
+
     def check_case(self, inputs, dout, *, causal=False, scale=None, directed=False, pointwise=False, function=None):
         from benchmarks.validate_sm80_static import assess, statistics
         from kohakufa_cute import api
@@ -121,12 +189,15 @@ class Sm120PublicKernelTests(unittest.TestCase):
             from kohakufa_cute.fa4_sm80._host import native_runner
 
             def function(q, k, v, *, is_causal=False, scale=None):
-                if q.shape[2] == 4096:
+                if q.shape[2] == 4096 or (is_causal and q.shape[2] == 1024):
                     return api.scaled_dot_product_attention(q, k, v, is_causal=is_causal, scale=scale)
                 return native_runner(_sm120.schedule(q.shape[-1]))(q, k, v, causal=is_causal, scale=scale)
 
         operands = [t.detach().requires_grad_(True) for t in inputs]
-        self.assertEqual(fa4_sm80.compatible(*operands, None, 0, causal, scale, False), inputs[0].shape[2] == 4096)
+        self.assertEqual(
+            fa4_sm80.compatible(*operands, None, 0, causal, scale, False),
+            (inputs[0].shape[2] == 4096 or (causal and inputs[0].shape[2] == 1024)),
+        )
         saved = []
         with torch.autograd.graph.saved_tensors_hooks(lambda t: saved.append(t) or t, lambda t: t):
             out = function(*operands, is_causal=causal, scale=scale)
@@ -140,14 +211,14 @@ class Sm120PublicKernelTests(unittest.TestCase):
         from benchmarks.compare_l40s import graph_kernels
         from kohakufa_cute import api
 
-        for length in (1024, 4096):
+        for length in (1023, 1024, 1025, 4096):
             inputs = [torch.randn(1, 16, length, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
             dout = torch.randn_like(inputs[0])
             operands = [t.detach().requires_grad_(True) for t in inputs]
-            self.assertEqual(fa4_sm80.compatible(*operands, None, 0, True, None, False), length == 4096)
+            self.assertEqual(fa4_sm80.compatible(*operands, None, 0, True, None, False), length in (1024, 4096))
             graph, _ = capture(api.scaled_dot_product_attention, inputs, dout, True, "joint", keep_graph=True)
             symbols = [row["symbol"] for row in graph_kernels(graph)]
-            self.assertEqual(any("fa4_sm80_backward" in symbol for symbol in symbols), length == 4096)
+            self.assertEqual(any("fa4_sm80_backward" in symbol for symbol in symbols), length in (1024, 4096))
 
     def test_selected_matrix_and_public_frontdoors(self):
         from kohakufa_cute import api

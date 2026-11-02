@@ -129,7 +129,7 @@ The optional tuned installation selects bounded [A100 D64/D128](docs/a100-sm80-f
 schedules. Their shape and software bounds are documented; other CUDA calls
 retain standard CuTe dispatch.
 
-GB10 has an [explicit shared entry](docs/gb10-shared.md) with measured training and [forward-only schedules](docs/gb10-inference.md), including [S128 forward-only widths 16/64/256](docs/gb10-short-forward.md), plus ordinary CuTe fallbacks. It is opt-in.
+GB10 has an [explicit shared entry](docs/gb10-shared.md) with measured training and [forward-only schedules](docs/gb10-inference.md), including [S128 widths 16/64/256](docs/gb10-short-forward.md) and [long D256](docs/gb10-long-d256.md), plus ordinary CuTe fallbacks. It is opt-in.
 
 For an ordinary RTX 3090, the optional [`rtx3090_attention`](docs/rtx3090-optin.md) entry exposes bounded D64/D128 schedules and B1 H16 S128 D16/D64/D128 ownership kernels,
 with the same training precision policy.

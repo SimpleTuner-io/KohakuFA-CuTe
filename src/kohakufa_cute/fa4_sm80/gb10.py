@@ -44,6 +44,23 @@ def inference_schedule(sequence, causal):
     return Schedule(forward_m=128 if wide else 64, forward_n=32 if wide else 64, query_stages=1, dout_stages=1)
 
 
+@lru_cache(maxsize=6)
+def _d256_inference_configuration(sequence, causal):
+    """Describe the qualified D256 register partition and tile."""
+    if sequence not in (512, 1024, 4096):
+        raise ValueError("The D256 forward-only runner requires a qualified sequence.")
+    wide = sequence == 4096 or (sequence == 1024 and not causal)
+    selected = Schedule(forward_m=128 if wide else 64, forward_n=32 if wide else 64, query_stages=1, dout_stages=1)
+    return selected, 256 if wide else 128
+
+
+@lru_cache(maxsize=6)
+def _long_d256_runner(sequence, causal):
+    """Cache immutable configuration while checking live input metadata per call."""
+    selected, threads = _d256_inference_configuration(sequence, causal)
+    return native_runner(selected, forward_threads=threads)
+
+
 @lru_cache(maxsize=8)
 def _qualified_device(index):
     """CUDA device properties are immutable within the initialized process."""
@@ -131,7 +148,13 @@ def inference_compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=No
 def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):
     """Run the explicit measured family and preserve the public fallback API."""
     if inference_compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
-        return native_runner(inference_schedule(q.shape[2], is_causal)).inference(q, k, v, scale=scale, causal=is_causal)
+        shape = q.shape
+        selected = (
+            _long_d256_runner(shape[2], is_causal)
+            if shape[3] == 256 and shape[2] != 128
+            else native_runner(inference_schedule(shape[2], is_causal))
+        )
+        return selected.inference(q, k, v, scale=scale, causal=is_causal)
     if compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
         return native_runner(schedule(q.shape[2], is_causal, q.shape[1], q.dtype))(q, k, v, scale=scale, causal=is_causal)
     from kohakufa_cute import api

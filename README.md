@@ -30,6 +30,8 @@ Compilation is excluded.
 The L40S D128 row predates the bounded [shared warp training update](docs/l40s-warp-training.md),
 which retains its separate paired native-CuTe/FA2 measurements.
 
+The pinned [RTX 5090 schedule](docs/rtx5090-configured-host.md#s1024-causal-training) also covers selected S1024 causal training calls, with separate captured-device gains and mixed D64 eager results.
+
 [Performance details and charts](results/README.md) cover both dtypes, dense/causal
 visibility, all five head widths, forward/backward phases and actual SDPA kernels.
 The [precision-removal report](docs/baseline-precision.md) includes the full H100
@@ -57,7 +59,8 @@ Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and
 
 **Tuned A100 and L40S training:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
 then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounded
-[A100](docs/a100-sm80-fa4.md), including [long causal ordering](docs/a100-causal-order.md), and [L40S](docs/l40s-warp-training.md) D64/D128 schedules.
+[A100 D64/D128](docs/a100-sm80-fa4.md), [bounded A100 D256](docs/a100-d256-shared-v.md),
+and [L40S D64/D128](docs/l40s-warp-training.md) schedules.
 Other CUDA calls retain the standard CuTe dispatch.
 
 **A40 opt-in:** the same qualified stack supports an explicit
@@ -115,12 +118,13 @@ Supported CuTe inputs:
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
 
-The optional tuned installation selects bounded [A100](docs/a100-sm80-fa4.md),
+The optional tuned installation selects bounded [A100 D64/D128](docs/a100-sm80-fa4.md),
+[A100 D256](docs/a100-d256-shared-v.md),
 [L40S training](docs/l40s-warp-training.md), and [RTX 5090 training](docs/rtx5090-configured-host.md)
-D64/D128 schedules. Their shape and software bounds are documented; other CUDA calls
+schedules. Their shape and software bounds are documented; other CUDA calls
 retain standard CuTe dispatch.
 
-GB10 has an [explicit D128 shared entry](docs/gb10-shared.md) with measured training and [forward-only schedules](docs/gb10-inference.md), plus ordinary CuTe fallbacks. It is opt-in.
+GB10 has an [explicit shared entry](docs/gb10-shared.md) with measured training and [forward-only schedules](docs/gb10-inference.md), including [S128 forward-only widths 16/64/256](docs/gb10-short-forward.md), plus ordinary CuTe fallbacks. It is opt-in.
 
 For an ordinary RTX 3090, the optional [`rtx3090_attention`](docs/rtx3090-optin.md) entry exposes bounded D64/D128 schedules and a B1 H16 S128 D16 full-row backward path,
 with the same training precision policy.

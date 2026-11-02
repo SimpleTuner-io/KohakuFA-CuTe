@@ -9,7 +9,12 @@ Times are median milliseconds per attention call unless a table explicitly speci
 ## L40S bounded shared warp training
 
 The [bounded training policy](../docs/l40s-warp-training.md) covers full-device
-L40S D64/D128 training at exact qualified lengths. Its current causal ordering
+L40S D64/D128 training at exact qualified lengths. The latest
+[native metadata analysis](../docs/l40s-native-metadata.md),
+[96-row actual public comparison](l40s-native-metadata.json) and
+[paired-variability chart](l40s-native-metadata.svg) report its host check.
+Short FP16 gains, BF16 ties and mixed long rows remain visible; GPU code is
+byte-identical. Its causal ordering
 has a [November 2 analysis](../docs/l40s-causal-groups.md),
 [96-row paired report](l40s-causal-groups.json) and [matching chart](l40s-causal-groups.svg).
 The native group1 control has a shorter Python guard than the public API;
@@ -66,6 +71,15 @@ dispatch. Compiler-returned PTX/cubin files are retained by content hash to avoi
 automatic filename collisions. Exact instruction comparisons additionally need
 an unambiguous binding to the loaded graph function; a matching symbol alone
 can be insufficient across variants. Retain raw captures outside the tracked tree.
+
+## A100 D256
+
+The [long shared-V schedule](../docs/a100-d256-shared-v.md) covers batch1/H8 or
+H16/S4096 with FP16/BF16 dense or causal visibility. Its [48-row actual API
+report](a100-d256-shared-v.json) and [chart](a100-d256-shared-v.svg) separate eager
+and graph timing; all eight backward and joint cases beat FA2 and SDPA in both
+boundaries. The [original N32 study](../docs/a100-d256-training.md) retains its
+144 rows and reference-order diagnosis separately.
 
 ## A40 opt-in
 

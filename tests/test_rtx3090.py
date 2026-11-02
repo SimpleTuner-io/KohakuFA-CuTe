@@ -49,10 +49,22 @@ class Rtx3090RoutingTests(unittest.TestCase):
         operation = Mock(return_value=object())
         with (
             patch("kohakufa_cute.rtx3090._eligible", return_value=True),
-            patch("kohakufa_cute.rtx3090._short_d128_runner", return_value=operation),
+            patch("kohakufa_cute.rtx3090._short_d128_stats_runner", return_value=operation),
         ):
             self.assertIs(rtx3090_attention(q, q, q, is_causal=True, scale=0.125), operation.return_value)
             operation.assert_called_once_with(q, q, q, scale=0.125, causal=True)
+
+    def test_short_d128_dense_keeps_the_existing_runner(self):
+        q = torch.empty(1, 16, 128, 128, dtype=torch.float16)
+        operation = Mock(return_value=object())
+        with (
+            patch("kohakufa_cute.rtx3090._eligible", return_value=True),
+            patch("kohakufa_cute.rtx3090._short_d128_runner", return_value=operation),
+            patch("kohakufa_cute.rtx3090._short_d128_stats_runner") as causal_runner,
+        ):
+            self.assertIs(rtx3090_attention(q, q, q, scale=0.125), operation.return_value)
+            operation.assert_called_once_with(q, q, q, scale=0.125, causal=False)
+            causal_runner.assert_not_called()
 
     def test_only_the_qualified_full_ordinary_device_matches(self):
         for name, sms, expected in (

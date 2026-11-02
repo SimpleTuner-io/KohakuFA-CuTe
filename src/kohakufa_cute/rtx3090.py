@@ -99,6 +99,13 @@ def _short_d128_runner():
     return extension().AttentionRunner("short_d128", {})
 
 
+@lru_cache(maxsize=1)
+def _short_d128_stats_runner():
+    from .native import extension
+
+    return extension().AttentionRunner("short_d128_stats", {})
+
+
 def rtx3090_attention(query, key, value, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):
     """Use qualified RTX 3090 schedules; other calls retain ordinary CuTe dispatch.
 
@@ -111,7 +118,8 @@ def rtx3090_attention(query, key, value, attn_mask=None, dropout_p=0.0, is_causa
         if query.shape[-2:] == (128, 64):
             return _short_key32_runner()(query, key, value, scale=scale, causal=is_causal)
         if query.shape[-2:] == (128, 128):
-            return _short_d128_runner()(query, key, value, scale=scale, causal=is_causal)
+            runner = _short_d128_stats_runner() if is_causal else _short_d128_runner()
+            return runner(query, key, value, scale=scale, causal=is_causal)
         return _runner(query.shape[-1], is_causal, _head_group(query.shape[-2], is_causal))(
             query, key, value, scale=scale, causal=is_causal
         )

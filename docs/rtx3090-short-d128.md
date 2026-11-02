@@ -11,7 +11,59 @@ from kohakufa_cute import rtx3090_attention
 out = rtx3090_attention(q, k, v, is_causal=True)
 ```
 
-## Complete-call comparison
+## Causal statistics staging update
+
+The causal owner now loads each thread's saved row maximum, logarithmic
+normalization and actual-output delta into registers before writing shared
+P/dS staging. These immutable values previously reloaded across shared stores.
+The exact loaded BF16 causal main kernel reduces scalar shared-load sites
+from 34 to six, while keeping 160 tensor instructions, 248 registers/thread,
+zero local bytes and 82,688 shared bytes. Static counts establish the code
+change; they do not measure runtime stall fractions.
+
+An independent same-process evaluation uses seed 143623 and seven rotating
+100-ms windows. The new public entry combines this backward change with the
+already qualified reciprocal forward. Graph medians below are microseconds.
+Dense retains its previous kernel; its small timing differences are variation.
+
+| Dtype | Visibility | Previous F+B | FA2 F+B | SDPA F+B | New F+B | Previous backward | New backward |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| BF16 | Dense | 31.277 | 33.591 | 39.689 | 31.305 | 22.847 | 22.544 |
+| BF16 | Causal | 32.072 | 28.375 | 34.539 | 30.700 | 23.242 | 22.127 |
+| FP16 | Dense | 31.407 | 34.021 | 40.107 | 31.389 | 22.592 | 23.066 |
+| FP16 | Causal | 31.443 | 28.494 | 34.604 | 30.459 | 23.310 | 22.208 |
+
+Causal complete calls improve 3.1–4.3% over the preceding public entry;
+backward improves 4.7–4.8%. Causal remains 7–8% slower than FA2. Eager and
+separate forward/backward samples remain in the
+[comparison data](../results/rtx3090-short-causal-stats.json).
+
+![RTX 3090 causal statistics update](../results/rtx3090-short-causal-stats.svg)
+
+The new semantic family keeps the previous owner available as an independent
+cache entry. It allocates the same two FP32 dQ partials and uses the same
+reduction, ownership, barriers and operand conversions. Its class reuses the
+existing owner helpers. Both causal backward cubins exactly match the
+independently qualified statistics prototype; all six forward/dense-backward
+cubins exactly match the preceding public implementation.
+
+The final public path passed 18 finite cases, the separate expected FP16
+cast-overflow diagnostic, changed/poisoned graphs, negative views, six fallback
+cases, eight long D64/D128 cases and all four safety tools with 12 calls each.
+All eight compilation units retain actual loaded-image bindings and PTX/SASS.
+The verified closed archive contains 688 entries (89.1 MB). Integrated CPU
+checks ran 429 tests: 228 passed and 201 were skipped. The arithmetic and
+accuracy criteria below are unchanged.
+
+A separate dQ warp-layout experiment changed normal/transposed matrix-load
+sites from 52/56 to 56/48, with the same tensor-instruction count. It passed
+correctness and all four tools but did not improve complete-call latency, so
+it is retained as a negative result rather than selected. The first public
+statistics adapter attempt failed before causal execution because its new
+family lacked the two-partial workspace allocation; its source, operands and
+failure are retained, and the corrected adapter passed the full qualification.
+
+## Preceding ownership and reciprocal comparison
 
 Independent evaluation uses seed 130397 and seven rotating 100-ms windows.
 Graph values below are microseconds. All four cases improve 19–22% over the

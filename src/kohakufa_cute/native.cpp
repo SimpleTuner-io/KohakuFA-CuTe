@@ -156,7 +156,8 @@ tvm::ffi::Function program(bool backward, const Tensors &tensors, bool causal, b
                 continue;
             parameters[configured_fields[i]] = values[i + 1];
         }
-        const char *configured_mode = values[0] == 12 ? (backward ? "short_d128_backward" : "short_d128_forward")
+        const char *configured_mode = values[0] == 13 ? (backward ? "short_d128_stats_backward" : "short_d128_stats_forward")
+                                      : values[0] == 12 ? (backward ? "short_d128_backward" : "short_d128_forward")
                                       : values[0] == 9 ? (backward ? "short_key32_backward" : "short_key32_forward")
                                       : values[0] == 4 ? (backward ? "shortopt_backward" : "shortopt_forward")
                                       : values[0] == 3 ? (backward ? "short_backward" : "short_forward")
@@ -386,7 +387,7 @@ class ConfiguredAttention : public torch::autograd::Function<ConfiguredAttention
         c10::cuda::CUDAGuard guard(q.device());
         auto dout = contiguous_gradient(gradients[0]);
         auto dq = at::empty_like(q), dk = at::empty_like(saved[1]), dv = at::empty_like(saved[2]);
-        if (parameters[0] == 12) {
+        if (parameters[0] == 12 || parameters[0] == 13) {
             auto partials = at::empty({2, q.numel()}, q.options().dtype(at::kFloat));
             launch(true, {q, saved[1], saved[2], q, saved[3], saved[4], saved[5], dout,
                           saved[4], dq, dk, dv, partials, saved[4]},
@@ -427,11 +428,11 @@ class AttentionRunner {
 
   public:
     AttentionRunner(const std::string &family, const std::map<std::string, int64_t> &options) {
-        TORCH_CHECK_VALUE(family == "warp" || family == "hopper" || family == "short" || family == "short-optimized" || family == "short_key32" || family == "short_d128",
+        TORCH_CHECK_VALUE(family == "warp" || family == "hopper" || family == "short" || family == "short-optimized" || family == "short_key32" || family == "short_d128" || family == "short_d128_stats",
                           "Select the warp, hopper, short or short-optimized kernel family.");
         std::vector<int64_t> values(1 + configured_fields.size());
-        values[0] = family == "short_d128" ? 12 : family == "short_key32" ? 9 : family == "short-optimized" ? 4 : family == "short" ? 3 : family == "warp" ? 1 : 2;
-        TORCH_CHECK_VALUE((family != "short" && family != "short-optimized" && family != "short_key32" && family != "short_d128") || options.empty(),
+        values[0] = family == "short_d128_stats" ? 13 : family == "short_d128" ? 12 : family == "short_key32" ? 9 : family == "short-optimized" ? 4 : family == "short" ? 3 : family == "warp" ? 1 : 2;
+        TORCH_CHECK_VALUE((family != "short" && family != "short-optimized" && family != "short_key32" && family != "short_d128" && family != "short_d128_stats") || options.empty(),
                           "The short kernel has one fixed geometry.");
         size_t recognized = 0;
         for (size_t i = 0; i < configured_fields.size(); ++i) {
@@ -486,7 +487,7 @@ class AttentionRunner {
                                  (target.first == 12 && (target.second == 0 || target.second == 1));
         const bool qualified_a100_d256 = !inference && family == 1 && q.size(3) == 256 &&
                                          target == std::make_pair(8, 0) && full_a100(q.get_device());
-        TORCH_CHECK_VALUE(((family == 1 || family == 3 || family == 4 || family == 9 || family == 12) && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
+        TORCH_CHECK_VALUE(((family == 1 || family == 3 || family == 4 || family == 9 || family == 12 || family == 13) && warp_device) || (family == 2 && target == std::make_pair(9, 0)),
                           "The configured attention family does not match the CUDA device.");
         const bool qualified_inference_width = inference && family == 1 &&
             (q.size(3) == 16 || q.size(3) == 256) && q.size(0) == 1 &&
@@ -522,7 +523,7 @@ class AttentionRunner {
                                   q.size(2) == 128 && q.size(3) == 16,
                               "Short attention requires a qualified full device square B1 H16 S128 D16 training call.");
         }
-        if (family == 9 || family == 12) {
+        if (family == 9 || family == 12 || family == 13) {
             static std::mutex short_device_mutex;
             static std::unordered_map<int, bool> short_devices;
             std::lock_guard<std::mutex> lock(short_device_mutex);
@@ -536,8 +537,8 @@ class AttentionRunner {
                                        std::strcmp(properties.name, "NVIDIA GeForce RTX 3090") == 0;
                 found = short_devices.emplace(q.get_device(), supported).first;
             }
-            TORCH_CHECK_VALUE(found->second && !inference && q.size(0) == 1 && q.size(1) == 16 &&
-                                  q.size(2) == 128 && ((family == 9 && q.size(3) == 64) || (family == 12 && q.size(3) == 128)),
+            TORCH_CHECK_VALUE((family != 13 || causal) && found->second && !inference && q.size(0) == 1 && q.size(1) == 16 &&
+                                  q.size(2) == 128 && ((family == 9 && q.size(3) == 64) || ((family == 12 || family == 13) && q.size(3) == 128)),
                               "Short attention requires full RTX 3090 square B1 H16 S128 D64 or D128 training.");
         }
         TORCH_CHECK_VALUE(q.sizes() == k.sizes() && q.sizes() == v.sizes() &&

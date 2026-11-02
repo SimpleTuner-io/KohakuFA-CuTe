@@ -37,6 +37,27 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
     from . import _l40s, _sm120
 
     if (
+        isinstance(q, torch.Tensor)
+        and getattr(q, "ndim", None) == 4
+        and q.device.type == "cuda"
+        and q.shape == (1, 8, 2048, 128)
+        and causal
+        and mask is None
+        and dropout == 0
+        and not torch.compiler.is_compiling()
+        and not torch.are_deterministic_algorithms_enabled()
+        and (
+            scale is None
+            or (isinstance(scale, (float, int)) and math.isfinite(scale) and 1.1754943508222875e-38 <= scale <= 2e38)
+        )
+        and available()
+    ):
+        from ..native import extension
+
+        if extension().a100_medium_metadata_compatible(q, k, v):
+            return all(torch.autograd.forward_ad.unpack_dual(t).tangent is None for t in (q, k, v))
+
+    if (
         getattr(q, "ndim", None) == 4
         and q.device.type == "cuda"
         and not torch.compiler.is_compiling()
@@ -74,10 +95,18 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or torch.cuda.get_device_properties(q.device).multi_processor_count != 108
     ):
         return False
-    # This medium-size causal family had no forward wall-time gain after host
-    # preparation, although its captured joint device time improved.
+    # The current native runtime also qualifies this medium training family.
+    # Other medium causal families retain their preceding selection.
     if causal and q.shape[-1] == 128 and q.shape[1] < 16 and q.shape[2] < 4096:
-        return False
+        if not (
+            q.shape[1] == 8
+            and q.shape[2] == 2048
+            and torch.is_grad_enabled()
+            and all(getattr(t, "requires_grad", False) for t in (q, k, v))
+        ):
+            return False
+        if any(torch.autograd.forward_ad.unpack_dual(t).tangent is not None for t in (q, k, v)):
+            return False
     if scale is not None and (
         not isinstance(scale, (float, int)) or not math.isfinite(scale) or not 1.1754943508222875e-38 <= scale <= 2e38
     ):

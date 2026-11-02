@@ -13,7 +13,7 @@ Use the `sm80-fa4` extra with Python 3.13, PyTorch 2.15.0/CUDA 13.2, and the
 pinned optional runtime described in the [A100 installation](a100-sm80-fa4.md).
 The opt-in selects a full 82-SM GeForce RTX 3090 for contiguous, aligned square
 FP16/BF16 attention with batch 1, 16 equal heads, D64/D128, and 1024–4096 tokens. It also selects a
-[full-row backward kernel for S128 D16](rtx3090-short.md) under the same
+[ownership backward kernels for S128 D16/D64](rtx3090-short.md) under the same
 batch/head, dtype and device restrictions.
 It supports dense and causal training. Other calls retain ordinary CuTe
 dispatch, including masks, GQA layouts, signed/zero scales and compiled calls.

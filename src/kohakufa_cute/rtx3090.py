@@ -31,7 +31,7 @@ def _eligible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.device.index != torch.cuda.current_device()
         or q.shape[0] != 1
         or q.shape[1] != 16
-        or not (q.shape[2:] == (128, 16) or (1024 <= q.shape[2] <= 4096 and q.shape[3] in (64, 128)))
+        or not ((q.shape[2] == 128 and q.shape[3] in (16, 64)) or (1024 <= q.shape[2] <= 4096 and q.shape[3] in (64, 128)))
         or q.dtype not in (torch.bfloat16, torch.float16)
         or q.dtype != k.dtype
         or q.dtype != v.dtype
@@ -83,6 +83,13 @@ def _short_runner():
     return extension().AttentionRunner("short", {})
 
 
+@lru_cache(maxsize=1)
+def _short_key32_runner():
+    from .native import extension
+
+    return extension().AttentionRunner("short_key32", {})
+
+
 def rtx3090_attention(query, key, value, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):
     """Use qualified RTX 3090 schedules; other calls retain ordinary CuTe dispatch.
 
@@ -92,6 +99,8 @@ def rtx3090_attention(query, key, value, attn_mask=None, dropout_p=0.0, is_causa
     if _eligible(query, key, value, attn_mask, dropout_p, is_causal, scale, enable_gqa):
         if query.shape[-1] == 16:
             return _short_runner()(query, key, value, scale=scale, causal=is_causal)
+        if query.shape[-2:] == (128, 64):
+            return _short_key32_runner()(query, key, value, scale=scale, causal=is_causal)
         return _runner(query.shape[-1], is_causal, _head_group(query.shape[-2], is_causal))(
             query, key, value, scale=scale, causal=is_causal
         )

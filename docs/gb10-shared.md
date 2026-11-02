@@ -423,3 +423,10 @@ python -m benchmarks.qualify_gb10_shared --public-selected --heads 4 \
   --long-causal-only --cpu-reference --reference-agreement \
   --output ../gb10-results/long-causal-h4.json
 ```
+
+## Long dense forward update
+
+The [long dense forward study](gb10-forward-geometry.md) qualifies M128/N32
+for H16/S4096/D128 in both dtypes, with complete eager/graph measurements
+against the preceding policy, FA2 and SDPA. It retains the existing backward
+schedules and records the short-shape alternatives separately.

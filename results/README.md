@@ -24,6 +24,17 @@ The [November 1 dense/initial report](l40s-warp-training.json) and
 comparison. Inference and unqualified lengths retain their existing path.
 The historical four-device grid above is unchanged.
 
+The initial bounded L40S S128 D16 training route has a separate
+[public-call report](../docs/l40s-short-owned.md), [24-row data](l40s-short-owned.json)
+and [matching chart](l40s-short-owned.svg). Its no-grad and long-shape controls
+remain visible; the earlier L40S studies above retain their dated scope.
+
+The independently qualified optimized short policy has its own
+[held-out public-call report](../docs/l40s-short-optimized.md),
+[24-row data and controls](l40s-short-optimized.json), and
+[matching chart](l40s-short-optimized.svg). The flags-disabled and pristine
+original-class baselines are labeled separately; eager variability remains visible.
+
 ## Standalone FlashAttention comparisons
 
 The retained grids below compare default PyTorch SDPA. Use the explicit standalone
@@ -71,6 +82,15 @@ dispatch. Compiler-returned PTX/cubin files are retained by content hash to avoi
 automatic filename collisions. Exact instruction comparisons additionally need
 an unambiguous binding to the loaded graph function; a matching symbol alone
 can be insufficient across variants. Retain raw captures outside the tracked tree.
+
+## A100 D256
+
+The [long shared-V schedule](../docs/a100-d256-shared-v.md) covers batch1/H8 or
+H16/S4096 with FP16/BF16 dense or causal visibility. Its [48-row actual API
+report](a100-d256-shared-v.json) and [chart](a100-d256-shared-v.svg) separate eager
+and graph timing; all eight backward and joint cases beat FA2 and SDPA in both
+boundaries. The [original N32 study](../docs/a100-d256-training.md) retains its
+144 rows and reference-order diagnosis separately.
 
 ## A40 opt-in
 

@@ -25,6 +25,10 @@ CuTe path. Selected-kernel errors propagate. On the pinned runtime, top-level
 APIs now [automatically select](rtx4090-automatic.md) S4096 training and S128/D16.
 S1024 and the explicit long no-grad behavior remain opt-in.
 
+The [combined live metadata check](rtx4090-native-metadata.md) reduces host
+overhead for short eager training calls while retaining these eligibility
+rules and the same GPU kernels.
+
 ## Measurements
 
 Milliseconds, lower is better. These are warmed CUDA-graph forward plus backward

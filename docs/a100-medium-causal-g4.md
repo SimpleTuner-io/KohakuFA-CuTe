@@ -93,8 +93,8 @@ implementations. The 43 referenced binary/code files are SHA-verified.
 
 The existing 1% BF16 and 0.5% FP16 per-head component limits remain unchanged;
 negative-offset fixtures use the declared rounded equations with actual O,
-and mathematical diagnostics remain separate. CPU checks run 385 tests total
-with 180 GPU skips. All 24 publication-guard tests pass.
+and mathematical diagnostics remain separate. CPU checks on the integrated main base run 401 tests total
+with 191 GPU skips. All 24 publication-guard tests pass.
 
 The retained backward-boundary diagnostic can be rerun with
 `python -m benchmarks.profile_a100_medium_backward --output artifacts/bwd-ladder`.

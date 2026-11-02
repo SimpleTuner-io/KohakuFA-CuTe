@@ -187,10 +187,12 @@
       "g8-systems": 0,
       "paired": 0
     },
-    "cpu_total": 385,
-    "cpu_skipped": 180,
+    "cpu_total": 401,
+    "cpu_skipped": 191,
     "guard_tests": 24,
-    "precision": "Unchanged per-head1%BF16/.5%FP16 normal FP64 gates; directed negative-offset rounded P/dS equations with actual O, same norm limits."
+    "precision": "Unchanged per-head1%BF16/.5%FP16 normal FP64 gates; directed negative-offset rounded P/dS equations with actual O, same norm limits.",
+    "frozen_source_cpu_total": 385,
+    "frozen_source_cpu_skipped": 180
   },
   "original_strict_selection_outcome": {
     "selected_group": null,
@@ -38165,5 +38167,9 @@
         }
       ]
     }
-  }
+  },
+  "integrated_cpu_base": "276644675543e4a47e30ecbfd59745d4375b97a7",
+  "a100_python_sources_match_gpu_snapshot_after_rebase": true,
+  "host_diagnostic_executed_source_sha256": "09f11cccb8cf33a7b1725328c42ff5481eb5c802339a22afdc26ebbc4e1994b1",
+  "host_diagnostic_retained_reproduction_sha256": "a7cff86f8ac1562f691d3e9ac4665e26088eddff2a8de03ebb62786e5edc1d8b"
 }

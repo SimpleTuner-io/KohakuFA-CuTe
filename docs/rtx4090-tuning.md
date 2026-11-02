@@ -1,4 +1,9 @@
-# RTX 4090 scheduling and the remaining SDPA gap
+# Historical RTX 4090 scheduling comparison
+
+This report records the earlier 450 W schedule investigation. The current
+[400 W automatic-selection study](rtx4090-automatic.md) and
+[refreshed default-API grid](../results/rtx4090.json) supersede its current-performance
+claims; the paired controls and tables below describe that historical run.
 
 This comparison measures attention forward, backward, and complete calls on a
 full 128-SM RTX 4090 at its 450 W board limit. It compares default PyTorch SDPA,
@@ -18,9 +23,8 @@ error against FP64 is 0.030% for FP16 and 0.238% for BF16.
 
 All values below are **microseconds**, BF16, batch one, 16 equal Q/K/V heads,
 contiguous B,H,S,D inputs. Forward retains autograd. Complete includes forward
-and all three gradients. Smaller is better. The [comparison data](../results/rtx4090.json)
-also contains FP16, S1024, backward-only timings, all samples, accuracy metrics,
-and source hashes.
+and all three gradients. Smaller is better. The current [comparison data](../results/rtx4090.json) contains the refreshed
+60-case API grid, with its own samples, accuracy metrics and source hashes.
 
 | Length | D | Visibility | Forward previous / CuTe / SDPA | Complete previous / CuTe / SDPA |
 | ---: | ---: | --- | ---: | ---: |

@@ -40,14 +40,7 @@ def _cold_compatible(q, k, v, mask, dropout, causal, scale, gqa):
         or q.dtype != v.dtype
         or q.shape[0] != 1
         or q.shape[1] != 16
-        or not (
-            q.shape[2:] == (128, 16)
-            or (
-                q.shape[2] in (1024, 4096)
-                and q.shape[-1] in (64, 128)
-                and not (causal and q.shape[-1] == 64 and q.shape[2] != 4096)
-            )
-        )
+        or not (q.shape[2:] == (128, 16) or (q.shape[2] in (1024, 4096) and q.shape[-1] in (64, 128)))
         or not all(t.is_contiguous() and t.data_ptr() % 16 == 0 for t in (q, k, v))
         or not is_device(q.device)
     ):
@@ -95,25 +88,30 @@ def compatible(q, k, v, mask, dropout, causal, scale, gqa):
 
 
 @lru_cache(maxsize=32)
-def schedule(dimension, sequence, causal):
+def schedule(dimension, sequence, causal, dtype=None):
     from ._attention import Schedule
 
+    medium_causal = dimension == 64 and sequence == 1024 and causal
     narrow_query = dimension == 128 and not causal
     return Schedule(
         forward_m=128 if dimension == 64 or (sequence == 4096 and not causal) else 64,
         forward_n=32 if dimension == 128 and sequence == 4096 and not causal else 64,
         backward_m=32 if narrow_query else 64,
-        backward_n=128 if dimension == 64 or narrow_query else 64,
-        query_stages=2 if dimension == 64 else 1,
+        backward_n=64 if medium_causal else 128 if dimension == 64 or narrow_query else 64,
+        query_stages=1 if medium_causal and dtype == torch.float16 else 2 if dimension == 64 else 1,
         dout_stages=1,
         score_m_warps=2 if dimension == 64 or narrow_query else 4,
         kv_m_warps=4 if dimension == 64 else 2,
         dq_m_warps=4 if dimension == 64 else 2,
         v_in_regs=not narrow_query,
         causal_head_group=(
-            8
-            if causal and dimension == 64 and sequence == 4096
-            else 16 if causal and dimension == 128 and sequence in (1024, 4096) else 1
+            16
+            if medium_causal
+            else (
+                8
+                if causal and dimension == 64 and sequence == 4096
+                else 16 if causal and dimension == 128 and sequence in (1024, 4096) else 1
+            )
         ),
     )
 
@@ -137,4 +135,4 @@ def attention(q, k, v, *, causal=False, scale=None):
 
     if q.shape[-1] == 16:
         return _short_runner()(q, k, v, causal=causal, scale=scale)
-    return native_runner(schedule(q.shape[-1], q.shape[2], causal))(q, k, v, causal=causal, scale=scale)
+    return native_runner(schedule(q.shape[-1], q.shape[2], causal, q.dtype))(q, k, v, causal=causal, scale=scale)

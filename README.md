@@ -5,7 +5,7 @@ CuTe DSL attention for **A100, A40, RTX 3090/3090 Ti, RTX 4090, RTX 5090, B200/B
 ## When to use it
 
 - **Sharp attention or large logits:** separate unscaled softmax statistics, shifted-score reconstruction and gradient scaling after accumulation address lost normalization information and premature underflow. The default uses single-rounded FP16/BF16 operands; see the [precision contract](docs/precision.md).
-- **512-wide heads:** forward plus backward beats default SDPA in all eight tested long FP16/BF16 dense/causal calls per card: RTX 5090 **1.96–4.71×**, RTX 4090 **2.17–4.57×**, RTX 3090 Ti **1.69–2.85×**, L40S **2.80–4.80×**.
+- **512-wide heads:** forward plus backward beats default SDPA in all eight tested long FP16/BF16 dense/causal calls per card: RTX 5090 **1.96–4.71×**, RTX 4090 **2.15–4.49×**, RTX 3090 Ti **1.69–2.85×**, L40S **2.80–4.80×**.
 - **Other attention shapes:** benchmark the complete call. Short shapes can benefit; long smaller-head calls still have substantial gaps against SDPA. The [full grid](results/README.md#rtx-cards-and-l40s) shows both wins and losses.
 - **H100 Clef 27B text inference:** retained D256 backbone measurements beat cuDNN SDPA by 1.24× at 787 tokens and 1.03× at 9,835 tokens. Those forward-only measurements and their model-compatibility limits are [documented separately](results/README.md#clef-27b-text-inference).
 
@@ -15,16 +15,18 @@ Automatic selection checks compatibility; it does **not** predict the fastest ba
 
 **Forward + backward**, milliseconds; lower is better. B1/H16, BF16, S4096,
 dense attention. The RTX 5090 D128 row uses the [pinned schedule](docs/rtx5090-configured-host.md);
-other rows retain the existing baseline. All use the default rounded arithmetic.
+RTX 4090 rows use the refreshed default automatic selection on the optional runtime;
+other rows retain their recorded baseline. All use the default rounded arithmetic.
 Compilation is excluded.
 
 | GPU | Head dim | CuTe | Default SDPA | SDPA / CuTe |
 | --- | ---: | ---: | ---: | ---: |
 | RTX 5090 | 512 | 22.354 | 50.147 | 2.24× |
-| RTX 4090 | 512 | 31.159 | 67.562 | 2.17× |
+| RTX 4090 | 512 | 30.142 | 64.845 | 2.15× |
 | RTX 3090 Ti | 512 | 61.916 | 104.654 | 1.69× |
 | L40S | 512 | 24.781 | 71.017 | 2.87× |
 | RTX 5090 (pinned schedule) | 128 | 2.493 | 2.664 | 1.07× |
+| RTX 4090 | 128 | 3.003 | 3.116 | 1.04× |
 | L40S | 128 | 3.132 | 2.663 | 0.85× |
 
 The L40S D128 row predates the bounded [shared warp training update](docs/l40s-warp-training.md),
@@ -57,10 +59,11 @@ python -m pip install '.[cuda]'
 
 Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and a C++17 compiler. The native launcher builds on first use. `pip install .` installs the API without CUDA extras; automatic selection can then use native SDPA on CPU/MPS.
 
-**Tuned A100 and L40S training:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
+**Tuned A100, L40S and RTX 4090 training:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
 then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounded
-[A100 D64/D128](docs/a100-sm80-fa4.md), [bounded A100 D256](docs/a100-d256-shared-v.md),
-and [L40S D64/D128](docs/l40s-warp-training.md) schedules.
+[A100 D64/D128](docs/a100-sm80-fa4.md), including [long causal ordering](docs/a100-causal-order.md),
+[bounded A100 D256](docs/a100-d256-shared-v.md), [L40S D64/D128](docs/l40s-warp-training.md),
+and the bounded [RTX 4090 automatic training route](docs/rtx4090-automatic.md).
 Other CUDA calls retain the standard CuTe dispatch.
 
 **A40 opt-in:** the same qualified stack supports an explicit
@@ -68,7 +71,9 @@ Other CUDA calls retain the standard CuTe dispatch.
 including [short S128](docs/a40-short-d256.md) and [long D256 training](docs/a40-d256.md) comparisons,
 with separate graph and complete eager measurements.
 
-The same pinned installation provides an opt-in [RTX 4090 joint-backward path](docs/rtx4090-shared-joint.md), with measured D64/D128 schedules, [S128/D16 training support](docs/rtx4090-short.md), and ordinary CuTe fallbacks.
+RTX 4090 automatically selects S128/D16 and S4096/D64/D128 training calls at B1/H16.
+S1024 remains [explicit](docs/rtx4090-shared-joint.md): its graph gains did not
+improve complete eager calls. Other shapes retain ordinary CuTe dispatch.
 
 **GB10 (SM121, DGX / RTX Spark)** is validated on Linux ARM64. Install an ARM64
 CUDA-enabled PyTorch build and the CUDA 13 DSL libraries:

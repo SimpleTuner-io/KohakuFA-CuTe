@@ -2,7 +2,7 @@
 
 import unittest
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import torch
 
@@ -11,6 +11,19 @@ from kohakufa_cute.rtx3090 import _device_matches
 
 
 class Rtx3090RoutingTests(unittest.TestCase):
+    def test_selected_runner_preserves_the_public_call_arguments(self):
+        for sequence, causal, group in ((1024, True, 16), (1025, True, 4), (4096, True, 4), (2048, False, 1)):
+            q = torch.empty(1, 16, sequence, 64, dtype=torch.float16)
+            operation = Mock(return_value=object())
+            with (
+                self.subTest(sequence=sequence, causal=causal),
+                patch("kohakufa_cute.rtx3090._eligible", return_value=True),
+                patch("kohakufa_cute.rtx3090._runner", return_value=operation) as runner,
+            ):
+                self.assertIs(rtx3090_attention(q, q, q, is_causal=causal, scale=0.125), operation.return_value)
+                runner.assert_called_once_with(64, causal, group)
+                operation.assert_called_once_with(q, q, q, scale=0.125, causal=causal)
+
     def test_only_the_qualified_full_ordinary_device_matches(self):
         for name, sms, expected in (
             ("NVIDIA GeForce RTX 3090", 82, True),

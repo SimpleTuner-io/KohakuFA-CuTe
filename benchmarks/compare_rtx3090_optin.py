@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import importlib.metadata
+import importlib.util
 import itertools
 import json
 import math
@@ -17,9 +18,20 @@ import torch
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output", type=Path, required=True)
 parser.add_argument("--source-revision", required=True)
+parser.add_argument(
+    "--baseline-source",
+    type=Path,
+    help="Exact published rtx3090.py control; relative imports resolve in the installed package.",
+)
+parser.add_argument("--seq", nargs="+", type=int, default=[1024, 4096])
+parser.add_argument("--visibility", nargs="+", choices=("dense", "causal"), default=["dense", "causal"])
+parser.add_argument("--seed", type=int, default=927)
 args = parser.parse_args()
+if any(not 1024 <= sequence <= 4096 for sequence in args.seq):
+    parser.error("Sequences must stay within the qualified public boundary.")
 root = args.output.parent
 root.mkdir(parents=True, exist_ok=True)
+(root / "code").mkdir(exist_ok=True)
 os.environ.update(CUTE_DSL_KEEP="ptx,cubin", CUTE_DSL_DUMP_DIR=str(root / "code"))
 from benchmarks.compare_ada import capture, measure
 from benchmarks.compare_flashattention import source_metadata
@@ -53,6 +65,14 @@ report = {
     "rows": [],
     "compiler_artifacts": [],
 }
+baseline = None
+if args.baseline_source is not None:
+    specification = importlib.util.spec_from_file_location("kohakufa_cute._rtx3090_pr58_control", args.baseline_source)
+    control = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(control)
+    baseline = control.rtx3090_attention
+    report["baseline_source_sha256"] = hashlib.sha256(args.baseline_source.read_bytes()).hexdigest()
+report["seed"] = args.seed
 scope = {}
 original_compile = kernels.cute.compile
 
@@ -63,6 +83,7 @@ def observe(program, *a, **kw):
         {
             "scope": dict(scope),
             "program": type(program).__module__ + "." + type(program).__name__,
+            "causal_head_group": getattr(getattr(program, "main", program), "causal_head_group", None),
             "artifacts": retain_code(function, root / "retained"),
         }
     )
@@ -98,10 +119,13 @@ for dtype, dimension in itertools.product((torch.bfloat16, torch.float16), (64, 
         "sdpa": load_backend("sdpa"),
         "public": rtx3090_attention,
     }
+    if baseline is not None:
+        functions["published_g1"] = baseline
     report["backends"] = {name: function.metadata() for name, function in functions.items() if hasattr(function, "metadata")}
-    for sequence in (1024, 4096):
-        for causal in (False, True):
-            torch.manual_seed(927)
+    for sequence in args.seq:
+        for visibility in args.visibility:
+            causal = visibility == "causal"
+            torch.manual_seed(args.seed)
             q, k, v, dout = [torch.randn(1, 16, sequence, dimension, dtype=dtype, device="cuda") for _ in range(4)]
             inputs = (q, k, v)
             row = {

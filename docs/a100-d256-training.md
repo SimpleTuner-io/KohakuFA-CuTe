@@ -106,6 +106,9 @@ python -m benchmarks.compare_attention_variants \
 
 Repeat with `--heads 8`. The final selector narrows only eligibility; its GPU
 methods and native runner remain byte-identical to the qualified broader
-candidate. A separate actual public selection check exercises selected and
-excluded families, kernel symbols and changing poisoned graphs. No D16 or new
+candidate. The separate final public selection check passed all five selected/excluded
+families, exact kernel symbols and changing poisoned graphs on the rebased
+source. Its compiled host library is retained and SHA-verified; the merged A40
+and GB10 metadata helpers remain present and reject A100 operands. CPU checks
+passed 378 tests total (177 skipped), with all 24 publication-guard tests passing. No D16 or new
 explicit-inference width is enabled.

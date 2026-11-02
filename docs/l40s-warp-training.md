@@ -1,7 +1,10 @@
 # Qualified L40S training schedules
 
 The shared warp-MMA implementation serves a bounded set of training calls on
-a full 142-SM L40S. The [current causal-ordering measurements](l40s-causal-groups.md)
+a full 142-SM L40S. The [live metadata check](l40s-native-metadata.md) and
+[current complete-call chart](../results/l40s-native-metadata.svg) report its
+host eligibility update, including mixed rows and unchanged GPU code.
+The [causal-ordering measurements](l40s-causal-groups.md)
 and [November 2 chart](../results/l40s-causal-groups.svg) qualify its causal groups.
 The [November 1 dense/initial training measurements](../results/l40s-warp-training.json)
 and [dated chart](../results/l40s-warp-training.svg) retain the preceding native

@@ -1,4 +1,4 @@
-# L40S short training
+# L40S short training: initial basic owner
 
 This change selects the basic exclusive-gradient owner for a full NVIDIA L40S
 (142 SMs, SM89, 101376-byte opt-in shared-memory capacity), square B1 H16 S128
@@ -119,3 +119,6 @@ compiler configuration and recovery scripts. The report generator checks
 completed stage receipts, physical inventories and code bindings before writing
 the compact JSON and SVG. The historical four-device grid and older dated L40S
 charts retain their original measurement scope.
+
+The independently qualified [optimized short policy](l40s-short-optimized.md)
+has a separate held-out report; this page retains the initial basic-owner data.

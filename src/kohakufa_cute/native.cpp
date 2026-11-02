@@ -482,8 +482,10 @@ class AttentionRunner {
                       properties.sharedMemPerBlockOptin == 101376 &&
                       std::strcmp(properties.name, "NVIDIA L40S") == 0));
                 const bool optimized = supported && properties.major == 8 && properties.minor == 9 &&
-                                       properties.multiProcessorCount == 128 &&
-                                       std::strcmp(properties.name, "NVIDIA GeForce RTX 4090") == 0;
+                    ((properties.multiProcessorCount == 128 &&
+                      std::strcmp(properties.name, "NVIDIA GeForce RTX 4090") == 0) ||
+                     (properties.multiProcessorCount == 142 && properties.sharedMemPerBlockOptin == 101376 &&
+                      std::strcmp(properties.name, "NVIDIA L40S") == 0));
                 found = short_devices.emplace(q.get_device(), ShortSupport{supported, optimized}).first;
             }
             const bool supported = family == 3 ? found->second.basic : found->second.optimized;

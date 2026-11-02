@@ -56,6 +56,11 @@ class Sm120PublicSelectionTests(unittest.TestCase):
                 self.assertEqual((schedule.query_stages, schedule.dout_stages, schedule.threads), (2, 1, 256))
                 self.assertEqual((schedule.score_m_warps, schedule.kv_m_warps, schedule.dq_m_warps), (4, 2, 2))
                 self.assertFalse(schedule.v_in_regs)
+                self.assertEqual(schedule.causal_head_group, 1)
+                causal_schedule = _sm120.schedule(dimension, True)
+                self.assertEqual(causal_schedule.causal_head_group, 16)
+                self.assertEqual(causal_schedule.query_stages, schedule.query_stages)
+                self.assertEqual(causal_schedule.backward_n, schedule.backward_n)
 
     def test_unqualified_shapes_layouts_and_modes_fall_through(self):
         capability, properties, current, available = self.runtime()
@@ -96,7 +101,7 @@ class Sm120PublicSelectionTests(unittest.TestCase):
             for _ in range(2):
                 fa4_sm80.attention(q, q, q, causal=True)
                 self.assertIs(fa4_sm80.attention, entry)
-            self.assertEqual(factory.call_args.args[0], _sm120.schedule(128))
+            self.assertEqual(factory.call_args.args[0], _sm120.schedule(128, True))
             self.assertEqual(runner.call_count, 2)
 
 
@@ -192,7 +197,7 @@ class Sm120PublicKernelTests(unittest.TestCase):
         from benchmarks.validate_sm80_static import assess
         from kohakufa_cute import api
 
-        for dtype, dimension, causal in ((torch.bfloat16, 64, True), (torch.float16, 128, False)):
+        for dtype, dimension, causal in ((torch.bfloat16, 64, True), (torch.float16, 128, True)):
             inputs = [torch.randn(1, 16, 4096, dimension, device="cuda", dtype=dtype) for _ in range(3)]
             dout = torch.randn_like(inputs[0])
             graph, storage = capture(api.scaled_dot_product_attention, inputs, dout, causal, "joint", keep_graph=True)

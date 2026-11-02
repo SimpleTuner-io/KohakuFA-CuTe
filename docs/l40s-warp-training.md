@@ -12,8 +12,10 @@ CuTe and standalone FA2 comparison. The historical cross-device chart and its
 arithmetic-policy measurements are unchanged.
 
 Automatic selection requires batch 1, 16 heads, aligned contiguous square MHA,
-FP16/BF16, D64/D128 and **exactly S1024 or S4096**. D64 causal selects only
-S4096. Gradients must be enabled and at least one Q/K/V operand must require
+FP16/BF16, D64/D128 and **exactly S1024 or S4096**. The
+[medium causal update](l40s-medium-causal.md) adds D64/S1024 with its own
+held-out public comparison; the older tables below retain their dated scope.
+Gradients must be enabled and at least one Q/K/V operand must require
 gradients. Inference, short calls, intervening lengths, masks, GQA, other head
 counts, D16/D256/D512, compiled calls and unsupported scales retain the preceding
 path. Positive normal FP32 scales through `2e38` are supported; signed, zero,

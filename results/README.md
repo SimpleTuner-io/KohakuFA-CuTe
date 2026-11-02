@@ -8,6 +8,10 @@ Times are median milliseconds per attention call unless a table explicitly speci
 
 ## L40S bounded shared warp training
 
+The [medium causal public comparison](../docs/l40s-medium-causal.md) and
+[matching chart](l40s-medium-causal.svg) cover the added S1024/D64 causal
+training family. Older grids below keep their original measurement scope.
+
 The [bounded training policy](../docs/l40s-warp-training.md) covers full-device
 L40S D64/D128 training at exact qualified lengths. The latest
 [native metadata analysis](../docs/l40s-native-metadata.md),

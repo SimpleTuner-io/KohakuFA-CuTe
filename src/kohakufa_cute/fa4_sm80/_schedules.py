@@ -10,6 +10,19 @@ from ._attention import Schedule
 def a100_schedule(dimension, sequence, causal, heads=16):
     schedule = Schedule()
     if dimension == 256:
+        if sequence == 4096 and heads in (8, 16):
+            return replace(
+                schedule,
+                forward_m=64,
+                backward_n=64,
+                query_stages=1,
+                dout_stages=1,
+                score_m_warps=4,
+                kv_m_warps=1,
+                dq_m_warps=2,
+                v_in_regs=False,
+                causal_head_group=4 if causal else 1,
+            )
         return replace(
             schedule,
             forward_m=64,

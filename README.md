@@ -57,7 +57,7 @@ Requires Python 3.12+, CUTLASS DSL 4.8, TVM FFI 0.1.14+, Triton 3.6+, Ninja, and
 
 **Tuned A100 and L40S training:** use Python 3.13 and PyTorch 2.15.0 with CUDA 13.2,
 then install `python -m pip install '.[cuda,sm80-fa4]'`. This enables the bounded
-[A100 D64/D128](docs/a100-sm80-fa4.md), [bounded A100 D256](docs/a100-d256-training.md),
+[A100 D64/D128](docs/a100-sm80-fa4.md), [bounded A100 D256](docs/a100-d256-shared-v.md),
 and [L40S D64/D128](docs/l40s-warp-training.md) schedules.
 Other CUDA calls retain the standard CuTe dispatch.
 
@@ -116,9 +116,10 @@ Supported CuTe inputs:
 
 The SDPA wrappers require `enable_gqa=True` for different head counts. With an explicit mask, fold causal visibility into that mask; `attention` also accepts `mask` and `causal=True` together. FP32, dropout, additive masks, unsupported devices/shapes, and missing CUDA dependencies select native SDPA through the automatic API. There is no packed variable-length API.
 
-The optional tuned installation selects bounded [A100](docs/a100-sm80-fa4.md),
+The optional tuned installation selects bounded [A100 D64/D128](docs/a100-sm80-fa4.md),
+[A100 D256](docs/a100-d256-shared-v.md),
 [L40S training](docs/l40s-warp-training.md), and [RTX 5090 training](docs/rtx5090-configured-host.md)
-D64/D128 schedules. Their shape and software bounds are documented; other CUDA calls
+schedules. Their shape and software bounds are documented; other CUDA calls
 retain standard CuTe dispatch.
 
 GB10 has an [explicit D128 shared entry](docs/gb10-shared.md) with measured training and [forward-only schedules](docs/gb10-inference.md), plus ordinary CuTe fallbacks. It is opt-in.

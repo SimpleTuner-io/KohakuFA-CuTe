@@ -9,10 +9,18 @@ from pathlib import Path
 def summarize(arguments):
     root = arguments.input
     measured = json.loads((root / "paired-public.json").read_text())
+    if getattr(arguments, "short", False):
+        nograd = json.loads((root / "paired-nograd.json").read_text())
+        assert len(measured["rows"]) == 24 and len(nograd["rows"]) == 8
+        for row in measured["rows"]:
+            row["workload"] = "training"
+        for row in nograd["rows"]:
+            row["workload"] = "no_grad"
+        measured["rows"] += nograd["rows"]
     state = json.loads((root / "state.json").read_text())
     assert len(state["stages"]) == 12 and all(s["exit_code"] == 0 for s in state["stages"])
     report = {
-        "scope": "Actual explicit A40 public API versus direct native control, ordinary CuTe, FA2 and torch SDPA. Complete implementation comparisons; matching rounded input tensors, distinct backend arithmetic.",
+        "scope": "Actual explicit A40 public API versus its recorded controls, ordinary CuTe, FA2 and torch SDPA. Complete implementation comparisons; matching rounded input tensors, distinct backend arithmetic.",
         "device": {
             "name": measured["device"],
             "capability": [8, 6],
@@ -42,7 +50,7 @@ def summarize(arguments):
         "selection": {
             "batch": 1,
             "heads": 16,
-            "sequences": [1024, 4096],
+            "sequences": sorted({row["shape"][2] for row in measured["rows"]}),
             "dimension": 256,
             "dtypes": ["bf16", "fp16"],
             "visibility": ["dense", "causal"],
@@ -88,6 +96,8 @@ def summarize(arguments):
                 "graph_resources",
             )
         }
+        if "workload" in row:
+            result["workload"] = row["workload"]
         result["accuracy"] = {}
         for backend, checks in row["qualification"].items():
             result["accuracy"][backend] = {}
@@ -143,11 +153,17 @@ def summarize(arguments):
         "raw_operands_and_loaded_code": "Retained outside the repository with per-file SHA256 verification.",
         "raw_report_sha256": hashlib.sha256((root / "paired-public.json").read_bytes()).hexdigest(),
     }
+    if getattr(arguments, "short", False):
+        report["forward_gradients"] = {"training": True, "no_grad": False}
+        report["no_grad_report_sha256"] = hashlib.sha256((root / "paired-nograd.json").read_bytes()).hexdigest()
     arguments.output.write_text(json.dumps(report, indent=2) + "\n")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--short", action="store_true", help="Include the separately measured S128 no-grad forward rows."
+    )
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     summarize(parser.parse_args())

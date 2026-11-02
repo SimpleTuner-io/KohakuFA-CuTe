@@ -33,7 +33,7 @@ class A40SharedTests(unittest.TestCase):
             and q.dtype == k.dtype == v.dtype
             and q.shape[0] == 1
             and q.shape[1] == 16
-            and q.shape[2] in (1024, 4096)
+            and (q.shape[2] in (1024, 4096) or (q.shape[2] == 128 and q.shape[-1] == 256))
             and (q.shape[-1] in (128, 256) or (q.shape[-1] == 64 and causal))
             and all(t.is_contiguous() for t in (q, k, v))
             and all(t.data_ptr() % 16 == 0 for t in (q, k, v))
@@ -95,6 +95,23 @@ class A40SharedTests(unittest.TestCase):
                 values = [q, q, q]
                 values[position] = bad
                 self.assertFalse(a40.compatible(*values))
+
+    def test_short_d256_keeps_adjacent_domains_unselected(self):
+        for dtype in (torch.float16, torch.bfloat16):
+            for causal in (False, True):
+                q = operand((1, 16, 128, 256), dtype=dtype)
+                self.assertTrue(a40.compatible(q, q, q, causal=causal))
+                for shape in (
+                    (1, 16, 127, 256),
+                    (1, 16, 129, 256),
+                    (1, 16, 512, 256),
+                    (1, 8, 128, 256),
+                    (2, 16, 128, 256),
+                    (1, 16, 128, 64),
+                    (1, 16, 128, 128),
+                ):
+                    q = operand(shape, dtype=dtype)
+                    self.assertFalse(a40.compatible(q, q, q, causal=causal), shape)
 
     def test_partition_and_runtime_guards(self):
         q = operand()

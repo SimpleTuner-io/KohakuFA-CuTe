@@ -62,7 +62,7 @@ Other CUDA calls retain the standard CuTe dispatch.
 
 **A40 opt-in:** the same qualified stack supports an explicit
 [A40 entry](docs/a40-native-predicate.md) for dense D128/D256 and causal D64/D128/D256,
-including the [D256 training comparison](docs/a40-d256.md),
+including [short S128](docs/a40-short-d256.md) and [long D256 training](docs/a40-d256.md) comparisons,
 with separate graph and complete eager measurements.
 
 The same pinned installation provides an opt-in [RTX 4090 joint-backward path](docs/rtx4090-shared-joint.md), with measured D64/D128 schedules and ordinary CuTe fallbacks.

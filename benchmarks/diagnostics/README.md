@@ -162,3 +162,12 @@ sanitizer report remains a failure requiring investigation.
   describe incomplete global tracking for some tensormap instructions. That
   general limitation supplies context; the controls above establish the scope
   of this particular diagnostic.
+
+## Standalone Blackwell allocator control
+
+The [B200 allocator diagnostic](../../docs/blackwell-allocator-initcheck.md)
+isolates an initialization report from attention and tensor-memory data
+operations. It includes native-code build tooling, captured-code association,
+and paired old/new initcheck evidence. The allocator report and the separate
+B300 attention report remain unresolved; this control does not qualify either
+attention backend.

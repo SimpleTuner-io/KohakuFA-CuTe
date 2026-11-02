@@ -1,0 +1,132 @@
+{
+  "date": "2026-11-01",
+  "scope": "Standalone SM100a allocator initialization diagnostic; no attention, performance or B300 qualification",
+  "device": {
+    "name": "NVIDIA B200",
+    "capability": [
+      10,
+      0
+    ],
+    "sm_count": 148,
+    "driver_api": 13020,
+    "runtime": 13020
+  },
+  "compiler": "NVCC13.2.51",
+  "source_sha256": "be2b4e20e2dabe868f343e0464aaee5c6d557b802a62d1724086714bba6e3464",
+  "executable_sha256": "04a5fa8b48369db50de2bcfefcd32620f1d321822570ba49864ebf87af834a7e",
+  "compiler_and_captured_uninstrumented_cubin_sha256": "caecd40f64aed3008db8fd8eac4cccbb91b21fd94fdcbc9d5c3f5bf2e631f87d",
+  "native_images_only": true,
+  "tool_versions": {
+    "old": "2026.1.0.0 build37182542",
+    "new": "2026.3.0.0 build38855100"
+  },
+  "controls": {
+    "initialization": "untouched user holding word",
+    "barrier": "416 roles in a512-thread CTA",
+    "participating_warps": "0..12; allocator warp12",
+    "dormant_threads": 96,
+    "execution": [
+      "eager generation1",
+      "graph generation2",
+      "graph generation3"
+    ],
+    "capture": "CUPTIloadedELF+runtime symbols for physical controls; explicitly disabled under both sanitizers"
+  },
+  "runs": [
+    {
+      "run": "physical-allocation",
+      "exit_code": 0,
+      "errors": null,
+      "all_three_generations_match": true,
+      "instrumented_elf_captured": null
+    },
+    {
+      "run": "physical-ordinary",
+      "exit_code": 0,
+      "errors": null,
+      "all_three_generations_match": true,
+      "instrumented_elf_captured": null
+    },
+    {
+      "run": "old-allocation",
+      "exit_code": 0,
+      "errors": 0,
+      "all_three_generations_match": true,
+      "instrumented_elf_captured": false
+    },
+    {
+      "run": "old-ordinary",
+      "exit_code": 0,
+      "errors": 0,
+      "all_three_generations_match": true,
+      "instrumented_elf_captured": false
+    },
+    {
+      "run": "new-allocation",
+      "exit_code": 99,
+      "errors": 102,
+      "all_three_generations_match": true,
+      "instrumented_elf_captured": false
+    },
+    {
+      "run": "new-ordinary",
+      "exit_code": 0,
+      "errors": 0,
+      "all_three_generations_match": true,
+      "instrumented_elf_captured": false
+    }
+  ],
+  "new_report": {
+    "summary_errors": 102,
+    "printed_reports": 6,
+    "unprinted_errors": 96,
+    "unprinted_classification": "unknown",
+    "printed_size_bytes": 1,
+    "printed_shared_address": "0x5c",
+    "first_thread": 384,
+    "kernel_pc_candidate": "0x190",
+    "inline_source_line": 75,
+    "inline_callsite_line": 95,
+    "associated_instruction": "LDS.U8 R3, [R2+0x1c]",
+    "inline_source_association": "verified in the captured uninstrumented ELF using nvdisasm -gi",
+    "instrumented_elf": "not captured"
+  },
+  "abi": {
+    "reserved_section": ".nv.shared.reserved.0",
+    "reserved_section_bytes": 96,
+    "reported_address_inside_section": true,
+    "user_holding_word_address": "0x400",
+    "runtime_user_static_shared_bytes": 4,
+    "elf_function_shared_section_bytes": 1028,
+    "permit_flag_role": "inferred from pre-allocation test and relinquish store; not an initialization proof"
+  },
+  "classification": "Unresolved compiler/runtime/checker allocator-state initialization report; no waiver",
+  "distinct_original_b300": {
+    "shared_address": "0x54",
+    "reported_pc": "0xee0",
+    "instruction_in_retained_compiler_artifact": "ATOMS.OR",
+    "loaded_image_binding": "not established by this B200 experiment",
+    "status": "unresolved"
+  },
+  "evidence_sha256": {
+    "source_ptx": "77ba10dec685a310c432621de37a1a8d189d6f1af9a48f94f629c74cd9b85c5a",
+    "source_sass": "3a25522b4cca80f534b2533398b222d8b00c73972cff25866c3899645064bcd3",
+    "inline_sass": "905af2407091db85fb146990a11dc3ce8085241252d94edc5da2e8a5359a1349",
+    "elf_sections": "d49668121106778754937057e8fc29fe04106c17c1bc520ce73e7654c28239a5",
+    "elf_symbols": "e994b855f1df60b0ef0b084dc4e0ceaf4ef58b155aa471472186701a01600612",
+    "new_allocation_log": "eb39d3c04aff4456a6b3a75a0367123d29af3aaac313aa69c2ab0f4946e2407c",
+    "status_table": "6b69e60257d61dd2a78a2c0986f6edfcc29ab9970232f5c6621ddbc7473ceb0f"
+  },
+  "next_tests": "Future only: unlimited report printing; legitimate user sentinel and full-CTA controls; independent memory/sync checks under existing budget.",
+  "public_builder_validation": {
+    "scope": "CPU-only build, architecture-image inspection and loader trace; executable never run",
+    "status": "pass",
+    "compiler": "NVCC13.2.51",
+    "source_sha256": "be2b4e20e2dabe868f343e0464aaee5c6d557b802a62d1724086714bba6e3464",
+    "native_images": 2,
+    "embedded_ptx": false,
+    "cubin_sha256": "78f6a26cc5226ad33955391fd1a41d4f982cec331665cafe0c819d72a0da9708",
+    "executable_sha256": "2cd399e330cd2cb99bbb3e836abcfac4c3c5e7165f7018fc2193d1dd9eb1f467",
+    "physical_qualification_extended": false
+  }
+}

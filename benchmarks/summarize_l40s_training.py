@@ -31,8 +31,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--captures", type=Path, required=True)
     parser.add_argument("--n32", action="store_true", help="Summarize the independently qualified N32 public update.")
-    parser.add_argument("--output", type=Path, default=Path("results/l40s-warp-training.json"))
-    parser.add_argument("--plot", type=Path, default=Path("results/l40s-warp-training.svg"))
+    parser.add_argument("--output", type=Path, required=True, help="Write campaign output outside the checkout.")
+    parser.add_argument("--plot", type=Path, required=True, help="Write campaign output outside the checkout.")
     args = parser.parse_args()
     root = args.captures
     name = "l40s-n32-public-v2-matrix.json" if args.n32 else "l40s-stage22-cached-final-matrix.json"
@@ -214,7 +214,7 @@ def main():
         report["forward_static_key_loops"] = json.loads(loops.read_text())
         report["capture_sha256"][loops.name] = digest(loops)
         report["allocation_control"] = {
-            "report": "results/l40s-n32-allocation.json",
+            "report": "benchmarks/experiments/results/l40s-allocation.json",
             "scope": "Separate shared-input-storage and balanced-capture-order diagnostic; standard96 timing rows above are unchanged, including mixed BF16 joint result.",
             "capture_sha256": digest(root / "l40s-n32-allocation-v2.json"),
         }

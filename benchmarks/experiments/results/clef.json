@@ -1,0 +1,4692 @@
+{
+  "scope": "Historical model compatibility; excluded from current per-target grids.",
+  "source_revision": "30704427809008e83ad38174e7c1780016c44258",
+  "source_path": "results/performance.json",
+  "clef_flash_model_validation": {
+    "model": "Cloudflare/clef-flash",
+    "model_revision": "17f0b0ad64efb65d273590632833508766b2aae6",
+    "date": "2026-10-22",
+    "scope": "BF16 text inference, synthetic four-choice records; no vision measurements or precision changes.",
+    "environment": {
+      "python": "3.12.3",
+      "torch": "2.11.0+cu130",
+      "cuda": "13.0",
+      "device": "NVIDIA L40S",
+      "sm_count": 142,
+      "driver": "595.71.05",
+      "packages": {
+        "transformers": "5.12.1",
+        "nvidia-cutlass-dsl": "4.8.1",
+        "apache-tvm-ffi": "0.1.15.post0",
+        "flash-linear-attention": "0.5.2",
+        "causal-conv1d": "1.7.0",
+        "triton": "3.6.0"
+      }
+    },
+    "power_limit_watts": 350,
+    "source_files_sha256": {
+      "src/kohakufa_cute/kernels.py": "edffe0142826021053e6eb9b5386b282e9775892c4997e43870351fa74b0a006",
+      "src/kohakufa_cute/native.cpp": "30f1c47a1d73ed93b70781bd71bf9f61de971cd23008c7a4139759b19999c720",
+      "src/kohakufa_cute/native.py": "5b29cfdf71c45468b271c8497495d7dd20ca2c2e2ce4e2625cc58f066d5da04f",
+      "src/kohakufa_cute/split_forward.py": "60c3c12daf3328f3b2897431310df0cc931934935ae56c02a7c78b03f7a16144",
+      "benchmarks/clef_forward.py": "99834ccd9c5bedad67037e4c41f81f17a36b274531b015b7c07c068802c5c821",
+      "tests/test_kernels.py": "1c1aaece75134c32e8066f119b4f0ca1ecf40b03d36ac46e3805ae4017a5f8f2",
+      "tests/test_sm89_forward.py": "b93803a33be7bb0c92dc3da13cc40cf934cd00998d5cbf0ee6db19bbaf78b616",
+      "tests/test_clef_forward_benchmark.py": "6315d1042e53876591fdc0d20258c7423cadc253c64b99b6dc72ab3ff9f1c6c2",
+      "tests/test_native_build.py": "5402d583cb4af0cf9144bd2060f50db5d1f6fe106d183758bf18f140dbe6f40a"
+    },
+    "native_build": {
+      "module": "kohakufa_cute_native_30f1c47a1d73ed93.so",
+      "binary_sha256": "4c5ff80fc18f5d14bbe48bfb6cbd015ef3836c6f853d52abb1949baf2d12f87b",
+      "cpp_sha256": "30f1c47a1d73ed93b70781bd71bf9f61de971cd23008c7a4139759b19999c720",
+      "cache_key": "C++ source content; separate native build per revision, independent of source mtimes.",
+      "verified_large_schema_partial_shape": [
+        1,
+        16,
+        256,
+        4,
+        64
+      ],
+      "verified_large_schema_program": {
+        "columns": 64,
+        "warps": 4,
+        "splits": 4,
+        "vector": 8,
+        "staggered": true,
+        "rows": 128
+      }
+    },
+    "validation": {
+      "cpu": {
+        "python": "3.13.16",
+        "tests": 111,
+        "skipped": 62,
+        "passed": true,
+        "command": "CUDA_VISIBLE_DEVICES='' python -m unittest discover -s tests -v",
+        "log_sha256": "6540f46a8024885af4a9b6325b111c018e6e152384e18cf62019b2020efbb5cf"
+      },
+      "full_gpu_suite": {
+        "tests": 109,
+        "skipped": 19,
+        "passed": false,
+        "failures": 1,
+        "errors": 0,
+        "captured_numerical_failures": 1,
+        "all_captured_failures_bitwise_identical_old_main": true,
+        "actual_unittest_exit_code": 1,
+        "source_phase": "full_gpu_suite; before native loader cache fix and final replay additions",
+        "source_manifest_sha256": "73a675953507874aaa2ddcfb95fab156af4308408e743ffaa24f57bdc7f64595"
+      },
+      "post_cache_fix": {
+        "gpu_tests": 4,
+        "cpu_tests": 4,
+        "gpu_exit_code": 0,
+        "cpu_exit_code": 0,
+        "all_passed": true,
+        "scope": "Four schema GPU tests, including dynamic compiled query boundaries; three benchmark CPU tests and preserved-mtime build regression."
+      },
+      "baseline_failure": {
+        "test": "test_dynamic_lengths_preserve_forward_configuration_thresholds",
+        "query_shape": [
+          2,
+          16,
+          1023,
+          128
+        ],
+        "key_shape": [
+          2,
+          16,
+          17,
+          128
+        ],
+        "dtype": "bf16",
+        "gradient": "dV",
+        "tolerance_violations": 1,
+        "output_and_all_gradients_bitwise_original_main": true,
+        "exact_saved_case_sha256": "e1b060d8ca9283eb404aa601c144a68fc2b8c4125f2c171cee3f78034c5d134e"
+      }
+    },
+    "integrated_replay_verification": {
+      "protocol": {
+        "rounds": 2,
+        "calls_per_graph": 32,
+        "target_window_ms": 100.0,
+        "rotated_backends": true,
+        "forward_only": true
+      },
+      "scope": "Final public-API replay validation on the model-investigation GPU, separately from seven-round schema and five-round backbone qualification tables.",
+      "exit_code": 0,
+      "full_fp64_and_changed_input_graph_checks_passed": true,
+      "interpretation": "Head gains reproduce. Two-round long-backbone samples are variable and do not establish an SDPA win.",
+      "cases": [
+        {
+          "record": "w256-q3-b1",
+          "query_shape": [
+            1,
+            16,
+            787,
+            256
+          ],
+          "key_shape": [
+            1,
+            4,
+            787,
+            256
+          ],
+          "causal": true,
+          "fp64": {
+            "sdpa": {
+              "max_abs": 0.016430078110724722,
+              "relative_l2": 0.0017146093243677889
+            },
+            "cute": {
+              "max_abs": 0.016430078110724722,
+              "relative_l2": 0.0017143411890680235
+            }
+          },
+          "samples_ms": {
+            "sdpa": [
+              0.07189346419440376,
+              0.07236262427435981
+            ],
+            "cute": [
+              0.06902491803071936,
+              0.06431510010544135
+            ]
+          },
+          "medians_ms": {
+            "sdpa": 0.0721280442343818,
+            "cute": 0.06667000906808035
+          }
+        },
+        {
+          "record": "w256-q3-b1",
+          "query_shape": [
+            1,
+            16,
+            12,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "causal": false,
+          "fp64": {
+            "sdpa": {
+              "max_abs": 0.007143130761783745,
+              "relative_l2": 0.0015107776014698475
+            },
+            "cute": {
+              "max_abs": 0.007143130761783745,
+              "relative_l2": 0.0015061251274178266
+            }
+          },
+          "samples_ms": {
+            "sdpa": [
+              0.007791366802870169,
+              0.007789961685090376
+            ],
+            "cute": [
+              0.005177023422777953,
+              0.005177132448359351
+            ]
+          },
+          "medians_ms": {
+            "sdpa": 0.007790664243980273,
+            "cute": 0.005177077935568652
+          }
+        },
+        {
+          "record": "w256-q3-b1",
+          "query_shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "causal": false,
+          "fp64": {
+            "sdpa": {
+              "max_abs": 0.029581221733481655,
+              "relative_l2": 0.001302201752211938
+            },
+            "cute": {
+              "max_abs": 0.029581221733481655,
+              "relative_l2": 0.0012960041269624485
+            }
+          },
+          "samples_ms": {
+            "sdpa": [
+              0.007774999737739563,
+              0.0077753448486328125
+            ],
+            "cute": [
+              0.004845382277868384,
+              0.004845509334791416
+            ]
+          },
+          "medians_ms": {
+            "sdpa": 0.0077751722931861875,
+            "cute": 0.004845445806329901
+          }
+        },
+        {
+          "record": "w256-q64-b1",
+          "query_shape": [
+            1,
+            16,
+            9835,
+            256
+          ],
+          "key_shape": [
+            1,
+            4,
+            9835,
+            256
+          ],
+          "causal": true,
+          "fp64": {
+            "sdpa": {
+              "max_abs": 0.018437556156596813,
+              "relative_l2": 0.0016854930576782827
+            },
+            "cute": {
+              "max_abs": 0.018437556156596813,
+              "relative_l2": 0.0016817801503041128
+            }
+          },
+          "samples_ms": {
+            "sdpa": [
+              4.195987224578857,
+              4.257481098175049
+            ],
+            "cute": [
+              4.552343845367432,
+              4.252137184143066
+            ]
+          },
+          "medians_ms": {
+            "sdpa": 4.226734161376953,
+            "cute": 4.402240514755249
+          }
+        },
+        {
+          "record": "w256-q64-b1",
+          "query_shape": [
+            1,
+            16,
+            256,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "causal": false,
+          "fp64": {
+            "sdpa": {
+              "max_abs": 0.00799201193265775,
+              "relative_l2": 0.0015305765915638425
+            },
+            "cute": {
+              "max_abs": 0.007963709814416298,
+              "relative_l2": 0.001529869400730218
+            }
+          },
+          "samples_ms": {
+            "sdpa": [
+              0.06263507787997906,
+              0.06392498199756329
+            ],
+            "cute": [
+              0.061291372334515606,
+              0.06079477734035916
+            ]
+          },
+          "medians_ms": {
+            "sdpa": 0.06328002993877117,
+            "cute": 0.061043074837437386
+          }
+        },
+        {
+          "record": "w256-q64-b1",
+          "query_shape": [
+            1,
+            16,
+            64,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "causal": false,
+          "fp64": {
+            "sdpa": {
+              "max_abs": 0.03254014541971273,
+              "relative_l2": 0.0015049068929295184
+            },
+            "cute": {
+              "max_abs": 0.03254014541971273,
+              "relative_l2": 0.001503343618065393
+            }
+          },
+          "samples_ms": {
+            "sdpa": [
+              0.02557413379351298,
+              0.026276642084121705
+            ],
+            "cute": [
+              0.02159673637813992,
+              0.021276805135938857
+            ]
+          },
+          "medians_ms": {
+            "sdpa": 0.025925387938817344,
+            "cute": 0.02143677075703939
+          }
+        }
+      ]
+    },
+    "head_only_model_validation": {
+      "records": [
+        {
+          "record": "w16-q3-b1",
+          "tokens": [
+            547
+          ],
+          "state_words": 16,
+          "questions": 3,
+          "passed": true,
+          "max_logit_abs": 0.0,
+          "decisions_checked": 3,
+          "decision_flips": 0,
+          "attention_calls_passed": 6
+        },
+        {
+          "record": "w16-q64-b1",
+          "tokens": [
+            9595
+          ],
+          "state_words": 16,
+          "questions": 64,
+          "passed": true,
+          "max_logit_abs": 0.015625,
+          "decisions_checked": 64,
+          "decision_flips": 0,
+          "attention_calls_passed": 6
+        },
+        {
+          "record": "w256-q3-b1",
+          "tokens": [
+            787
+          ],
+          "state_words": 256,
+          "questions": 3,
+          "passed": true,
+          "max_logit_abs": 0.0,
+          "decisions_checked": 3,
+          "decision_flips": 0,
+          "attention_calls_passed": 6
+        },
+        {
+          "record": "w256-q64-b1",
+          "tokens": [
+            9835
+          ],
+          "state_words": 256,
+          "questions": 64,
+          "passed": true,
+          "max_logit_abs": 0.015625,
+          "decisions_checked": 64,
+          "decision_flips": 0,
+          "attention_calls_passed": 6
+        },
+        {
+          "record": "w2048-q3-b1",
+          "tokens": [
+            2579
+          ],
+          "state_words": 2048,
+          "questions": 3,
+          "passed": true,
+          "max_logit_abs": 0.0,
+          "decisions_checked": 3,
+          "decision_flips": 0,
+          "attention_calls_passed": 6
+        },
+        {
+          "record": "w2048-q64-b1",
+          "tokens": [
+            11627
+          ],
+          "state_words": 2048,
+          "questions": 64,
+          "passed": true,
+          "max_logit_abs": 0.015625,
+          "decisions_checked": 64,
+          "decision_flips": 0,
+          "attention_calls_passed": 6
+        }
+      ],
+      "logits_atol": 0.02,
+      "logits_rtol": 0.02,
+      "timing_used_for_performance_claims": false,
+      "records_passed": 6,
+      "decisions_checked": 201,
+      "decision_flips": 0
+    },
+    "whole_model": {
+      "units": "milliseconds per encoded batch through device logits",
+      "protocol": {
+        "rounds": 3,
+        "forwards_per_round": 5,
+        "rotated_backends": true,
+        "cuda_graph": false,
+        "warmup_forwards": 3,
+        "tokenization_and_collation_included": false,
+        "native_mha_fastpath": true
+      },
+      "logits_atol": 0.02,
+      "logits_rtol": 0.02,
+      "interpretation": "Timing distributions overlap; no reliable end-to-end SDPA win or large improvement over previous CuTe is established. Both CuTe versions retain native model-gate failures; those failures are not waived.",
+      "cases": [
+        {
+          "questions": 3,
+          "tokens": 787,
+          "medians_ms": {
+            "sdpa": 81.24848175048828,
+            "previous_main": 81.18502044677734,
+            "cute": 81.17488098144531
+          },
+          "samples_ms": {
+            "sdpa": [
+              81.21619415283203,
+              81.17488098144531,
+              81.10867309570312,
+              80.80086517333984,
+              80.9832992553711,
+              81.28697967529297,
+              81.24195098876953,
+              81.24848175048828,
+              81.3214111328125,
+              81.51145935058594,
+              81.02435302734375,
+              82.36335754394531,
+              81.43244934082031,
+              82.17574310302734,
+              81.3768310546875
+            ],
+            "previous_main": [
+              80.8220443725586,
+              80.94454193115234,
+              81.0782699584961,
+              81.18502044677734,
+              82.06784057617188,
+              81.13817596435547,
+              81.16671752929688,
+              82.06492614746094,
+              81.33030700683594,
+              81.41494750976562,
+              81.6995849609375,
+              81.28396606445312,
+              81.24352264404297,
+              80.90898895263672,
+              80.77900695800781
+            ],
+            "cute": [
+              81.05689239501953,
+              81.18099212646484,
+              80.61465454101562,
+              81.3154525756836,
+              81.4312973022461,
+              81.30598449707031,
+              81.391357421875,
+              81.22943878173828,
+              80.94534301757812,
+              81.2438735961914,
+              80.8469467163086,
+              81.0173110961914,
+              81.17488098144531,
+              80.80646514892578,
+              81.00953674316406
+            ]
+          },
+          "correctness": {
+            "control_vs_candidate": {
+              "passed": true,
+              "logits_max_abs": 0.015625,
+              "decisions_checked": 3,
+              "flips": 0
+            },
+            "native_vs_control": {
+              "passed": false,
+              "logits_max_abs": 0.046875,
+              "decisions_checked": 3,
+              "flips": 0
+            },
+            "native_vs_candidate": {
+              "passed": false,
+              "logits_max_abs": 0.046875,
+              "decisions_checked": 3,
+              "flips": 0
+            }
+          }
+        },
+        {
+          "questions": 64,
+          "tokens": 9835,
+          "medians_ms": {
+            "sdpa": 1017.79541015625,
+            "previous_main": 1021.7743530273438,
+            "cute": 1020.0178833007812
+          },
+          "samples_ms": {
+            "sdpa": [
+              1004.7089233398438,
+              1006.1348266601562,
+              1007.5859375,
+              1008.8465576171875,
+              1009.0509643554688,
+              1017.2288208007812,
+              1017.538330078125,
+              1017.8460083007812,
+              1018.0775756835938,
+              1017.79541015625,
+              1019.9546508789062,
+              1019.189453125,
+              1017.8078002929688,
+              1018.6486206054688,
+              1019.1898193359375
+            ],
+            "previous_main": [
+              1016.41455078125,
+              1016.3861083984375,
+              1016.42041015625,
+              1017.5053100585938,
+              1018.3547973632812,
+              1023.0521850585938,
+              1021.156494140625,
+              1021.1763916015625,
+              1023.1829223632812,
+              1021.7743530273438,
+              1029.839111328125,
+              1029.51904296875,
+              1029.4566650390625,
+              1029.3065185546875,
+              1029.921875
+            ],
+            "cute": [
+              1015.238525390625,
+              1014.783447265625,
+              1016.4720458984375,
+              1016.0908813476562,
+              1015.6028442382812,
+              1017.7892456054688,
+              1022.0110473632812,
+              1020.0178833007812,
+              1020.7373046875,
+              1019.1728515625,
+              1021.4318237304688,
+              1021.906982421875,
+              1022.17578125,
+              1022.4168701171875,
+              1021.7850341796875
+            ]
+          },
+          "correctness": {
+            "control_vs_candidate": {
+              "passed": true,
+              "logits_max_abs": 0.0234375,
+              "decisions_checked": 64,
+              "flips": 0
+            },
+            "native_vs_control": {
+              "passed": false,
+              "logits_max_abs": 0.0625,
+              "decisions_checked": 64,
+              "flips": 0
+            },
+            "native_vs_candidate": {
+              "passed": false,
+              "logits_max_abs": 0.0625,
+              "decisions_checked": 64,
+              "flips": 0
+            }
+          }
+        }
+      ]
+    },
+    "nsight_systems_native_ranges": [
+      {
+        "capture": 1,
+        "scope": "clef.w256-q3-b1.native",
+        "profiled_range_ms": 81.259825,
+        "kernel_busy_union_ms": 72.985812,
+        "kernel_gap_ms": 8.27401300000001,
+        "kernel_count": 2232,
+        "kernel_groups_ms": {
+          "other": 12.343011000000027,
+          "gemm": 59.915242000000006,
+          "flash_attention": 0.7275590000000002
+        }
+      },
+      {
+        "capture": 3,
+        "scope": "clef.w256-q64-b1.native",
+        "profiled_range_ms": 1022.005871,
+        "kernel_busy_union_ms": 983.078412,
+        "kernel_gap_ms": 38.927459,
+        "kernel_count": 6061,
+        "kernel_groups_ms": {
+          "other": 379.7434519999894,
+          "gemm": 572.8158339999986,
+          "flash_attention": 30.519125999999993
+        }
+      }
+    ],
+    "evidence": {
+      "archive": "clef-capture-evidence-hash-fixed.tar.gz",
+      "archive_sha256": "b1ce7eb91a01ca47bbf6c5deecc9414e21d3b7b2a79abdffff4826e9177a1a97",
+      "manifest_files_independently_verified": 218,
+      "phase_manifest_sha256": "4d9ad5df39d79e51080d2c028a5e1e993411bb855c9da95b388ac23627952b18",
+      "records": {
+        "gpu_suite": {
+          "file": "final-gpu-suite-clean/summary.json",
+          "sha256": "0dd06bcb0a656db3d726f0e009580aaad7b730397d4ce30df3e753249f7f8de3"
+        },
+        "corrected_combined_model": {
+          "file": "final-combined-hash-fixed/report.json",
+          "sha256": "2f227d7aef70a6818be1da05862230ac2438655ee815b2573e83ed07bbedafec"
+        },
+        "corrected_attention_replay": {
+          "file": "hash-fixed-replay/report.json",
+          "sha256": "66da0d3d0e59d46eb3e1bfd7d93626d965c26c3123fbd71cf08c7d4c974f078e"
+        },
+        "corrected_heldout_head": {
+          "file": "hash-fixed-heldout-head/report.json",
+          "sha256": "e3ff89347223c446cdf6ba6d735b4a0dde7f4d7d06aac26233cf07a2275a0d77"
+        }
+      }
+    }
+  },
+  "clef_27b_h100_validation": {
+    "model": "Cloudflare/clef",
+    "model_revision": "a30162b99d68a481d8bd75d38df069a0cf83df40",
+    "date": "2026-10-22",
+    "environment": {
+      "python": "3.12.3",
+      "packages": {
+        "torch": "2.11.0+cu130",
+        "nvidia-cutlass-dsl": "4.8.1",
+        "apache-tvm-ffi": "0.1.15.post0",
+        "transformers": "5.12.1",
+        "flash-linear-attention": "0.5.2",
+        "causal-conv1d": "1.7.0",
+        "triton": "3.6.0"
+      },
+      "gpu": "NVIDIA H100 80GB HBM3, 595.71.05, 700.00 W, 81559 MiB",
+      "cuda": "13.0",
+      "cudnn_version": 91900
+    },
+    "source_files_sha256": {
+      "src/kohakufa_cute/__init__.py": "8d3705804553530b02da88cb24b282bf58075691c146df01f7dcf1447b608e2a",
+      "src/kohakufa_cute/_ops.py": "f6c5f62d787d6c7b1f305f1352584e15201c92d32cbffdc14b9ac5ab68318374",
+      "src/kohakufa_cute/api.py": "a5d461c4a21130bce52b1b30e852cd055328a197d57b8616cf25020af4309ebd",
+      "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+      "src/kohakufa_cute/blackwell_pipeline.py": "743ca206e93d7ad7256182d6462d35920ee0c1dccb7984fcf261d5aec3970970",
+      "src/kohakufa_cute/blackwell_register_aux.py": "f4567cf9f6d209724efd9e43a2000284609c08fbc11c7ab08dbe43d3762d3cb1",
+      "src/kohakufa_cute/hopper_forward.py": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+      "src/kohakufa_cute/kernels.py": "4e5976418fbb6ae0f74245450883cf53b4483be7dd44047f6bff1b7b91ebcb22",
+      "src/kohakufa_cute/native.cpp": "bc95f9e070156ec698a680d42cbcee93f9d30717ffb81adbe66af2bc3f748771",
+      "src/kohakufa_cute/native.py": "5b29cfdf71c45468b271c8497495d7dd20ca2c2e2ce4e2625cc58f066d5da04f",
+      "src/kohakufa_cute/sm103.py": "c634b612c31ecc7428a9490f46b57db61a12b5c22146bbaa15894a0e52778bf8",
+      "src/kohakufa_cute/split_forward.py": "60c3c12daf3328f3b2897431310df0cc931934935ae56c02a7c78b03f7a16144",
+      "benchmarks/clef_forward.py": "149cfc3ae1269ec7a3fa98f9b6cfa73d9583f78c6d9552c457c06bbd53da5eaf",
+      "tests/test_sm90_forward.py": "b69719897f0d13ba2459c1b4041ebda7ab802c3d70e772ae2fa90afad63a7261",
+      "tests/test_kernels.py": "2252faf44370f1634e075ea2b5e4494f6f724b6ba7d17c76e87b45cb01588321"
+    },
+    "native_binaries": [
+      {
+        "name": "kohakufa_cute_native_bc95f9e070156ec6.so",
+        "sha256": "9f98f5e97119f55901f714b4a59a39a2cdcd646e4d6472c4d50ea1e5cbabec17"
+      }
+    ],
+    "attention_capture_archive_sha256": "d7eb6d56fd5ec8687067fb3ecfa500b1177c93bac2b460e60fc99cfb47c01976",
+    "attention_capture_payloads": {
+      "w256-q3-b1-call0.pt": {
+        "bytes": 12896498,
+        "sha256": "756cced710072860457ecb9bc2587812b97c66ab7629556bea84eedafc32b191"
+      },
+      "w256-q3-b1-call1.pt": {
+        "bytes": 3250354,
+        "sha256": "553edb2aa3c18645e8296b5896c5e0a3349be35c380cc7c1d4c8452eae259669"
+      },
+      "w256-q3-b1-call2.pt": {
+        "bytes": 3231922,
+        "sha256": "9a60cb965ce371f6a1e70d3e22f05dce81981f76950bd5303f8959a4e04ee4bc"
+      },
+      "w256-q64-b1-call0.pt": {
+        "bytes": 161138939,
+        "sha256": "ab7d55922707877cb4d0ffac3e9f6eed45bbae0f5ba00c56b98058099d22545b"
+      },
+      "w256-q64-b1-call1.pt": {
+        "bytes": 40810683,
+        "sha256": "566fa867fff1468c14ea5ab08d8b68e6f305cfb4d4343548eebd213b4c99a16c"
+      },
+      "w256-q64-b1-call2.pt": {
+        "bytes": 40417467,
+        "sha256": "bb9f437952ee2e1808cde1bb3c0208378055e10a5c6d41f25228ce395df84776"
+      }
+    },
+    "validation": {
+      "cpu": {
+        "tests": 116,
+        "skipped": 65,
+        "passed": true,
+        "python": "3.13.16",
+        "log_sha256": "717dfa4301c2fef79c45081aa46aaf7afc5ffae8da50f75c7f6ab92f75d56eee"
+      },
+      "full_gpu_suite": {
+        "tests": 116,
+        "skipped": 24,
+        "passed": false,
+        "failures": 1,
+        "errors": 20,
+        "captured_numerical_failures": 0,
+        "all_captured_failures_bitwise_identical_old_main": false,
+        "actual_unittest_exit_code": 1,
+        "setup_errors": {
+          "tests": 20,
+          "initial_reason": "The GPU image lacked Git and the source-only runtime bundle omitted required test support files.",
+          "resolved": true,
+          "rerun_passed": true,
+          "rerun_tests": 20,
+          "log": "records/public-text-complete-final.log",
+          "log_sha256": "03754868dd3a5cc1130563c7be9c231b53a72da298c751c6a8506df2f707434b"
+        },
+        "source_helper_sha256": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+        "remaining_numerical_failures": 1
+      },
+      "baseline_failure": {
+        "test": "test_sm89_short_query_split_forward_saturated_and_offset_logits",
+        "dtype": "fp16",
+        "logit_scale": 100000,
+        "query_shape": [
+          1,
+          16,
+          3,
+          64
+        ],
+        "key_shape": [
+          1,
+          16,
+          787,
+          64
+        ],
+        "output_and_all_gradients_bitwise_previous_cute": true,
+        "dq_tolerance_violations": 40,
+        "dk_tolerance_violations": 114,
+        "exact_inputs": "records/fp16-baseline-final/inputs.pt",
+        "exact_inputs_sha256": "ea514624953ae22f3714492edfbd7c4138e102427d3c71d4be88e07878d320b2",
+        "diagnosed_after_discovery": true,
+        "record": "records/fp16-baseline-final/report.json",
+        "record_sha256": "c608a071028c31ea717f0a3213bb86e25bd0cfcabcdc6d185c384615ad874638"
+      },
+      "final_hopper_gpu_tests": {
+        "tests": 4,
+        "passed": true,
+        "source_helper_sha256": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+        "source_test_sha256": "b69719897f0d13ba2459c1b4041ebda7ab802c3d70e772ae2fa90afad63a7261",
+        "scope": "21 serial128 output/gradient/statistics configurations, strict FP64 output and all-gradient checks over six signed/zero/tiny scales, changed Q/K/V graph inputs, and infinity/NaN propagation."
+      },
+      "integrated_replay": {
+        "cases": 2,
+        "scope": "All 65261568 values in actual backbone captures; schema path unchanged and its earlier four replay records retained separately.",
+        "passed": true,
+        "full_fp64_and_changed_inputs": true,
+        "record_sha256": "077cc08779e43e6110db60a56e60e8d81ab76021d02177dc8786f8f6c3229892"
+      },
+      "sanitizers": {
+        "cases": 15,
+        "shapes": [
+          [
+            1,
+            257
+          ],
+          [
+            129,
+            257
+          ],
+          [
+            257,
+            129
+          ],
+          [
+            257,
+            269
+          ],
+          [
+            1025,
+            1031
+          ]
+        ],
+        "scales": [
+          0.0625,
+          -0.125,
+          0.0
+        ],
+        "memcheck": {
+          "exit_code": 0,
+          "errors": 0,
+          "log": "results/fixed4-memcheck.log",
+          "log_sha256": "ccd24c82402413eed77c7622761cb12f09914a2962f4b74eb086201ba82a6183"
+        },
+        "racecheck": {
+          "exit_code": 0,
+          "hazards": 0,
+          "warnings": 0,
+          "log": "results/fixed4-racecheck.log",
+          "log_sha256": "9cffdf7547022a0767c649e5b6698ab9520b5dc94ea54112bcac6d286a2540f7"
+        }
+      },
+      "expanded_fp64_stress": {
+        "configurations": 21,
+        "passed": false,
+        "violations": 1,
+        "scope": "One BF16 dK element at B1/GQA24:4/Sq257/Sk129/D256/scale-0.125 exceeds the unchanged .02abs/.02rel bound in both the new kernel and serial64/serial128 controls. Exact tensors and comparisons retained.",
+        "record": "records/contract-diagnosis-final/report.json",
+        "record_sha256": "ae115a4b0922c3afc4e6c3eee69110599907ddd2c07c7137505fef5babf38285"
+      }
+    },
+    "schema_model_guards": {
+      "records": 6,
+      "decisions_checked": 201,
+      "decisions_changed": 1,
+      "logits_atol": 0.02,
+      "logits_rtol": 0.02,
+      "native_mha_fastpath_retained": true,
+      "all_decision_gates_passed": false,
+      "cases": [
+        {
+          "id": "w16-q3-b1",
+          "tokens": [
+            547
+          ],
+          "passed": true,
+          "logits_max_abs": 0.00390625,
+          "decisions_checked": 3,
+          "flips": 0,
+          "all_attention_checks_passed": true
+        },
+        {
+          "id": "w16-q64-b1",
+          "tokens": [
+            9595
+          ],
+          "passed": true,
+          "logits_max_abs": 0.015625,
+          "decisions_checked": 64,
+          "flips": 0,
+          "all_attention_checks_passed": true
+        },
+        {
+          "id": "w256-q3-b1",
+          "tokens": [
+            787
+          ],
+          "passed": true,
+          "logits_max_abs": 0.0078125,
+          "decisions_checked": 3,
+          "flips": 0,
+          "all_attention_checks_passed": true
+        },
+        {
+          "id": "w256-q64-b1",
+          "tokens": [
+            9835
+          ],
+          "passed": true,
+          "logits_max_abs": 0.015625,
+          "decisions_checked": 64,
+          "flips": 0,
+          "all_attention_checks_passed": true
+        },
+        {
+          "id": "w2048-q3-b1",
+          "tokens": [
+            2579
+          ],
+          "passed": false,
+          "logits_max_abs": 0.0078125,
+          "decisions_checked": 3,
+          "flips": 1,
+          "all_attention_checks_passed": true
+        },
+        {
+          "id": "w2048-q64-b1",
+          "tokens": [
+            11627
+          ],
+          "passed": true,
+          "logits_max_abs": 0.0078125,
+          "decisions_checked": 64,
+          "flips": 0,
+          "all_attention_checks_passed": true
+        }
+      ]
+    },
+    "tie_diagnostic": {
+      "model": "Cloudflare/clef",
+      "revision": "a30162b99d68a481d8bd75d38df069a0cf83df40",
+      "tokens": 2579,
+      "questions": 3,
+      "ground_truth_labels": false,
+      "scope": "FP64 reference for six explicit schema SDPA calls, rounded to BF16 at attention outputs; backbone, head projections/MLPs and native MHA fastpath unchanged. This is not a full FP64 model or task accuracy evaluation.",
+      "attention_same_inputs": [
+        {
+          "owner": "head.evidence_layers.0.attention",
+          "query_shape": [
+            1,
+            16,
+            12,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            2579,
+            64
+          ],
+          "errors": {
+            "native": {
+              "max_abs": 0.013496140594441819,
+              "relative_l2": 0.001672211683776303,
+              "mean_abs": 0.0007701409913233867
+            },
+            "control": {
+              "max_abs": 0.013496140594441819,
+              "relative_l2": 0.001670645678399256,
+              "mean_abs": 0.0007698971995773615
+            },
+            "candidate": {
+              "max_abs": 0.013496140594441819,
+              "relative_l2": 0.001667928164166251,
+              "mean_abs": 0.0007695288860360604
+            }
+          },
+          "rounded_fp64_errors": {
+            "native": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0007830498193627381,
+              "mean_abs": 4.730171834429105e-05
+            },
+            "control": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0007099812878740614,
+              "mean_abs": 4.295911639928818e-05
+            },
+            "candidate": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0007554687981157047,
+              "mean_abs": 4.6962794537345566e-05
+            }
+          }
+        },
+        {
+          "owner": "head.evidence_layers.1.attention",
+          "query_shape": [
+            1,
+            16,
+            12,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            2579,
+            64
+          ],
+          "errors": {
+            "native": {
+              "max_abs": 0.007414348368204315,
+              "relative_l2": 0.0016310555597110537,
+              "mean_abs": 0.0005823553497695344
+            },
+            "control": {
+              "max_abs": 0.008233603011876589,
+              "relative_l2": 0.0016318300094033133,
+              "mean_abs": 0.0005822827408619327
+            },
+            "candidate": {
+              "max_abs": 0.007414348368204315,
+              "relative_l2": 0.0016302704921027388,
+              "mean_abs": 0.0005819975866458977
+            }
+          },
+          "rounded_fp64_errors": {
+            "native": {
+              "max_abs": 0.0078125,
+              "relative_l2": 0.0005144190498263887,
+              "mean_abs": 2.7926202164962888e-05
+            },
+            "control": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0005316441738298338,
+              "mean_abs": 2.6360406385113794e-05
+            },
+            "candidate": {
+              "max_abs": 0.0078125,
+              "relative_l2": 0.00042116887954002385,
+              "mean_abs": 1.9777716564324994e-05
+            }
+          }
+        },
+        {
+          "owner": "head.layers.0.multihead_attn",
+          "query_shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            2579,
+            64
+          ],
+          "errors": {
+            "native": {
+              "max_abs": 0.008798593035910685,
+              "relative_l2": 0.001466165864356771,
+              "mean_abs": 0.000810494464487669
+            },
+            "control": {
+              "max_abs": 0.008798593035910685,
+              "relative_l2": 0.0014649014458139023,
+              "mean_abs": 0.0008101173130957871
+            },
+            "candidate": {
+              "max_abs": 0.008872958130143882,
+              "relative_l2": 0.0014628569327464007,
+              "mean_abs": 0.0008086934948251297
+            }
+          },
+          "rounded_fp64_errors": {
+            "native": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0008731603674778498,
+              "mean_abs": 0.00011267295728127161
+            },
+            "control": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0008741229070405714,
+              "mean_abs": 0.00011325658609469731
+            },
+            "candidate": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0008559811248962343,
+              "mean_abs": 0.00010193480799595514
+            }
+          }
+        },
+        {
+          "owner": "head.layers.1.multihead_attn",
+          "query_shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            2579,
+            64
+          ],
+          "errors": {
+            "native": {
+              "max_abs": 0.007838470777862483,
+              "relative_l2": 0.00142462949096764,
+              "mean_abs": 0.0006481043690897652
+            },
+            "control": {
+              "max_abs": 0.007838470777862483,
+              "relative_l2": 0.0014247039777672884,
+              "mean_abs": 0.0006483674484841096
+            },
+            "candidate": {
+              "max_abs": 0.007786529222137517,
+              "relative_l2": 0.0014215718982449161,
+              "mean_abs": 0.0006472298050249797
+            }
+          },
+          "rounded_fp64_errors": {
+            "native": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0007207721581260688,
+              "mean_abs": 5.535595118999481e-05
+            },
+            "control": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0007291995839214507,
+              "mean_abs": 5.860502521197001e-05
+            },
+            "candidate": {
+              "max_abs": 0.0078125,
+              "relative_l2": 0.0005653327315792568,
+              "mean_abs": 4.592289527257283e-05
+            }
+          }
+        },
+        {
+          "owner": "head.layers.2.multihead_attn",
+          "query_shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            2579,
+            64
+          ],
+          "errors": {
+            "native": {
+              "max_abs": 0.00827041044751553,
+              "relative_l2": 0.0017296332248460113,
+              "mean_abs": 0.0006503180047680999
+            },
+            "control": {
+              "max_abs": 0.00827041044751553,
+              "relative_l2": 0.0017287974968632973,
+              "mean_abs": 0.00065013660119663
+            },
+            "candidate": {
+              "max_abs": 0.008982628226720024,
+              "relative_l2": 0.0017343033227369545,
+              "mean_abs": 0.0006501856813905455
+            }
+          },
+          "rounded_fp64_errors": {
+            "native": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0009326115575038622,
+              "mean_abs": 6.10171506802241e-05
+            },
+            "control": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0008920855657143458,
+              "mean_abs": 5.6713198622067765e-05
+            },
+            "candidate": {
+              "max_abs": 0.015625,
+              "relative_l2": 0.0008455179124963735,
+              "mean_abs": 5.0857042272885636e-05
+            }
+          }
+        },
+        {
+          "owner": "head.layers.3.multihead_attn",
+          "query_shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "key_shape": [
+            1,
+            16,
+            2579,
+            64
+          ],
+          "errors": {
+            "native": {
+              "max_abs": 0.014053999832120745,
+              "relative_l2": 0.001453562321761691,
+              "mean_abs": 0.0007248725901340164
+            },
+            "control": {
+              "max_abs": 0.014053999832120745,
+              "relative_l2": 0.0014544427375975852,
+              "mean_abs": 0.0007251485165336528
+            },
+            "candidate": {
+              "max_abs": 0.014053999832120745,
+              "relative_l2": 0.001453051563544058,
+              "mean_abs": 0.0007243679869021467
+            }
+          },
+          "rounded_fp64_errors": {
+            "native": {
+              "max_abs": 0.0078125,
+              "relative_l2": 0.0005141170123286077,
+              "mean_abs": 4.731615384419759e-05
+            },
+            "control": {
+              "max_abs": 0.0078125,
+              "relative_l2": 0.0005622021616195966,
+              "mean_abs": 5.3163617849349976e-05
+            },
+            "candidate": {
+              "max_abs": 0.0078125,
+              "relative_l2": 0.0005226541930764066,
+              "mean_abs": 4.438132358094056e-05
+            }
+          }
+        }
+      ],
+      "scores": {
+        "native": [
+          [
+            1.25,
+            0.5078125,
+            0.625,
+            0.90625
+          ],
+          [
+            0.73828125,
+            0.2421875,
+            0.373046875,
+            0.66796875
+          ],
+          [
+            0.8203125,
+            0.15625,
+            0.5546875,
+            0.8203125
+          ]
+        ],
+        "control": [
+          [
+            1.25,
+            0.5,
+            0.625,
+            0.90625
+          ],
+          [
+            0.73828125,
+            0.2421875,
+            0.373046875,
+            0.66796875
+          ],
+          [
+            0.8125,
+            0.15625,
+            0.5546875,
+            0.8203125
+          ]
+        ],
+        "candidate": [
+          [
+            1.25,
+            0.5,
+            0.625,
+            0.90625
+          ],
+          [
+            0.73828125,
+            0.2421875,
+            0.373046875,
+            0.66796875
+          ],
+          [
+            0.8125,
+            0.15625,
+            0.5546875,
+            0.8203125
+          ]
+        ],
+        "fp64_head": [
+          [
+            1.25,
+            0.5078125,
+            0.625,
+            0.90625
+          ],
+          [
+            0.73828125,
+            0.2421875,
+            0.373046875,
+            0.66796875
+          ],
+          [
+            0.8203125,
+            0.16015625,
+            0.5546875,
+            0.8203125
+          ]
+        ]
+      },
+      "comparisons": {
+        "fp64_vs_native": {
+          "passed": true,
+          "logits_max_abs": 0.00390625,
+          "decisions_checked": 3,
+          "flips": 0
+        },
+        "fp64_vs_control": {
+          "passed": false,
+          "logits_max_abs": 0.0078125,
+          "decisions_checked": 3,
+          "flips": 1
+        },
+        "fp64_vs_candidate": {
+          "passed": false,
+          "logits_max_abs": 0.0078125,
+          "decisions_checked": 3,
+          "flips": 1
+        },
+        "fp64_vs_fp64_head": {
+          "passed": true,
+          "logits_max_abs": 0.0,
+          "decisions_checked": 3,
+          "flips": 0
+        },
+        "native_vs_control": {
+          "passed": false,
+          "logits_max_abs": 0.0078125,
+          "decisions_checked": 3,
+          "flips": 1
+        },
+        "native_vs_candidate": {
+          "passed": false,
+          "logits_max_abs": 0.0078125,
+          "decisions_checked": 3,
+          "flips": 1
+        },
+        "control_vs_candidate": {
+          "passed": true,
+          "logits_max_abs": 0.0,
+          "decisions_checked": 3,
+          "flips": 0
+        }
+      },
+      "record": "records/head-tie-diagnosis/report.json",
+      "record_sha256": "1fd5606edc76c6c48c991d052ae4c939fc26bdde65e8d8f2a26ede12529a04e2"
+    },
+    "whole_model": {
+      "scope": "Encoded batch through BF16 device logits; native MHA fastpaths and linear attention retained. Synthetic unlabeled records.",
+      "timing_gate": "Unchanged .02abs/.02rel and zero decision flips versus prior CuTe.",
+      "timing_performed": false,
+      "timing_exclusion_reason": "Both records fail the unchanged model logit gate; the long record changes one decision relative to prior CuTe. No whole-model speedup is claimed.",
+      "source_helper_sha256": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+      "cases": [
+        {
+          "questions": 3,
+          "tokens": 787,
+          "bitwise_previous_arithmetic_candidate": true,
+          "candidate_vs_prior": {
+            "passed": false,
+            "logits_max_abs": 0.02734375,
+            "decisions_checked": 3,
+            "flips": 0
+          },
+          "native_vs_candidate": {
+            "passed": false,
+            "logits_max_abs": 0.046875,
+            "decisions_checked": 3,
+            "flips": 0
+          },
+          "fp64_attention_reference_vs_candidate": {
+            "passed": false,
+            "logits_max_abs": 0.0625,
+            "decisions_checked": 3,
+            "flips": 0
+          }
+        },
+        {
+          "questions": 64,
+          "tokens": 9835,
+          "bitwise_previous_arithmetic_candidate": true,
+          "candidate_vs_prior": {
+            "passed": false,
+            "logits_max_abs": 0.42578125,
+            "decisions_checked": 64,
+            "flips": 1
+          },
+          "native_vs_candidate": {
+            "passed": false,
+            "logits_max_abs": 0.4140625,
+            "decisions_checked": 64,
+            "flips": 1
+          },
+          "fp64_attention_reference_vs_candidate": {
+            "passed": false,
+            "logits_max_abs": 0.4921875,
+            "decisions_checked": 64,
+            "flips": 2
+          }
+        }
+      ]
+    },
+    "native_model_nsight_ranges": [
+      {
+        "scope": "clef.w256-q3-b1.native",
+        "profiled_range_ms": 96.328822,
+        "kernel_busy_union_ms": 79.15213,
+        "kernel_gap_ms": 17.176692000000003,
+        "kernel_count": 4078,
+        "groups_ms": {
+          "other": 21.461134999999988,
+          "gemm": 52.60292400000003,
+          "linear_attention": 4.462381000000006,
+          "softmax_attention": 0.640858
+        }
+      },
+      {
+        "scope": "clef.w256-q64-b1.native",
+        "profiled_range_ms": 999.268132,
+        "kernel_busy_union_ms": 956.856932,
+        "kernel_gap_ms": 42.41120000000001,
+        "kernel_count": 8128,
+        "groups_ms": {
+          "other": 263.353630000001,
+          "gemm": 615.6051140000039,
+          "linear_attention": 46.06174699999997,
+          "softmax_attention": 31.87794500000007
+        }
+      }
+    ],
+    "backbone_final_ncu": {
+      "w256-q3-b1": {
+        "candidate": {
+          "compute_sm_throughput_pct": 31.977018,
+          "launch_registers_per_thread": 168,
+          "dynamic_shared_memory_bytes": 197632,
+          "block_threads": 384,
+          "grid_blocks": 168,
+          "spilling_requests": 0,
+          "dynamic_warp_instructions": {
+            "HGMMA": 129024,
+            "FMUL": 1208832,
+            "SHFL": 26880,
+            "SYNCS": 232762,
+            "NANOSLEEP": 99833,
+            "FENCE": 10920,
+            "MEMBAR": 10752,
+            "UTMALDG": 5376
+          }
+        },
+        "sdpa": {
+          "compute_sm_throughput_pct": 32.205922,
+          "launch_registers_per_thread": 168,
+          "dynamic_shared_memory_bytes": 232448,
+          "block_threads": 384,
+          "grid_blocks": 132,
+          "spilling_requests": 0,
+          "dynamic_warp_instructions": {
+            "HGMMA": 129024,
+            "FMUL": 1216032,
+            "SHFL": 29880,
+            "SYNCS": 38744,
+            "NANOSLEEP": 3204,
+            "FENCE": 5376,
+            "MEMBAR": 5376,
+            "UTMALDG": 6048
+          }
+        }
+      },
+      "w256-q64-b1": {
+        "candidate": {
+          "compute_sm_throughput_pct": 78.76639,
+          "launch_registers_per_thread": 168,
+          "dynamic_shared_memory_bytes": 197632,
+          "block_threads": 384,
+          "grid_blocks": 1848,
+          "spilling_requests": 0,
+          "dynamic_warp_instructions": {
+            "HGMMA": 13837824,
+            "FMUL": 113748096,
+            "SHFL": 2365440,
+            "SYNCS": 18944174,
+            "NANOSLEEP": 7737739,
+            "FENCE": 1155000,
+            "MEMBAR": 1153152,
+            "UTMALDG": 576576
+          }
+        },
+        "sdpa": {
+          "compute_sm_throughput_pct": 75.482123,
+          "launch_registers_per_thread": 168,
+          "dynamic_shared_memory_bytes": 232448,
+          "block_threads": 384,
+          "grid_blocks": 132,
+          "spilling_requests": 0,
+          "dynamic_warp_instructions": {
+            "HGMMA": 13837824,
+            "FMUL": 113749152,
+            "SHFL": 2385240,
+            "SYNCS": 3424968,
+            "NANOSLEEP": 358990,
+            "FENCE": 59136,
+            "MEMBAR": 59136,
+            "UTMALDG": 583968
+          }
+        }
+      }
+    },
+    "profiling": {
+      "tools": {
+        "nsys": "2025.3.2",
+        "ncu": "2025.3.1"
+      },
+      "clock_control": "none",
+      "profiler_in_timing_window": false,
+      "native_ptx_available": false,
+      "native_loaded_sass_retained": true,
+      "candidate_ptx_and_cubin_retained": true,
+      "record": "results/fixed4-profiles/profiling-summary.json",
+      "record_sha256": "cd0ae02525ddb802e1b641657a74e6008317d4af210ba338aff1aa8e7c5acc86",
+      "interpretation": "Dynamic warp instruction totals and sampled stalls are not percentages of elapsed time. Extra producer warps parked at the final barrier inflate active-warp counters; these do not establish productive occupancy. Default SDPA is verified as cuDNN on both actual captures.",
+      "evidence_archive": "pipeline",
+      "safe_helper_sha256": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+      "exponent_fold_exhaustive": {
+        "finite_nonpositive_fp32_values": 2139095040,
+        "probability_mismatches": 0,
+        "default_scale": 0.0625,
+        "scope": "Compare two RN multiplies followed by ex2.approx.ftz against the folded default-scale expression for every finite FP32 bit pattern with its sign bit set: negative zero, all negative subnormals and all finite negative values.",
+        "record": "records/exp2-fold-exhaustive/report.json"
+      },
+      "design_changes": [
+        "N128 key tiles with independent single-stage K/V producers and two M64 consumer warpgroups.",
+        "All four warps contribute to each ordered softmax phase token; the single-arrival prototype was rejected after sanitizer deadlock.",
+        "Runtime-uniform sign/default-scale branches outside the tile loop, delayed denominator reduction and exact default-scale exponent folding.",
+        "Head-major grid with longest causal query tiles first."
+      ],
+      "small_shape_alternative": {
+        "scope": "S128/256/512, existing serial M64/N128, 8 balanced rounds, 32 calls/graph, 500ms windows, 5s preheat and full FP64/changed-input guards.",
+        "selected": false,
+        "reason": "Slower than the safe specialized kernel at all three lengths. Native cuDNN remains faster there.",
+        "serial128_median_us": [
+          12.045,
+          15.764,
+          37.085
+        ],
+        "specialized_median_us": [
+          11.021,
+          13.697,
+          19.484
+        ],
+        "native_median_us": [
+          9.753,
+          12.324,
+          18.293
+        ],
+        "native_dispatch": "Same cuDNN64x128x256 knob7 kernel family; underfilled grids24/48/96 blocks.",
+        "evidence_archive": "pipeline",
+        "record": "results/final-small-serial128/report.json",
+        "dispatch_record": "results/final-small-native.csv"
+      }
+    },
+    "evidence": {
+      "parent": {
+        "archive": "clef-h100-cudnn-parent.tar.gz",
+        "archive_sha256": "c7749c81cc24b22d743f5b76746f966dd054fbc14ababdb463c689cf875cb2ad",
+        "bytes": 100636160,
+        "verified_manifest_files": 244,
+        "manifest_sha256": "b87f6f96ac18e8ae8fb4c11f4d34621bc8d8ca774b516a25eeb1368eb5104a34"
+      },
+      "pipeline": {
+        "archive": "clef-h100-n128-fixed4-evidence.tar.gz",
+        "archive_sha256": "6dad25fb5e4c609cf46cab8baee3e7378cd286f25fb1aa9acb0f55e896eb4742",
+        "bytes": 148690015,
+        "verified_manifest_files": 304,
+        "manifest_sha256": "44d4f93b31c70e5e1e2fa575a594fdb9514282d11ae933d10dd7bf5f4b6508d7"
+      },
+      "prior_capture_archive_sha256": "d7eb6d56fd5ec8687067fb3ecfa500b1177c93bac2b460e60fc99cfb47c01976",
+      "prior_head_and_baseline_evidence_archive_sha256": "89147bf892ea0f79ebfb6503c202b39be26a45c041d9bd361027175e1c4e7dee"
+    },
+    "fp64_attention_model_reference": {
+      "scope": "All explicit SDPA calls use FP64 QK/softmax/PV and BF16 outputs; native MHA fastpaths and linear attention retained; unmodified BF16 weights. No labeled task-accuracy claim.",
+      "cases": [
+        {
+          "questions": 3,
+          "tokens": 787,
+          "explicit_sdpa_calls": 22,
+          "comparisons": {
+            "native": {
+              "passed": false,
+              "logits_max_abs": 0.078125,
+              "decisions_checked": 3,
+              "flips": 0
+            },
+            "prior": {
+              "passed": false,
+              "logits_max_abs": 0.0625,
+              "decisions_checked": 3,
+              "flips": 0
+            },
+            "candidate": {
+              "passed": false,
+              "logits_max_abs": 0.0625,
+              "decisions_checked": 3,
+              "flips": 0
+            }
+          }
+        },
+        {
+          "questions": 64,
+          "tokens": 9835,
+          "explicit_sdpa_calls": 22,
+          "comparisons": {
+            "native": {
+              "passed": false,
+              "logits_max_abs": 0.26171875,
+              "decisions_checked": 64,
+              "flips": 3
+            },
+            "prior": {
+              "passed": false,
+              "logits_max_abs": 0.27734375,
+              "decisions_checked": 64,
+              "flips": 3
+            },
+            "candidate": {
+              "passed": false,
+              "logits_max_abs": 0.4921875,
+              "decisions_checked": 64,
+              "flips": 2
+            }
+          }
+        }
+      ],
+      "record": "records/model-fp64-check-complete/report.json",
+      "record_sha256": "ba2692653856c474003007d7c31cb0ba7644279cecca3ca9042175b97f444451"
+    },
+    "broader_shape_grid": {
+      "scope": "BF16 causal GQA24/4 D256, scale0.0625, BSHD-strided V. Eight B1 square lengths128 through16384 and two rectangular B1/B2 shapes. Default SDPA beats CuTe on lengths128/256/512. Forced FlashAttention rejects rectangular causal shapes.",
+      "summary": {
+        "cases": 10,
+        "candidate_improves_prior": 10,
+        "candidate_improves_default_sdpa": 7,
+        "flash_comparable": 8,
+        "candidate_improves_flash_where_available": 8
+      },
+      "record": "results/final-fixed4-grid-combined/report.json",
+      "evidence_archive": "pipeline",
+      "record_sha256": "0f646223f0a8edf594652ff7efac0a5911b75ffb3c1288348ebb8c7355ffbffd",
+      "cases": [
+        {
+          "record": "b1-q128-k128",
+          "q_shape": [
+            1,
+            24,
+            128,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            128,
+            256
+          ],
+          "seed": 620,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.01267742094446401,
+            "cute": 0.011046369139848033,
+            "sdpa": 0.009757749557495117,
+            "flash": 0.01248408912064193
+          },
+          "samples_ms": {
+            "prior": [
+              0.012676755717543306,
+              0.012677051200241339,
+              0.0126784692045118,
+              0.01267742094446401,
+              0.012678345695870822
+            ],
+            "cute": [
+              0.011046153989843129,
+              0.011046369139848033,
+              0.011046848674811939,
+              0.011046973448325755,
+              0.011045865324632788
+            ],
+            "sdpa": [
+              0.009759031931559244,
+              0.009737300237019856,
+              0.009752183914184571,
+              0.009764082590738932,
+              0.009757749557495117
+            ],
+            "flash": [
+              0.012483647891453334,
+              0.012483695110717377,
+              0.01248408912064193,
+              0.012484509449500542,
+              0.012484498612292401
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.00831730506039774,
+              "relative_l2": 0.0019036750906366194,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.00831730506039774,
+              "relative_l2": 0.001908003191735989,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.00831730506039774,
+              "relative_l2": 0.001907991613582813,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.00831730506039774,
+              "relative_l2": 0.0018980298210660251,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q256-k256",
+          "q_shape": [
+            1,
+            24,
+            256,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            256,
+            256
+          ],
+          "seed": 621,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.016910829918873882,
+            "cute": 0.013658491545768172,
+            "sdpa": 0.012593324492577792,
+            "flash": 0.021863949432801663
+          },
+          "samples_ms": {
+            "prior": [
+              0.01690322759370096,
+              0.016904127129300714,
+              0.016918605071488426,
+              0.016910829918873882,
+              0.016975284143306284
+            ],
+            "cute": [
+              0.013700159194191437,
+              0.013622784361822446,
+              0.013709561984867594,
+              0.013658491545768172,
+              0.013562526803977076
+            ],
+            "sdpa": [
+              0.012593324492577792,
+              0.012585373962817548,
+              0.012596321754715069,
+              0.0125938589070119,
+              0.012584627891073421
+            ],
+            "flash": [
+              0.02186005838801352,
+              0.021867662333370595,
+              0.021864763806375226,
+              0.021863949432801663,
+              0.021863303827435784
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.009222593518317446,
+              "relative_l2": 0.0019381534649922435,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.009222593518317446,
+              "relative_l2": 0.0019444945729840157,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.009222593518317446,
+              "relative_l2": 0.0019444955111756186,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.009222593518317446,
+              "relative_l2": 0.0019307002639176035,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q512-k512",
+          "q_shape": [
+            1,
+            24,
+            512,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            512,
+            256
+          ],
+          "seed": 622,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.027979117567821215,
+            "cute": 0.019520184331795507,
+            "sdpa": 0.01821609386231651,
+            "flash": 0.05714230641831447
+          },
+          "samples_ms": {
+            "prior": [
+              0.02798064207945246,
+              0.028195953710959377,
+              0.02793336854613383,
+              0.027932172180503926,
+              0.027979117567821215
+            ],
+            "cute": [
+              0.01952094586534055,
+              0.019520184331795507,
+              0.01942774470373805,
+              0.01934405919667837,
+              0.019525870058401798
+            ],
+            "sdpa": [
+              0.01821398100033222,
+              0.018210450327136616,
+              0.018219159244047815,
+              0.018223406904834812,
+              0.01821609386231651
+            ],
+            "flash": [
+              0.05714051740883041,
+              0.05714230641831447,
+              0.057150663250554214,
+              0.05714763516057147,
+              0.05712489664119526
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.008552412926117636,
+              "relative_l2": 0.0019652988959966856,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.008552412926117636,
+              "relative_l2": 0.0019732583191776564,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.008552412926117636,
+              "relative_l2": 0.001973248548563221,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.008552412926117636,
+              "relative_l2": 0.0019508095369771764,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q1024-k1024",
+          "q_shape": [
+            1,
+            24,
+            1024,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            1024,
+            256
+          ],
+          "seed": 623,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.071138672395186,
+            "cute": 0.03440987805783491,
+            "sdpa": 0.04303526483188018,
+            "flash": 0.07275183554048892
+          },
+          "samples_ms": {
+            "prior": [
+              0.07109564434398305,
+              0.07114425572482022,
+              0.071138672395186,
+              0.07182628891684792,
+              0.07110209898515181
+            ],
+            "cute": [
+              0.03442427606293649,
+              0.03440987805783491,
+              0.03436044593910118,
+              0.03451808706506506,
+              0.03435679638024532
+            ],
+            "sdpa": [
+              0.04325822176854255,
+              0.04302961391638656,
+              0.04300657029968599,
+              0.04336955929329382,
+              0.04303526483188018
+            ],
+            "flash": [
+              0.07288191495118318,
+              0.07271429785975704,
+              0.07269990885699237,
+              0.0733478996488783,
+              0.07275183554048892
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.008046188069510407,
+              "relative_l2": 0.0019917211505815803,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.008046188069510407,
+              "relative_l2": 0.0019997547684785268,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.008046188069510407,
+              "relative_l2": 0.0019997786395213597,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.008046188069510407,
+              "relative_l2": 0.001989960860315175,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q2048-k2048",
+          "q_shape": [
+            1,
+            24,
+            2048,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            2048,
+            256
+          ],
+          "seed": 624,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.197312238739758,
+            "cute": 0.10833728940863359,
+            "sdpa": 0.12071739025970003,
+            "flash": 0.2259876463148329
+          },
+          "samples_ms": {
+            "prior": [
+              0.19685533570080269,
+              0.197312238739758,
+              0.19726150791819502,
+              0.19756812584109423,
+              0.19798606779517197
+            ],
+            "cute": [
+              0.10777731945640162,
+              0.10833728940863359,
+              0.10850120845593904,
+              0.10829146284806102,
+              0.10871952458431847
+            ],
+            "sdpa": [
+              0.12053257671754751,
+              0.1207681627415899,
+              0.12071739025970003,
+              0.11953893348352233,
+              0.1207248915487261
+            ],
+            "flash": [
+              0.2259876463148329,
+              0.22516637378268772,
+              0.2258154551188151,
+              0.22601464059617785,
+              0.22766876220703125
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.009287412651529436,
+              "relative_l2": 0.0020177629020057004,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.009287412651529436,
+              "relative_l2": 0.0020253660658442,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.009287412651529436,
+              "relative_l2": 0.002025382700777777,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.009287412651529436,
+              "relative_l2": 0.0020164200354172296,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q4096-k4096",
+          "q_shape": [
+            1,
+            24,
+            4096,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            4096,
+            256
+          ],
+          "seed": 625,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.6175440274752103,
+            "cute": 0.36901772022247314,
+            "sdpa": 0.39266053113070404,
+            "flash": 0.7604262612082742
+          },
+          "samples_ms": {
+            "prior": [
+              0.6207147744985727,
+              0.6175440274752103,
+              0.6180987724891076,
+              0.617505146906926,
+              0.6152764467092661
+            ],
+            "cute": [
+              0.3673554261525472,
+              0.36901772022247314,
+              0.3654185136159261,
+              0.3705836534500122,
+              0.3746311267217
+            ],
+            "sdpa": [
+              0.3883181485262784,
+              0.39266053113070404,
+              0.404316555369984,
+              0.3954897793856534,
+              0.3891026323491877
+            ],
+            "flash": [
+              0.7604262612082742,
+              0.7562699751420454,
+              0.7618120366876776,
+              0.7586156671697443,
+              0.7616867585615679
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.010150605348473896,
+              "relative_l2": 0.0020554158354315474,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.010150605348473896,
+              "relative_l2": 0.0020627716531139506,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.010150605348473896,
+              "relative_l2": 0.0020627639794770663,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.010150605348473896,
+              "relative_l2": 0.002053796153941758,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q8192-k8192",
+          "q_shape": [
+            1,
+            24,
+            8192,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            8192,
+            256
+          ],
+          "seed": 626,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 2.232430934906006,
+            "cute": 1.3458916800362724,
+            "sdpa": 1.395717938741048,
+            "flash": 2.786259651184082
+          },
+          "samples_ms": {
+            "prior": [
+              2.232430934906006,
+              2.227492570877075,
+              2.228930711746216,
+              2.238812208175659,
+              2.245338201522827
+            ],
+            "cute": [
+              1.3426459176199776,
+              1.3471881321498327,
+              1.355945450919015,
+              1.3458916800362724,
+              1.3451123918805803
+            ],
+            "sdpa": [
+              1.3850151697794597,
+              1.3985776901245117,
+              1.40279754002889,
+              1.395717938741048,
+              1.3840654691060383
+            ],
+            "flash": [
+              2.8174314498901367,
+              2.798232396443685,
+              2.784936269124349,
+              2.774176915486654,
+              2.786259651184082
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.008445402806929625,
+              "relative_l2": 0.0020690773463615643,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.008445402806929625,
+              "relative_l2": 0.002075739447046956,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.008445402806929625,
+              "relative_l2": 0.0020757347465176455,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.008445402806929625,
+              "relative_l2": 0.0020676211363264063,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q16384-k16384",
+          "q_shape": [
+            1,
+            24,
+            16384,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            16384,
+            256
+          ],
+          "seed": 627,
+          "protocol": {
+            "rounds": 5,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 8.422114054361979,
+            "cute": 5.160941441853841,
+            "sdpa": 5.259576797485352,
+            "flash": 10.886252085367838
+          },
+          "samples_ms": {
+            "prior": [
+              8.420099894205729,
+              8.467820485432943,
+              8.427140553792318,
+              8.420951207478842,
+              8.422114054361979
+            ],
+            "cute": [
+              5.166685104370117,
+              5.160941441853841,
+              5.1153364181518555,
+              5.142443339029948,
+              5.177770932515462
+            ],
+            "sdpa": [
+              5.259576797485352,
+              5.276237805684407,
+              5.2586625417073565,
+              5.27676264444987,
+              5.2165266672770185
+            ],
+            "flash": [
+              10.89719009399414,
+              10.886252085367838,
+              10.867453257242838,
+              10.878194173177084,
+              10.937909444173178
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.008025794960415222,
+              "relative_l2": 0.00209222244580405,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.008025794960415222,
+              "relative_l2": 0.00209860110640693,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.008025794960415222,
+              "relative_l2": 0.0020986173188289256,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "flash": {
+              "max_abs": 0.008025794960415222,
+              "relative_l2": 0.0020913627569864447,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b2-q513-k1025",
+          "q_shape": [
+            2,
+            24,
+            513,
+            256
+          ],
+          "k_shape": [
+            2,
+            4,
+            1025,
+            256
+          ],
+          "seed": 628,
+          "protocol": {
+            "rounds": 4,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.06670882966783312,
+            "cute": 0.03313215001154754,
+            "sdpa": 0.03546374042828877
+          },
+          "samples_ms": {
+            "prior": [
+              0.06667624987088717,
+              0.0667018808870234,
+              0.06671577844864283,
+              0.06727902502076238
+            ],
+            "cute": [
+              0.03321071196410615,
+              0.03300006712897349,
+              0.03319920725741629,
+              0.033065092765678795
+            ],
+            "sdpa": [
+              0.03546258255287453,
+              0.03538069901642976,
+              0.03548448615603977,
+              0.03546489830370302
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.007870789747686846,
+              "relative_l2": 0.0019693633951148766,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.007870789747686846,
+              "relative_l2": 0.0019776408208364116,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.007870789747686846,
+              "relative_l2": 0.001977645730864645,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        },
+        {
+          "record": "b1-q1025-k513",
+          "q_shape": [
+            1,
+            24,
+            1025,
+            256
+          ],
+          "k_shape": [
+            1,
+            4,
+            513,
+            256
+          ],
+          "seed": 629,
+          "protocol": {
+            "rounds": 4,
+            "calls_per_graph": 32,
+            "window_ms": 250.0,
+            "rotated": true,
+            "preheat_seconds": 5,
+            "profiler": false,
+            "telemetry": false
+          },
+          "medians_ms": {
+            "prior": 0.07271564448321308,
+            "cute": 0.03726065158843994,
+            "sdpa": 0.03806123195909986
+          },
+          "samples_ms": {
+            "prior": [
+              0.07272602010656286,
+              0.07266610198550755,
+              0.07270526885986328,
+              0.0733712425938359
+            ],
+            "cute": [
+              0.03731816609700521,
+              0.0370530332837786,
+              0.03731967608133952,
+              0.037203137079874674
+            ],
+            "sdpa": [
+              0.03806635678983202,
+              0.03791329907435997,
+              0.038056107128367704,
+              0.03812532798916686
+            ]
+          },
+          "checks": {
+            "prior": {
+              "max_abs": 0.009057956124926214,
+              "relative_l2": 0.002002583853965782,
+              "changed_inputs": true,
+              "bitwise_prior": true
+            },
+            "cute": {
+              "max_abs": 0.009057956124926214,
+              "relative_l2": 0.0020105520827795004,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            },
+            "sdpa": {
+              "max_abs": 0.009057956124926214,
+              "relative_l2": 0.0020105543342115798,
+              "changed_inputs": true,
+              "bitwise_prior": false
+            }
+          }
+        }
+      ]
+    },
+    "independent_backbone_reproduction": {
+      "evidence_archive": "pipeline",
+      "record": "results/final-fixed4-twelve-v2/report.json",
+      "record_sha256": "662051ed2a221fa09467933b6c2555fab51e758aa8491b06e29797740b1e8f4f",
+      "protocol": {
+        "rounds": 12,
+        "calls_per_graph": 32,
+        "target_window_ms": 500.0,
+        "rotated_backends": true,
+        "forward_only": true,
+        "minimum_timing_preheat_ms": 5000
+      },
+      "cases": [
+        {
+          "record": "w256-q3-b1",
+          "cute_ms": 0.028146663464997945,
+          "sdpa_ms": 0.034800706284769466
+        },
+        {
+          "record": "w256-q64-b1",
+          "cute_ms": 1.8918124304877386,
+          "sdpa_ms": 1.9496165381537542
+        }
+      ]
+    }
+  },
+  "datasets": [
+    {
+      "id": "l40s-clef-schema-forward",
+      "date": "2026-10-22",
+      "device": "L40S (142 SMs, 48 GB)",
+      "torch": "2.11.0+cu130",
+      "cuda": "13.0",
+      "driver": "595.71.05",
+      "cutlass_dsl": "4.8.1",
+      "model": "Cloudflare/clef-flash",
+      "model_revision": "17f0b0ad64efb65d273590632833508766b2aae6",
+      "scope": "Forward-only dense schema cross-attention. Actual captured BF16 inputs and matching FP16 casts, preserving projection strides and storage offsets. Per-attention-call timings; excludes projections and the rest of the model.",
+      "source_kernels_sha256": "05b23886c5bce0f0509d47adbb274272b2a86217d72748bcd88a2b71ba567e3f",
+      "source_runtime_sha256": {
+        "src/kohakufa_cute/kernels.py": "05b23886c5bce0f0509d47adbb274272b2a86217d72748bcd88a2b71ba567e3f",
+        "src/kohakufa_cute/native.cpp": "30f1c47a1d73ed93b70781bd71bf9f61de971cd23008c7a4139759b19999c720",
+        "src/kohakufa_cute/split_forward.py": "60c3c12daf3328f3b2897431310df0cc931934935ae56c02a7c78b03f7a16144",
+        "tests/test_kernels.py": "e9761013d51aeef0075fb04948c69296958a1ae3d40aaac53e15804412aa8935"
+      },
+      "previous_main_commit": "c0786ddcd88d964f83a5d4eef40b7d028eee99de",
+      "previous_main_kernels_sha256": "98a3a8e47be581e2588f07f76558a437c6250eac99d0b14d7c550899adb46f7a",
+      "protocol": {
+        "rounds": 7,
+        "calls_per_graph": 32,
+        "minimum_backend_window_ms": 100,
+        "rotated_order": true,
+        "forward_only": true,
+        "native_abi": true,
+        "inference_mode": true,
+        "graph_output_checked_against_fp64": true,
+        "telemetry_in_timing_window": false,
+        "profiler_in_timing_window": false
+      },
+      "validation": {
+        "gpu_unittest_passed": true,
+        "gpu_unittest_tests": 3,
+        "random_parameter_cases": 96,
+        "changed_input_graph_replays": 192,
+        "adversarial_parameter_cases": 22,
+        "cache_boundary_cases": 23,
+        "bf16_atol": 0.02,
+        "bf16_rtol": 0.02,
+        "fp16_atol": 0.003,
+        "fp16_rtol": 0.003
+      },
+      "previous_main_comparison": {
+        "same_gpu": true,
+        "same_inputs": true,
+        "same_software": true,
+        "same_graph_protocol": true,
+        "separate_processes": true,
+        "each_process_rotated_with_native_sdpa": true,
+        "candidate_and_previous_main_interleaved": false
+      },
+      "evidence": {
+        "archive": "schema-evidence.tar.gz",
+        "archive_sha256": "93708108093cd8e610988620a8c44514020d497fbc9efe921cf362a99e7ba493",
+        "manifest_files_verified": 174,
+        "records": {
+          "candidate-final-bf16.json": "8ccb0309c7254c082f0d5e7804b7002b94902fae79e412df746b328a87d895df",
+          "candidate-final-fp16.json": "f9105ddec9288fbbc6bb89461c67abffaf250123e28da82fb847b779e05824bd",
+          "old-main-bf16.json": "7e6dbd172b4d7c1e4d84780b34b5fb96e7e93d0a6d3006e3ad2eacafe23bdc0c",
+          "old-main-fp16.json": "b658aeceec5af7fa3965f456933a58ea81b09f5ab7398385ab2b3c9ba0d167d3",
+          "native-tests-frozen.log": "38d9fd1b827e3eae5d4ad329b2441b05f06a000f2457de836cabd2a77444249d",
+          "environment-final.json": "5dbcfc344da94fdf72bc1913a661964353fde7409b516457df4cd515fad542f6",
+          "precision-diagnosis.json": "024bf9b4224ce9a0c59a173d54c19d7a4e96862ecd93539d6d97b6fbcff38763",
+          "nsys-summary.json": "0637a7e9346cf1d5dea8ae7611f92a99decb353f922eab9085238ebb462baf01"
+        }
+      },
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            12,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q3-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.007848425536071624
+            },
+            "cute": {
+              "forward_ms": 0.005214477421246307
+            },
+            "previous_main": {
+              "forward_ms": 0.01771568168293346
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.00781948140045858,
+                0.007846798644558308,
+                0.007850017595651468,
+                0.007849629639978673,
+                0.007848231558235226,
+                0.007848425536071624,
+                0.007849007469580817
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.005180771243393122,
+                0.00518778289896817,
+                0.005214500904879307,
+                0.005214414134845511,
+                0.005214519214152493,
+                0.005214477421246307,
+                0.00521477634003246
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.01771568168293346,
+                0.017717209729281338,
+                0.01771581850268624,
+                0.01771523329344663,
+                0.01771558550271121,
+                0.017714755101637406,
+                0.017716033892198044
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.007143130761783745,
+              "rel_l2": 0.0015107776014698475
+            },
+            "cute": {
+              "max_abs": 0.007143130761783745,
+              "rel_l2": 0.0015061251274178268
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.5093276720971849,
+              1.512553396580841,
+              1.5054206987107928,
+              1.5053713489159288,
+              1.5050729004765562,
+              1.5051221631708167,
+              1.5051474805019078
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.5050729004765562,
+            "median": 1.5053713489159288,
+            "maximum": 1.512553396580841
+          },
+          "sdpa_over_cute": 1.5051221631708167,
+          "previous_main_over_cute": 3.3974030860218494,
+          "previous_main_native_sdpa_control_ms": 0.00784818775157638,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        },
+        {
+          "shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q3-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.007857923312565249
+            },
+            "cute": {
+              "forward_ms": 0.004950501631447857
+            },
+            "previous_main": {
+              "forward_ms": 0.017918914213947867
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.007854396424939871,
+                0.007853987271828419,
+                0.007854237885731261,
+                0.007858542225245015,
+                0.007857923312565249,
+                0.007858859303662234,
+                0.007858450150550783
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.0049485651600244375,
+                0.004948535648929956,
+                0.00495315491182408,
+                0.004950035666798147,
+                0.004950638314411772,
+                0.004950501631447857,
+                0.004950741214938583
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.01791817840488478,
+                0.017928293381614245,
+                0.017918608654504536,
+                0.01792513228010857,
+                0.01792192596128617,
+                0.01791833323993902,
+                0.017918914213947867
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.029581221733481655,
+              "rel_l2": 0.001302201752211938
+            },
+            "cute": {
+              "max_abs": 0.029581221733481655,
+              "rel_l2": 0.0012960041269624485
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.587206830858641,
+              1.587133614673812,
+              1.5857040665095632,
+              1.5875728488090248,
+              1.5872545747666715,
+              1.5874874686918907,
+              1.5873279998636065
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.5857040665095632,
+            "median": 1.5872545747666715,
+            "maximum": 1.5875728488090248
+          },
+          "sdpa_over_cute": 1.5872983987416782,
+          "previous_main_over_cute": 3.6196158587482743,
+          "previous_main_native_sdpa_control_ms": 0.007857144649022617,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        },
+        {
+          "shape": [
+            1,
+            16,
+            256,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q64-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.06451725959777832
+            },
+            "cute": {
+              "forward_ms": 0.06146164210337513
+            },
+            "previous_main": {
+              "forward_ms": 0.1681965947151184
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.06374194145202637,
+                0.06442180156707764,
+                0.06448966026306152,
+                0.06451725959777832,
+                0.06575362205505371,
+                0.06496513843536376,
+                0.0649560785293579
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.06146164210337513,
+                0.061121922618937945,
+                0.061387489426810785,
+                0.06139977473133015,
+                0.06338788878242925,
+                0.06259537642856813,
+                0.0614713227973794
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.17191389799118043,
+                0.1580338954925537,
+                0.1691336989402771,
+                0.1581287980079651,
+                0.1681965947151184,
+                0.15796245336532594,
+                0.16893985271453857
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.00799201193265775,
+              "rel_l2": 0.0015305765915638425
+            },
+            "cute": {
+              "max_abs": 0.007963709814416298,
+              "rel_l2": 0.001529869400730218
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.0371011784035302,
+              1.0539884677501499,
+              1.0505342516075575,
+              1.0507735554420108,
+              1.0373215344140034,
+              1.0378584192955518,
+              1.056689128741623
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.0371011784035302,
+            "median": 1.0505342516075575,
+            "maximum": 1.056689128741623
+          },
+          "sdpa_over_cute": 1.0497158453603275,
+          "previous_main_over_cute": 2.7366108186992615,
+          "previous_main_native_sdpa_control_ms": 0.06392635822296143,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        },
+        {
+          "shape": [
+            1,
+            16,
+            64,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q64-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.02574719757330222
+            },
+            "cute": {
+              "forward_ms": 0.02160914627822129
+            },
+            "previous_main": {
+              "forward_ms": 0.15746040344238282
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.02574719757330222,
+                0.02635191893968426,
+                0.025673606356636423,
+                0.026345327252247294,
+                0.025666827061137217,
+                0.026360417975754034,
+                0.025705615028006133
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.021704692106980544,
+                0.021467860762055938,
+                0.021648440327677692,
+                0.02150055911991146,
+                0.021619126513287738,
+                0.021483027851664938,
+                0.02160914627822129
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.15752160549163818,
+                0.15745229721069337,
+                0.15746040344238282,
+                0.15742474794387817,
+                0.15743734836578369,
+                0.15747934579849243,
+                0.15772910118103028
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.03254014541971273,
+              "rel_l2": 0.0015049068929295184
+            },
+            "cute": {
+              "max_abs": 0.03254014541971273,
+              "rel_l2": 0.001503343618065393
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.1862503023031388,
+              1.2275055829624537,
+              1.1859333036483246,
+              1.2253321927730307,
+              1.187227756189023,
+              1.2270345762136643,
+              1.1895710592654676
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.1859333036483246,
+            "median": 1.1895710592654676,
+            "maximum": 1.2275055829624537
+          },
+          "sdpa_over_cute": 1.191495362278678,
+          "previous_main_over_cute": 7.286748000825873,
+          "previous_main_native_sdpa_control_ms": 0.02570266410952709,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        },
+        {
+          "shape": [
+            1,
+            16,
+            12,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "dtype": "fp16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q3-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.0077963878285674665
+            },
+            "cute": {
+              "forward_ms": 0.005168021816183842
+            },
+            "previous_main": {
+              "forward_ms": 0.01774190366268158
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.007796077944469692,
+                0.007796302550385521,
+                0.0077963878285674665,
+                0.007796929525187995,
+                0.007796007680052173,
+                0.00779660943173041,
+                0.007797420775560048
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.005166447698177395,
+                0.005166988404538985,
+                0.005168021816183842,
+                0.005167728652573266,
+                0.005168166216121934,
+                0.005168913604812495,
+                0.005168590688467423
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.017741420052268288,
+                0.01774190366268158,
+                0.017741517587141556,
+                0.017741199244152416,
+                0.017742709680037064,
+                0.017742908813736656,
+                0.017751375382596798
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.0009262472945232858,
+              "rel_l2": 0.00019576630939580934
+            },
+            "cute": {
+              "max_abs": 0.0009262472945232858,
+              "rel_l2": 0.00019542704864055146
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.5089822640070412,
+              1.5088678239604316,
+              1.5085826077886908,
+              1.5087730121637715,
+              1.5084669018060544,
+              1.5083652054991612,
+              1.5086164189705102
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.5083652054991612,
+            "median": 1.5086164189705102,
+            "maximum": 1.5089822640070412
+          },
+          "sdpa_over_cute": 1.5085826077886908,
+          "previous_main_over_cute": 3.4330164023538337,
+          "previous_main_native_sdpa_control_ms": 0.007813937134212919,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        },
+        {
+          "shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "dtype": "fp16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q3-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.007830114461690112
+            },
+            "cute": {
+              "forward_ms": 0.004895950093169527
+            },
+            "previous_main": {
+              "forward_ms": 0.01794627069056719
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.007830104148418242,
+                0.007829819623447254,
+                0.007829869976480499,
+                0.007830221234387114,
+                0.007830114461690112,
+                0.007830770871111455,
+                0.007831776111787208
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.004895753522617998,
+                0.004895919379020851,
+                0.004895882522042439,
+                0.0048962929398541286,
+                0.004896046842737858,
+                0.004895950093169527,
+                0.004896381626958432
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.017945970612010736,
+                0.01794627069056719,
+                0.017946391270078462,
+                0.017946051455092156,
+                0.017948924810036845,
+                0.017946028161322933,
+                0.017947258620426572
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.003740661763560027,
+              "rel_l2": 0.00017713851040359745
+            },
+            "cute": {
+              "max_abs": 0.003740661763560027,
+              "rel_l2": 0.00017687606102163102
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.599366494298329,
+              1.599254198710511,
+              1.599276522920749,
+              1.5992142076818618,
+              1.5992727833689455,
+              1.599438458744989,
+              1.5995027978757048
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.5992142076818618,
+            "median": 1.599276522920749,
+            "maximum": 1.5995027978757048
+          },
+          "sdpa_over_cute": 1.5993043868265973,
+          "previous_main_over_cute": 3.6655338287872907,
+          "previous_main_native_sdpa_control_ms": 0.007844109924472108,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        },
+        {
+          "shape": [
+            1,
+            16,
+            256,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "dtype": "fp16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q64-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.06384908159573872
+            },
+            "cute": {
+              "forward_ms": 0.06194523206123939
+            },
+            "previous_main": {
+              "forward_ms": 0.1670986533164978
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.06384908159573872,
+                0.0637482504049937,
+                0.0637353112300237,
+                0.0637633353471756,
+                0.06543270746866862,
+                0.06516743699709575,
+                0.06470666825771332
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.06194523206123939,
+                0.06158088262264545,
+                0.06140865270908062,
+                0.06140807500252357,
+                0.06337007650962242,
+                0.06289203808857845,
+                0.06197755611859835
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.1724146008491516,
+                0.15835845470428467,
+                0.16870230436325073,
+                0.15834715366363525,
+                0.1670986533164978,
+                0.15828429460525512,
+                0.16730945110321044
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.0010285161383754016,
+              "rel_l2": 0.00019157776326182414
+            },
+            "cute": {
+              "max_abs": 0.0010095938013745531,
+              "rel_l2": 0.00019142003647678674
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.0307343999069563,
+              1.035195464729361,
+              1.0378881219225808,
+              1.038354244853877,
+              1.0325489737847011,
+              1.0361794430212705,
+              1.0440338779072318
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.0307343999069563,
+            "median": 1.0361794430212705,
+            "maximum": 1.0440338779072318
+          },
+          "sdpa_over_cute": 1.0307343999069563,
+          "previous_main_over_cute": 2.697522436453272,
+          "previous_main_native_sdpa_control_ms": 0.06441262364387512,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        },
+        {
+          "shape": [
+            1,
+            16,
+            64,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "dtype": "fp16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q64-b1",
+          "medians_ms": {
+            "sdpa": {
+              "forward_ms": 0.026153193802392782
+            },
+            "cute": {
+              "forward_ms": 0.02140648663043976
+            },
+            "previous_main": {
+              "forward_ms": 0.15677839517593384
+            }
+          },
+          "samples_ms": {
+            "sdpa": {
+              "forward_ms": [
+                0.026107000703571224,
+                0.02638294917194783,
+                0.026153193802392782,
+                0.02639235368295878,
+                0.026130680276566193,
+                0.02633397519087591,
+                0.02612362989858419
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.02140648663043976,
+                0.0211980144182841,
+                0.0214088327354855,
+                0.021282965938250225,
+                0.021422139472431607,
+                0.02129203412267897,
+                0.021460645728641085
+              ]
+            },
+            "previous_main": {
+              "forward_ms": [
+                0.15744165182113648,
+                0.1567997455596924,
+                0.15678404569625853,
+                0.15677839517593384,
+                0.15674079656600953,
+                0.15677280426025392,
+                0.15676050186157225
+              ]
+            }
+          },
+          "sdpa_backend": "FlashAttention 2",
+          "fp64_metrics": {
+            "sdpa": {
+              "max_abs": 0.0041442635003097195,
+              "rel_l2": 0.00019999804910417163
+            },
+            "cute": {
+              "max_abs": 0.003973710298669886,
+              "rel_l2": 0.0001997193115262172
+            }
+          },
+          "paired_sdpa_over_cute": {
+            "samples": [
+              1.2195836315543436,
+              1.2445953027181416,
+              1.221607647905223,
+              1.240069347455274,
+              1.219797878274206,
+              1.2367994076632902,
+              1.2172807020303191
+            ],
+            "wins": 7,
+            "total": 7,
+            "minimum": 1.2172807020303191,
+            "median": 1.221607647905223,
+            "maximum": 1.2445953027181416
+          },
+          "sdpa_over_cute": 1.2217415334846806,
+          "previous_main_over_cute": 7.323873267133753,
+          "previous_main_native_sdpa_control_ms": 0.02616522510846456,
+          "projection_strides": [
+            1024,
+            64,
+            1024,
+            1
+          ]
+        }
+      ],
+      "profiling": {
+        "nsight_compute": "Driver profiling resource unavailable; no hardware counter claims.",
+        "nsight_systems": {
+          "cute": [
+            {
+              "start": 4215291332,
+              "end": 4215357252,
+              "duration_us": 65.92,
+              "name": "kernel_cutlass_kernel_kohakufa_cutesplit_forwardForward_object_at__tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81_tensorptrbf16_gmem_align16_o_11664i64_div8i64_div8i64_div81__0",
+              "grid": [
+                2,
+                16,
+                4
+              ],
+              "threads": 128,
+              "registers_per_thread": 254,
+              "shared_bytes": 32768
+            },
+            {
+              "start": 4215358180,
+              "end": 4215361220,
+              "duration_us": 3.04,
+              "name": "kernel_cutlass_merge_kohakufa_cutesplit_forwardForward_object_at__tensorptrf32_gmem_align16_o_116464i64i64256641_tensorptrf32_gmem_align16_o_11642i64i64821_tensorptrbf16_gmem_align16_o_11_1",
+              "grid": [
+                128,
+                16,
+                1
+              ],
+              "threads": 128,
+              "registers_per_thread": 30,
+              "shared_bytes": 0
+            }
+          ],
+          "sdpa": [
+            {
+              "start": 2021219193,
+              "end": 2021290042,
+              "duration_us": 70.849,
+              "name": "void pytorch_flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<(int)64, (int)64, (int)256, (int)4, (bool)0, (bool)0, cutlass::bfloat16_t, Flash_kernel_traits<(int)64, (int)64, (int)256, (int)4, cutlass::bfloat16_t>>, (bool)0, (bool)0, (bool)0, (bool)0, (bool)1, (bool)0, (bool)1, (bool)0>(pytorch_flash::Flash_fwd_params)",
+              "grid": [
+                4,
+                4,
+                16
+              ],
+              "threads": 128,
+              "registers_per_thread": 254,
+              "shared_bytes": 73728
+            },
+            {
+              "start": 2021290874,
+              "end": 2021295066,
+              "duration_us": 4.192,
+              "name": "void pytorch_flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<(int)64, (int)64, (int)256, (int)4, (bool)0, (bool)0, cutlass::bfloat16_t, Flash_kernel_traits<(int)64, (int)64, (int)256, (int)4, cutlass::bfloat16_t>>, (int)8, (int)2, (bool)1>(pytorch_flash::Flash_fwd_params)",
+              "grid": [
+                512,
+                1,
+                1
+              ],
+              "threads": 128,
+              "registers_per_thread": 54,
+              "shared_bytes": 0
+            }
+          ]
+        },
+        "cute_assembly_dump": "cute-dumps"
+      }
+    },
+    {
+      "id": "l40s-clef-backbone-forward",
+      "date": "2026-10-22",
+      "device": "L40S (142 SMs, 48 GB)",
+      "torch": "2.11.0+cu130",
+      "cuda": "13.0",
+      "driver": "595.71.05",
+      "cutlass_dsl": "4.8.1",
+      "model": "Cloudflare/clef-flash",
+      "model_revision": "17f0b0ad64efb65d273590632833508766b2aae6",
+      "scope": "Forward-only causal D256 GQA16/4 on actual BF16 text-backbone inputs. Q/K are BHSD; V retains its projection stride. Attention calls exclude projections and the rest of the model.",
+      "source_kernels_sha256": "98a09efca61d8cd8bab787b4976f374c73d2b3f8785c909a05e5e9f62e21ec2d",
+      "previous_main_commit": "c0786ddcd88d964f83a5d4eef40b7d028eee99de",
+      "previous_main_kernels_sha256": "98a3a8e47be581e2588f07f76558a437c6250eac99d0b14d7c550899adb46f7a",
+      "protocol": {
+        "rounds": 5,
+        "target_window_ms": 250,
+        "rotated_backends": true,
+        "forward_only": true,
+        "profiler": false,
+        "precision": "unchanged BF16; fixed inputs; candidate==control bitwise",
+        "calls_per_graph": 1,
+        "minimum_replays": 32
+      },
+      "validation": {
+        "gpu_unittest_passed": true,
+        "gpu_unittest_tests": 3,
+        "exact_serial_parameter_cases": 18,
+        "changed_input_graph_seeds": 2,
+        "full_fp64_forward": {
+          "checked_values": 43507712,
+          "tolerance_failures": 0,
+          "atol": 0.02,
+          "rtol": 0.02,
+          "cases": [
+            {
+              "sequence": 787,
+              "checked_values": 3223552,
+              "candidate": {
+                "squared_error": 1.60882921367128,
+                "squared_reference": 547413.4001663792,
+                "max_absolute_error": 0.016430078110724722,
+                "tolerance_failures": 0,
+                "relative_l2": 0.0017143411890680237
+              },
+              "sdpa": {
+                "squared_error": 1.609332517963335,
+                "squared_reference": 547413.4001663792,
+                "max_absolute_error": 0.016430078110724722,
+                "tolerance_failures": 0,
+                "relative_l2": 0.0017146093243677889
+              }
+            },
+            {
+              "sequence": 9835,
+              "checked_values": 40284160,
+              "candidate": {
+                "squared_error": 16.573018817649697,
+                "squared_reference": 5859535.353220194,
+                "max_absolute_error": 0.018437556156596813,
+                "tolerance_failures": 0,
+                "relative_l2": 0.0016817801503041128
+              },
+              "sdpa": {
+                "squared_error": 16.646276917317202,
+                "squared_reference": 5859535.353220194,
+                "max_absolute_error": 0.018437556156596813,
+                "tolerance_failures": 0,
+                "relative_l2": 0.0016854930576782824
+              }
+            }
+          ]
+        },
+        "shape_regression_grid": {
+          "cases": 13,
+          "candidate_control_bitwise": true,
+          "candidate_faster_than_control": true,
+          "scope": "B1/B2, sequence lengths 128 through 16384; three rotated rounds. Native SDPA still wins several power-of-two cases."
+        }
+      },
+      "evidence": {
+        "archive": "clef-d256-evidence.tar.gz",
+        "archive_sha256": "80220601c080c7a754707f525891345153ec9728a8a4aeb5881746c0e9bb683e",
+        "manifest_files_verified": 79,
+        "records": {
+          "paired-final-loadfast-main.json": "cae074160a8d27a47ec54c3b4d91de8656ee2ff295a7a1aac8da6857b81d67c3",
+          "actual-fp64-loadfast.json": "d4dcf5c47c903d42ebbbc0f251a921821c4f01d49078407bfd5158927995b3e9",
+          "paired-validation-grid.json": "26ee1086411286a518fcea36d10f1ffd2d587548e9bbeda728b53792771fe8ef"
+        }
+      },
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            787,
+            256
+          ],
+          "kv_shape": [
+            1,
+            4,
+            787,
+            256
+          ],
+          "strides": {
+            "q": [
+              3223552,
+              201472,
+              256,
+              1
+            ],
+            "k": [
+              805888,
+              201472,
+              256,
+              1
+            ],
+            "v": [
+              805888,
+              256,
+              1024,
+              1
+            ]
+          },
+          "dtype": "bf16",
+          "mask": "causal",
+          "sdpa_backend": "FlashAttention-2",
+          "input_sha256": "1cc03e110002f8f8a78277208c6029a44647244a9552168deff3ce8681bb64ff",
+          "candidate_control_bitwise": true,
+          "medians_ms": {
+            "previous_main": {
+              "forward_ms": 0.08386658944822122
+            },
+            "cute": {
+              "forward_ms": 0.06495540502999424
+            },
+            "sdpa": {
+              "forward_ms": 0.07311873963075469
+            }
+          },
+          "samples_ms": {
+            "previous_main": {
+              "forward_ms": [
+                0.08364891856268841,
+                0.08410515484338867,
+                0.08390921021515992,
+                0.08162866900531932,
+                0.08386658944822122
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.0647612011794826,
+                0.066417451401371,
+                0.06495540502999424,
+                0.06487968957941119,
+                0.06680589476302827
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                0.07311873963075469,
+                0.07273194361234452,
+                0.07294222451870672,
+                0.073471276752152,
+                0.07352778005979098
+              ]
+            }
+          },
+          "paired_sdpa_over_cute": [
+            1.1290516281208183,
+            1.0950727870121673,
+            1.1229585049161719,
+            1.1324233705253,
+            1.1006181463567903
+          ],
+          "paired_sdpa_wins_for_cute": 5,
+          "interpretation": "Faster than SDPA in every paired round."
+        },
+        {
+          "shape": [
+            1,
+            16,
+            9835,
+            256
+          ],
+          "kv_shape": [
+            1,
+            4,
+            9835,
+            256
+          ],
+          "strides": {
+            "q": [
+              40284160,
+              2517760,
+              256,
+              1
+            ],
+            "k": [
+              10071040,
+              2517760,
+              256,
+              1
+            ],
+            "v": [
+              10071040,
+              256,
+              1024,
+              1
+            ]
+          },
+          "dtype": "bf16",
+          "mask": "causal",
+          "sdpa_backend": "FlashAttention-2",
+          "input_sha256": "bfb548999ecb9b3d0a98c04e710ed85b2650f6023b15eb4e701c194a52a3b2b3",
+          "candidate_control_bitwise": true,
+          "medians_ms": {
+            "previous_main": {
+              "forward_ms": 4.697606222970145
+            },
+            "cute": {
+              "forward_ms": 4.189799647177419
+            },
+            "sdpa": {
+              "forward_ms": 4.197515578497024
+            }
+          },
+          "samples_ms": {
+            "previous_main": {
+              "forward_ms": [
+                4.770107814243862,
+                4.686545235770089,
+                4.697606222970145,
+                4.631792885916574,
+                4.741974966866629
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                4.0926705637285785,
+                4.189799647177419,
+                4.184451195501512,
+                4.208135789440524,
+                4.224766885080645
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                4.197515578497024,
+                4.253557477678571,
+                4.168742830791171,
+                4.208448621961805,
+                4.159408811538938
+              ]
+            }
+          },
+          "paired_sdpa_over_cute": [
+            1.02561775083918,
+            1.0152173936393605,
+            0.9962460155522358,
+            1.0000743399303003,
+            0.9845297799098661
+          ],
+          "paired_sdpa_wins_for_cute": 3,
+          "interpretation": "Near parity with SDPA; per-round ratios straddle one."
+        }
+      ]
+    },
+    {
+      "id": "h100-clef27-schema-forward",
+      "date": "2026-10-22",
+      "device": "H100 80GB HBM3 (132 SMs)",
+      "power_limit_watts": 700,
+      "torch": "2.11.0+cu130",
+      "cuda": "13.0",
+      "driver": "595.71.05",
+      "cutlass_dsl": "4.8.1",
+      "tvm_ffi": "0.1.15.post0",
+      "model": "Cloudflare/clef",
+      "model_revision": "a30162b99d68a481d8bd75d38df069a0cf83df40",
+      "scope": "Actual captured BF16 text inference inputs; forward only, projection strides and offsets retained. Each comparison uses one GPU; schema and final backbone now share the model-investigation H100.",
+      "source_runtime_sha256": {
+        "src/kohakufa_cute/kernels.py": "4e5976418fbb6ae0f74245450883cf53b4483be7dd44047f6bff1b7b91ebcb22",
+        "src/kohakufa_cute/native.cpp": "bc95f9e070156ec698a680d42cbcee93f9d30717ffb81adbe66af2bc3f748771",
+        "src/kohakufa_cute/native.py": "5b29cfdf71c45468b271c8497495d7dd20ca2c2e2ce4e2625cc58f066d5da04f",
+        "src/kohakufa_cute/split_forward.py": "60c3c12daf3328f3b2897431310df0cc931934935ae56c02a7c78b03f7a16144"
+      },
+      "previous_cute_kernels_sha256": "edffe0142826021053e6eb9b5386b282e9775892c4997e43870351fa74b0a006",
+      "previous_cute_cpp_sha256": "30f1c47a1d73ed93b70781bd71bf9f61de971cd23008c7a4139759b19999c720",
+      "protocol": {
+        "rounds": 7,
+        "calls_per_graph": 32,
+        "minimum_backend_window_ms": 100,
+        "rotated_backends": true,
+        "same_process": true,
+        "profiler_in_timing_window": false,
+        "telemetry_in_timing_window": false,
+        "timing": "Median CUDA-event milliseconds per attention call, including schema merge; compilation excluded."
+      },
+      "evidence": {
+        "archive": "clef27-h100-evidence.tar.gz",
+        "archive_sha256": "89147bf892ea0f79ebfb6503c202b39be26a45c041d9bd361027175e1c4e7dee",
+        "manifest_files_verified": 282,
+        "record": "records/head-forced-final/report.json",
+        "record_sha256": "bc02878ccb70a854788dca7acfad12d569c4a64cb8e0a54795dd3238d0cd05d9"
+      },
+      "rows": [
+        {
+          "shape": [
+            1,
+            16,
+            12,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q3-b1",
+          "medians_ms": {
+            "previous_cute": {
+              "forward_ms": 0.01611801538711939
+            },
+            "cute": {
+              "forward_ms": 0.006595666480786873
+            },
+            "sdpa": {
+              "forward_ms": 0.013772117125021445
+            },
+            "forced_flash": {
+              "forward_ms": 0.010478083934848156
+            }
+          },
+          "samples_ms": {
+            "previous_cute": {
+              "forward_ms": [
+                0.016115856170654298,
+                0.016118405415461612,
+                0.01611801538711939,
+                0.016117302576700847,
+                0.016118204899323293,
+                0.016118630384787534,
+                0.01611773295280261
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.006591668755117089,
+                0.006596648572671293,
+                0.006595666480786873,
+                0.006596975615530303,
+                0.006588369908958974,
+                0.0065902546198681146,
+                0.006595787857518052
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                0.013780626090797218,
+                0.013771797085667515,
+                0.013733499758952373,
+                0.013776783470634942,
+                0.013772117125021445,
+                0.013776725476926512,
+                0.013732630927283485
+              ]
+            },
+            "forced_flash": {
+              "forward_ms": [
+                0.010477818222559662,
+                0.010478154577390111,
+                0.010477925791884914,
+                0.010479320179332386,
+                0.010474404100617174,
+                0.010479016737504438,
+                0.010478083934848156
+              ]
+            }
+          },
+          "sdpa_backend": "cuDNN Hopper WGMMA",
+          "forced_flash_backend": "PyTorch FlashAttention-2",
+          "fp64": {
+            "previous_cute": {
+              "max_abs": 0.015319487210311067,
+              "relative_l2": 0.0016982775680507052
+            },
+            "cute": {
+              "max_abs": 0.015319487210311067,
+              "relative_l2": 0.0016958009516804204
+            },
+            "sdpa": {
+              "max_abs": 0.015930512789688933,
+              "relative_l2": 0.001703069227918749
+            },
+            "forced_flash": {
+              "max_abs": 0.015319487210311067,
+              "relative_l2": 0.0017029810075407442
+            }
+          },
+          "changed_input_graph_verified": true,
+          "candidate_bitwise_previous_cute": null,
+          "strides": {
+            "q": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "k": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "v": [
+              1024,
+              64,
+              1024,
+              1
+            ]
+          },
+          "storage_offsets": {
+            "q": 0,
+            "k": 0,
+            "v": 0
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            3,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            787,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q3-b1",
+          "medians_ms": {
+            "previous_cute": {
+              "forward_ms": 0.01637902636277048
+            },
+            "cute": {
+              "forward_ms": 0.006184956270777537
+            },
+            "sdpa": {
+              "forward_ms": 0.01369421807202426
+            },
+            "forced_flash": {
+              "forward_ms": 0.010388518655579226
+            }
+          },
+          "samples_ms": {
+            "previous_cute": {
+              "forward_ms": [
+                0.016378978679054662,
+                0.016379136788217646,
+                0.01637902636277048,
+                0.016380410445363897,
+                0.016380131872076736,
+                0.016378631089863024,
+                0.016378073943288704
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.006184658842410394,
+                0.006186519078389851,
+                0.006185011949367866,
+                0.006184800180370461,
+                0.006184956270777537,
+                0.006187558887961382,
+                0.006183289244265375
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                0.013683990998701616,
+                0.01369421807202426,
+                0.013694327527826483,
+                0.013649840788407759,
+                0.013698336211117832,
+                0.013699354908683084,
+                0.01369037303057584
+              ]
+            },
+            "forced_flash": {
+              "forward_ms": [
+                0.010388284223932885,
+                0.010389063270594363,
+                0.01038802985762274,
+                0.010388518655579226,
+                0.010389026590812964,
+                0.010388973165913968,
+                0.010384856259145066
+              ]
+            }
+          },
+          "sdpa_backend": "cuDNN Hopper WGMMA",
+          "forced_flash_backend": "PyTorch FlashAttention-2",
+          "fp64": {
+            "previous_cute": {
+              "max_abs": 0.008368881885981061,
+              "relative_l2": 0.0014797466963087013
+            },
+            "cute": {
+              "max_abs": 0.007736789829340118,
+              "relative_l2": 0.0014726917186712806
+            },
+            "sdpa": {
+              "max_abs": 0.008368881885981061,
+              "relative_l2": 0.001481493799968528
+            },
+            "forced_flash": {
+              "max_abs": 0.007736789829340118,
+              "relative_l2": 0.0014725441016253623
+            }
+          },
+          "changed_input_graph_verified": true,
+          "candidate_bitwise_previous_cute": null,
+          "strides": {
+            "q": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "k": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "v": [
+              1024,
+              64,
+              1024,
+              1
+            ]
+          },
+          "storage_offsets": {
+            "q": 0,
+            "k": 0,
+            "v": 805888
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            256,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q64-b1",
+          "medians_ms": {
+            "previous_cute": {
+              "forward_ms": 0.11404117516108922
+            },
+            "cute": {
+              "forward_ms": 0.061661234088972505
+            },
+            "sdpa": {
+              "forward_ms": 0.0992472842335701
+            },
+            "forced_flash": {
+              "forward_ms": 0.046006574350244855
+            }
+          },
+          "samples_ms": {
+            "previous_cute": {
+              "forward_ms": [
+                0.11400510583605085,
+                0.11404117516108922,
+                0.11400217669350761,
+                0.11404567956924438,
+                0.11407628229686193,
+                0.11405278955187116,
+                0.11401643071855817
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.06165684438219257,
+                0.061655371796851065,
+                0.061656923855052274,
+                0.061680237452189125,
+                0.061675155864042396,
+                0.06166331440794701,
+                0.061661234088972505
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                0.09921334683895111,
+                0.09925244003534317,
+                0.0992472842335701,
+                0.0992482528090477,
+                0.0992470309138298,
+                0.09924568980932236,
+                0.09925009310245514
+              ]
+            },
+            "forced_flash": {
+              "forward_ms": [
+                0.04600439702763277,
+                0.04600635346244363,
+                0.04600541030659395,
+                0.04601423530017629,
+                0.046006574350244855,
+                0.04601227886536542,
+                0.04600910228841445
+              ]
+            }
+          },
+          "sdpa_backend": "cuDNN Hopper WGMMA",
+          "forced_flash_backend": "PyTorch FlashAttention-2",
+          "fp64": {
+            "previous_cute": {
+              "max_abs": 0.01564775940210872,
+              "relative_l2": 0.001642360984608746
+            },
+            "cute": {
+              "max_abs": 0.01564775940210872,
+              "relative_l2": 0.0016433301670875648
+            },
+            "sdpa": {
+              "max_abs": 0.01564775940210872,
+              "relative_l2": 0.0016437943067693537
+            },
+            "forced_flash": {
+              "max_abs": 0.015602240597891281,
+              "relative_l2": 0.0016465931420786026
+            }
+          },
+          "changed_input_graph_verified": true,
+          "candidate_bitwise_previous_cute": null,
+          "strides": {
+            "q": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "k": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "v": [
+              1024,
+              64,
+              1024,
+              1
+            ]
+          },
+          "storage_offsets": {
+            "q": 0,
+            "k": 0,
+            "v": 0
+          }
+        },
+        {
+          "shape": [
+            1,
+            16,
+            64,
+            64
+          ],
+          "kv_shape": [
+            1,
+            16,
+            9835,
+            64
+          ],
+          "dtype": "bf16",
+          "mask": "dense",
+          "phase": "forward",
+          "case": "w256-q64-b1",
+          "medians_ms": {
+            "previous_cute": {
+              "forward_ms": 0.1136773909841265
+            },
+            "cute": {
+              "forward_ms": 0.02310781619128059
+            },
+            "sdpa": {
+              "forward_ms": 0.09892953187227249
+            },
+            "forced_flash": {
+              "forward_ms": 0.024376269370790512
+            }
+          },
+          "samples_ms": {
+            "previous_cute": {
+              "forward_ms": [
+                0.11367849792752947,
+                0.11367114101137434,
+                0.1136773909841265,
+                0.1136806777545384,
+                0.1136722479547773,
+                0.11368014131273542,
+                0.11367703335625785
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.023100007982815012,
+                0.023143161745632395,
+                0.02310781619128059,
+                0.023103691199246573,
+                0.0231053022777333,
+                0.023156280026716346,
+                0.02311113301445456
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                0.0989188402891159,
+                0.09893090277910233,
+                0.09892953187227249,
+                0.09889493882656097,
+                0.09890227764844894,
+                0.09893497079610825,
+                0.09893618524074554
+              ]
+            },
+            "forced_flash": {
+              "forward_ms": [
+                0.02436826153407021,
+                0.024361063563634478,
+                0.024376483190627324,
+                0.024468976353842115,
+                0.024374785877409436,
+                0.02440455603221106,
+                0.024376269370790512
+              ]
+            }
+          },
+          "sdpa_backend": "cuDNN Hopper WGMMA",
+          "forced_flash_backend": "PyTorch FlashAttention-2",
+          "fp64": {
+            "previous_cute": {
+              "max_abs": 0.009845205216443276,
+              "relative_l2": 0.0015401389577586215
+            },
+            "cute": {
+              "max_abs": 0.008631501555036447,
+              "relative_l2": 0.0015309385144926086
+            },
+            "sdpa": {
+              "max_abs": 0.009845205216443276,
+              "relative_l2": 0.0015401810554582897
+            },
+            "forced_flash": {
+              "max_abs": 0.008182142151555993,
+              "relative_l2": 0.0015289220737294711
+            }
+          },
+          "changed_input_graph_verified": true,
+          "candidate_bitwise_previous_cute": null,
+          "strides": {
+            "q": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "k": [
+              1024,
+              64,
+              1024,
+              1
+            ],
+            "v": [
+              1024,
+              64,
+              1024,
+              1
+            ]
+          },
+          "storage_offsets": {
+            "q": 0,
+            "k": 0,
+            "v": 10071040
+          }
+        }
+      ]
+    },
+    {
+      "id": "h100-clef27-backbone-forward",
+      "date": "2026-10-22",
+      "device": "H100 80GB HBM3 (132 SMs)",
+      "power_limit_watts": 700,
+      "torch": "2.11.0+cu130",
+      "cuda": "13.0",
+      "driver": "595.71.05",
+      "cutlass_dsl": "4.8.1",
+      "tvm_ffi": "0.1.15.post0",
+      "model": "Cloudflare/clef",
+      "model_revision": "a30162b99d68a481d8bd75d38df069a0cf83df40",
+      "scope": "Actual BF16 Clef 27B backbone captures, causal D256 GQA24/4. Projection strides and offsets retained. All backends share the same device and native ABI; the prior CuTe control swaps the pre-Hopper device kernels.",
+      "source_runtime_sha256": {
+        "src/kohakufa_cute/kernels.py": "4e5976418fbb6ae0f74245450883cf53b4483be7dd44047f6bff1b7b91ebcb22",
+        "src/kohakufa_cute/native.cpp": "bc95f9e070156ec698a680d42cbcee93f9d30717ffb81adbe66af2bc3f748771",
+        "src/kohakufa_cute/native.py": "5b29cfdf71c45468b271c8497495d7dd20ca2c2e2ce4e2625cc58f066d5da04f",
+        "src/kohakufa_cute/hopper_forward.py": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272"
+      },
+      "previous_cute_kernels_sha256": "edffe0142826021053e6eb9b5386b282e9775892c4997e43870351fa74b0a006",
+      "previous_cute_cpp_sha256": "bc95f9e070156ec698a680d42cbcee93f9d30717ffb81adbe66af2bc3f748771",
+      "protocol": {
+        "rounds": 15,
+        "calls_per_graph": 32,
+        "minimum_backend_window_ms": 500.0,
+        "preheat_seconds_after_correctness": 5,
+        "rotated_backends": true,
+        "balanced_order_positions": true,
+        "same_process": true,
+        "profiler_in_timing_window": false,
+        "telemetry_in_timing_window": false,
+        "timing": "Median CUDA-event milliseconds per attention call; compilation excluded."
+      },
+      "evidence": {
+        "archive": "clef-h100-cudnn-parent.tar.gz",
+        "archive_sha256": "c7749c81cc24b22d743f5b76746f966dd054fbc14ababdb463c689cf875cb2ad",
+        "bytes": 100636160,
+        "verified_manifest_files": 244,
+        "manifest_sha256": "b87f6f96ac18e8ae8fb4c11f4d34621bc8d8ca774b516a25eeb1368eb5104a34",
+        "record": "records/final-attention/report.json",
+        "record_sha256": "077cc08779e43e6110db60a56e60e8d81ab76021d02177dc8786f8f6c3229892"
+      },
+      "rows": [
+        {
+          "shape": [
+            1,
+            24,
+            787,
+            256
+          ],
+          "kv_shape": [
+            1,
+            4,
+            787,
+            256
+          ],
+          "dtype": "bf16",
+          "mask": "causal",
+          "phase": "forward",
+          "case": "w256-q3-b1",
+          "medians_ms": {
+            "previous_cute": {
+              "forward_ms": 0.06832604281670224
+            },
+            "cute": {
+              "forward_ms": 0.027909636285758144
+            },
+            "sdpa": {
+              "forward_ms": 0.03465493374612839
+            },
+            "forced_flash": {
+              "forward_ms": 0.05189464876315738
+            }
+          },
+          "samples_ms": {
+            "previous_cute": {
+              "forward_ms": [
+                0.06877351862139407,
+                0.06827184795278364,
+                0.06838617493621016,
+                0.068257589255814,
+                0.06836868387407961,
+                0.06842558362842661,
+                0.06830736177157512,
+                0.06832604281670224,
+                0.06834029307407616,
+                0.06827901738934812,
+                0.06850217717938718,
+                0.0682661470058745,
+                0.06828057027496068,
+                0.06831687741574988,
+                0.06851875676517993
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                0.027503105082266284,
+                0.02779487352388155,
+                0.028002813484910113,
+                0.028093868208185605,
+                0.02791780434535621,
+                0.027516144842279953,
+                0.027885298110663786,
+                0.02791430979808313,
+                0.02787410471833197,
+                0.028025781282523175,
+                0.027511705090266986,
+                0.027909636285758144,
+                0.0280067653893154,
+                0.02797045970259509,
+                0.027692193459871606
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                0.03468320789817269,
+                0.034645390456001054,
+                0.03467812745467476,
+                0.03465374001649206,
+                0.034660485570981794,
+                0.034682444085791124,
+                0.03463634473508228,
+                0.03464847407570147,
+                0.03465493374612839,
+                0.03468855022020144,
+                0.03467166996656894,
+                0.034643677333945265,
+                0.03469230381247654,
+                0.03464814454521686,
+                0.034650785153735965
+              ]
+            },
+            "forced_flash": {
+              "forward_ms": [
+                0.05189386470205832,
+                0.05189464876315738,
+                0.05188818105915249,
+                0.05188587687959607,
+                0.05191028518164718,
+                0.051912790976914786,
+                0.051927870552011784,
+                0.051890453236215064,
+                0.05189318304893954,
+                0.05188504161450687,
+                0.05189516720355757,
+                0.051896255288348105,
+                0.05186381756059275,
+                0.051899897172147,
+                0.05190380467664475
+              ]
+            }
+          },
+          "sdpa_backend": "cuDNN Hopper WGMMA",
+          "forced_flash_backend": "PyTorch FlashAttention-2",
+          "fp64": {
+            "previous_cute": {
+              "max_abs": 0.014787706691038238,
+              "relative_l2": 0.0017177302688879848
+            },
+            "cute": {
+              "max_abs": 0.014787706691038238,
+              "relative_l2": 0.0017197669015819406
+            },
+            "sdpa": {
+              "max_abs": 0.014787706691038238,
+              "relative_l2": 0.0017197538504806539
+            },
+            "forced_flash": {
+              "max_abs": 0.014787706691038238,
+              "relative_l2": 0.0017196303871948883
+            }
+          },
+          "changed_input_graph_verified": true,
+          "candidate_bitwise_previous_cute": false,
+          "strides": {
+            "q": [
+              4835328,
+              201472,
+              256,
+              1
+            ],
+            "k": [
+              805888,
+              201472,
+              256,
+              1
+            ],
+            "v": [
+              805888,
+              256,
+              1024,
+              1
+            ]
+          },
+          "storage_offsets": {
+            "q": 0,
+            "k": 0,
+            "v": 0
+          },
+          "paired_native_speedup": [
+            1.261065170439103,
+            1.2464669222629667,
+            1.238380117532182,
+            1.2334983477424846,
+            1.2415190371784073,
+            1.2604397994191319,
+            1.2421005720515064,
+            1.2412441620921173,
+            1.2432662536184298,
+            1.2377371346230106,
+            1.2602515857454064,
+            1.2412801435045357,
+            1.2387115516635734,
+            1.2387406182674292,
+            1.2512835143936127
+          ]
+        },
+        {
+          "shape": [
+            1,
+            24,
+            9835,
+            256
+          ],
+          "kv_shape": [
+            1,
+            4,
+            9835,
+            256
+          ],
+          "dtype": "bf16",
+          "mask": "causal",
+          "phase": "forward",
+          "case": "w256-q64-b1",
+          "medians_ms": {
+            "previous_cute": {
+              "forward_ms": 3.183049519856771
+            },
+            "cute": {
+              "forward_ms": 1.890106413099501
+            },
+            "sdpa": {
+              "forward_ms": 1.945789549085829
+            },
+            "forced_flash": {
+              "forward_ms": 4.015903949737549
+            }
+          },
+          "samples_ms": {
+            "previous_cute": {
+              "forward_ms": [
+                3.1791369120279946,
+                3.17039426167806,
+                3.1796801884969077,
+                3.2098992665608725,
+                3.1894089380900064,
+                3.1849635442097983,
+                3.176647186279297,
+                3.1715850830078125,
+                3.185000737508138,
+                3.2233851750691733,
+                3.1896384557088218,
+                3.1735569636027017,
+                3.169976552327474,
+                3.183049519856771,
+                3.2034680048624673
+              ]
+            },
+            "cute": {
+              "forward_ms": [
+                1.8865248362223308,
+                1.8848813374837239,
+                1.890106413099501,
+                1.9035070207383897,
+                1.8938102722167969,
+                1.8763050503200955,
+                1.8814688788519964,
+                1.8899493747287326,
+                1.8956856197781033,
+                1.896314197116428,
+                1.8771500057644315,
+                1.8839471605088975,
+                1.90214114718967,
+                1.8930121527777777,
+                1.8937954372829862
+              ]
+            },
+            "sdpa": {
+              "forward_ms": [
+                1.930121315850152,
+                1.9343698289659288,
+                1.943474875556098,
+                1.9547848171657987,
+                1.9493872324625652,
+                1.9545845455593533,
+                1.9476356506347656,
+                1.9409667121039496,
+                1.9519324832492404,
+                1.945789549085829,
+                1.9564842647976346,
+                1.9526778327094183,
+                1.9422266218397353,
+                1.9446559482150607,
+                1.943205303615994
+              ]
+            },
+            "forced_flash": {
+              "forward_ms": [
+                4.038144111633301,
+                4.026702404022217,
+                4.0129194259643555,
+                3.976492166519165,
+                3.98917555809021,
+                3.9917516708374023,
+                4.022759437561035,
+                4.0368332862854,
+                4.00475549697876,
+                3.997342824935913,
+                4.015903949737549,
+                4.01715612411499,
+                4.031250476837158,
+                4.020235061645508,
+                3.9971585273742676
+              ]
+            }
+          },
+          "sdpa_backend": "cuDNN Hopper WGMMA",
+          "forced_flash_backend": "PyTorch FlashAttention-2",
+          "fp64": {
+            "previous_cute": {
+              "max_abs": 0.015080510126419533,
+              "relative_l2": 0.0016858221105881554
+            },
+            "cute": {
+              "max_abs": 0.015080510126419533,
+              "relative_l2": 0.0016864857111740287
+            },
+            "sdpa": {
+              "max_abs": 0.015080510126419533,
+              "relative_l2": 0.0016864847984210324
+            },
+            "forced_flash": {
+              "max_abs": 0.015080510126419533,
+              "relative_l2": 0.0016866017529321776
+            }
+          },
+          "changed_input_graph_verified": true,
+          "candidate_bitwise_previous_cute": false,
+          "strides": {
+            "q": [
+              60426240,
+              2517760,
+              256,
+              1
+            ],
+            "k": [
+              10071040,
+              2517760,
+              256,
+              1
+            ],
+            "v": [
+              10071040,
+              256,
+              1024,
+              1
+            ]
+          },
+          "storage_offsets": {
+            "q": 0,
+            "k": 0,
+            "v": 0
+          },
+          "paired_native_speedup": [
+            1.0231094119678386,
+            1.026255494443099,
+            1.0282356919624862,
+            1.0269385906480752,
+            1.0293466357539147,
+            1.0417200258699424,
+            1.0351676142648407,
+            1.0269940232565962,
+            1.0296709870478,
+            1.0260902713509366,
+            1.0422631429505262,
+            1.0364822717118856,
+            1.0210738696806436,
+            1.0272812804511062,
+            1.0260903925314635
+          ]
+        }
+      ]
+    }
+  ]
+}

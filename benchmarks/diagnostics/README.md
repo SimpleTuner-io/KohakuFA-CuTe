@@ -4,7 +4,7 @@ On the recorded RTX 5090 stack, initcheck does not recognize writes from this
 standalone `UTMASTG.4D` producer even though every output byte has the expected
 value. Ordinary stores pass; poisoning the TMA destination removes the reports;
 waiting for full destination completion does not. The
-[compact evidence](../../results/tma4d-store-summary.json) retains all 33 executed
+[compact evidence](results/tma4d-store-summary.json) retains all 33 executed
 cases, status codes, source/binary hashes and code-binding scope.
 
 This is a constant-store diagnostic with no attention arithmetic or performance
@@ -94,7 +94,7 @@ constant 3D diagnostic remain separate evidence.
 
 ## Checker-version control
 
-A separate [checker-only comparison](../../results/tma4d-checker-comparison.json)
+A separate [checker-only comparison](results/tma4d-checker-comparison.json)
 reused the identical NVCC 13.2 executable, source/PTX and previously captured
 loaded-code controls. Compute Sanitizer **2026.3.0.0** reproduces the results
 from **2026.1.0.0**: untouched read/full-wait TMA output reports 36,864 errors
@@ -165,7 +165,7 @@ sanitizer report remains a failure requiring investigation.
 
 ## Standalone Blackwell allocator control
 
-The [B200 allocator diagnostic](../../docs/blackwell-allocator-initcheck.md)
+The [B200 allocator diagnostic](../../docs/diagnostics/blackwell-allocator.md)
 isolates an initialization report from attention and tensor-memory data
 operations. It includes native-code build tooling, captured-code association,
 and paired old/new initcheck evidence. The allocator report and the separate

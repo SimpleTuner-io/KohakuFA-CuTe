@@ -51,9 +51,7 @@ def render(value, depth=0):
             + "}"
         )
     if isinstance(value, list):
-        return (
-            "[\n" + ",\n".join(child + json.dumps(item, separators=(",", ":")) for item in value) + "\n" + padding + "]"
-        )
+        return "[\n" + ",\n".join(child + json.dumps(item, separators=(",", ":")) for item in value) + "\n" + padding + "]"
     return json.dumps(value)
 
 
@@ -125,7 +123,7 @@ def main():
     parser.add_argument("--initial-record", type=Path, required=True)
     parser.add_argument("--continuation-record", type=Path, required=True)
     parser.add_argument("--control-code", default="l40s-medium-causal-code-v1-58719868-e2d6c8dde2")
-    parser.add_argument("--output", type=Path, default=Path("results/l40s-medium-causal.json"))
+    parser.add_argument("--output", type=Path, required=True, help="Write campaign output outside the checkout.")
     args = parser.parse_args()
     original, continuation = args.archive / args.initial, args.archive / args.continuation
     states = {
@@ -246,8 +244,7 @@ def main():
                 "dtype": row["dtype"],
                 "mode": row["mode"],
                 "metric": metric,
-                "selected_minus_parent_median_us": statistics.median(selected_samples)
-                - statistics.median(parent_samples),
+                "selected_minus_parent_median_us": statistics.median(selected_samples) - statistics.median(parent_samples),
                 "median_round_delta_us": statistics.median(differences),
                 "round_delta_us": differences,
                 "rounds_favoring_selected": sum(value < 0 for value in differences),

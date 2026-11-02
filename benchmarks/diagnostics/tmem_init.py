@@ -43,7 +43,15 @@ def compile_commands(nvcc, architecture, include, library):
     ]
     return {
         "host": base
-        + ["-code=" + architecture, "-L" + str(library), "-Xlinker", "-rpath=$ORIGIN/lib", "-lcupti", "-o", "tmem_init"],
+        + [
+            "-code=" + architecture,
+            "-L" + str(library),
+            "-Xlinker",
+            "-rpath=$ORIGIN/lib",
+            "-lcupti",
+            "-o",
+            "tmem_init",
+        ],
         "ptx": base + ["--ptx", "-o", "source.ptx"],
         "cubin": base + ["-code=" + architecture, "--cubin", "-o", "source.cubin"],
     }
@@ -133,7 +141,8 @@ def main():
             raise ValueError("The loader must resolve the bundled CUDA libraries.")
     (root / "loader-trace.txt").write_text(loader)
     shutil.copytree(args.sanitizer_dir, root / "sanitizer-new", symlinks=True)
-    shutil.copy2(Path(__file__).with_name("run_tmem_init.sh"), root / "run_tmem_init.sh")
+    for name in ("run_tmem_init.sh", "blackwell_init_association.py"):
+        shutil.copy2(Path(__file__).with_name(name), root / name)
     report = {
         "scope": "CPU-only build and loader trace; executable main and CUDA APIs were not run",
         "architecture": args.arch,

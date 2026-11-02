@@ -8,10 +8,30 @@ import argparse
 import hashlib
 import json
 import re
+from collections import Counter
 from pathlib import Path
 
 MARKER = re.compile(r"^=+\s+Uninitialized __(shared|global)__ memory read of size (\d+) bytes\s*$", re.MULTILINE)
 INSTRUCTION = re.compile(r"/\*([0-9a-fA-F]+)\*/\s+(.*?)\s*;", re.MULTILINE)
+
+
+def initcheck_counts(log):
+    """Count full initcheck reports without confusing the unprinted subtotal."""
+    totals = re.findall(r"^=+\s+ERROR SUMMARY: (\d+) errors?\s*$", log, re.MULTILINE)
+    omitted = re.findall(r"^=+\s+ERROR SUMMARY: (\d+) errors? (?:were|was) not printed.*$", log, re.MULTILINE)
+    if len(totals) != 1 or len(omitted) > 1:
+        raise ValueError("A unique completed error summary is required.")
+    total = int(totals[0])
+    unprinted = int(omitted[0]) if omitted else 0
+    printed = len(MARKER.findall(log))
+    if unprinted > total or printed + unprinted > total:
+        raise ValueError("Error summary and printed report counts are inconsistent.")
+    return {
+        "summary_errors": total,
+        "printed_initialization_reports": printed,
+        "unprinted_errors": unprinted,
+        "all_errors_are_printed_initialization_reports": printed == total and unprinted == 0,
+    }
 
 
 def selected_function(sass, symbol):
@@ -78,6 +98,8 @@ def associate(log, sass, symbol=None, inline_sass=None):
             frame = re.search(r"Device Frame: (.+?)\+0x[0-9a-fA-F]+", block)
             if frame is None or frame.group(1) != kernel:
                 raise ValueError("An inline report needs its explicitly selected containing-kernel frame.")
+        coordinates = re.search(r"by thread \((\d+),\s*(\d+),\s*(\d+)\) in block \((\d+),\s*(\d+),\s*(\d+)\)", block)
+        coordinates = None if coordinates is None else tuple(map(int, coordinates.groups()))
         pc = int(pc_hex, 16)
         instructions = selected_function(sass, kernel)
         selected = [i for i, item in enumerate(instructions) if item[0] == pc]
@@ -94,6 +116,8 @@ def associate(log, sass, symbol=None, inline_sass=None):
                 "pc": hex(pc),
                 "address": address.group(1),
                 "source_line": None if source_line is None else int(source_line),
+                "thread": None if coordinates is None else coordinates[:3],
+                "block": None if coordinates is None else coordinates[3:],
                 "instruction": instructions[selected[0]][1],
                 "nearest_literal_address_candidate": None if candidate is None else hex(candidate),
                 "candidate_matches_report": None if candidate is None else candidate == int(address.group(1), 16),
@@ -101,7 +125,12 @@ def associate(log, sass, symbol=None, inline_sass=None):
                 "inline_lineage": None if lineage is None else {"line": lineage[0], "call_site": lineage[1]},
             }
         )
+    classes = Counter((r["space"], r["bytes"], r["pc"], r["address"], r["instruction"]) for r in reports)
     return {
+        "report_classes": [
+            dict(zip(("space", "bytes", "pc", "address", "instruction", "count"), (*key, count)))
+            for key, count in sorted(classes.items())
+        ],
         "association": "Uninstrumented artifact association; runtime loaded-code binding remains required.",
         "address_scope": "Literal register assignments only; cluster terms and branch dominance require review.",
         "instrumented_elf_captured": False,
@@ -112,14 +141,30 @@ def associate(log, sass, symbol=None, inline_sass=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ("log", "sass", "cubin", "output"):
+    for name in ("log", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
+    for name in ("sass", "cubin"):
+        parser.add_argument("--" + name, type=Path)
+    parser.add_argument(
+        "--counts-only", action="store_true", help="Inspect complete error counts, including clean controls."
+    )
     parser.add_argument("--symbol", help="Explicit containing kernel for an inline report.")
     parser.add_argument("--inline-sass", type=Path, help="nvdisasm -gi output for that uninstrumented ELF.")
     parser.add_argument(
         "--loaded-cubin", type=Path, help="Independently captured uninstrumented ELF to compare byte for byte."
     )
     args = parser.parse_args()
+    if args.counts_only:
+        log = args.log.read_bytes()
+        report = initcheck_counts(log.decode("utf-8", "replace"))
+        report["scope"] = "Report count consistency only; no code binding or qualification."
+        report["log_sha256"] = hashlib.sha256(log).hexdigest()
+        with args.output.open("x") as handle:
+            json.dump(report, handle, indent=2)
+            handle.write("\n")
+        return
+    if args.sass is None or args.cubin is None:
+        parser.error("SASS and cubin are required unless --counts-only is selected.")
     artifacts = {name: getattr(args, name).read_bytes() for name in ("log", "sass", "cubin")}
     if not artifacts["cubin"].startswith(b"\x7fELF"):
         raise ValueError("A real retained ELF is required.")
@@ -127,7 +172,10 @@ def main():
     if args.inline_sass is not None:
         artifacts["inline_sass"] = args.inline_sass.read_bytes()
         inline = artifacts["inline_sass"].decode()
-    report = associate(artifacts["log"].decode("utf-8", "replace"), artifacts["sass"].decode(), args.symbol, inline)
+    log = artifacts["log"].decode("utf-8", "replace")
+    counts = initcheck_counts(log)
+    report = associate(log, artifacts["sass"].decode(), args.symbol, inline)
+    report["counts"] = counts
     if args.loaded_cubin is not None:
         loaded = args.loaded_cubin.read_bytes()
         if loaded != artifacts["cubin"]:

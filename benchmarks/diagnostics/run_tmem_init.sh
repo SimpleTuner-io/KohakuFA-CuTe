@@ -3,6 +3,8 @@
 set -eu
 bundle=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 output=${1:?Supply a fresh external output directory}
+mode=${2:-baseline}
+case "$mode" in baseline|controls) ;; *) exit 2 ;; esac
 case "$output" in /*) ;; *) output="$PWD/$output" ;; esac
 mkdir "$output"
 cd "$bundle"
@@ -38,7 +40,15 @@ run_one() {
   local label=$1 limit=$2
   shift 2
   local remaining=$((105 - (EPOCHSECONDS - start)))
-  if (( remaining <= 2 )); then return 124; fi
+  if (( remaining <= 2 )); then
+    if test "$mode" = controls; then
+      mkdir "$output/$label"
+      printf '%s\n' not_executed_budget_exhausted > "$output/$label.log"
+      printf '%s\n' 124 > "$output/$label.status"
+      printf '%s\t124\t%s\n' "$label" "$((EPOCHSECONDS-start))" >> "$output/status.tsv"
+    fi
+    return 124
+  fi
   if (( limit > remaining )); then limit=$remaining; fi
   mkdir "$output/$label"
   setsid timeout --signal=TERM --kill-after=2s "${limit}s" "$@" "$output/$label" \
@@ -51,30 +61,54 @@ run_one() {
   printf '%s\t%s\t%s\n' "$label" "$status" "$((EPOCHSECONDS-start))" >> "$output/status.tsv"
   return "$status"
 }
-# Exact selected launch symbol and loaded ELF must exist before instrumented comparison.
+# Controls mode changes only runtime arguments; no source or executable rebuild.
+initializations=(untouched)
+barriers=(roles)
+if test "$mode" = controls; then
+  initializations+=(sentinel)
+  barriers+=(cta)
+fi
 for producer in allocation ordinary; do
-  label="physical-$producer"
-  if ! run_one "$label" 20 "$bundle/tmem_init" "$producer" untouched roles enabled; then
-    printf '%s\n' physical_control_failed > "$output/final-status.txt"
-    exit 11
-  fi
-  grep -q '"all_match":true' "$output/$label/report.json"
-  grep -q '"captured_modules":[1-9]' "$output/$label/report.json"
-  grep -q "\"symbol\":\"tmem_init_$producer\"" "$output/$label/launches.jsonl"
-  test -s "$output/$label/loaded-0.cubin"
-  test "$(od -An -tx1 -N4 "$output/$label/loaded-0.cubin" | tr -d ' \n')" = 7f454c46
-  grep -a -q "tmem_init_$producer" "$output/$label/loaded-0.cubin"
+  for initialization in "${initializations[@]}"; do
+    for barrier in "${barriers[@]}"; do
+      label="physical-$producer"
+      if test "$mode" = controls; then label="$label-$initialization-$barrier"; fi
+      if ! run_one "$label" 20 "$bundle/tmem_init" "$producer" "$initialization" "$barrier" enabled; then
+        printf '%s\n' physical_control_failed > "$output/final-status.txt"
+        exit 11
+      fi
+      grep -q '"all_match":true' "$output/$label/report.json"
+      grep -q '"captured_modules":[1-9]' "$output/$label/report.json"
+      grep -q "\"symbol\":\"tmem_init_$producer\"" "$output/$label/launches.jsonl"
+      if test "$mode" = controls; then
+        cmp "$bundle/source.cubin" "$output/$label/loaded-0.cubin"
+      else
+        test -s "$output/$label/loaded-0.cubin"
+        test "$(od -An -tx1 -N4 "$output/$label/loaded-0.cubin" | tr -d ' \n')" = 7f454c46
+        grep -a -q "tmem_init_$producer" "$output/$label/loaded-0.cubin"
+      fi
+    done
+  done
 done
-# Instrumented CUPTI is intentionally disabled: preserve the independently captured
-# same-executable controls, and report that instrumented loaded-ELF capture is unavailable.
-# Each nonzero sanitizer result is retained; it never becomes a qualification pass.
+# CUPTI is disabled inside initcheck. Physical capture does not expose patched ELF.
 for tool in old new; do
   if test "$tool" = old; then checker=$old_cs; else checker=$new_cs; fi
   for producer in allocation ordinary; do
-    label="$tool-$producer"
-    run_one "$label" 15 "$checker" --tool initcheck --initcheck-address-space all \
-      --report-api-errors no --print-limit 6 --error-exitcode 99 \
-      "$bundle/tmem_init" "$producer" untouched roles disabled || true
+    for initialization in "${initializations[@]}"; do
+      for barrier in "${barriers[@]}"; do
+        # Old-tool baseline pair is retained without repeating its factorial.
+        if test "$tool" = old && { test "$initialization" != untouched || test "$barrier" != roles; }; then continue; fi
+        label="$tool-$producer"
+        print_limit=6
+        if test "$mode" = controls; then
+          label="$label-$initialization-$barrier"
+          print_limit=0
+        fi
+        run_one "$label" 15 "$checker" --tool initcheck --initcheck-address-space all \
+          --report-api-errors no --print-limit "$print_limit" --error-exitcode 99 \
+          "$bundle/tmem_init" "$producer" "$initialization" "$barrier" disabled || true
+      done
+    done
   done
 done
 printf '%s\n' 'collection_finished_not_attention_qualification' > "$output/final-status.txt"

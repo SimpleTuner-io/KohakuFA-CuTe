@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
@@ -89,6 +90,26 @@ class Rtx4090SharedTests(unittest.TestCase):
         self.assertEqual((dense.causal_head_group, causal.causal_head_group), (1, 16))
         self.assertEqual(rtx4090.schedule(64, True).forward_m, 64)
         self.assertEqual(rtx4090.schedule(64, False).forward_m, 128)
+
+    def test_long_causal_d64_tile_preserves_short_and_other_families(self):
+        short = rtx4090.schedule(64, True)
+        long = rtx4090.schedule(64, True, 4096)
+        self.assertEqual((long.backward_m, long.backward_n), (64, 128))
+        self.assertEqual((long.score_m_warps, long.kv_m_warps, long.dq_m_warps), (2, 4, 4))
+        self.assertEqual(replace(long, backward_n=64, score_m_warps=4, kv_m_warps=2, dq_m_warps=2), short)
+        for sequence in (128, 1024, 1025, 2048, 4097, 8192):
+            self.assertEqual(rtx4090.schedule(64, True, sequence), short)
+        for dimension, causal in ((64, False), (128, False), (128, True)):
+            self.assertEqual(rtx4090.schedule(dimension, causal, 4096), rtx4090.schedule(dimension, causal))
+
+    def test_public_call_passes_current_sequence_to_policy(self):
+        for sequence in (1024, 4096):
+            q = operand((1, 16, sequence, 64))
+            implementation = Mock(return_value="output")
+            with patch.object(rtx4090, "native_runner", return_value=implementation) as factory:
+                self.assertEqual(rtx4090.scaled_dot_product_attention(q, q, q, is_causal=True), "output")
+            factory.assert_called_once_with(rtx4090.schedule(64, True, sequence))
+            implementation.assert_called_once_with(q, q, q, scale=None, causal=True)
 
     def test_selected_errors_propagate_and_fallback_keeps_arguments(self):
         q = operand()

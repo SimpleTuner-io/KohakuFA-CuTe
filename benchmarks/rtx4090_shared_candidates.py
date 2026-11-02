@@ -37,7 +37,7 @@ def make_attention(source=None, dependencies=None, *, direct=False, forward_cont
         actual_scale = q.shape[-1] ** -0.5 if scale is None else scale
         if enable_gqa or not 1.1754943508222875e-38 <= actual_scale <= 2e38:
             return api.scaled_dot_product_attention(q, k, v, is_causal=is_causal, scale=scale, enable_gqa=enable_gqa)
-        configuration = rtx4090.schedule(q.shape[-1], is_causal)
+        configuration = rtx4090.schedule(q.shape[-1], is_causal, q.shape[-2])
         if is_causal and causal_head_group is not None:
             configuration = replace(configuration, causal_head_group=causal_head_group)
         if q.shape[-1] == 128:

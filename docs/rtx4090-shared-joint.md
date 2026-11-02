@@ -68,15 +68,16 @@ appropriate timing boundary.
 | Family | Forward M×N | Backward M×N | Q/dO stages | Score/KV/dQ M warps | V storage |
 | --- | --- | --- | --- | --- | --- |
 | D64 dense | 128×64 | 64×128 | 1/1 | 2/4/4 | registers |
-| D64 causal | 64×64 | 64×64 | 1/1 | 4/2/2 | registers |
+| D64 causal S1024 | 64×64 | 64×64 | 1/1 | 4/2/2 | registers |
+| D64 causal S4096 | 64×64 | 64×128 | 1/1 | 2/4/4 | registers |
 | D128 dense | 64×64 | 32×128 | 1/1 | 2/2/2 | shared |
 | D128 causal | 64×64 | 64×64 | 1/1 | 4/2/2 | registers |
 
 D128 dense uses a wider key tile to reduce dQ partial updates. Moving V to shared
 memory avoids the long-lived register operand that made the earlier M32 layout
 spill inside its main loop. The retained layout uses 99,328 shared bytes on the
-measured device. Causal attention keeps its separate M64N64 ownership; the dense
-layout regressed causal calls. D64 causal uses a smaller forward query tile,
+measured device. D128 causal keeps its M64N64 ownership; the dense D128 layout regressed
+causal calls. Long D64 causal uses its independently qualified M64N128 path. D64 causal uses a smaller forward query tile,
 which improved the complete call as well as forward latency.
 
 The [precision contract](precision.md) is unchanged: separate unscaled maximum
@@ -119,3 +120,7 @@ The optional dependency notes specify the pinned FlashAttention revision. Source
 and qualifier hashes in the compact record identify the measured implementation.
 
 The [causal head-grouping follow-up](rtx4090-causal-head-groups.md) applies the measured G16 ordering to the same bounded causal calls. Its newer record includes separate graph and eager results.
+
+The [long D64 causal follow-up](rtx4090-long-causal.md) uses N128 at S4096 and retains N64 at S1024. Its held-out current-policy record supersedes the earlier long D64 causal timings above.
+
+The [long D64 causal follow-up](rtx4090-long-causal.md) uses N128 at S4096 and retains N64 at S1024. Its held-out current-policy record supersedes the earlier long D64 causal timings above.

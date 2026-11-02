@@ -187,18 +187,21 @@ class Sm120PublicKernelTests(unittest.TestCase):
         from benchmarks.validate_sm80_static import assess, statistics
         from kohakufa_cute import api
 
+        selected = inputs[0].shape[2] == 4096 or (
+            causal and inputs[0].shape[2] == 1024 and (inputs[0].shape[-1] == 64 or inputs[0].dtype == torch.bfloat16)
+        )
         if function is None:
             from kohakufa_cute.fa4_sm80._host import native_runner
 
             def function(q, k, v, *, is_causal=False, scale=None):
-                if q.shape[2] == 4096 or (is_causal and q.shape[2] == 1024):
+                if selected:
                     return api.scaled_dot_product_attention(q, k, v, is_causal=is_causal, scale=scale)
                 return native_runner(_sm120.schedule(q.shape[-1]))(q, k, v, causal=is_causal, scale=scale)
 
         operands = [t.detach().requires_grad_(True) for t in inputs]
         self.assertEqual(
             fa4_sm80.compatible(*operands, None, 0, causal, scale, False),
-            (inputs[0].shape[2] == 4096 or (causal and inputs[0].shape[2] == 1024)),
+            selected,
         )
         saved = []
         with torch.autograd.graph.saved_tensors_hooks(lambda t: saved.append(t) or t, lambda t: t):

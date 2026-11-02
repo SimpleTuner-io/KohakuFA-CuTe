@@ -1,30 +1,51 @@
-# RTX 5090 pipeline controls
+# Explicit experiments
 
-These explicit controls preserve the declared rounded attention computation. They are negative experiments, not automatic dispatch presets. Compact timings, source revisions, resource sizes and exact loaded-code hashes are in [the pipeline results](../../results/rtx5090-pipeline-controls.json). Use the qualified optional runtime described in [the RTX 5090 guide](../../docs/rtx5090-configured-host.md).
+These controls are outside default dispatch. They preserve evidence needed to
+interpret accuracy changes, rejected schedules, and unresolved model compatibility.
+Current supported-target performance belongs in the [GPU catalog](../../results/README.md).
 
-The output-gradient control uses the existing configured runner and changes only D64's stage count. Run it from the repository root:
+| Evidence | Scope |
+| --- | --- |
+| [controls.json](results/controls.json) | Compact negative results, failing diagnostics, and model-shape audit from superseded reports; original source paths/hashes and Git revision retained |
+| [precision.json](results/precision.json) | Previous arithmetic diagnostics, mathematical failures, H100 control, and B300 racecheck |
+| [rtx5090-pipeline.json](results/rtx5090-pipeline.json) | dO stage and maximum-staging negative controls, complete-call costs and loaded-code hashes |
+| [l40s-controls.json](results/l40s-controls.json) | Pipeline/layout and bounded-length experiments |
+| [l40s-allocation.json](results/l40s-allocation.json) | Separate allocation-order diagnostic; mixed standard results remain in the main catalog |
+| [h200.json](results/h200.json) | Explicit H200 WGMMA backend, eager/graph comparisons and unresolved initialization |
+| [clef.json](results/clef.json) | Historical captured-attention and model compatibility; whole-model logit gate failed |
+
+Historical notes describe their recorded revisions and arithmetic, not current
+selection. Repository-relative source paths inside these records are resolved at
+the recorded Git revision. Full prior reports remain recoverable from that tree;
+they are not duplicated as an archive of user documentation.
+
+## Accuracy controls
+
+`benchmarks.experimental_precision_control` retains the former compensated policy.
+Verify it against the preceding checkout with `benchmarks.verify_previous_precision`
+before timing it. Residual products and corrections are a stronger accuracy
+experiment; their coordinate gates do not redefine [the default computation](../../docs/precision.md).
+
+Retain failing operands, original acceptance criteria, numerical results, and full
+call cost when extending these experiments. An execution failure, unsupported
+configuration, or instrumentation timeout is not a successful timing result.
+
+## RTX 5090 pipeline controls
+
+Run from the repository root on the [qualified runtime](../../docs/installation.md#qualified-tuned-runtime):
 
 ```sh
-PYTHONPATH=src python3 -m benchmarks.compare_attention_variants \
+python -m benchmarks.compare_attention_variants \
   --operations '[{"label":"do1","factory":"benchmarks.sm120_dout_experiments:make_attention","kwargs":{"dout_stages":1}},{"label":"do2","factory":"benchmarks.sm120_dout_experiments:make_attention","kwargs":{"dout_stages":2}}]' \
   --seq 128 1024 4096 --dim 64 --heads 16 --dtype bf16 fp16 \
   --visibility dense causal --phases backward joint --warmup-ms 1000 \
-  --window-ms 100 --repeats 7 --output dout-pipeline.json
+  --window-ms 100 --repeats 7 --output "$CAPTURE_DIR/dout.json"
 ```
 
-The maximum-staging prototype needs an isolated checkout of its qualified base. Its retained patch adds an explicit experimental runner family; it does not modify the production checkout. The patch contains the shared backward methods and its factory, rather than a runtime rewrite of the kernel class.
+The retained [maximum-staging patch](sm120_maximum_staging.patch) applies to
+`ca0e795982155528e92674813c24b88214d348e2` in an isolated worktree. Its factory is
+`benchmarks.sm120_maximum_experiments:make_attention`, with `stage_maximum` false/true.
+The patch retains the experiment without rewriting production classes at runtime.
 
-```sh
-git worktree add -b experiment/sm120-maximum .publication/sm120-maximum \
-  ca0e795982155528e92674813c24b88214d348e2
-git -C .publication/sm120-maximum apply \
-  ../../benchmarks/experiments/sm120_maximum_staging.patch
-cd .publication/sm120-maximum
-PYTHONPATH=src python3 -m benchmarks.compare_attention_variants \
-  --operations '[{"label":"control","factory":"benchmarks.sm120_maximum_experiments:make_attention","kwargs":{"stage_maximum":false}},{"label":"maximum","factory":"benchmarks.sm120_maximum_experiments:make_attention","kwargs":{"stage_maximum":true}}]' \
-  --seq 128 1024 4096 --dim 64 128 --heads 16 --dtype bf16 fp16 \
-  --visibility dense causal --phases backward joint --warmup-ms 1000 \
-  --window-ms 100 --repeats 7 --output maximum-pipeline.json
-```
-
-Compilation, allocation and warmup precede timing. Eager windows include host submission gaps; captured replay measures a different boundary. These commands reproduce the isolated controls, not a complete-model speedup.
+Keep raw captures outside the checkout. Compilation, allocation, and warmup
+precede timing. [H200 usage and limits](../../docs/experimental/h200.md) are separate.

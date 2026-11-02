@@ -14,8 +14,8 @@ def main():
     parser.add_argument("--captures", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--source-tar", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=Path("results/l40s-native-metadata.json"))
-    parser.add_argument("--plot", type=Path, default=Path("results/l40s-native-metadata.svg"))
+    parser.add_argument("--output", type=Path, required=True, help="Write campaign output outside the checkout.")
+    parser.add_argument("--plot", type=Path, required=True, help="Write campaign output outside the checkout.")
     parser.add_argument("--integration", type=Path)
     parser.add_argument("--integration-checkpoint", type=Path)
     parser.add_argument("--integration-source-tar", type=Path)
@@ -42,8 +42,7 @@ def main():
     assert all(pair["same_as_PR69"] for pair in identity["pairs"])
     bridge = json.loads((root / "host-bridge-binding.json").read_text())
     assert bridge and all(
-        digest(root / "host-bridge" / (row["loaded_bridge_sha256"] + ".so")) == row["loaded_bridge_sha256"]
-        for row in bridge
+        digest(root / "host-bridge" / (row["loaded_bridge_sha256"] + ".so")) == row["loaded_bridge_sha256"] for row in bridge
     )
     cpu = (root / "cpu.log").read_text()
     guards = (root / "guards.log").read_text()
@@ -94,8 +93,7 @@ def main():
             "sanitizers": "PR69 all four passing sanitizer runs retained: every selected current CUDA cubin/PTX/SASS pair is byte-identical, GPU-method source/ownership unchanged; no redundant tool rerun.",
         },
         "host_bridge": [
-            {key: row[key] for key in ("library", "loaded_bridge_sha256", "native_source_sha256", "scope")}
-            for row in bridge
+            {key: row[key] for key in ("library", "loaded_bridge_sha256", "native_source_sha256", "scope")} for row in bridge
         ],
         "verified_retention": {
             "files": health["verified_files"],
@@ -262,9 +260,7 @@ def main():
         "L40S native metadata · actual public API comparison · B1/H16 · 350 W · 2026-11-02\nDiamonds: difference of latency medians. Dots: nine paired rounds. Mixed samples and regressions retained.",
         fontsize=11,
     )
-    figure.savefig(
-        args.plot, metadata={"Date": None, "Creator": "KohakuFA-CuTe benchmarks.summarize_l40s_native_metadata"}
-    )
+    figure.savefig(args.plot, metadata={"Date": None, "Creator": "KohakuFA-CuTe benchmarks.summarize_l40s_native_metadata"})
     if args.plot.suffix.lower() == ".svg":
         args.plot.write_text("\n".join(line.rstrip() for line in args.plot.read_text().splitlines()) + "\n")
     plt.close(figure)

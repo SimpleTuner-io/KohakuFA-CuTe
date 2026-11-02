@@ -40,8 +40,8 @@ def main():
     parser.add_argument("--source-tar", type=Path, required=True)
     parser.add_argument("--publication-cpu", type=Path)
     parser.add_argument("--publication-proof", type=Path)
-    parser.add_argument("--output", type=Path, default=Path("results/l40s-causal-groups.json"))
-    parser.add_argument("--plot", type=Path, default=Path("results/l40s-causal-groups.svg"))
+    parser.add_argument("--output", type=Path, required=True, help="Write campaign output outside the checkout.")
+    parser.add_argument("--plot", type=Path, required=True, help="Write campaign output outside the checkout.")
     args = parser.parse_args()
     root = args.captures
     health = json.loads((args.verified_checkpoint / "health.json").read_text())

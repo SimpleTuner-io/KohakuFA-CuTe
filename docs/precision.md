@@ -36,20 +36,12 @@ unrounded value by a large dO would produce a representable result. Cancellation
 between rounded operands can also change a small coordinate's sign. These effects
 do not establish an indexing, reconstruction, or synchronization defect.
 
-## Precision work removed from default dispatch
+## Optional stronger accuracy experiments
 
-Earlier tuning added high/low P and dS products, independent residual accumulators,
-scaled FP16 residuals, a compensated forward denominator on one 5090 path, and a
-P-weighted-key product plus row correction for dQ. Those operations implement a
-stronger accuracy target and add computation, registers, and sometimes different
-KV geometry. The default no longer selects that precision policy or computes the
-extra dQ product. See the [removal validation](baseline-precision.md) for measured
-costs and the model-shape audit.
-
-The retained internal compensated owners and
-[previous-arithmetic benchmark control](../benchmarks/experimental_precision_control.py)
-are experiments, separate from public API dispatch. Historical device tuning
-reports describe their recorded source revisions and accuracy policies.
+Residual P/dS products, compensated reductions, and weighted-key dQ corrections
+implement a stronger accuracy target. They are excluded from default dispatch on
+every GPU. The [experiment record](../benchmarks/experiments/README.md) retains
+the previous-policy comparison and precision tradeoffs.
 
 ## Diagnose rounding separately from implementation errors
 

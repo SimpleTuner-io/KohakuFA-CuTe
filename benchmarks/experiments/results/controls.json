@@ -1,0 +1,402 @@
+{
+  "scope": "Compact retained negative results and accuracy diagnostics; not default dispatch or current performance claims.",
+  "source_revision": "30704427809008e83ad38174e7c1780016c44258",
+  "notes": [
+    {
+      "source_path": "docs/a100-causal-order.md",
+      "source_sha256": "2cf8191a8a0b5dbb3f31b369e23f903ef61648986f095827f75208b53acd321c",
+      "notes": [
+        "The initial same-process G1/G2/G4/G16 study used seed371. On the full 108-SM\nA100-SXM4-40GB, G4 was best for long H8 and G16 for long H16; S128 grouped\nvariants regressed and H8/S1024 was mixed. Those short families were not enabled.\nA separate actual public API evaluation used seed4093, followed by the final\nmerged-source evaluation with seed4243. All stages preserve the pinned Python\n3.13.18, Torch 2.15 CUDA 13.2, CUTLASS DSL 4.8.1 and FA2 2.8.4 stack, with the\nsame 350 W device. No Q2 pipeline change is included."
+      ]
+    },
+    {
+      "source_path": "docs/a100-d256-shared-v.md",
+      "source_sha256": "703219c1dc2108c90a5c803651a9061e730de30276e65e08afca9250bde69a02",
+      "notes": [
+        "These are geometric means over the eight measured cases. No forward speedup\nis claimed: its geometry and representative loaded SASS are unchanged, while\nits measured ratios retain the small regressions shown above. Values below1\nmean the comparison backend remains faster.",
+        "The [compact result](../results/a100-d256-shared-v.json) retains all 48 held-out\nrows and all 32 selection-study rows, seven timing samples, interned resources\nand per-head error summaries, source/library hashes and loaded-code evidence.\nThis is a separate follow-up; the [original N32 study](a100-d256-training.md),\nits 144 rows and its reference-order failure/diagnosis remain intact. Speedups\nfrom the two studies are not multiplied into a new same-process claim.",
+        "The selection study tested N32/resident-V against N64/shared-V, isolated KV1\nversus FA2's KV2 ownership, and compared causal head groups 1/4. All six controls\npassed resource, math, changed-graph and memory checks before timing. KV1 was\nselected uniformly, with causal group 4; the slight FP16-only KV2 advantage in\nsome causal selection rows did not become a dtype-specific preset. Group 4\nregressed with N32 and improved N64, so it is not applied indiscriminately.",
+        "An earlier N64/resident-V control was a different design: its representative\nBF16 dense joint call took 122.40 ms versus 9.51 ms for N32. CUDA reported 32\nregisters and 4120 local bytes for that N64 kernel. The new shared-V candidate\nretains that negative result; tile width alone did not predict performance. The\nearlier local-storage behavior was observed, not isolated as a single cause."
+      ]
+    },
+    {
+      "source_path": "docs/a100-d256-training.md",
+      "source_sha256": "32b7da3084b99043a66f3f7e2408bb487bdb8173e998d923f10a5deb36e4c309",
+      "notes": [
+        "Both references compute independent IEEE FP32 QK and dP before the prescribed\nP/dS conversions. CPU and CUDA GEMMs use different FP32 reduction orders. In\nhead0, 14965 score entries differed; that changed 14 input-rounded P entries\nand 15 input-rounded dS entries. The preserved operands, actual outputs,\nstatistics and failure report remain retained. No tolerance or kernel precision\nwas changed.",
+        "The broader evaluation passed 34 correctness/reference cases, 16 changing\npoisoned graph replays, all four sanitizer tools, 144 actual API timing rows\nand 16 unique loaded-kernel associations. All 24 referenced loaded ELF/SASS\nfiles are copied off-host and SHA-verified; this verifies the referenced code,\nnot a final archive of every campaign artifact. The earlier CPU-reference\nfailure remains a failed stage and is not relabelled as a pass.",
+        "The 144-row evaluation also measured H8/H16/S128 and H8/S1024. Its N32 joint\ngraph won every measured case over previous public dispatch, but complete eager\nS128 speed ratios were0.872\u20130.919, and H8/S1024 causal ratios were0.880\u20130.885. Those\nfamilies retain native automatic dispatch. The high host-call floor is observed;\nits cause is unresolved and is not attributed to hardware utilization."
+      ]
+    },
+    {
+      "source_path": "docs/a100-medium-causal-g4.md",
+      "source_sha256": "6fc26a3eefb658116a3d916c37d38b51bc2c1aa33a0ac417df51c55902971fa1",
+      "notes": [
+        "The original automatic selection rule rejected every candidate because a\nratio of eager joint medians showed a 0.12% FP16 regression. Yet G4 won all\nnine graph windows for both dtypes, and median paired eager ratios slightly\nfavored G4 for both. The original rejection remains unchanged in the data.\nG4 then received separate sanitizer qualification and two independent\nevaluations without changing any numerical gate."
+      ]
+    },
+    {
+      "source_path": "docs/a100-medium-causal.md",
+      "source_sha256": "254d7ff664f2cdefe8175359d7d0f0fbf2b2d014e255d759278080916b3aae66",
+      "notes": [
+        "Across these two dtype cases, the geometric speedups are 1.12\u00d7 over the\nprevious public API, 2.06\u00d7 over FA2 and 1.08\u00d7 over SDPA in complete eager time.\nGraph speedups are 1.61\u00d7, 1.06\u00d7 and 1.17\u00d7 respectively. FA2 eager results include\nits host implementation; the graph comparison describes the device path.\nSome individual eager paired windows regress. All samples and their ranges\nremain in the data and chart; the medians do not establish uniform wins.",
+        "The original Python-metadata candidate improved graph time but regressed both\neager joint medians by about 5%. It was retained and investigated rather than\nreleased as an automatic improvement. Systems traces correlate caller and\nautograd-worker launches: all 120 profiled joint calls contain four kernels.\nThe original public path spent more time before the first launch than the\nexplicit runner, while their GPU work matched. The observed cgroup throttle\ncounters did not increase during that diagnostic."
+      ]
+    },
+    {
+      "source_path": "docs/a100-public-host.md",
+      "source_sha256": "537afe60899733a554ef0427e17fc9f2edc9568fd88c705f696216be13e4ee85",
+      "notes": [
+        "There are regressions: S4096/D128 causal forward loses about 3.1% BF16 and\n4.1% FP16 in complete eager time. D128 causal graph-forward losses are about\n4\u20135% across both lengths. Joint regressions against the previous public API\nare at most about 1%. The retained samples include all cases; this change does\nnot claim uniform wins. H8 remains within earlier qualified eligibility but is\nnot included in this new actual API timing matrix."
+      ]
+    },
+    {
+      "source_path": "docs/a100-sm80-fa4.md",
+      "source_sha256": "1b6d9309106eb9862175fe1eca9160128aaead2dd541c8034967e710081bba91",
+      "notes": [
+        "Two-stage forward and register-resident Q variants generally regressed; their\ncombination failed correctness and remains an experiment. Positive-only\nprobability specialization gave no broad material improvement. Producer-owned\nmaximum staging passed correctness and sanitizers, but improved some D128 and\ncausal rows by only 1\u20133% while slowing D64 dense. It is retained separately and\nis not selected by this backend. One dO stage reduced D128 shared storage to\n148480 bytes and local storage to 16 bytes per thread. Its small gains varied\nby dtype; the two-stage default remains selected, with the one-stage schedule\nretained as an explicit experiment."
+      ]
+    },
+    {
+      "source_path": "docs/a100-warp-inference-experiment.md",
+      "source_sha256": "9ee546d8104620144efc095585d19490d9486f98fae7d3adbcb4136ba53790af",
+      "notes": [
+        "The method requires NoGrad or inputs that do not request gradients. Forward-AD\ndual inputs are rejected even under NoGrad. The inference branch independently\nchecks contiguity, alignment and pending logical conjugation/negation, so a later\ntraining-layout extension cannot silently enable unqualified inference views.",
+        "Actual traces retain a single forward kernel in each path. The ordinary runner\nrecords two `aten::empty` statistic buffers; inference records neither, while\nboth retain the owned output allocation (`empty_like`/`empty_strided`). This is\nevidence of removed host preparation. It does not assign a runtime percentage\nto any device instruction. D128 causal resources change from 220 to 232\nregisters without local storage; the longer causal call is slower. That\nassociation alone does not establish the cause of the regression."
+      ]
+    },
+    {
+      "source_path": "docs/a40-d256.md",
+      "source_sha256": "47140773e631254be76c73c2476353bcae436b6eec2c6ccc58e9f746600f48e5",
+      "notes": [
+        "Actual public memcheck, racecheck, synccheck and initcheck each pass the two\nfocused S1024 families, BF16 dense and FP16 causal, including changed/poisoned\nreplay. References run on CPU using identical rounded operands, actual outputs\nand unchanged equations. Host API probe diagnostics use `--report-api-errors no`;\ndevice checks remain enabled. Earlier full-suite attempts stopped before math\non a metadata-file lookup error; their failures remain recorded, and the repaired\nimmutable continuation supplies the passing qualification."
+      ]
+    },
+    {
+      "source_path": "docs/a40-native-predicate.md",
+      "source_sha256": "a36312273887413f6b1d7881742c1102f0598789e6bf8d406ea13c40868fa297",
+      "notes": [
+        "Graph F+B does not consistently improve, and long causal and dense differences\nare small and mixed. The compact report retains those rows, including regressions;\nthere is no uniform speedup claim for long calls. All three captured selected\nbackward ELFs, their SASS and resource allocations are byte-identical to the\npreceding public entry. Every before/native graph row has identical symbols,\ngrids, blocks, registers, local bytes and shared-memory requirements. This is a\nhost-dispatch improvement, with no new pipeline or numerical method."
+      ]
+    },
+    {
+      "source_path": "docs/b200-wide-backward.md",
+      "source_sha256": "2b1475b43ddca121606aab6b6eabf429dbc31db2c44b81ea3ffd626ee81d885e",
+      "notes": [
+        "Forcing the wider owner at H8/S512 regressed causal forward + backward by\n10.7% in the preceding experiment. That geometry has only 64 wide CTAs,\ncompared with 128 preceding-owner CTAs; H16/S512 has 128 versus 256. The H8\nselector therefore starts at the measured 1024-token case. Its smaller calls\nretain the preceding owner.",
+        "The SDPA columns compare against that selected memory-efficient backend. They\ndo not establish performance against a Blackwell-specific FlashAttention path.\nSeparately, the pinned FA4 default configuration failed D512 during forward\nsetup because its score/output accumulators exceeded TMEM capacity. No\nsuccessful FA4 D512 timing was recorded. This is a limitation of the tested\nconfiguration, not a claim that every possible FA4 configuration fails D512.",
+        "Targeted memcheck, racecheck and synccheck cover both repaired backward owners,\nincluding all their eager and changed-graph launches. An unfiltered global-only\ninitialization check also passes with input, forward and delta producers\nincluded. Consumer-filtered global diagnostics and a bounded readback-control\nfailure are retained separately; they do not establish a producer-complete\ninitialization failure. Shared-memory initialization diagnostics\nremain explicit: initcheck reports byte `0x54` in compiler-generated allocation\ncode. An allocator-only control places the application holding slot at `0x4a0`\nand records the reserved-region registers as `(0, 0x120, 0x400, 0x40, 0)`.\nThe exact loaded forward instruction is an atomic OR at `0x40 + 0x14`;\nthe application's holding-slot store/read use a separate address. The control\nreproduces the report with and without a poisoned application slot, while all\nthreads observe its hardware-written allocation result. This locates the report\nin reserved allocator state; it does not establish a clean initcheck result.\nUnchanged native-forward race reports are retained separately. These checks\ndo not establish race-free complete attention or checkpoint-level quality."
+      ]
+    },
+    {
+      "source_path": "docs/baseline-precision.md",
+      "source_sha256": "8d4fdcefa2192d34fe0e301bc13b82a8ca10830d243de23f83cd1ed6ddce44ef",
+      "notes": [
+        "A BF16 B2/H16/D128 rectangle with 1,023 or 1,027 queries and 17 keys also demonstrates\nthe distinction on ordinary random operands: the previous pointwise FP64 check\nreports two coordinate failures, while the rounded reference has none. Independent\nFP64 component norm errors remain approximately 0.20\u20130.30%. This is an operand\nrounding effect, rather than evidence that the query/key boundary lost data.",
+        "```sh\npython -m benchmarks.compare_upstream_precision --upstream-checkout ../KohakuFA \\\n  --output ../upstream-precision.json\npython -m benchmarks.cudnn_regressions --quick --reference rounded \\\n  --backends kohakufa-cute --output ../rounded-regressions.json\npython -m benchmarks.cudnn_regressions --quick --reference fp64 \\\n  --backends kohakufa-cute --output ../mathematical-diagnostics.json\n```",
+        "The regression command applies the selected reference to every backend and\nretains both assessments. It exits unsuccessfully when the selected check fails.\nOn H100, all 24 quick cases match the declared contract, while ten fail the former\nmathematical/edge-row criterion. BF16 issue160, for example, has about 31% dQ\nnorm error against FP64. This is an explicit accuracy tradeoff, not evidence\nthat those gradients became FP64-accurate. The compensated computation can\nremain useful where that stronger mathematical target is required."
+      ]
+    },
+    {
+      "source_path": "docs/blackwell-allocator-initcheck.md",
+      "source_sha256": "dde54c23925f7540c1c641e591ce325a159c636bd1641c4facd1cce7fa368733",
+      "notes": [
+        "The same standalone allocator executable passes the recorded physical checks\nand old initcheck, but newer initcheck reports reads inside its allocation\nlowering. This is an unresolved compiler/runtime/checker initialization report.\nIt does not qualify attention, automatic dispatch, or B300.",
+        "These controls disprove user-word sentinel initialization and the full-CTA\nbarrier as fixes for this executable's reports. They leave initialization of\ncompiler-reserved allocator state unresolved. The atomic sites show that\n`ATOMS.OR` at shared `0x54` can occur inside standalone SM100a allocation. This\ndoes not establish the original SM103 attention report's loaded instruction,\ninitialization provenance or checker behavior. No memory-qualification waiver\nor attention dispatch change follows.",
+        "## Separate failures and next control",
+        "The original B300 attention report is distinct: four-byte shared read at\n`0x54`, reported PC `0xee0`. Its retained compiler artifact contains\n`ATOMS.OR`, not this B200 byte load, and lacks the same direct loaded-image\nbinding. It remains unresolved. The allocator diagnostic cannot waive that\nattention report or downstream output reports."
+      ]
+    },
+    {
+      "source_path": "docs/causal-head-groups.md",
+      "source_sha256": "b9812ae48df67f2b8001ffb9dee6c1f409fc7cc11c02f3224f40557c5703da50",
+      "notes": [
+        "Use `--smoke` under each sanitizer. `--compare-reference-devices` performs the\nadditional CPU/CUDA reference sanity check outside instrumentation. Large raw\ncaptures and failed-harness records stay outside the tracked tree.\n"
+      ]
+    },
+    {
+      "source_path": "docs/configured-native-host.md",
+      "source_sha256": "0c9c5f722cad89e4af73ab47223f21592dad54eb0005e251a03c6a79404028bf",
+      "notes": [
+        "The strict `scaled_dot_product_attention` entry now tries qualified selection\nbefore that generic-cache check. Compilation and unselected calls retain their\nexisting validation. A selected execution failure still propagates."
+      ]
+    },
+    {
+      "source_path": "docs/determinism.md",
+      "source_sha256": "87838e255066f7c88a2e47fc71f8495e00cbce8cde364dc90d13680c57892bd0",
+      "notes": [
+        "Run the policy regression tests with:"
+      ]
+    },
+    {
+      "source_path": "docs/gb10-forward-geometry.md",
+      "source_sha256": "f7dbdacda045e38caad8b7a9deddc8124fcab265146cf74f0f5dad42f5e68d94",
+      "notes": [
+        "Random representative cases keep the independent per-head FP64 norm limits of\n1% BF16 and 0.5% FP16 for O, dQ, dK and dV. Directed negative-offset fixtures\nalso check the declared once-rounded equations using actual forward O. On a\nretained BF16 S1024 offset fixture, the old and experimental layouts have 1.10%\nand 1.08% mathematical dQ error; their respective declared rounding floors\npredict almost all of it. Both match that rounded reference within 0.20%.\nThe mathematical diagnostics and the original failed threshold run are retained.\nThese checks follow the [declared precision contract](precision.md), including\none input-dtype conversion each for P and dS."
+      ]
+    },
+    {
+      "source_path": "docs/gb10-inference.md",
+      "source_sha256": "b8ce422dd1f46f5b7e14a26c70db89d538d5eae8122daae3495ca5b3981b068b",
+      "notes": [
+        "The opt-in `gb10_attention` entry uses the existing native forward-only runner\nwhen a call requests no input gradients. The new measured family is full-device\nGB10, B1/H16/D128, FP16 or BF16, equal contiguous aligned Q/K/V shapes, and\nS128, S512, S1024 or S4096, dense or causal. BF16 dense S512 retains its\nprevious normal runner after a consistent small regression in the forward-only\nexperiment. Training keeps its existing\n[schedules and fallback boundary](gb10-shared.md).",
+        "The qualified runtime and full-device checks remain those in\n[the installation boundary](gb10-shared.md#qualified-boundary). Masks, dropout,\nGQA, other head counts or dimensions, tails, noncontiguous or unaligned inputs,\nsigned/zero/subnormal scales, deterministic mode and compiled calls retain the\nordinary API or the previously qualified training path. Pending negative views\nuse the existing canonicalizing path. Forward-AD dual inputs remain explicitly\nunsupported by the native forward-only runner. Selected-kernel failures propagate.",
+        "Retaining the BF16 dense S512 normal runner avoids the rejected forward-only\npolicy, but does not establish unchanged latency: the held-out graph/eager\nmedians are 28.74/28.95 \u00b5s versus 28.34/28.67 \u00b5s previously. Its graph kernel\ndescriptors and 32-node counts match the previous control. The remaining\nroughly 1% difference and the full API overhead remain in the data."
+      ]
+    },
+    {
+      "source_path": "docs/gb10-long-d256.md",
+      "source_sha256": "5e0e06e11bbebdbdb7717a56dfb4e8a8b74933bd34462a88d4aa24c458a91c97",
+      "notes": [
+        "A controlled same-process pilot compared both variants with M64/N64/128 and\nM64/N32/128, FA2, SDPA and the actual preceding public entry. M64/N32 lost and\nwas dropped. Broadening retained the original spilled control and the useful\nM64 control, then chose the released cases before the held-out public run.\nThe [compact data](../results/gb10-long-d256.json) keeps the negative results.",
+        "Actual public calls pass independent per-head FP64 output norm limits of\n1% BF16 and 0.5% FP16 on negative score offsets and three changed-input graph\nreplays with poisoned outputs. They save no autograd tensors in NoGrad mode.\nAll twelve training cases preserve O/dQ/dK/dV bitwise against the preceding\nentry; S512 also checks all four components independently against FP64. Single\nrequested input gradients, mode transitions, Parameters, identity subclasses,\nforward AD, fullgraph compiler fallback, boundary fallbacks and selected-adapter\nfailure propagation are checked. Independent compiled cases reset Dynamo's\ncache between cases, preserving production limits. Legacy D128/H4 training\nand all short-width gates pass separately.",
+        "Actual graph and eager processes map both current and pristine parent host libraries; inode checks, library bytes and exact build configurations are retained. Complete source snapshots, operands and loaded code are SHA-verified against offhost inventories. CPU checks ran 378 tests: 177 skipped, 201 executed, no failures; 24\npublication-guard tests passed separately.",
+        "The first public timing harness failed before its first window because a CUDA\noutput reached a CPU reference metric. A new immutable continuation copies\ndiagnostics to CPU outside timing; runtime/GPU source and passed API gates are\nunchanged.\n"
+      ]
+    },
+    {
+      "source_path": "docs/gb10-long-d64.md",
+      "source_sha256": "cccafdad2a160941e88da58878ffbc2503ac6b9a2c56f5162391667cff285f0e",
+      "notes": [
+        "Independent CPU FP64 checks use identical rounded operands and per-head output norm limits of 1% BF16 and 0.5% FP16. Four public cases cover negative offsets and three changed, poisoned graph replays. Requested gradients use the preceding training implementation and retain bitwise-equal O/dQ/dK/dV; NoGrad and inference mode save no autograd statistics. Parameters, identity subclasses, live gradient flags, fullgraph compiled fallback, explicit forward-AD rejection, signed/zero scales, masks, hidden rows, strides, alignment, tails and GQA are checked. Selected adapter failures propagate. Existing D256, D128/H4 training and short-width gates also pass.",
+        "The actual preceding control loads pristine PR86 Python and C++ metadata code through a separate native bridge; it cannot inherit the newly widened predicate. Both actual timed processes retain current and parent mapped libraries, inodes, source hashes and compiler/include configuration. An initial observer failed before reading mappings because a legacy qualifier had already created its output directory. All its successful gates and eight timing rows remain retained. A new immutable timing-only continuation changes only the observer destination, uses the same evaluation seed without retuning, and requires both timed-library proofs. Source and benchmark equivalence are checked before it runs. The final table comes from a subsequent complete run after composing the preceding branch\u2019s RTX 3090/L40S integration. That run rechecks every public gate and both timed libraries; the GB10 arithmetic, schedules and live metadata boundary retain their qualified behavior.",
+        "Complete source snapshots, operands, actual loaded code, both timed host libraries and exact build flags are physically SHA-verified against complete offhost inventories. CPU checks ran389 tests total:185 skipped,204 executed, no failures;24 publication-guard tests passed separately."
+      ]
+    },
+    {
+      "source_path": "docs/gb10-native-metadata.md",
+      "source_sha256": "535e3bd537aedb4ba885a13b6dc63c640d02f16f8ad37af751645d631f978e56",
+      "notes": [
+        "All samples, paired reversals and per-head errors remain in\n[the compact data](../results/gb10-native-metadata.json). Longer cases retain\nsmall differences and regressions; the complete matrix is the record.\nThese are attention-call measurements, with no complete-model or backward\nspeedup claim. FA2 and SDPA retain their own arithmetic policies.",
+        "The production function contains the native call directly. No runtime\nmonkeypatch is installed. Compiler, mask, dropout, GQA, deterministic, CPU and\nscale checks stop before optional native initialization where applicable.\nUnsupported runtime pins retain the preceding fallback. Selected initialization\nfailures propagate."
+      ]
+    },
+    {
+      "source_path": "docs/gb10-query-ownership.md",
+      "source_sha256": "8da24c2ba590347f488495e4c954b8e7182a38095a083ded124b63b6900cf31f",
+      "notes": [
+        "The report includes the corresponding FP16 cases. A separate B1/H4 matrix at\nS128/512/1024 passed 12 cases and showed complete-call speedups of 1.15\u20131.22\u00d7.\nThe long D256 FA2 gap remains. The default direct FA4 D256 call requested\n131,072 bytes of shared memory and failed the device's block limit; it is\nrecorded as an execution failure, never as a timing or a fallback result.",
+        "The unchanged six-suite run completed 80 tests with 23 skips and 17 failing\nsubtests, so this is not a claim that the whole GPU suite passes. A sharp FP16\ncausal D64 fixture has the same outputs and gradients with and without the new\nD256 owner; direct FA2, FA4 and SDPA also miss its existing cosine gate. Twelve\nD256/D512 causal tail subtests likewise return byte-identical baseline and\ncandidate tensors. Their first query has one visible key: the kernel gives zero\ndQ while a different FP32 dP/delta reduction order produces a reference norm\naround 2e-5. Whole-tensor norms pass. These diagnostics do not change the original\ngates or add compensation. Four wide-head sharp-cancellation subtests also fail\nat logit scale 1e6. Their outputs and all three gradients are byte-identical with\nthe previous query owner, including the unchanged D512 control. Their accuracy\nfailure remains unresolved in the baseline; this change does not claim to fix it."
+      ]
+    },
+    {
+      "source_path": "docs/gb10-shared.md",
+      "source_sha256": "e0d57b9c77ea0d21a62bd243eb59c1e0a2759f68214c79db5a3fe969091a2c54",
+      "notes": [
+        "The training selection requires aligned, contiguous BHSD FP16/BF16 with equal Q/K/V shapes,\nbatch one, 4 or 16 heads, and D128. Dense lengths are 512, 1024 and 4096;\ncausal lengths are 512 and 4096. It also requires the current CUDA device,\nthe reported `NVIDIA GB10` name, 48 SMs, and 101376 bytes of opt-in shared\nmemory per block. Masks, dropout, GQA, other shapes, tails, strided/unaligned\ninputs, signed/zero/subnormal scales, deterministic mode and compiled calls\nretain the ordinary public CuTe API with the original arguments. Selected\nkernel failures propagate.",
+        "H16/S4096 complete public eager medians were 6000.39 versus ordinary CuTe\n8781.94 and FA2 6081.69 us for BF16; FP16 measured 6000.99 versus 8794.92\nand 6152.66 us. Short eager measurements have substantial host variability\nand observed regressions: H4/S512 FP16 public measured 287.32 versus ordinary\nCuTe 87.65 us; H16/S512 BF16 measured 428.78 versus 202.72 us. The entry is\nexplicitly opt-in. A graph win does not imply an eager win.",
+        "On the same ARM GB10 lease, eleven alternating rounds of 10000 hot calls\nmeasured predicate medians of 5.166 versus 2.624 us, a 2.542 us reduction.\nFifty-two complete API rows retained identical graph resources for cached,\nuncached and direct-runner controls and passed the existing FP64 gates.\nThe [cache summary](../results/gb10-device-cache-summary.json) keeps every row,\nincluding regressions and sample ranges. There is no broad API latency gain\nclaim: H4/S512 FP16 eager joint improved 60.75 to 58.11 us, while H16/S512\nBF16 changed 184.19 to 274.08 us and H4/S1024 BF16 changed 182.38 to 230.36 us.\nLong H16/S4096 stayed approximately 5.93 ms.",
+        "Public eager's instrumented kernel span was 9.755 ms with 2.573 ms summed\nkernel durations, versus graph's 2.563 ms span and 2.505 ms kernel sum.\nThe timelines expose launch gaps; instrumented timings are not benchmark\nspeedup evidence or a performance ceiling. Original profiling attempts\nfailed on nonleaf CloneBackward stream ownership and are not counted as\nsuccessful captures. The repaired harness passes detached operands into the\nexisting capture helper so it creates independent leaf operands.",
+        "The pairing driver retains samples, per-head mathematical/rounded diagnostics,\ngraph resources, loaded-library names and coarse board/CPU activity samples.\nIts CPU stub executes dense/causal eager and graph builders, checking repeated\nbackward reuse, operand identity and gradients. An early causal eager-joint\nbenchmark omitted the visibility keyword; those measurements are excluded and\nthe corrected driver is rerun. Exact frozen source/commands, raw reports,\nwheel, hashes, loaded code and failures remain outside the tracked tree.",
+        "The same ordering transfer fails for long FP16. H16/S4096 joint graph measured\n3511.53 us with G1, 3573.44 us with G4 and 6536.82 us with G16, versus\n3408.39 us for FA2. Instantiated FP16 main resources were 255 registers,\n82944 shared bytes, and local allocation of 0/48/88/88 bytes for G1/2/4/16.\nThese resources support a follow-up storage intervention; they do not measure\nlocal-memory traffic or prove a stall percentage. Larger grouping is not\nselected for those cases. [The group summary](../results/gb10-causal-groups-summary.json)\nretains all measured rows, rounds, negative results and source hashes.",
+        "The final actual-public before/selected/FA2 pair used nine rotating rounds,\n500 ms warmup and 100 ms windows, with no concurrent compilation. Complete\njoint graph measured 98.47/93.88/114.90 us, respectively: the selected entry\nwas 4.7% below its cached public predecessor. Backward graph measured\n71.71/65.06/71.83 us. Complete joint eager wall medians were\n127.98/117.90/461.67 us. The unusually large FA2 eager result is retained;\nearlier short-eager variability remains unresolved and this row does not\nestablish a general host-latency gain.",
+        "The original noncausal underflow fixture overflows FP16 when reused with causal\nprefixes: its rounded reference reaches 400934.78, and both the reference's FP16\ncast and the kernel produce 94 positive infinities per head at exactly the same\ncoordinates. That failed fixture and its operands remain retained; it is not a\nsuccessful finite-output case. The causal qualification multiplies dO by the\nexact power-of-two factor 1/8, keeping P and its rounding/underflow unchanged\nwhile bounding dV near 50117. A CPU regression preserves the original overflow\npositions and signs and checks the representable rescaling. No kernel arithmetic,\nreference equation or acceptance tolerance changes."
+      ]
+    },
+    {
+      "source_path": "docs/gb10-short-forward.md",
+      "source_sha256": "91a3bc6d3dfe41b18f10a2c88a8dd67676f6279a34007c1a7f7a3bff3d174499",
+      "notes": [
+        "Actual public output checks use independent per-head FP64 norm limits of\n1% for BF16 and 0.5% for FP16. All twelve shape/dtype/visibility cases include\nthree changed-input graph replays with poisoned outputs. Separate policy checks\nexercise live grad flags, views, strides, alignment, scales, masks, GQA,\nshape boundaries, forward AD and actual fullgraph compiler fallback. Independent\ncompiled cases reset Dynamo's cache between cases, preserving its production\nrecompile limit. Twelve random training cases check O/dQ/dK/dV against FP64\nunder the same per-head limits. Existing D128 metadata, initialization failure,\nmode transitions and long H4 training checks are rerun.",
+        "Source snapshots and exact commands precede launch. Actual operands, loaded\nhost libraries, build configurations, process maps, cubins, PTX and SASS remain\noutside the tracked tree, verified against complete file inventories and SHA-256.\nThe original compiled-case recompile-limit failure and the capture adapter's\nincorrect single-kernel FA2 assumption and native-library import-order failure\nare preserved. None is reported as a\nsuccessful stage. The first pilot's memcheck API-version reporting warnings are\nalso retained; subsequent kernel checks use `--report-api-errors no` and still\ntreat kernel memory errors as failures."
+      ]
+    },
+    {
+      "source_path": "docs/h200-experimental.md",
+      "source_sha256": "a41311584249bf71d25146d7656471054bbc8aefed2f98befa7daf70d4ebc208",
+      "notes": [
+        "A separate [standalone rank-4 diagnostic](../benchmarks/diagnostics/README.md)\nnow reproduces initialization reports on SM120 with exact uninstrumented loaded\n`UTMASTG.4D` binding. Ordinary stores and poisoned-output controls pass, and a\nfull-completion wait retains the reports despite correct physical output. Its\ninstrumented runs use the same executable with CUPTI capture explicitly disabled.\nThis is evidence about that standalone SM120 producer. H200's unmodified\ninitialization status remains unresolved and its attention backend stays\nexperimental."
+      ]
+    },
+    {
+      "source_path": "docs/l40s-causal-groups.md",
+      "source_sha256": "09b8662d9bbe33dd2b3e5c8e41459e4087b16e91eaa26629cc9189885a3f8a7c",
+      "notes": [
+        "Complete source snapshots, exact commands, all timing operands and samples,\nloaded binaries/PTX/SASS and stage receipts are verified off-host by physical\nfile SHA inventory. The compact report records archive and source hashes;\nraw captures remain outside the tracked tree. The first release attempt stopped\nbefore GPU work because an import-order preflight failed. Its receipt is retained;\nthe immutable corrected run passed all 45 stages. No failed or skipped stage is\ncounted as a pass. After refreshing the publication branch onto its newer\nupstream base, all active L40S/API/kernel/native-ABI files remain byte-identical\nto qualification. The final CPU suite passes 358 tests with 179 expected GPU\nskips; all 24 publication-guard tests pass separately.",
+        "The retained K-residency, query-tile, positive-scale and register-dKV/copy\nexperiments remain separate rejected controls. Their negative timings and failed\nimplementation attempts did not change this selector or its accuracy criteria.\n"
+      ]
+    },
+    {
+      "source_path": "docs/l40s-native-metadata.md",
+      "source_sha256": "eec296bc99d9db87f942f602808e0a4cf18d49c4c8933a723e54e355e7f2e86f",
+      "notes": [
+        "Long-call differences are mixed. Dense D128 eager joint medians regress about\n0.7\u20130.9%, while causal D128 improves about 0.9\u20131.0%; paired samples vary.\nThere is no consistent long-call or CUDA-graph speedup claim. FA2 and SDPA remain\ncomplete implementation comparisons under their own arithmetic policies, with\nall rows retained rather than only favorable cases.",
+        "The final source passes 12 GPU/API test methods: all three guarded APIs and the\nexplicit shared entry, cold/warm caches, saved statistics, changing/poisoned graph\nstorage, unaligned dO, fallback/compile paths and required-loader failures. More\nthan 400 actual metadata comparisons include both dtypes and GQA flag values,\nshape/scale boundaries, parameters, plain tensor subclasses, parametrized modules,\nmutable storage offsets and gradient flags. An alternate-current-device branch\nrequires multiple GPUs; this machine has one.",
+        "All 380 actual artifact files, 553576666 bytes, match their physical off-host SHA\ninventory: input tensors, final samples, loaded GPU code, the mapped native bridge\nand build command, logs and receipts. Complete frozen source includes both the\ncandidate and pristine parent namespace. Raw captures remain outside the tree.\nThe initial upload-only attempt failed before launch; its source and failure are\nretained separately from the passing 34-stage run.",
+        "The final integration preserves the merged A40 D256 and GB10 helpers. All six\nactual GPU/API tests and 16 fresh short-shape joint timing rows completed. Graph\nexecution remains essentially unchanged. Eager samples retain substantial host\nvariability; BF16 dense D128 has a 1.4% regression in differences of medians,\nwhile its median paired difference is only -0.21 microseconds. These samples\nsupplement the original evaluation without replacing it. The final CPU suite\nran 385 tests with 187 skipped and no failures, and all 24 publication checks\npassed. All 24 final raw files (103415873 bytes), including the actual mapped\nnative bridge and its build configuration, match the physical SHA inventory."
+      ]
+    },
+    {
+      "source_path": "docs/l40s-outliers.md",
+      "source_sha256": "444254a690fbc864483ea0b0dac0bf125e17cbe55b85e98a9e3d596b92b6b594",
+      "notes": [
+        "The forward predicate is deliberately stricter than \u201clong sequence.\u201d A measured D64 1,025-query/1,031-key case regressed with the larger query tile; restoring the stock tail path avoids that result. Shape-cache and compiled-call tests cross both length thresholds and the aligned/shifted boundary.",
+        "## Precision failures and their repair",
+        "The original BF16 rectangular failure used B2/H16, 1,023 queries, 17 keys and D128. One dV coordinate was approximately \u22120.15918 instead of the centered FP64 result \u22120.18469. Its whole-gradient relative error was only 0.236%, so a norm-only gate missed it. The corrected probability product returns approximately \u22120.18457 and passes the existing component-wise checks.",
+        "A compact cancellation example makes the issue clearer: a single rounded probability operand gives BF16 dV **+0.37109** where FP64 gives **\u22120.0182377**. FP16 gives **+0.00870514**. A second probability component and its own FP32 accumulator preserve the negative result. Embedding the same finite inputs in square attention demonstrates that rectangular shape is not a mathematical protection.",
+        "The corresponding key-gradient failure comes from rounding dS before multiplying by Q. Capturing the actual GPU FP32 dS isolated the loss: its FP64 product with Q agreed closely with the centered reference, while the rounded operand reproduced the released kernel\u2019s wrong-sign result. The low dS product repairs that rounding boundary. An arbitrary query-anchor correction was not substituted for the actual residual product.",
+        "High and low products have independent FP32 sums. Interleaving both products into one accumulator was rejected because FP32 accumulation rounding can consume the small residual during cancellation. The low sum is combined only in the epilogue.",
+        "An FP16 underflow fixture produces a dV coordinate of about **0.67997**. Unscaled probability components both disappear and produce zero. Scaled residual storage gives about **0.67969**, with all output/dQ/dK/dV gates passing. A short-square variant also fails without scaling. The shared regression factories preserve the exact rounded operands and check these coordinates in addition to whole tensors. The D256 owner retains its separately qualified derivative-packing policy; its probability residual is also scaled.",
+        "## Resource choices and rejected controls",
+        "The first full-width D128 residual layout was rejected after a severe allocation failure: 40 allocated registers and roughly 3,000 bytes of local memory per thread, with extensive local loads/stores. Its PTX was register-only; the local traffic appeared in assembled SASS. A smaller output fragment removed this spill cliff. This differs from D64\u2019s small, measured spill tradeoff: the final BF16 export has seven local-load and ten local-store sites across the whole function, while FP16 has four and six. These are static sites, not executed counts or runtime percentages. The selected owner still beat the spill-free alternative on complete calls.",
+        "A smaller 16-key-row/four-column-warp layout reduced register use substantially but increased complete latency at long D64/D128. The controlled intervention repeats query/gradient staging over more key tiles; lower registers did not establish a speedup. It remains a rejected long-sequence control, while the compact short layout is retained.",
+        "Reusing query-column statistics also showed why cold medians are insufficient. FP16 pilot runs favored it by roughly 3\u20136%, while BF16 often regressed. Four alternating 20-second sustained passes, excluding the first five seconds of each, reduced the aggregate FP16 advantage to about 1.65%. Temperature rose from roughly 55\u00b0C to 65\u00b0C and sampled board power approached 350 W. The final generic policy keeps the simpler original statistic schedule rather than adding a small dtype-specific preset. Sampled clock values are telemetry, not cycle-normalized timings.",
+        "Compute counters were unavailable: a corrected capture attempt returned `ERR_NVGPUCTRPERM`. An earlier export-harness failure is retained separately. Timing, graph identities, deployed code, resources and controlled changes support the conclusions; no cache-hit, stall or utilization percentages were inferred.",
+        "The frozen generic correction passed 64 focused cases, including both dtypes, exact key/value/underflow factories, the original rectangular operands, three negative-max key fixtures, signed and zero scales, strided masked GQA and 12 graph replays with changed inputs and poisoned outputs. Separate existing regression methods cover the same public frontends and runtime boundaries. Full GPU discovery passed 194 tests with 56 skips on revision `671a8a2`. The final `2806bcc` runtime then passed all ten shared key/value test methods and a public four-backend dispatch check. These are separate validation runs; the final matrix records its own complete runtime hashes. A later `26a1061` integration check passed eight D64/D128 cases across both dtypes and visibility modes, checking eager outputs/gradients and all three captured phases. Its only runtime differences are the nonselected RTX 5090 schedule and new backward module. The capability guard bypasses that selector on L40S; sixteen direct predicate checks on actual normalized compilation arguments were false, and the new module was never imported.",
+        "Twenty focused CPU-FP64-reference cases passed memcheck and racecheck with CUDA API-status reporting suppressed. Unfiltered memcheck reported seven pairs of API-version lookup diagnostics: a 13041 request against driver API 13040 and `cuGetProcAddress_v2` invalid-value status. They were retained separately from kernel-memory findings. Only API-status reporting was suppressed; kernels were not name-filtered. The same memcheck flags detected an intentional invalid global write and returned the configured failure exit code, confirming that memory instrumentation remained active.",
+        "`released` is not a claim of a byte-identical historical binary. Comparing `previous` with `cute` isolates the architecture schedule; comparing `released` with the corrected paths also exposes arithmetic costs. Failed native/released numerical gates leave diagnostic timings and are not qualified speedup claims."
+      ]
+    },
+    {
+      "source_path": "docs/l40s-short-optimized.md",
+      "source_sha256": "d0b915153426962116a6bba5211d43d96cb4ad34bc51b8b2783c83f86006056a",
+      "notes": [
+        "The same-process baseline uses the actual preceding PR #81 Python namespace\nwith both shared-class flags disabled. It is explicitly labeled **basic, flags\ndisabled**, rather than relabeled as the pristine original class. That disabled\nclass had a 0.7\u20131.2% graph regression in the earlier compatibility study.",
+        "Eight shared-storage graph controls additionally reverse allocation/capture\norder for each dtype/visibility case. Eight no-grad and eight long BF16 D128\ncontrols retain the preceding paths. All samples, paired differences, ties and\nregressions remain in the report. The original basic-owner study remains\navailable as a [dated control](l40s-short-owned.md)."
+      ]
+    },
+    {
+      "source_path": "docs/l40s-short-owned.md",
+      "source_sha256": "04bb0242b949166052b125b3021117f9a693696ca524a943461beb63628bcdee",
+      "notes": [
+        "This change selects the basic exclusive-gradient owner for a full NVIDIA L40S\n(142 SMs, SM89, 101376-byte opt-in shared-memory capacity), square B1 H16 S128\nD16 FP16/BF16 training. Dense and causal visibility are qualified. This page\nretains the initial basic-kernel measurements from PR #76 and its\nseparate L40S public qualification. The dependency composition now contains the\nshared class with both L40S controls disabled. Its independent compatibility\nrun passes directed math and all four tools, while retaining a 0.7\u20131.2% graph\nregression against the pristine original class. The optimized L40S selection is\nqualified separately in PR #88.",
+        "Eight no-grad controls retain the generic path. Eight BF16 D128 long controls\nretain the preceding schedules: graph differences are below 0.2%; eager results\ninclude a 0.16% dense S4096 regression. These controls establish compatibility\nand expose variability, rather than claiming long-shape gains. A separately\nseeded eight-row combined-call confirmation is supplemental; the original\n24 rows remain the primary data and chart.",
+        "The first public run's Systems statistics command failed because its SQLite\nexport was older than the retained capture. The capture and failed export remain\npreserved; an immutable continuation re-exports to a new filename and checks\nlaunch sequences offline. Another small verification executes all four public\ncases and captures its actually mapped native library, inode, build command and\nsource hash. That new mapping proof does not reconstruct the earlier timed\nprocess. Full raw artifacts and source snapshots are physically SHA-verified\noutside the repository before publication. The earlier payload-permission failure\nand the first offline-statistics retry are also retained with their nonzero\nstage receipts and physical inventories; neither ran new GPU math."
+      ]
+    },
+    {
+      "source_path": "docs/l40s-warp-training.md",
+      "source_sha256": "8916e4d99ab29b00cd2e85f71d62330686ca24b20a867359ae69f50b831ef4b6",
+      "notes": [
+        "The D128 dense M32/shared-V configuration reuses the existing kernel methods.\nThe larger forward tile is restricted to dense S4096; its causal control\nregressed. Earlier P staging, packed P conversion and publication-barrier\nelision did not produce a general improvement and are not enabled here. The\n[separate experiment summary](../results/l40s-warp-experiments.json) retains\ntheir comparisons, the earlier host controls and the larger-forward-tile screen.",
+        "A second independent M64/M128 by N32/N64 experiment selected M128/N32 only\nfor dense D128/S4096. S1024 retains M64/N64 because the N32 controls tied or\nregressed. The public selector's training, dtype, device and exact-length\nbounds are unchanged; the backward configuration is unchanged.",
+        "The diagnostic eager runs reused saved side-stream contexts and emitted\nAccumulateGrad stream-mismatch warnings; they are retained but are not the\nstandard eager release measurements. The initial diagnostic failed before\ntiming from a saved default-stream node. Its repair creates saved forwards and\nwarmup on the capture stream and retains all owners; no safety guard was disabled.",
+        "FA2 is a separately loaded 2.8.4 implementation with its own normalization and\nrounding policy, not a numerical oracle or a precision-matched scheduling\ncontrol. D64 and causal cases can still trail FA2. D128 forward can also trail\nFA2 despite a faster complete training call. Short-call eager regressions and\nforward-only losses motivated the training and length gates; a graph-only win\nwas insufficient for automatic selection. Per-window sustained power and clock\ntelemetry was not retained, so no power, bandwidth or utilization ceiling is\nclaimed. The configured board limit was 350 W.",
+        "Final public tests check all three API entries, literal saved statistics,\nindividual gradients, cache reuse, changed/poisoned graphs, unaligned dO, rejected\nshort/intervening lengths and inference fallback. CPU, publication-guard and\nfinal public GPU test counts are retained in the compact report. The final host\ncache changes do not change the qualified GPU bodies."
+      ]
+    },
+    {
+      "source_path": "docs/rtx3090-optin.md",
+      "source_sha256": "62c0e8832b77dd92ebe2cf812e953e3ae37b56366dcb70bcc91d9051f2425db6",
+      "notes": [
+        "This entry is for an ordinary RTX 3090. RTX 3090 Ti, other SM86 devices and GPU\npartitions require their own qualification. The faster Ada M32 shared-V preset\nregressed long backward on this card and is not selected."
+      ]
+    },
+    {
+      "source_path": "docs/rtx3090-short-d128.md",
+      "source_sha256": "5b14e8d78c57925a6b1861eb41c1a9e8d79d4e1ae327195f3567f6dbabe7fb98",
+      "notes": [
+        "A separate dQ warp-layout experiment changed normal/transposed matrix-load\nsites from 52/56 to 56/48, with the same tensor-instruction count. It passed\ncorrectness and all four tools but did not improve complete-call latency, so\nit is retained as a negative result rather than selected. The first public\nstatistics adapter attempt failed before causal execution because its new\nfamily lacked the two-partial workspace allocation; its source, operands and\nfailure are retained, and the corrected adapter passed the full qualification."
+      ]
+    },
+    {
+      "source_path": "docs/rtx3090-short.md",
+      "source_sha256": "36e0e03a65e9f2c7ff15434c866ce749a2d3b483f7f42a6b94112b4f01235c2e",
+      "notes": [
+        "This design follows a measured resource repair. Owning all 128 keys in one\nblock was correct but D128 used 472 local bytes/thread and lost badly to FA2.\nSplitting output features reduced some register pressure but repeated QK/dP\nand still lost. Two 64-key owners improved D64; four 32-key owners improved\nits complete call further. These experiments and the D128 measurements are\nretained as negative results. The N32 selector applies to D64. D128 uses a separately qualified\n[reciprocal-forward and N64 backward path](rtx3090-short-d128.md).",
+        "The final public source passed 18 finite directed cases, one expected final-cast\noverflow diagnostic, changed/poisoned graph and negative-view checks, six fallback\ncases and eight legacy long D64/D128 cases. All eight public CuTe compilation units have\nidentical PTX and cubins to their corresponding qualified N32 prototype, with\nevery public cubin matched to an actual loaded image. The four retained sanitizer\nruns each covered 24 prototype cases, including 12 D64 calls; none reported a\ndevice error. The public archive has 654 verified entries (82.9 MB), alongside\n714 verified N32 prototype entries (119.5 MB). The CPU suite ran 378 tests with\n177 skipped and no failures; all 24 publication guard tests passed.",
+        "Making the existing dense FP16 underflow fixture causal produces a declared\ndV value above the final FP16 range. The original input and first finite-gate\nfailure are retained. This case is a separate overflow diagnostic, checking\nthe exact final-cast infinity mask/sign and each head's representable output\nand gradient coordinates; it is not counted as a finite-case pass or timing\nresult. A distinct causal input with dO divided by eight checks all four\nfinite components at the unchanged limits. The original dense fixture stays\nunchanged.",
+        "Raw captures, failures, loaded binaries, compiler PTX/cubins and nonempty\nSASS are archived outside the tracked tree. All eight CuTe compilation units\nfrom the four dtype/visibility cases have retained PTX/cubins; each cubin is\nbyte-matched to an actual loaded module image. Four safety tools and the\nunchanged-code capture are retained separately from uninstrumented timings.",
+        "The integration with the merged A40 and GB10 paths retains their guards and the\nidentical short-kernel, native Python bridge and RTX 3090 selector. The rebuilt\nC++ bridge passed all 18 finite cases, the expected overflow diagnostic and six\nfallback cases again; its loaded library and build configuration were retained.\nThe integration CPU suite ran 377 tests with 177 skipped and no failures;\n24 publication-guard tests passed. Original timing samples retain their original\nsource hashes in the result file.\n"
+      ]
+    },
+    {
+      "source_path": "docs/rtx3090ti-outliers.md",
+      "source_sha256": "a012f8f8c388c57ba5fb2af34248994b88ff2b12fc273fa66c7a274bf0323c4f",
+      "notes": [
+        "Released is a computation control, not a byte-identical historical cubin.\nEvery output, dQ, dK and dV is checked independently against centered FP64\non identical rounded inputs. Norm-relative limits are 1% BF16 and 0.5% FP16;\neach element also passes `atol=rtol=0.02` BF16 or `0.003` FP16. Exact-zero\nreferences require exact zero. Captured forward/backward/complete phases and\nchanged-input, poisoned joint replay receive the same checks. Failed released\nor native comparisons remain diagnostics and do not become qualified wins.",
+        "| Intervention | Observation |\n| --- | --- |\n| Nine compact/split producer layouts on S1024/D256 | All lost complete latency; fewer warps or smaller tiles did not establish a better schedule. |\n| High-only resident-V Q64/K32 owner | Improved the old long call, but failed the later true dK/dV cancellation fixtures and was not retained. The preceding owner already retained V in shared memory; this experiment retained its matrix B fragment in registers. |\n| K16 high/low paired products | Reduced registers but was slower than some separate-product controls. Lower allocation did not establish a win. |\n| K16 next-dO or next-Q/dO register prefetch | Actual SASS moved the eight or sixteen vector global loads between 32 and 64 remaining HMMA sites; complete latency improved about 2.9\u20133.3% over its own corrected K16 control. K32 was still faster. |\n| K32 nonresident V, both low products | Passed strict key/value/underflow fixtures without spills and beat the corrected K16 controls. The retained policy uses paired dK and dV high/low products. |\n| FP16 DS residual scaling on D256 | Rejected by the unchanged 2% cancellation-coordinate gate on the Ti. Captured FP32 dS showed upstream probability/reduction bias that residual packing alone cannot remove. |\n| Direct denominator statistics | A matched private forward/query/key-value prototype improved the scaled key fixture. It changes the saved-statistics contract and remains experimental. |",
+        "One uninterrupted GPU discovery run on `812aaeb` passed 203 methods in\n3591.295 seconds: 129 active passes and 74 hardware/backend skips. It includes\nall ten common key/value precision methods, all eight Ti schedule methods,\nand tracker, training, graph and compiled-call regressions. Separate actual\nlong-D256 public-dispatch proofs with the selected query owner placed the\nkey coordinate within 0.70% BF16 and 1.76% FP16 of the closed form, below the\nunchanged 2% gate. Broader B2/H4 qualification separately retained 56\nrectangular, strided, signed-scale and changed-data checks.",
+        "FP16 demonstrates why that resource change alone does not select a preset.\nIts S1024 complete pilots improved 4.2% dense and 0.65% causal, but S4096\ndense tied and causal regressed 0.74%. FP16 therefore retains the repaired\nN1 owner. The BF16 range requires its own public-dispatch, boundary, fallback,\ncompiled-call, replay and sanitizer qualification; private forced-owner\nnumbers are selection evidence rather than the final comparison grid.",
+        "All 38 strict qualification records passed. Actual resources were 244\nregisters and 64 KiB for one stage, and 249 registers and 96 KiB for both\ntwo-stage variants, with zero local bytes. Five rotating 100 ms complete\nmedians were 27.915 ms for the accepted Q64 owner, 29.320 ms for Q32 one\nstage, 29.002 ms for Q32 two stages, and 28.894 ms for two stages retaining\nupper V. Earlier copies and reduced V reload traffic helped the Q32 control,\nbut every accepted-Q64 sample beat every variant. All three controls were\nrejected; they did not alter the published runtime.\n"
+      ]
+    },
+    {
+      "source_path": "docs/rtx4090-automatic.md",
+      "source_sha256": "c5ee58768c04169a77ee1c2a35e896358f9e8f8097accbecb5c08f1172879097",
+      "notes": [
+        "The original bitwise gradient-subset test failed on existing FP32 atomic dQ\norder, and its actual operands were retained. Six identical all-gradient calls\nvaried 46\u201355 dQ coordinates while the other components stayed identical; maximum\nper-head dQ norm error against FP64 remained 0.2993%. All seven subset patterns\nlaunched the same selected kernel symbols and resources. The final tests check\nthe established per-component norm contract, without a new bitwise guarantee."
+      ]
+    },
+    {
+      "source_path": "docs/rtx4090-backward-ownership.md",
+      "source_sha256": "bd578f0e0bbff8b7a0ecc9a479e48c98b69c82f9a38efdda2806f82fc5f5fa49",
+      "notes": [
+        "The FP32 atomic path also changes cross-block summation order and uses the\narchitecture's flush-to-zero floating-point reduction instruction. The existing\napproximately 1e-21 regression exercises normal FP32 contributions. It does not\nqualify FP32 subnormal accumulation. The distinct BF16 diagnostic scales the\nsharp-attention dO by approximately 1e-18: production dQ has about 5.05% norm\nerror and the opaque prototype about 6.23%, both rejected by the 1% gate.\nCorrectly rounding the FP64 dQ into BF16 has approximately 0.295% error in a\nseparate CPU representability check. Low-precision operand rounding, tensor\ninstructions and atomic FTZ all require consideration; these measurements do\nnot isolate their individual contributions. Subnormal accumulation remains\nunqualified and is not hidden inside the normal tiny-gradient pass count.",
+        "For each retained case, the harness compares dQ, dK and dV separately with\ncentered FP64 equations on identical rounded inputs, checks graph replay with\nchanged dO, and checks changed Q/K/V with freshly computed forward statistics.\nIt poisons scratch, row statistics, pivots and output storage before replay.\nSDPA's own retained-forward backward is measured separately and is never used\nas the accuracy oracle. Its failed accuracy cases are diagnostic, not qualified\nspeedup comparisons.",
+        "The frozen opaque configuration passes 13 focused cases covering D64/D128,\nFP16/BF16, dense/causal attention, lengths 1/17/65/129/257 and a 4096-token\nshifted-key case. These include partial tiles, negative maxima, sharp attention\nand the directional cancellation example above. Every accepted case also passes\nchanged-dO and changed-Q/K/V replay with fresh forward statistics and poisoned\nstorage. A separate fourteenth subnormal diagnostic is rejected by both CuTe\npaths, as detailed above. Selection used seed 1009, qualification seed 1021,\nand the seven-round holdout uses seed 1033."
+      ]
+    },
+    {
+      "source_path": "docs/rtx4090-long-causal.md",
+      "source_sha256": "07ef321b1425e78570e8025f1a46f2657836012f4976fe720bc85910bb197a4b",
+      "notes": [
+        "The explicit RTX 4090 entry selects a 128-key backward tile for batch 1, 16 heads, 4,096-token causal D64 attention in FP16/BF16. It retains the 64-key tile at 1,024 tokens: the wider tile regressed that shorter workload. Other head dimensions, dense schedules and fallback boundaries retain their preceding choices. The top-level dispatcher is unchanged."
+      ]
+    },
+    {
+      "source_path": "docs/rtx4090-s1024-host.md",
+      "source_sha256": "175d984c37bb2f22a2fd533130b63279339f607f9bdf72e0dfff7e34a39eac4b",
+      "notes": [
+        "The initial automatic candidate improved S1024 graph replay but regressed\ncomplete eager calls by about 1\u20134%. Systems confirmed four tuned launches versus\nthree generic launches, including gradient preparation and conversion. The\ninstrumented traces also spent substantial time in kernel-name callbacks, so\ntheir durations were not used as sustained performance estimates."
+      ]
+    },
+    {
+      "source_path": "docs/rtx4090-shared-joint.md",
+      "source_sha256": "0ef75cb488aa04fe159833e0153c343c07f28f1bd1778ab41434bf0591f0c6eb",
+      "notes": [
+        "D128 dense uses a wider key tile to reduce dQ partial updates. Moving V to shared\nmemory avoids the long-lived register operand that made the earlier M32 layout\nspill inside its main loop. The retained layout uses 99,328 shared bytes on the\nmeasured device. D128 causal keeps its M64N64 ownership; the dense D128 layout regressed\ncausal calls. Long D64 causal uses its independently qualified M64N128 path. D64 causal uses a smaller forward query tile,\nwhich improved the complete call as well as forward latency."
+      ]
+    },
+    {
+      "source_path": "docs/rtx4090-tuning.md",
+      "source_sha256": "d07333fa8c071b3aeea20d4b22a1be4fd32f42ff1e970e75a6bab38fd54dd841",
+      "notes": [
+        "Both backward owners use 64 key/query columns rather than 32. A fused query\ncentering calculation removes its separate launch. The forward path also skips\npadded matrix work. Changing the tile width or padding alone was less effective\nthan the combined selection. Two- and eight-warp forward alternatives were\nslower and were rejected.",
+        "### Experiments rejected",
+        "Measured interventions also included paired score instructions, smaller N\nfragments on long calls, V-register caching, dO-storage reuse, double-buffered Q,\nearlier softmax/operand transfers, eight-warp owners, reverse query order,\nminimum-residency hints, streamed product operands, and separate QK/dP warp\nowners. None provided a reliable complete-call win over the selected policies\nfor the remaining long D64/D128 gap. Some reduced an isolated phase while\nincreasing other call costs. Register residency alone was not a consistent gain. Invalid-capacity and setup\nfailures are recorded separately from correct candidates with slower timings.",
+        "Dedicated-loader prototypes used one or two producer warps, two or three\nshared-memory slots, and two, three, or four compute warps. The first BF16 layout\nshowed a roughly 1.3% causal pilot gain, while its dense call was slower.\nSubsequent complete-tile and three-compute-warp configurations did not give a\nconsistent gain across FP16/BF16. Their sampled outputs and gradients passed\nFP64 checks; the rejected prototypes did not receive release sanitizer\nqualification. The ring uses the SM80-compatible test-wait mechanism described\nin the [PTX ISA](https://docs.nvidia.com/cuda/pdf/ptx_isa_9.2.pdf)."
+      ]
+    },
+    {
+      "source_path": "docs/rtx5090-configured-host.md",
+      "source_sha256": "bf501f7de16d209247bddf0a43de09950098f4d24d7b2c505651207ee146620a",
+      "notes": [
+        "D64 eager performance is near parity with the preceding CuTe path, including a 3.3\u20133.6% regression in one holdout. Its larger captured-device gain does not become a comparable eager gain: submission and autograd work remain significant. BF16 D128 improves both boundaries. The selected joint calls beat the measured FA2 and SDPA implementations at both boundaries; this does not claim a universal eager improvement over preceding CuTe. Vendor comparisons include their own host wrappers and arithmetic policies.",
+        "Earlier seven-window 100 ms runs contained substantial eager variability, including regressions; they remain visible rather than being replaced by the newer protocol. A separate in-process attribution study recorded zero CPU quota-throttling events across 3,888 measured windows and both complete processes. Its instrumented Systems traces show the largest inter-kernel gap between forward and backward preparation in all three compared paths. Neither observation establishes the cause of the earlier variability or a hardware performance ceiling.",
+        "The final bounded source passed 84 live-policy cases, nine actual public-frontdoor frames with 18 changed-data/poisoned replays, independent output/dQ/dK/dV and literal-statistic checks, CPU/GPU reference agreement, and actual selected/fallback graph checks. Its frozen CPU tree ran 379 tests total, with 180 skips and no failures; executable hook permissions were restored and checked. All four sanitizer passes and 16 pipeline-code bindings were retained for the unchanged wider GPU implementation. Three final main-kernel bindings, including FP16 D64, passed after narrowing eligibility. Loaded ELF, compiler ELF, PTX/SASS and actual host-library bytes were verified off-host. Public and direct-runner forward, preparation, main and conversion binaries match for both BF16 dimensions.",
+        "Actual API qualification passed 12 frontdoor frames, 44 live-metadata/policy cases, 16 changed-data and poisoned-buffer replays, independent O/dQ/dK/dV norm gates and literal saved-statistic checks. Short/partial calls and legacy D64/D128 selection were checked. The frozen tree ran 381 CPU tests total, with 180 skips and no failures. All four sanitizer tools passed on actual selected public calls; reference equations ran on exact CPU copies while implementation kernels remained instrumented. The private geometry comparison separately passed 39 strong fixtures, changed graphs and all four tools for each of three forward controls. Acceptance criteria and rounding remain unchanged.",
+        "The complete forward-plus-backward gain over the preceding public G1 path is approximately 4\u20135% in both boundaries. Larger groups are not a blanket improvement: G4 slightly regressed at S1024, and G4/G16 regressed approximately 4\u20138% on the S4096 controls. Those negative paired samples remain in the [compact evidence](../results/rtx5090-d256-short-groups.json). The chart also includes held-out dense/long controls whose dispatch is unchanged. Short causal FA2 eager variance is retained; captured comparisons give the more conservative device-path comparison.",
+        "G4/G16 each passed 39 strong fixtures, changed/poisoned graphs and all four sanitizer tools before selection. Final actual-public qualification passed 12 API frames, 44 live-policy cases, 16 poisoned replays, independent O/dQ/dK/dV and literal-statistic checks, four sanitizer tools and six strict loaded-code bindings. The frozen CPU run had 391 total tests, 188 skips and no failures. The changed S1024 causal kernel and unchanged S4096 causal control are both bound to loaded ELF/compiler ELF/PTX/SASS, with all 162 raw output files SHA-verified off-host. Backward uses 91,136 shared bytes and 255 registers; local allocation increases from 72 to 96 bytes on the short grouped control, despite the measured latency gain. This does not establish a runtime spill percentage.",
+        "After integrating onto current main, three public GPU methods, independent output/dQ/dK/dV and literal-statistic checks, CPU/GPU reference agreement, bounded partial-tile runs under memcheck/racecheck/synccheck/initcheck, the 32-row comparison and two new public-code bindings passed again. The existing long public sanitizer passes were retained for the unchanged backward implementation. Reference equations run on exact CPU copies under sanitizers; GPU kernels, graph replay and poisoned storage remain instrumented. The per-head mathematical norm gates remain 1% for BF16 and 0.5% for FP16, with the existing rounded directed checks. That earlier S4096 integration ran 342 CPU-discovery tests total with 177 GPU/runtime skips and no failures; the final S1024 qualification is recorded above.",
+        "Full raw machine captures, source snapshots, failed harnesses and exploratory variants remain outside the tracked tree."
+      ]
+    },
+    {
+      "source_path": "docs/rtx5090-outliers.md",
+      "source_sha256": "3e18f4da0859004aa62e4f36d1b18e1731954ecabbbdc7b1f927421cfec8832d",
+      "notes": [
+        "Released is a computation control, not a claim of historical binary identity.\nPrevious versus CuTe isolates the D16 schedules, D64 ranges and short schedules\nin `sm120_schedule.py`. Both retain the current shared precision owners, their\nqualified packed-store policy and the compensated normalizer. Released versus\nCuTe includes scheduling, ownership and arithmetic changes. A failed numerical row\nremains diagnostic and does not establish a qualified speedup.",
+        "The public-path regressions cross both sequence axes, the 128/512/4096 range\nboundaries and cached rectangular fallbacks. They also check strided, changed\nand poisoned graph inputs, signed/zero scales and negative maxima. A causal\nclosed-form regression shifts the strong key-cancellation query/dO groups by\n1031 rows: all active queries see the same original 1031 valid keys, retaining\nthe exact small negative dK target while exercising the selected long owner.",
+        "A deterministic D256 FP16 example initially passed ordinary norm and pointwise\nchecks but failed the stricter closed-form dK coordinate check. The target is\n`-0.001713324311`. The original normalizer and unscaled low operand produce\n`-0.001667022705`, a 2.70% error. Scaling the low dS operand alone still leaves\n2.15% error.",
+        "On the same strong fixture, default SDPA gives dK `-0.177734375` for BF16\nand `+0.055694580078` for FP16, against the same negative `-0.001713324311`\nreference. Both have 16 dK pointwise failures; their dQ norm errors are 11.69%\nand 1.43%, respectively. Actual graph symbols identify the launched native\nbackend. These are numerical diagnostics, not qualified timing comparisons.",
+        "## What the machine code and rejected experiments establish",
+        "A private joint prototype reproduced that geometry, shared scores, kept V in\nregisters and used coalesced opaque FP32 dQ scratch. It was rejected. Before the\nnew low-component repairs, three rotating 100-ms rounds at BF16 B1/H16/S4096/\nD256 gave complete backward times of 6.956 ms for released CuTe, 7.768 ms for\nthe prototype and 4.599 ms for default SDPA. Separate node-level Systems captures\nlocated 5.747 ms in the joint main loop, 1.928 ms in the centered prepass,\n0.078 ms in conversion and 0.031 ms in scratch clearing. Those instrumented\nstage means are diagnostics, not the canonical benchmark samples. The prototype\nwas not qualified against the later low-component cancellation tests and is not\nan accuracy-equivalent performance ceiling for a future joint design.",
+        "A later fixed forward-owner control kept the current arithmetic, cache policy\nand FP16 compensated normalizer, replacing the D256 M64/K16 four-warp TMA\nowner with generic M128/K32/eight-warps. At S4096 dense, strict FP64 and changed\nstorage checks passed, but seven rotating 100-ms rounds showed BF16 forward\n1.606\u21921.762 ms and complete 9.692\u21929.823 ms; FP16 forward 1.603\u21921.839 ms and\ncomplete 9.577\u21929.823 ms. It was rejected. Halving the query-CTA count and its logical KV reads did not\noutweigh the complete owner's different copy and compute schedule.",
+        "A scalar correction formed by multiplying missing dS mass by an arbitrary\nquery anchor was tested and rejected. It improves a common-query example but\ncreates a large new error when that anchor is an unrelated finite outlier hidden\nby the mask. The selected low-dS matrix product handles that counterexample."
+      ]
+    },
+    {
+      "source_path": "docs/sm80-native-host.md",
+      "source_sha256": "db5c2fa14bf1805a31b47fa40fe0fbf8f8422187113927e67a53027d984924a3",
+      "notes": [
+        "The entry is currently an experiment. The existing public selector still uses\nthe qualified Python wrapper; automatic short-call selection needs its own\ncomplete-API comparison. The direct experiment requires the qualified optional\nruntime documented in [the A100 schedule](a100-sm80-fa4.md), aligned contiguous\nsquare FP16/BF16 MHA, D64/D128, and positive scales. It propagates unsupported\ninputs and execution failures.",
+        "The static specialization regressed by 4\u20136%. Dynamic 32-bit dimensions and\nactual stride-divisibility constraints restored the previous GPU performance.\nA dynamic variant without the preparation kernel's stride-alignment guarantees\nfailed compiler IR verification; that failed experiment is retained separately.",
+        "Actual graph CUfunction queries report 235 registers for the dynamic D64 main\nand 246 for its static control, with equal shared memory and no local storage.\nD128 reports 255 registers and 24 local bytes for both forms. Resource counts\nalone therefore do not explain the regression. The control retains symbols and\nresource metadata; its compiler-artifact requests returned unavailable values.\nIt does not establish independently captured loaded-image or ISA identity.",
+        "The final dynamic GPU methods passed independent per-head output/dQ/dK/dV\nchecks, literal saved-statistic checks, tails, negative common offsets, rounded\ncancellation and underflow fixtures, runtime-scale/cache reuse, and changed\npoisoned graphs. Final alignment-guard tests exercise expanded and unaligned\noutput gradients, rejected unaligned inputs, and selected graph symbols.",
+        "Memcheck, racecheck, synccheck and initcheck report zero device errors/hazards\non the tail/changed-graph/alignment smoke set with host API reporting disabled.\nThe original dynamic memcheck remains explicit: forty host API negotiation\ndiagnostics, comprising thirteen version-13030 probes and seven version-13041\nprobes against driver API 13020, plus twenty matching address-lookup failures.\nSuppressing those reports does not suppress device checking. The earlier static\nmetadata run additionally reported unresolved internal-helper lookup diagnostics;\nit is not used to qualify the final dynamic entry."
+      ]
+    }
+  ],
+  "model_shape_audit": "\nThe source audit used [SimpleTuner revision\n`7ffd66dd5f4c170992a394c86c03784490314899`](https://github.com/bghira/SimpleTuner/tree/7ffd66dd5f4c170992a394c86c03784490314899/simpletuner/helpers/models). Paths below are relative to its repository.\nThese are constructor defaults and source-derived sequence examples, not captured\nactivations or checkpoint quality measurements.\n\n| Model sources under `simpletuner/helpers/models` | Default heads / head dimension | Relevant geometry |\n| --- | --- | --- |\n| `flux/transformer.py`, `moss_image/transformer.py`, `qwen_image/transformer.py` | 24 / 128 | Matches the D128 cancellation family; the model-head-count test repeats it with H24. FLUX and MOSS concatenate image/text tokens into attention sequences. |\n| `hunyuanvideo/transformer.py`, `anima/transformer.py` | 16 / 128 | Matches both H16 and D128 in the earlier fixtures and comparison grid. Video/image and text lengths vary. |\n| `qwen_image/transformer_21.py` | 32 / 128 | Matches D128; the model-head-count test also exercises H32. |\n| `ltxvideo/transformer.py` | 32 / 64 | Matches D64; the model-head-count test exercises H32. Video token count varies with the spatial/temporal grid. |\n| `sd3/transformer.py` | 18 / 64 | Matches D64; the model-head-count test exercises H18. The 128\u00d7128 latent sample and 2\u00d72 patches give 4,096 image tokens; 77 CLIP plus 256 T5 text tokens give a 4,429-token joint example. |\n| `auraflow/transformer.py` | 12 / 256 | Matches D256, with H12 rather than the H16 timing preset. A 64\u00d764 latent sample, 2\u00d72 patches, eight registers and 256 text tokens give a 1,288-token joint example. |\n| `ltxvideo2/transformer.py` | Video 32 / 128; audio 32 / 64 | Both tested head-width families occur; text and video/audio sequence lengths differ. |\n\nThe FLUX packing recipe gives 1,024 image tokens plus 512 text tokens at 512-pixel\nsquare input, and 4,096 plus 512 at 1,024 pixels: joint lengths 1,536 and 4,608.\nThose lengths differ from an image-only 1,024/4,096-token benchmark. Variable text,\nreference tokens, and masks can also introduce partial tiles.\n\nA packed training sequence contains many query rows; it is not the single-query\nreproducer. Packing does not remove the per-row probability reconstruction or\noperand-rounding rules. The head/dimension overlaps above establish geometric\nrelevance, without establishing that a model produces the synthetic cancellation\nvalues. No D512 default is asserted for these constructors.\n"
+}

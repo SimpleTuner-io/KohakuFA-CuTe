@@ -3,6 +3,7 @@
 import copy
 import json
 import math
+import re
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -200,6 +201,37 @@ class ResultsCatalogTests(unittest.TestCase):
             self.assertEqual([s for s in texts if s.startswith("D")], [f"D{expected_dimension}"])
             self.assertEqual([s for s in texts if s in ("F", "I", "F+B")], [expected_phase])
             self.assertEqual(sum(element.attrib.get("class") == "measurement" for element in panel), 1)
+
+    def test_chart_stays_readable_at_github_readme_width(self):
+        svg = ET.fromstring(render(list(self.reports.values())))
+        width = float(svg.attrib["width"])
+        self.assertLessEqual(width, 1000)
+        sizes = [float(element.attrib["font-size"]) for element in svg.iter() if "font-size" in element.attrib]
+        for element in svg.iter():
+            if element.tag.endswith("}style"):
+                sizes.extend(float(size) for size in re.findall(r"font-size:\s*([\d.]+)px", element.text))
+        self.assertGreaterEqual(min(sizes) * min(1, 830 / width), 12)
+        panels = [element for element in svg.iter() if element.attrib.get("class") == "gpu-panel"]
+        titles = [panel.find(".//{http://www.w3.org/2000/svg}text") for panel in panels]
+        self.assertEqual(len({title.attrib["x"] for title in titles}), 1)
+        self.assertTrue(all(float(a.attrib["y"]) < float(b.attrib["y"]) for a, b in zip(titles, titles[1:])))
+        previous_section, previous_target = None, -1
+        for panel in panels:
+            section = panel.attrib["data-series"], panel.attrib["data-workload"]
+            target = TARGETS.index(panel.attrib["data-target"])
+            if section == previous_section:
+                self.assertGreaterEqual(target, previous_target)
+            previous_section, previous_target = section, target
+
+    def test_long_gpu_headings_wrap_without_losing_text(self):
+        report = copy.deepcopy(self.reports["rtx5090"])
+        report["label"] = ("Long GPU name & detailed device policy " * 5).strip()
+        svg = ET.fromstring(render([report]))
+        panel = next(element for element in svg.iter() if element.attrib.get("class") == "gpu-panel")
+        title = panel.find("{http://www.w3.org/2000/svg}a")
+        lines = [element.text for element in title]
+        self.assertGreater(len(lines), 1)
+        self.assertEqual(" ".join(lines), report["label"].strip() + " · vs default SDPA")
 
     def test_recovered_families_keep_their_actual_precision_hardware_and_reference(self):
         for target, count in (("gb10", 112), ("b200", 64), ("b300", 64), ("h100", 12)):

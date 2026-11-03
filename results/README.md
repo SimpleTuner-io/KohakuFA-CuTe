@@ -44,7 +44,9 @@ explicitly separate sections. Historical data do not requalify current dispatch.
 
 **F** is forward with autograd,
 **F+B** includes forward plus all three gradients, and **I** is NoGrad forward.
-Each GPU table groups rows that share measured dimension/phase columns; unmeasured
+GPUs follow the report order in a single column sized for readable GitHub previews.
+Headings and notes wrap within the image. Each GPU table groups rows that share
+measured dimension/phase columns; unmeasured
 columns and combinations are omitted. A focused D512 comparison therefore shows
 D512 alone, while complete five-dimension grids remain complete.
 

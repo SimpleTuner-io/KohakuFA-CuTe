@@ -1,9 +1,11 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "target": "rtx3090ti",
   "label": "RTX 3090 Ti",
   "precision_contract": "docs/precision.md",
-  "selection": "Latest retained study for each measured workload; distinct evaluation runs are preserved.",
+  "selection": "Latest retained study for each measured workload, evidence series and reference; distinct evaluation runs are preserved.",
+  "series_contract": "current uses docs/precision.md; historical is previous arithmetic or hardware; captured is historical model-input forward only; experimental retains unresolved qualification limits.",
+  "coverage_gaps": [{"family":"Current synthetic NoGrad inference","status":"No retained timings; training forward and captured historical model inputs do not qualify this workload."}],
   "studies": {
     "rtx3090ti": {
       "provenance": {"revision":"30704427809008e83ad38174e7c1780016c44258","path":"results/rtx3090ti.json","sha256":"22bd1a2e8054f15a4afe9533bafdb1c7db6ab185801e8a9e9a4b55432bf909d6"},

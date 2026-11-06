@@ -20,6 +20,7 @@ shape, layout, gradient, and runtime requirements.
 | RTX 5090 | Standard APIs; additional pinned schedules | [RTX 5090](backends/rtx5090.md) |
 | L40S | Standard APIs on pinned runtime | [L40S](backends/l40s.md) |
 | GB10 | Standard APIs; shared schedules opt-in | [GB10](backends/gb10.md) |
+| H200 | Explicit experimental entry | [H200](experimental/h200.md) |
 | H100, B200, B300 | Standard APIs | [Hopper and Blackwell](backends/hopper-blackwell.md) |
 
 [Results](../results/README.md) contain one report per GPU target and the common

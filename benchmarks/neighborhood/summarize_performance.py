@@ -365,6 +365,9 @@ def markdown(report):
             lines += [
                 "## " + phase.replace("_", " ") + " / " + mode,
                 "",
+                "<details>",
+                "<summary>Complete timing rows</summary>",
+                "",
                 "| GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |",
                 "| --- | --- | ---: | ---: | ---: | ---: | ---: |",
             ]
@@ -391,7 +394,7 @@ def markdown(report):
                         for name in ("flex", "natten")
                     ]
                     lines.append("| " + " | ".join([run["label"], caption, *cells, *ratios]) + " |")
-            lines += [""]
+            lines += ["", "</details>", ""]
     lines += [
         "† A retained timing lacks required qualification, graph validation, paired rounds, or a kernel trace; inspect its exclusion list in JSON. No ratio is reported for it.",
         "",

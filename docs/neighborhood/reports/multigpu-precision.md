@@ -1,12 +1,12 @@
 # Neighborhood precision across GPUs
 
-Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).
+**Study question:** Does the H100 combined method qualify on five additional GPUs?
+
+**Current relevance:** Five-device qualification of the [H100 combined method](dk-precision.md), explicitly selected during this campaign and now the [public default](../README.md#default-precision).
+
+**Evidence:** [recorded data](../../../results/neighborhood/multigpu-precision.json) (including source identities and measured runtime); [report generator](../../../benchmarks/neighborhood/summarize_multigpu_precision.py).
 
 This report covers the explicit combined method on five devices, following its separate H100 qualification. Start with the [current guide](../README.md) for the default-policy distinction and usage. [Machine-readable evidence](../../../results/neighborhood/multigpu-precision.json) retains all samples and component errors.
-
-The explicit dQ+dK experiment uses the same arithmetic and retained rounded inputs on every architecture. Default dispatch is unchanged.
-
-The [H100 dQ+dK study](dk-precision.md) specifies the experiment and its explicit selection controls.
 
 The mathematical reference uses native FP64 on identical rounded Q/K/V/dO. The independent rounded-arithmetic reference uses the actual rounded forward output; it does not emulate tensor-core reduction order.
 
@@ -48,6 +48,9 @@ Worst per-head relative norm errors on the 21 historical fixtures:
 Secondary resident forward-plus-backward CUDA graph timings follow. They include the complete advertised call, including required backend layout copies. Compilation and immutable geometry preparation are outside this boundary. Missing or failed rows do not establish a speedup.
 
 Baseline, prior dQ, combined dQ+dK, FlexAttention and NATTEN use different precision policies. These are complete-implementation comparisons, rather than isolated scheduling comparisons under identical arithmetic.
+
+<details>
+<summary>Complete timing matrix by GPU, workload and method</summary>
 
 | GPU | Workload | Implementation | Status | Median (µs) | Change vs prior dQ |
 | --- | --- | --- | --- | ---: | ---: |
@@ -201,5 +204,7 @@ Baseline, prior dQ, combined dQ+dK, FlexAttention and NATTEN use different preci
 | l40s | tail-33x49-w7-bf16 | weighted_dq_reconstructed_dk | pass | 81.688 | -0.826% |
 | l40s | tail-33x49-w7-bf16 | flex | pass | 91.147 | +10.658% |
 | l40s | tail-33x49-w7-bf16 | natten | pass | 172.499 | +109.425% |
+
+</details>
 
 All per-head errors, declared gates, observed control failures, source and input hashes, raw timing samples and compiled-path flags are retained in the companion JSON. Compiler artifacts establish target and selected flags; graph replay and numerical tests supply separate execution evidence. Results qualify these operator workloads and do not establish model-level quality or performance on other shapes.

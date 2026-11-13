@@ -13,7 +13,9 @@ remain part of validation.
 
 ## Run checks
 
-From the repository root, using Python 3.13:
+The [test map](../tests/README.md) separates lightweight repository checks from
+numerical CPU references and GPU suites. Run the numerical commands below on
+the qualification host, from the repository root with Python 3.13:
 
 ```bash
 CUDA_VISIBLE_DEVICES='' python -m unittest discover -v -f
@@ -78,7 +80,7 @@ supersede a recorded broader-suite failure. In particular:
   [initial report](neighborhood/reports/initial.md). Later neighborhood passes
   do not establish a full ordinary-attention GPU-suite pass.
 
-Previous compensated arithmetic is an explicit accuracy experiment. Its stricter
-coordinate checks do not redefine the default contract. The retained
+For ordinary attention, previous compensated arithmetic is an explicit accuracy
+experiment. Its stricter coordinate checks do not redefine the default contract. The retained
 [evidence](../benchmarks/experiments/README.md) includes precision tradeoffs and
 the model-shape audit; shape overlap alone does not qualify a model.

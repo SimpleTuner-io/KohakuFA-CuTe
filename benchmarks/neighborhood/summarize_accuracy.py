@@ -219,7 +219,10 @@ def probe_markdown(probe):
     candidate_passes = sum(row["status"] == "pass" for row in candidate_rows)
     lines = [
         "",
-        f"## Current native-backend probe: {probe['label']}",
+        f"## Recorded probe: {probe['label']}",
+        "",
+        "<details>",
+        "<summary>Full probe configuration, component errors and failures</summary>",
         "",
         "This separate full-tensor diagnostic uses native CPU FP64 equations on",
         "identical already-rounded operands. It measures no latency or model quality.",
@@ -325,8 +328,6 @@ def markdown(report):
     lines = [
         "# Neighborhood accuracy against FP64",
         "",
-        "This report diagnoses the original default arithmetic. Its cancellation-sensitive dQ/dK errors must not be attributed to the later explicit combined method. See the [current guide](../README.md#default-precision), [dQ study](dq-precision.md), and [dK study](dk-precision.md). That campaign predates promotion of the combined method to the public default.",
-        "",
         "The retained ordinary-workload results do **not** demonstrate a general",
         f"mathematical-accuracy gain over FlexAttention or NATTEN. On the {report['routine']['cases']} matched",
         "device/workload cases, the candidate's worst-head sampled dQ error was",
@@ -345,7 +346,7 @@ def markdown(report):
         "",
         *(
             [
-                "The newer native-backend probes below show a defined large-offset benefit",
+                "The later recorded native-backend probes below show a defined large-offset benefit",
                 "for output/dK/dV, while dQ remains worse than FlexAttention and can have",
                 "very large mathematical error. There is **no overall accuracy winner**.",
                 "",
@@ -377,7 +378,7 @@ def markdown(report):
         "declared P/dS operand conversions, FP32 QK/dP, and delta from actual rounded",
         "O. Its final products use FP64 to isolate operand-rounding effects. Close",
         "agreement with that reference does not imply the closest mathematical",
-        "FP64 result. The candidate retains the [declared precision contract](../../precision.md).",
+        "FP64 result. The candidate used the [ordinary-attention baseline equations](../../precision.md#arithmetic-contract).",
         "",
         "## Representative ordinary workload",
         "",
@@ -450,7 +451,7 @@ def markdown(report):
         "agreement with the declared rounded computation on defined difficult",
         "inputs. There is no demonstrated universal accuracy gain over FlexAttention,",
         "and the initial qualification did not measure FlexAttention on this fixture.",
-        "The separate current native-backend probe below fills that comparison.",
+        "The separate recorded native-backend probes below fill that historical comparison.",
         "",
         "The [machine-readable audit](../../../results/neighborhood/accuracy.json) retains source-report",
         "hashes, all component maxima and their locations, matched error-ratio ranges,",
@@ -480,13 +481,33 @@ def markdown(report):
         "    --markdown docs/neighborhood/reports/accuracy.md",
         "```",
     ]
+    if report.get("probes"):
+        lines += [
+            "",
+            "## Recorded probe comparison",
+            "",
+            "These probes all measured the former baseline policy, not the corrected public default. Status includes comparator execution failures; a failed row is not a successful qualification.",
+            "",
+            "| Probe | Variant | Tile columns | Status | Stage exit |",
+            "| --- | --- | --- | --- | --- |",
+        ]
+        for probe in report["probes"]:
+            variant = probe["tuning_variant"]
+            columns = variant["columns"] if variant["columns"] is not None else "automatic per shape"
+            stage = probe.get("stage_receipt", {}).get("exit_status", "not recorded")
+            lines.append(f"| {probe['label']} | `{variant['name']}` | `{columns}` | {probe['status']} | {stage} |")
     for probe in report.get("probes", []):
         lines.extend(probe_markdown(probe))
+        lines.extend(["", "</details>"])
     return (
         "\n".join(
             lines[:2]
             + [
-                "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).",
+                "**Study question:** Where does the former baseline differ from mathematical FP64?",
+                "",
+                "**Current relevance:** Historical baseline diagnosis; its errors precede the [dQ](dq-precision.md) and [dK](dk-precision.md) corrections now enabled in the [public default](../README.md#default-precision).",
+                "",
+                "**Evidence:** [recorded data](../../../results/neighborhood/accuracy.json) (including source identities and measured runtime); [report generator](../../../benchmarks/neighborhood/summarize_accuracy.py).",
                 "",
             ]
             + lines[2:]

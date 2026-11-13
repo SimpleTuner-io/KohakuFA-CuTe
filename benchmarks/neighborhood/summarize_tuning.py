@@ -66,6 +66,9 @@ def markdown(data):
             "",
             "## " + label,
             "",
+            "<details>",
+            "<summary>Complete timing rows</summary>",
+            "",
             "| case | variant | forward | forward + backward | training range |",
             "| --- | --- | ---: | ---: | ---: |",
         ]
@@ -81,6 +84,7 @@ def markdown(data):
             lines.append(
                 f"| {row['workload']['name']} | {row['variant']} | {display(forward)} | {display(training)} | {interval} |"
             )
+        lines += ["", "</details>"]
     return "\n".join(lines) + "\n"
 
 

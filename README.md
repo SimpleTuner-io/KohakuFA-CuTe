@@ -77,6 +77,7 @@ eager execution, inference, and training have distinct timing boundaries.
 - [Precision](docs/precision.md) and [determinism](docs/determinism.md)
 - [Validation](docs/validation.md) and [benchmarking](docs/benchmarking.md)
 - [Benchmark tools](benchmarks/README.md) and [repository layout](docs/internals/repository.md)
+- [Source and dispatch map](docs/internals/source-map.md) and [test map](tests/README.md)
 
 ## License and attribution
 

@@ -1,9 +1,14 @@
 # Documentation
 
-Start with [installation](installation.md) and the [API](api.md).
-[Precision](precision.md) defines the computation; [determinism](determinism.md)
-defines repeatability. [Validation](validation.md) covers accuracy and known
-limitations; [benchmarking](benchmarking.md) covers timing and profiling.
+| I want to… | Start here |
+| --- | --- |
+| Install and call attention | [Installation](installation.md), [API](api.md) |
+| Use spatial neighborhoods | [Neighborhood guide](neighborhood/README.md) |
+| Choose a device-specific entry | [GPU guides](#gpu-guides) |
+| Understand numerical behavior | [Precision](precision.md), [determinism](determinism.md) |
+| Check correctness or measure performance | [Validation](validation.md), [test map](../tests/README.md), [benchmarking](benchmarking.md) |
+| Find an implementation or follow dispatch | [Source map](internals/source-map.md) |
+| Understand a retained experiment | [Experiment catalog](../benchmarks/experiments/README.md) |
 
 ## Neighborhood attention
 
@@ -40,6 +45,8 @@ there is no single all-device qualification run.
 
 ## Implementation and diagnostics
 
+- [Source and dispatch map](internals/source-map.md)
+- [Test families and execution requirements](../tests/README.md)
 - [Native host ownership](internals/native-host.md)
 - [Schedule controls](internals/scheduling.md)
 - [Experimental H200 backend](experimental/h200.md)

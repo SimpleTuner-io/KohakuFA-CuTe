@@ -24,8 +24,8 @@ boundaries and [validation](../docs/validation.md) for acceptance criteria.
 
 Use `--help` for runner arguments on the configured host. Some retained
 experiment modules are imported controls rather than command-line programs.
-The `test_*` neighborhood runners launch experiments; unit tests live in
-[`tests/`](../tests).
+The `test_*` neighborhood runners launch experiments; unit test families are
+listed in the [test map](../tests/README.md).
 
 ## Layout
 
@@ -46,9 +46,9 @@ The `test_*` neighborhood runners launch experiments; unit tests live in
 The root retains shared references, adapters, artifact capture and common
 drivers. Each device study keeps its controls beside its validation scripts.
 No compatibility wrappers or hidden import redirection are installed for old
-benchmark module names. For example, `benchmarks.neighborhood.tune` is now
-`benchmarks.neighborhood.tune`, and `benchmarks.experiments.ada.compare_ada` is now
-`benchmarks.experiments.ada.compare_ada`.
+benchmark module names. Use the current modules above for new runs and a frozen
+source snapshot for historical commands. The [experiment catalog](experiments/README.md)
+maps retained runners and factories to their purpose, evidence and status.
 
 ## Reports and reproducibility
 

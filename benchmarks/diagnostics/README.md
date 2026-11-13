@@ -171,3 +171,8 @@ operations. It includes native-code build tooling, captured-code association,
 and paired old/new initcheck evidence. The allocator report and the separate
 B300 attention report remain unresolved; this control does not qualify either
 attention backend.
+
+The separate [Sanitizer API review](results/blackwell-sanitizer-api-review.json)
+records SDK/header hashes and why the documented API does not establish export
+of initcheck-patched ELF. See the [review explanation](../../docs/diagnostics/blackwell-allocator.md#sanitizer-api-review-and-optional-controls);
+this offline review is distinct from the measured allocator controls.

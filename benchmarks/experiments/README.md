@@ -23,9 +23,52 @@ selection. Repository-relative source paths inside these records are resolved at
 the recorded Git revision. Full prior reports remain recoverable from that tree;
 they are not duplicated as an archive of user documentation.
 
+## Source catalogs
+
+Every retained Python module in the device-study directories is linked in these
+catalogs, with its invocation role and source-defined purpose. A helper or frozen
+snapshot is not a standalone command. Evidence links identify the associated
+family; absence of a per-module result is not proof that the source is unused.
+
+| Study family | Questions and controls |
+| --- | --- |
+| [Ampere](ampere/README.md) | A100/A40/RTX3090 schedules, host preparation and old/new selectors |
+| [Ada](ada/README.md) | L40S/RTX4090 short/medium shapes, host guards and schedules |
+| [Hopper](hopper/README.md) | Explicit H200 pipeline, persistent scheduling and initialization |
+| [Blackwell](blackwell/README.md) | B200/B300/RTX5090 pipelines, readout, code generation and negative controls |
+| [GB10](gb10/README.md) | Geometry, cache/metadata overhead, causal ordering and frozen selectors |
+| [Shared](shared/README.md) | Joint backward and captured application experiments |
+
+Run CLI entries on the configured remote host from the repository root as
+`python -m benchmarks.experiments.FAMILY.MODULE --help`. Some retained scripts
+parse arguments or execute work at module scope; do not import them merely to
+inspect their purpose. “CLI (top-level execution)” marks that pattern. Imported
+helpers and snapshots are not standalone commands. Factories can be selected by
+`benchmarks.experiments.FAMILY.MODULE:FACTORY` in the comparison driver; inspect
+their required arguments first. Patch-installing controls belong in isolated
+experiment processes. Current production selection is documented in the
+[source map](../../docs/internals/source-map.md), regardless of historical
+experiment names. Preserve the frozen campaign source for historical replay.
+
+Cross-family factories retained at the benchmark root:
+
+| Source | Role and status |
+| --- | --- |
+| [configured_host_experiments.py](../configured_host_experiments.py) | `make_attention`: explicit native runner configuration; bypasses the normal compatibility selector during the experiment |
+| [selected_validation_controls.py](../selected_validation_controls.py) | `make_attention`: previous/current API bodies with isolated cold/warm generic caches; records proof when configured |
+| [experimental_precision_control.py](../experimental_precision_control.py) | Previous compensated arithmetic, separate from ordinary default qualification |
+| [tune_kohakufa.py](../tune_kohakufa.py) | CLI tuning the installed upstream Gluon comparison on BF16 BHSD inputs |
+| [cpu_reference_unittest.py](../validation/cpu_reference_unittest.py) | CLI moving reference work to CPU while GPU kernels remain instrumented; `--agreement` checks reference agreement outside sanitizers |
+
+[`compare_attention_variants`](../compare_attention_variants.py) resolves factory
+strings with `importlib.import_module`. Snapshot loaders also read Python source
+bytes and execute them in a package namespace. An import-only reachability scan
+therefore misses valid callers. See [frozen controls](../../controls/README.md)
+for loader ownership and duplicate-snapshot policy.
+
 ## Accuracy controls
 
-`benchmarks.experimental_precision_control` retains the former compensated policy.
+For ordinary attention, `benchmarks.experimental_precision_control` retains the former compensated policy.
 Verify it against the preceding checkout with `benchmarks.validation.verify_previous_precision`
 before timing it. Residual products and corrections are a stronger accuracy
 experiment; their coordinate gates do not redefine [the default computation](../../docs/precision.md).

@@ -200,6 +200,8 @@ requires its own authorized setup, storage, transfer and archival budget.
 
 ## Sanitizer API review and optional controls
 
+The [compact SDK review](../../benchmarks/diagnostics/results/blackwell-sanitizer-api-review.json)
+retains the reviewed header and guide hashes and the limits below.
 The reviewed NVIDIA SDK is 13.4.92 (Compute Sanitizer 2026.3.0). Its documented
 interfaces do not establish a supported export of initcheck's patched ELF:
 

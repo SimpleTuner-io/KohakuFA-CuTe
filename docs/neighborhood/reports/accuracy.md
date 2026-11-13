@@ -1,8 +1,10 @@
 # Neighborhood accuracy against FP64
 
-Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).
+**Study question:** Where does the former baseline differ from mathematical FP64?
 
-This report diagnoses the original default arithmetic. Its cancellation-sensitive dQ/dK errors must not be attributed to the later explicit combined method. See the [current guide](../README.md#default-precision), [dQ study](dq-precision.md), and [dK study](dk-precision.md). That campaign predates promotion of the combined method to the public default.
+**Current relevance:** Historical baseline diagnosis; its errors precede the [dQ](dq-precision.md) and [dK](dk-precision.md) corrections now enabled in the [public default](../README.md#default-precision).
+
+**Evidence:** [recorded data](../../../results/neighborhood/accuracy.json) (including source identities and measured runtime); [report generator](../../../benchmarks/neighborhood/summarize_accuracy.py).
 
 The retained ordinary-workload results do **not** demonstrate a general
 mathematical-accuracy gain over FlexAttention or NATTEN. On the 50 matched
@@ -15,7 +17,7 @@ These compare each implementation's worst head within the same workload;
 the identity of that head can differ. They are descriptive norm-error
 comparisons, without statistical or model-quality conclusions.
 
-The newer native-backend probes below show a defined large-offset benefit
+The later recorded native-backend probes below show a defined large-offset benefit
 for output/dK/dV, while dQ remains worse than FlexAttention and can have
 very large mathematical error. There is **no overall accuracy winner**.
 
@@ -43,7 +45,7 @@ comparison. Separate small directed fixtures check full tensors.
 declared P/dS operand conversions, FP32 QK/dP, and delta from actual rounded
 O. Its final products use FP64 to isolate operand-rounding effects. Close
 agreement with that reference does not imply the closest mathematical
-FP64 result. The candidate retains the [declared precision contract](../../precision.md).
+FP64 result. The candidate used the [ordinary-attention baseline equations](../../precision.md#arithmetic-contract).
 
 ## Representative ordinary workload
 
@@ -100,7 +102,7 @@ The demonstrated benefit is robust probability reconstruction and closer
 agreement with the declared rounded computation on defined difficult
 inputs. There is no demonstrated universal accuracy gain over FlexAttention,
 and the initial qualification did not measure FlexAttention on this fixture.
-The separate current native-backend probe below fills that comparison.
+The separate recorded native-backend probes below fill that historical comparison.
 
 The [machine-readable audit](../../../results/neighborhood/accuracy.json) retains source-report
 hashes, all component maxima and their locations, matched error-ratio ranges,
@@ -129,7 +131,21 @@ python3 -m benchmarks.neighborhood.summarize_accuracy \
     --markdown docs/neighborhood/reports/accuracy.md
 ```
 
-## Current native-backend probe: H100-initial-C32
+## Recorded probe comparison
+
+These probes all measured the former baseline policy, not the corrected public default. Status includes comparator execution failures; a failed row is not a successful qualification.
+
+| Probe | Variant | Tile columns | Status | Stage exit |
+| --- | --- | --- | --- | --- |
+| H100-initial-C32 | `no_stat_fills` | `[32, 32, 32]` | execution-error | 1 |
+| H100-v2-exactmixed | `exactmixed_no_stat_fills` | `[32, 32, 64]` | execution-error | 1 |
+| H100-v4-production-candidate | `production` | `automatic per shape` | execution-error | 1 |
+| H100-v6-production | `production` | `automatic per shape` | execution-error | 1 |
+
+## Recorded probe: H100-initial-C32
+
+<details>
+<summary>Full probe configuration, component errors and failures</summary>
 
 This separate full-tensor diagnostic uses native CPU FP64 equations on
 identical already-rounded operands. It measures no latency or model quality.
@@ -216,7 +232,12 @@ with CUTLASS NATTEN, and does not describe this native Hopper result.
 The JSON retains both references, every head/component, operand hashes,
 actual launched kernels and source hashes, including failed diagnostics.
 
-## Current native-backend probe: H100-v2-exactmixed
+</details>
+
+## Recorded probe: H100-v2-exactmixed
+
+<details>
+<summary>Full probe configuration, component errors and failures</summary>
 
 This separate full-tensor diagnostic uses native CPU FP64 equations on
 identical already-rounded operands. It measures no latency or model quality.
@@ -303,7 +324,12 @@ with CUTLASS NATTEN, and does not describe this native Hopper result.
 The JSON retains both references, every head/component, operand hashes,
 actual launched kernels and source hashes, including failed diagnostics.
 
-## Current native-backend probe: H100-v4-production-candidate
+</details>
+
+## Recorded probe: H100-v4-production-candidate
+
+<details>
+<summary>Full probe configuration, component errors and failures</summary>
 
 This separate full-tensor diagnostic uses native CPU FP64 equations on
 identical already-rounded operands. It measures no latency or model quality.
@@ -395,7 +421,12 @@ with CUTLASS NATTEN, and does not describe this native Hopper result.
 The JSON retains both references, every head/component, operand hashes,
 actual launched kernels and source hashes, including failed diagnostics.
 
-## Current native-backend probe: H100-v6-production
+</details>
+
+## Recorded probe: H100-v6-production
+
+<details>
+<summary>Full probe configuration, component errors and failures</summary>
 
 This separate full-tensor diagnostic uses native CPU FP64 equations on
 identical already-rounded operands. It measures no latency or model quality.
@@ -486,3 +517,5 @@ The earlier 4.1% relative dQ improvement above compared the candidate
 with CUTLASS NATTEN, and does not describe this native Hopper result.
 The JSON retains both references, every head/component, operand hashes,
 actual launched kernels and source hashes, including failed diagnostics.
+
+</details>

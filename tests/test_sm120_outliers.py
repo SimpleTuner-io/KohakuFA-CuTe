@@ -157,7 +157,7 @@ class SM120OutlierTests(unittest.TestCase):
                 self.assertEqual(compiler.call_count, 2)
 
     def test_d64_column_graph_reads_changed_strided_inputs(self):
-        from benchmarks.compare_sm120 import graph_nodes
+        from benchmarks.experiments.blackwell.compare_sm120 import graph_nodes
 
         for dtype, causal in itertools.product((torch.float16, torch.bfloat16), (False, True)):
             with self.subTest(dtype=dtype, causal=causal):

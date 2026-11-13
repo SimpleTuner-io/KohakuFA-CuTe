@@ -86,7 +86,7 @@ class AutomaticGpuTests(unittest.TestCase):
                 self.assertFalse(rtx4090.automatic_compatible(q, q, q, None, 0, False, None, False))
 
     def test_public_training_parameters_subclasses(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute import api
 
         class PlainTensor(torch.Tensor):
@@ -127,7 +127,7 @@ class AutomaticGpuTests(unittest.TestCase):
                         self.assertTrue(fa4_sm80.compatible(*values, None, 0, causal, None, False))
 
     def test_fallback_namespace_matches_parent(self):
-        from benchmarks.rtx4090_automatic_controls import parent_api
+        from benchmarks.experiments.ada.rtx4090_automatic_controls import parent_api
         from kohakufa_cute import api
 
         before = parent_api()
@@ -194,7 +194,7 @@ class AutomaticGpuTests(unittest.TestCase):
                                 self.assertLess(error["relative_error"], 0.01 if dtype == torch.bfloat16 else 0.005)
 
     def test_masks_rectangular_gqa_and_compiler_fallbacks(self):
-        from benchmarks.rtx4090_automatic_controls import parent_api
+        from benchmarks.experiments.ada.rtx4090_automatic_controls import parent_api
         from kohakufa_cute import api
 
         before = parent_api()

@@ -8,7 +8,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from benchmarks.plot_performance import TARGETS, comparison_reference, graph_cells, render
+from benchmarks.reporting.plot_performance import TARGETS, comparison_reference, graph_cells, render
 
 ROOT = Path(__file__).resolve().parents[1]
 

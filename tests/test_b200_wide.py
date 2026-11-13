@@ -43,8 +43,8 @@ class B200WideTests(unittest.TestCase):
     def test_runtime_length_boundaries_and_changed_graphs(self):
         from unittest.mock import patch
 
-        from benchmarks.compare_ada import capture
-        from benchmarks.compare_l40s import graph_kernels
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ada.compare_l40s import graph_kernels
         from benchmarks.reference import fp64_reference, metrics, rounded_reference
         from kohakufa_cute import kernels, native, scaled_dot_product_attention
         from kohakufa_cute.blackwell_register_aux import AdaptiveBackward

@@ -31,6 +31,16 @@ These commands benchmark installed source; they do not reproduce a historical
 host or every selection study. Published data keep their original protocol and
 source identity. Previous-policy controls require separate verification.
 
+## Neighborhood attention
+
+Use `python -m benchmarks.neighborhood.benchmark` for the default API comparison
+and `python -m benchmarks.neighborhood.test_key_precision` for the explicit
+dQ+dK experiment. Run `--help` on the configured remote host before a campaign.
+The [neighborhood guide](neighborhood/README.md) defines inputs, arithmetic,
+measured stacks and timing scope. Its [data index](../results/neighborhood/README.md)
+separates the original baseline, H100 tuning and later accuracy qualifications.
+The [tool index](../benchmarks/README.md) lists all current module locations.
+
 ## Standalone FlashAttention
 
 ```bash
@@ -64,9 +74,9 @@ protocols into an isolated speedup.
 ```bash
 nsys profile --capture-range=cudaProfilerApi --capture-range-end=stop \
   --trace=cuda,nvtx --cuda-graph-trace=node -o "$CAPTURE_DIR/cute" \
-  python -m benchmarks.profile_nsight --backend cute --phase joint \
+  python -m benchmarks.profiling.profile_nsight --backend cute --phase joint \
   --seq 4096 --dim 128 --heads 16
-python -m benchmarks.plot_performance
+python -m benchmarks.reporting.plot_performance
 ```
 
 Use `--eager` to inspect ordinary launches. Identify actual kernels and required

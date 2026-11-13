@@ -5,8 +5,8 @@ from unittest.mock import patch
 
 import torch
 
-from benchmarks.neighborhood_backends import make_backend, neighborhood_predicate, spatial_block_lists
-from benchmarks.neighborhood_reference import neighborhood_mask
+from benchmarks.neighborhood.backends import make_backend, neighborhood_predicate, spatial_block_lists
+from benchmarks.neighborhood.reference import neighborhood_mask
 
 
 class NeighborhoodBackendTests(unittest.TestCase):

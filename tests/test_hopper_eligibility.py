@@ -66,7 +66,7 @@ class HopperEligibilityTests(unittest.TestCase):
                 fa4_hopper.attention(*self.inputs, scale=scale)
 
     def test_python_policy_factory_rejects_positive_underflow_before_launch(self):
-        from benchmarks.experimental_hopper_lpt import make_attention
+        from benchmarks.experiments.hopper.experimental_hopper_lpt import make_attention
 
         operation = make_attention()
         for scale in (1e-100, float("nan"), float("inf"), "invalid"):

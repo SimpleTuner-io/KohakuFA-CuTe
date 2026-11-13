@@ -133,7 +133,7 @@ def neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None):
     Each axis starts at clamp(query - window//2, 0, extent - window),
     matching NATTEN's shifted boundary windows, including even windows.
     The arithmetic follows docs/precision.md. Qualification details are in
-    docs/experimental/neighborhood.md.
+    docs/neighborhood/README.md.
     """
     if (
         not isinstance(spatial_shape, (tuple, list))

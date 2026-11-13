@@ -184,7 +184,7 @@ class Sm120PublicKernelTests(unittest.TestCase):
             self.assertFalse(_sm120.compatible(q, q, q, None, 0, True, None, False))
 
     def check_case(self, inputs, dout, *, causal=False, scale=None, directed=False, pointwise=False, function=None):
-        from benchmarks.validate_sm80_static import assess, statistics
+        from benchmarks.experiments.ampere.validate_sm80_static import assess, statistics
         from kohakufa_cute import api
 
         selected = inputs[0].shape[2] == 4096 or (
@@ -212,8 +212,8 @@ class Sm120PublicKernelTests(unittest.TestCase):
         assess(actual, operands, dout, causal=causal, scale=scale, directed=directed, pointwise=pointwise)
 
     def test_final_public_bounds(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.compare_l40s import graph_kernels
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ada.compare_l40s import graph_kernels
         from kohakufa_cute import api
 
         for length in (1023, 1024, 1025, 4096):
@@ -272,9 +272,9 @@ class Sm120PublicKernelTests(unittest.TestCase):
             self.check_case((q, k, v), dout, directed=True)
 
     def test_changed_graph_and_actual_selected_components(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.compare_l40s import graph_kernels
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ada.compare_l40s import graph_kernels
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute import api
 
         for dtype, dimension, causal in ((torch.bfloat16, 64, True), (torch.float16, 128, True)):

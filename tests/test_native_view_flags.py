@@ -163,7 +163,7 @@ class NativeViewFlagTests(unittest.TestCase):
             self.assertLess(metrics(got, want)["relative_error"], 0.01)
 
     def check_changed_graph(self, operation):
-        from benchmarks.compare_ada import capture
+        from benchmarks.experiments.ada.compare_ada import capture
 
         torch.manual_seed(42023)
         bases = [torch.randn(1, 2, 129, 64, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)]

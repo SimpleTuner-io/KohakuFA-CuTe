@@ -3,7 +3,7 @@
 import unittest
 from collections import Counter
 
-from benchmarks.experimental_hopper_lpt import decode_work, head_swizzle
+from benchmarks.experiments.hopper.experimental_hopper_lpt import decode_work, head_swizzle
 
 
 class HopperSchedulerTests(unittest.TestCase):

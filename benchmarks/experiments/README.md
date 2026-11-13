@@ -1,5 +1,9 @@
 # Explicit experiments
 
+Executable studies are grouped under `ampere/`, `ada/`, `hopper/`,
+`blackwell/`, `gb10/` and `shared/`. The [tool index](../README.md) lists current
+commands. Recorded evidence below retains historical source paths and hashes.
+
 These controls are outside default dispatch. They preserve evidence needed to
 interpret accuracy changes, rejected schedules, and unresolved model compatibility.
 Current supported-target performance belongs in the [GPU catalog](../../results/README.md).
@@ -22,7 +26,7 @@ they are not duplicated as an archive of user documentation.
 ## Accuracy controls
 
 `benchmarks.experimental_precision_control` retains the former compensated policy.
-Verify it against the preceding checkout with `benchmarks.verify_previous_precision`
+Verify it against the preceding checkout with `benchmarks.validation.verify_previous_precision`
 before timing it. Residual products and corrections are a stronger accuracy
 experiment; their coordinate gates do not redefine [the default computation](../../docs/precision.md).
 
@@ -36,7 +40,7 @@ Run from the repository root on the [qualified runtime](../../docs/installation.
 
 ```sh
 python -m benchmarks.compare_attention_variants \
-  --operations '[{"label":"do1","factory":"benchmarks.sm120_dout_experiments:make_attention","kwargs":{"dout_stages":1}},{"label":"do2","factory":"benchmarks.sm120_dout_experiments:make_attention","kwargs":{"dout_stages":2}}]' \
+  --operations '[{"label":"do1","factory":"benchmarks.experiments.blackwell.sm120_dout_experiments:make_attention","kwargs":{"dout_stages":1}},{"label":"do2","factory":"benchmarks.experiments.blackwell.sm120_dout_experiments:make_attention","kwargs":{"dout_stages":2}}]' \
   --seq 128 1024 4096 --dim 64 --heads 16 --dtype bf16 fp16 \
   --visibility dense causal --phases backward joint --warmup-ms 1000 \
   --window-ms 100 --repeats 7 --output "$CAPTURE_DIR/dout.json"

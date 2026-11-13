@@ -5,7 +5,7 @@ import hashlib
 import json
 import unittest
 
-from benchmarks.summarize_neighborhood_performance import markdown, summarize_inputs
+from benchmarks.neighborhood.summarize_performance import markdown, summarize_inputs
 
 
 def report():
@@ -14,7 +14,7 @@ def report():
     result = dict(
         status="pass",
         source_revision="a" * 40,
-        source_sha256={"benchmarks/benchmark_neighborhood.py": "b" * 64},
+        source_sha256={"benchmarks/neighborhood/benchmark.py": "b" * 64},
         versions={"torch": "2.13.0+cu130"},
         device=dict(name="NVIDIA H100 PCIe", capability=[9, 0], sm_count=114, memory_bytes=80 * 1024**3),
         protocol=dict(
@@ -151,7 +151,7 @@ class NeighborhoodPerformanceSummaryTests(unittest.TestCase):
 
     def test_different_source_reports_remain_separate(self):
         first, second = report(), report()
-        second["source_sha256"]["benchmarks/benchmark_neighborhood.py"] = "c" * 64
+        second["source_sha256"]["benchmarks/neighborhood/benchmark.py"] = "c" * 64
         result = summarize_inputs([("h100-one", json.dumps(first).encode()), ("h100-two", json.dumps(second).encode())])
         self.assertEqual(len(result["configurations"]), 2)
         self.assertEqual(len(result["runs"]), 2)

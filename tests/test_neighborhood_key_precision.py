@@ -7,16 +7,16 @@ from unittest.mock import patch
 
 import torch
 
-from benchmarks.neighborhood_key_precision_reference import (
+from benchmarks.neighborhood.key_precision_reference import (
     METHODS,
     NEW_METHODS,
     key_precision_reference,
     key_terms,
     sparse_key_precision_reference,
 )
-from benchmarks.neighborhood_precision_reference import mathematical_reference, precision_reference, reference_gate
-from benchmarks.neighborhood_reference import neighborhoods
-from benchmarks.qualify_neighborhood import execute
+from benchmarks.neighborhood.precision_reference import mathematical_reference, precision_reference, reference_gate
+from benchmarks.neighborhood.qualify import execute
+from benchmarks.neighborhood.reference import neighborhoods
 
 
 class NeighborhoodKeyPrecisionReferenceTests(unittest.TestCase):
@@ -98,9 +98,8 @@ class NeighborhoodKeyPrecisionGPUTests(unittest.TestCase):
                 torch.testing.assert_close(a, b.cpu(), atol=0, rtol=0)
 
     def test_formula_and_changed_poisoned_graph(self):
+        from benchmarks.neighborhood.precision import key_statistics, variant
         from kohakufa_cute import neighborhood_attention
-
-        from benchmarks.neighborhood_precision import key_statistics, variant
 
         spatial, window = (9, 17), (3, 4)
         for dtype in (torch.float16, torch.bfloat16):
@@ -155,11 +154,10 @@ class NeighborhoodKeyPrecisionGPUTests(unittest.TestCase):
                         self.assertTrue(reference_gate(got, exact, dtype)["passed"])
 
     def test_resolved_schedule_changed_poisoned_graph(self):
+        from benchmarks.neighborhood.benchmark import sample_positions, sparse_references
+        from benchmarks.neighborhood.precision import key_statistics, variant
         from kohakufa_cute import neighborhood_attention, neighborhood_ops
         from kohakufa_cute.neighborhood_kernels import effective_schedule
-
-        from benchmarks.benchmark_neighborhood import sample_positions, sparse_references
-        from benchmarks.neighborhood_precision import key_statistics, variant
 
         properties = torch.cuda.get_device_properties(0)
         normalized_name = "".join(properties.name.upper().split())
@@ -262,20 +260,19 @@ class NeighborhoodKeyPrecisionGPUTests(unittest.TestCase):
                     self.assertTrue(all(ownership), "The reconstruction and actual-O delta buffers alias")
 
     def test_frozen_sharp_math_fp64(self):
-        from kohakufa_cute import neighborhood_attention
-
-        from benchmarks.neighborhood_precision import variant
-        from benchmarks.qualify_neighborhood_accuracy import tensor_hash
-        from benchmarks.test_neighborhood_key_precision import (
+        from benchmarks.neighborhood.precision import variant
+        from benchmarks.neighborhood.qualify_accuracy import tensor_hash
+        from benchmarks.neighborhood.test_key_precision import (
             fixtures,
             historical_hashes,
             required_math_components,
             selected_gate,
         )
+        from kohakufa_cute import neighborhood_attention
 
         retained = os.environ.get("NEIGHBORHOOD_FROZEN_OPERANDS")
         frozen = Path(retained) if retained else None
-        hashes = historical_hashes(Path("docs/experimental/neighborhood-key-precision.json"))
+        hashes = historical_hashes(Path("results/neighborhood/dk-precision.json"))
         checked = 0
         for index, fixture in enumerate(fixtures(frozen)):
             label, inputs, dout, spatial, window, scale, stress, _ = fixture

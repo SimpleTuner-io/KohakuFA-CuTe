@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 import torch
 
-from benchmarks.neighborhood_reference import neighborhood_mask, neighborhoods
+from benchmarks.neighborhood.reference import neighborhood_mask, neighborhoods
 from benchmarks.reference import fp64_reference, metrics, rounded_reference
 from kohakufa_cute import api, neighborhood_attention
 from kohakufa_cute.neighborhood_geometry import spatial_bounds, spatial_tile
@@ -102,7 +102,7 @@ class NeighborhoodGeometryTests(unittest.TestCase):
                 torch.testing.assert_close(got, want, atol=1e-12, rtol=1e-12)
 
     def test_qualification_runner_keeps_head_and_component_failures_separate(self):
-        from benchmarks.qualify_neighborhood import assess
+        from benchmarks.neighborhood.qualify import assess
 
         torch.manual_seed(62)
         inputs = [torch.randn(2, 2, 15, 4, dtype=torch.float16) for _ in range(3)]
@@ -398,7 +398,7 @@ class ProductionNeighborhoodGPUTests(unittest.TestCase):
         import os
         from pathlib import Path
 
-        from benchmarks.benchmark_neighborhood import assess, sparse_references
+        from benchmarks.neighborhood.benchmark import assess, sparse_references
         from kohakufa_cute import neighborhood_kernels
 
         properties = torch.cuda.get_device_properties(0)

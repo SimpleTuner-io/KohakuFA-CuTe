@@ -41,9 +41,9 @@ def main():
         os.environ["CUTE_DSL_KEEP"] = "ptx,cubin"
         os.environ.setdefault("CUTE_DSL_DUMP_DIR", str(args.export_code.resolve()))
         Path(os.environ["CUTE_DSL_DUMP_DIR"]).mkdir(parents=True, exist_ok=True)
-    from benchmarks.compare_ada import capture, measure
-    from benchmarks.compare_l40s import board_state, graph_kernels, loaded_libraries
     from benchmarks.experimental_precision_control import previous_precision
+    from benchmarks.experiments.ada.compare_ada import capture, measure
+    from benchmarks.experiments.ada.compare_l40s import board_state, graph_kernels, loaded_libraries
     from kohakufa_cute import kernels, scaled_dot_product_attention
 
     prop = torch.cuda.get_device_properties(0)
@@ -77,8 +77,8 @@ def main():
                 "qualify_baseline_precision.py",
                 "experimental_precision_control.py",
                 "reference.py",
-                "compare_ada.py",
-                "compare_l40s.py",
+                "experiments/ada/compare_ada.py",
+                "experiments/ada/compare_l40s.py",
             )
         },
         "precision_contract": "Single rounded FP16/BF16 P; dS formed from rounded P and actual O/dO FP32 delta, rounded once; FP32 accumulation followed by gradient scaling.",

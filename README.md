@@ -43,6 +43,7 @@ out = automatic_scaled_dot_product_attention(q, k, v, is_causal=True)
 | `attention(...)` | Strict CuTe, implicit GQA, optional key centering |
 | `scaled_dot_product_attention(...)` | Strict CuTe with SDPA arguments |
 | `automatic_scaled_dot_product_attention(...)` | CuTe for supported calls; native SDPA otherwise |
+| `neighborhood_attention(...)` | Explicit experimental 2D shifted-window attention, D64 |
 
 CuTe accepts FP16/BF16 BHSD tensors, head dimensions 1–512, GQA, boolean masks,
 and dense or causal visibility on SM80/86/89/90/100/103/120/121. It supports
@@ -52,6 +53,12 @@ and packed variable-length attention are outside the CuTe API.
 Automatic selection checks compatibility; benchmark your workload to choose the
 fastest backend. Errors from a selected CuTe kernel propagate. See the
 [API guide](docs/api.md) for masks, strides, scales, and fallback rules.
+
+For spatial attention, start with the [neighborhood guide](docs/neighborhood/README.md).
+It covers the FP16/BF16 D64 API, H100/B200/B300/RTX 4090/RTX 5090/L40S
+qualification, and comparisons with FlexAttention and NATTEN. The stronger
+dQ+dK accuracy method remains an explicit experiment; default arithmetic is
+unchanged.
 
 ## Performance
 
@@ -66,9 +73,11 @@ eager execution, inference, and training have distinct timing boundaries.
 
 - [Installation and optional runtime](docs/installation.md)
 - [API and supported inputs](docs/api.md)
+- [Neighborhood attention: usage, accuracy and performance](docs/neighborhood/README.md)
 - [GPU-specific selection and evidence](docs/README.md#gpu-guides)
 - [Precision](docs/precision.md) and [determinism](docs/determinism.md)
 - [Validation](docs/validation.md) and [benchmarking](docs/benchmarking.md)
+- [Benchmark tools](benchmarks/README.md) and [repository layout](docs/internals/repository.md)
 
 ## License and attribution
 

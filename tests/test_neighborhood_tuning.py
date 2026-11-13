@@ -2,8 +2,8 @@
 
 import unittest
 
-from benchmarks.neighborhood_reference import neighborhoods
-from benchmarks.neighborhood_tuning import (
+from benchmarks.neighborhood.reference import neighborhoods
+from benchmarks.neighborhood.tuning import (
     BASELINE_COLUMNS,
     COLUMN_EXPERIMENTS,
     SECONDARY_COLUMN_EXPERIMENTS,

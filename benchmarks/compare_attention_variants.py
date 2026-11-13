@@ -41,10 +41,10 @@ def main():
     import torch
 
     import kohakufa_cute
-    from benchmarks.compare_ada import capture
-    from benchmarks.compare_l40s import graph_kernels
+    from benchmarks.experiments.ada.compare_ada import capture
+    from benchmarks.experiments.ada.compare_l40s import graph_kernels
+    from benchmarks.experiments.ampere.validate_sm80_static import assess
     from benchmarks.flashattention_backends import configuration_metadata, load_backend
-    from benchmarks.validate_sm80_static import assess
 
     operations = {}
     metadata = {}

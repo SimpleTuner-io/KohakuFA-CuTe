@@ -29,6 +29,13 @@ Set `CAPTURE_DIR` to storage outside the checkout. Run relevant device tests and
 sanitizers when changing kernels or memory ownership. CPU skips do not establish
 GPU qualification.
 
+For neighborhood attention, the [current guide](neighborhood/README.md) links
+the independent geometry/reference checks and six-GPU results. The combined
+dQ+dK experiment has its own prescribed equations and does not redefine the
+default policy. GPU tests include `tests.test_neighborhood`,
+`tests.test_neighborhood_precision` and `tests.test_neighborhood_key_precision`.
+Run numerical CPU references and GPU work on the remote qualification host.
+
 ## Directed regressions
 
 Preserve the [baseline](../tests/test_baseline_precision.py),
@@ -38,9 +45,9 @@ from reconstruction, mask, indexing, or synchronization defects.
 
 ```bash
 python -m unittest tests.test_adversarial -v
-python -m benchmarks.cudnn_regressions --reference rounded \
+python -m benchmarks.validation.cudnn_regressions --reference rounded \
   --backends kohakufa-cute cudnn flash math --output "$CAPTURE_DIR/adversarial.json"
-python -m benchmarks.tracker_regressions --backends cute cudnn --frontend-plan \
+python -m benchmarks.validation.tracker_regressions --backends cute cudnn --frontend-plan \
   --output "$CAPTURE_DIR/tracker.json"
 ```
 
@@ -66,6 +73,10 @@ supersede a recorded broader-suite failure. In particular:
 - The [H200 backend](experimental/h200.md) remains experimental with unresolved initcheck.
 - Captured H100 Clef attention improvements did not pass the whole-model logit
   compatibility gate. They do not establish model throughput or task accuracy.
+- Initial neighborhood qualification reproduced six ordinary-attention failing
+  subcases on both the candidate and untouched base; see the
+  [initial report](neighborhood/reports/initial.md). Later neighborhood passes
+  do not establish a full ordinary-attention GPU-suite pass.
 
 Previous compensated arithmetic is an explicit accuracy experiment. Its stricter
 coordinate checks do not redefine the default contract. The retained

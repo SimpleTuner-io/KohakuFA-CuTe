@@ -56,7 +56,7 @@ class L40sShortPublicTests(unittest.TestCase):
         torch.set_num_threads(4)
 
     def test_four_entries_and_each_live_gradient_flag(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         torch.manual_seed(296653)
         for dtype in (torch.bfloat16, torch.float16):
@@ -90,7 +90,7 @@ class L40sShortPublicTests(unittest.TestCase):
                         )
 
     def test_inference_policy_and_long_routes_match_parent(self):
-        from benchmarks.l40s_short_controls import parent_api
+        from benchmarks.experiments.ada.l40s_short_controls import parent_api
 
         parent = parent_api()
         for shape, gradients in (
@@ -99,18 +99,14 @@ class L40sShortPublicTests(unittest.TestCase):
             ((1, 16, 1024, 128), True),
             ((1, 16, 4096, 64), True),
         ):
-            inputs = [
-                torch.randn(*shape, device="cuda", dtype=torch.bfloat16, requires_grad=gradients) for _ in range(3)
-            ]
+            inputs = [torch.randn(*shape, device="cuda", dtype=torch.bfloat16, requires_grad=gradients) for _ in range(3)]
             for causal in (False, True):
                 with patch.object(_l40s, "_short_runner", side_effect=AssertionError("short selected")):
                     out = api.scaled_dot_product_attention(*inputs, is_causal=causal)
                 torch.testing.assert_close(
                     out, parent.scaled_dot_product_attention(*inputs, is_causal=causal), rtol=0, atol=0
                 )
-        inputs = [
-            torch.randn(1, 16, 128, 16, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)
-        ]
+        inputs = [torch.randn(1, 16, 128, 16, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)]
         for options in (
             {"scale": 0.0},
             {"scale": -0.25},

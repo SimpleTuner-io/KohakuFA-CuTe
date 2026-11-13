@@ -7,8 +7,8 @@ from pathlib import Path
 
 import torch
 
-from benchmarks.neighborhood_reference import neighborhood_mask
-from benchmarks.qualify_neighborhood_accuracy import cases, save, tensor_hash
+from benchmarks.neighborhood.qualify_accuracy import cases, save, tensor_hash
+from benchmarks.neighborhood.reference import neighborhood_mask
 from benchmarks.reference import fp64_reference, rounded_reference
 
 

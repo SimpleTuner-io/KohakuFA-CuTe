@@ -8,9 +8,9 @@ import unittest
 
 import torch
 
-from benchmarks.neighborhood_precision_reference import mathematical_reference, precision_reference, reference_gate
-from benchmarks.neighborhood_reference import neighborhood_mask
-from benchmarks.qualify_neighborhood import execute
+from benchmarks.neighborhood.precision_reference import mathematical_reference, precision_reference, reference_gate
+from benchmarks.neighborhood.qualify import execute
+from benchmarks.neighborhood.reference import neighborhood_mask
 from benchmarks.reference import rounded_reference
 
 
@@ -69,7 +69,7 @@ class NeighborhoodPrecisionGPUTests(unittest.TestCase):
                     torch.testing.assert_close(a, b.cpu(), atol=1e-12, rtol=1e-12)
 
     def test_all_variants_formula_and_changed_poisoned_graph(self):
-        from benchmarks.neighborhood_precision import VARIANTS, variant
+        from benchmarks.neighborhood.precision import VARIANTS, variant
         from kohakufa_cute import neighborhood_attention
 
         options = {

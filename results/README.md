@@ -1,5 +1,8 @@
 # Performance results
 
+For the separate 2D operator, see [neighborhood evidence](neighborhood/README.md)
+and the [current neighborhood guide](../docs/neighborhood/README.md).
+
 [Performance across twelve GPU targets](performance.svg) reads the reports below.
 There is one JSON file per target and one common figure. Measurements were retained
 from existing measured runs with their qualification limits. No new GPU benchmarks
@@ -93,7 +96,7 @@ while its independent evaluation runs remain separate. Unsuccessful backends sta
 explicit in raw records and do not acquire timing cells. Some compact GB10 studies
 published only sample counts and ranges; missing raw samples are not reconstructed.
 
-Regenerate the chart with `python -m benchmarks.plot_performance`.
+Regenerate the chart with `python -m benchmarks.reporting.plot_performance`.
 [Benchmarking](../docs/benchmarking.md) documents new measurements. The one-time
 migration is reproducible with `python tools/consolidate_results.py --output DIR`;
 it reads the frozen pre-cleanup Git tree without changing the checkout.

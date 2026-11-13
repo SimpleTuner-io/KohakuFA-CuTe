@@ -7,8 +7,8 @@ from pathlib import Path
 
 import torch
 
-from benchmarks.plot_rows import distribution
 from benchmarks.reference import metrics, row_metrics
+from benchmarks.reporting.plot_rows import distribution
 
 
 class RowMetricsTests(unittest.TestCase):
@@ -54,7 +54,7 @@ class RowMetricsTests(unittest.TestCase):
 
     @unittest.skipUnless(importlib.util.find_spec("matplotlib"), "Requires optional plots dependency")
     def test_violin_plot_handles_constant_exact_and_undefined_rows(self):
-        from benchmarks.plot_rows import render
+        from benchmarks.reporting.plot_rows import render
 
         data = row_metrics(torch.tensor([[1.0], [2.0], [0.0]]), torch.tensor([[1.0], [1.0], [0.0]]))
         report = {

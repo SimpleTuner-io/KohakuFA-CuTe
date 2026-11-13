@@ -4,8 +4,8 @@ import unittest
 
 import torch
 
-from benchmarks.adversarial import cases, logits_statistics, make_case
 from benchmarks.reference import fp64_reference, metrics
+from benchmarks.validation.adversarial import cases, logits_statistics, make_case
 from tests.attention_reference import attention_reference
 
 
@@ -40,7 +40,7 @@ class AdversarialFixtureTests(unittest.TestCase):
             torch.testing.assert_close(actual, want, atol=2e-13, rtol=2e-13)
 
     def test_comparator_rejects_lost_tiny_gradients_and_lost_tail_rows(self):
-        from benchmarks.cudnn_regressions import assess
+        from benchmarks.validation.cudnn_regressions import assess
 
         reference = torch.full((1, 1, 2, 8), 1e-22, dtype=torch.float64)
         actual = torch.zeros_like(reference)

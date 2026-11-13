@@ -7,7 +7,7 @@ from pathlib import Path
 
 import torch
 
-from benchmarks.benchmark_neighborhood import (
+from benchmarks.neighborhood.benchmark import (
     assess,
     atomic_save,
     execute,
@@ -17,7 +17,7 @@ from benchmarks.benchmark_neighborhood import (
     summarize,
     workloads,
 )
-from benchmarks.neighborhood_reference import neighborhood_mask
+from benchmarks.neighborhood.reference import neighborhood_mask
 from benchmarks.reference import fp64_reference, rounded_reference
 
 

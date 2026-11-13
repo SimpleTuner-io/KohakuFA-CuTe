@@ -1213,8 +1213,8 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm121_short_forward_keeps_negative_maxima_and_tiny_gradients(self):
         if torch.cuda.get_device_capability() != (12, 1):
             self.skipTest("Requires GB10 short forward dispatch.")
-        from benchmarks.adversarial import Case, make_case
-        from benchmarks.cudnn_regressions import assess
+        from benchmarks.validation.adversarial import Case, make_case
+        from benchmarks.validation.cudnn_regressions import assess
         from kohakufa_cute import attention
         from tests.attention_reference import attention_reference
 
@@ -1259,7 +1259,7 @@ class CuTeAttentionTests(unittest.TestCase):
     def test_sm121_short_forward_parallel_tiles_preserve_tail_gradients(self):
         if torch.cuda.get_device_capability() != (12, 1):
             self.skipTest("Requires GB10 short forward dispatch.")
-        from benchmarks.cudnn_regressions import assess
+        from benchmarks.validation.cudnn_regressions import assess
         from kohakufa_cute import attention
         from tests.attention_reference import attention_reference
 

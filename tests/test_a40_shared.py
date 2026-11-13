@@ -180,7 +180,7 @@ class A40SharedTests(unittest.TestCase):
         self.assertEqual(a40.schedule(128, False, 4096).causal_head_group, 1)
 
     def test_benchmark_control_retains_public_entry_and_group(self):
-        from benchmarks.a40_shared_candidates import make_attention
+        from benchmarks.experiments.ampere.a40_shared_candidates import make_attention
 
         q = operand()
         with patch.object(a40, "native_runner", return_value=Mock(return_value="selected")) as runner:
@@ -242,8 +242,8 @@ class A40SharedGpuTests(unittest.TestCase):
                     self.check_call((q, k, v), dout, causal=causal, scale=scale, selected=True)
 
     def test_grouped_public_graphs_read_changed_inputs(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         for dtype in (torch.bfloat16, torch.float16):
             for dimension, sequence in ((64, 1024), (64, 4096), (128, 1024), (128, 4096)):

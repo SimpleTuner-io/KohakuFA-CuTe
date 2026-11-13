@@ -43,6 +43,13 @@ implement a stronger accuracy target. They are excluded from default dispatch on
 every GPU. The [experiment record](../benchmarks/experiments/README.md) retains
 the previous-policy comparison and precision tradeoffs.
 
+The explicit [neighborhood dQ+dK method](neighborhood/README.md#default-arithmetic-and-stronger-accuracy-experiment)
+combines reconstructed FP32 probabilities, a normalized weighted-query
+correction and a reconstructed key-gradient correction. Its independent
+equations, defined-workload FP64 errors and complete-call costs are reported
+separately. Calling `neighborhood_attention` alone retains the contract above;
+GPU selection never silently enables the stronger method.
+
 ## Diagnose rounding separately from implementation errors
 
 [FP64 equations](../benchmarks/reference.py) diagnose mathematical accuracy on

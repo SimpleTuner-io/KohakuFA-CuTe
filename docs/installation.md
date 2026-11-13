@@ -58,6 +58,18 @@ export CUTE_DSL_ARCH=sm_121a
 The generic GB10 stack was validated with Python 3.13, PyTorch 2.11/CUDA 13, and
 CUTLASS DSL 4.8.1. Its opt-in shared schedules require the pinned runtime above.
 
+## Neighborhood comparison runtime
+
+The neighborhood campaigns use a separately pinned stack: Python 3.13.18,
+PyTorch 2.13.0+cu130, CUTLASS DSL 4.8.1, TVM FFI 0.1.15.post0,
+CUDA bindings 13.0.3, Triton 3.7.1 and NATTEN 0.21.7+torch2130cu130.
+NATTEN is a separately installed comparator, not a dependency of the API.
+The optional `sm80-fa4`/`hopper-fa4` extras above select another framework stack;
+do not use them to reproduce the recorded neighborhood comparison.
+See the [neighborhood guide](neighborhood/README.md#reproduce-and-inspect) for
+scope and entry points. These versions identify the measured runtime, not the
+newest available releases.
+
 ## Development
 
 Use Python 3.13 with `pip install -e '.[dev,plots]'`. The project uses unittest,

@@ -4,7 +4,7 @@ from unittest import mock
 
 import torch
 
-from benchmarks import tune_neighborhood as tuning
+from benchmarks.neighborhood import tune as tuning
 
 
 class NeighborhoodVariantTests(unittest.TestCase):

@@ -68,8 +68,9 @@ Atomic schedules do not promise bitwise-identical dQ between calls.
 adds an explicit noncausal 2D path for matching FP16/BF16
 `[batch, heads, height*width, 64]` inputs, with stride and dilation one.
 It generates spatial tiles without a dense mask and uses shifted boundary
-windows. See the [contract and scoped H100 qualification](experimental/neighborhood.md).
-The [H100 scheduling report](experimental/neighborhood-tuning.md) describes the
-bounded device and workload dispatch. Its tile choices preserve the same
-precision contract; the [FP64 report](experimental/neighborhood-accuracy.md)
-separates mathematical accuracy from rounded-arithmetic agreement.
+windows. See the [neighborhood guide](neighborhood/README.md) for the complete
+input contract, asymmetric backward visibility, usage and current evidence.
+Qualification covers H100, B200, B300, RTX 4090, RTX 5090 and L40S; the guide
+distinguishes default arithmetic from the explicit stronger dQ+dK experiment.
+The [H100 schedule](neighborhood/reports/tuning.md#default-dispatch) is bounded
+by device and workload and preserves the default precision contract.

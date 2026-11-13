@@ -2,7 +2,7 @@
 
 from functools import lru_cache
 from importlib.metadata import PackageNotFoundError, version
-from math import isfinite
+from math import isfinite, prod
 
 import torch
 from packaging.version import Version
@@ -126,10 +126,11 @@ def attention(q, k, v, *, mask=None, causal=False, scale=None, center_keys=False
 
 
 def neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None):
-    """Experimental noncausal 2D attention, stride/dilation one, head dim 64.
+    """Experimental noncausal 2D/3D attention, stride/dilation one, head dim 64.
 
-    Q/K/V: matching FP16/BF16 CUDA tensors [B, heads, height*width, 64].
-    ``spatial_shape`` is (height, width); ``window_size`` is an int or (h, w).
+    Q/K/V: matching FP16/BF16 CUDA tensors [B, heads, prod(spatial_shape), 64].
+    ``spatial_shape`` is (height, width) or (depth, height, width).
+    ``window_size`` is an int or a matching tuple; each window must fit its axis.
     Each axis starts at clamp(query - window//2, 0, extent - window),
     matching NATTEN's shifted boundary windows, including even windows.
     Normalized dQ and reconstructed dK corrections are enabled by default;
@@ -138,21 +139,21 @@ def neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None):
     """
     if (
         not isinstance(spatial_shape, (tuple, list))
-        or len(spatial_shape) != 2
+        or len(spatial_shape) not in (2, 3)
         or any(type(n) is not int or n <= 0 for n in spatial_shape)
     ):
-        raise ValueError("spatial_shape must contain two positive integers.")
+        raise ValueError("spatial_shape must contain two or three positive integers.")
     if type(window_size) is int:
-        window_size = (window_size, window_size)
+        window_size = (window_size,) * len(spatial_shape)
     if (
         not isinstance(window_size, (tuple, list))
-        or len(window_size) != 2
+        or len(window_size) != len(spatial_shape)
         or any(type(n) is not int or n <= 0 or n > extent for n, extent in zip(window_size, spatial_shape))
     ):
         raise ValueError("window_size must contain positive integers no larger than spatial_shape.")
     _validate(q, k, v, None, 0, False, False)
-    if q.shape != k.shape or q.shape[-1] != 64 or q.shape[2] != spatial_shape[0] * spatial_shape[1]:
-        raise ValueError("Neighborhood attention requires matching [B, heads, height*width, 64] Q/K/V.")
+    if q.shape != k.shape or q.shape[-1] != 64 or q.shape[2] != prod(spatial_shape):
+        raise ValueError("Neighborhood attention requires matching [B, heads, prod(spatial_shape), 64] Q/K/V.")
     scale = 0.125 if scale is None else float(scale)
     if not isfinite(scale) or abs(scale) > torch.finfo(torch.float32).max:
         raise ValueError("Neighborhood attention requires a finite FP32 scale.")
@@ -161,7 +162,30 @@ def neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None):
     # DLPack describes physical storage. Resolve logical view flags while
     # autograd can still map the logical operands back to their base tensors.
     q, k, v = (tensor.resolve_conj().resolve_neg() for tensor in (q, k, v))
-    return forward(q, k, v, *spatial_shape, *window_size, scale)[0]
+    return forward(q, k, v, list(spatial_shape), list(window_size), scale)[0]
+
+
+def neighborhood_attention_3d(q, k, v, kernel_size, is_causal=None, scale=None):
+    """LTX-layout adapter: [B, T, H, W, heads, 64], noncausal unit dilation.
+
+    Like LTX's decoder, clip oversized windows to each spatial extent. Unlike
+    the strict flattened API, this accepts e.g. an 11-frame window on one frame.
+    Pass scale=1.0 when Q already includes the scale (as in LTX RMS/RoPE).
+    Arbitrary strided layouts are accepted; flattening may require a copy.
+    """
+    if any(t.ndim != 6 for t in (q, k, v)) or q.shape != k.shape or q.shape != v.shape:
+        raise ValueError("3D neighborhood attention requires matching [B, T, H, W, heads, 64] Q/K/V.")
+    causal = (False,) * 3 if is_causal is None else ((is_causal,) * 3 if type(is_causal) is bool else is_causal)
+    if not isinstance(causal, (tuple, list)) or len(causal) != 3 or any(value is not False for value in causal):
+        raise ValueError("3D neighborhood attention supports only noncausal windows.")
+    window = (kernel_size,) * 3 if type(kernel_size) is int else kernel_size
+    if not isinstance(window, (tuple, list)) or len(window) != 3 or any(type(n) is not int or n <= 0 for n in window):
+        raise ValueError("kernel_size must be a positive integer or three positive integers.")
+    spatial = tuple(q.shape[1:4])
+    window = tuple(min(n, extent) for n, extent in zip(window, spatial))
+    inputs = [t.flatten(1, 3).transpose(1, 2) for t in (q, k, v)]
+    out = neighborhood_attention(*inputs, spatial_shape=spatial, window_size=window, scale=scale)
+    return out.transpose(1, 2).reshape(q.shape)
 
 
 def scaled_dot_product_attention(

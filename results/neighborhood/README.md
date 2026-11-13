@@ -1,5 +1,9 @@
 # Neighborhood evidence
 
+The [3D H100 receipt](3d-h100.json) records the separate LTX-compatible 3D
+qualification. See the [3D guide](../../docs/neighborhood/3d.md) for scope,
+per-component FP64 errors and the distinction from existing 2D evidence.
+
 Start with the [current neighborhood guide](../../docs/neighborhood/README.md)
 for usage and the [precision contract](../../docs/precision.md#neighborhood-default).
 The combined normalized dQ and reconstructed dK method with column-staged
@@ -15,6 +19,7 @@ the neighborhood arithmetic before the corrected method became default.
 
 | Campaign / devices | Measured policy and current role | Acceptance and retained limits | Report / data |
 | --- | --- | --- | --- |
+| 3D LTX comparison / H100 PCIe | Two-term forward and compact spatial ownership; corrected gradients retained | Complete eager forward calls and independent FP64 checks; separate from whole-decoder latency | [Report](../../docs/neighborhood/reports/ltx-3d.md) / [receipt](3d-ltx-performance.json) |
 | Initial qualification / H100 | Former baseline; historical correctness evidence | Scoped neighborhood checks passed; ordinary-attention regression failures remain unresolved | [Report](../../docs/neighborhood/reports/initial.md) / [qualification](qualification-h100.json) |
 | Initial performance / H100, B200, RTX 4090, RTX 5090, L40S | Former baseline versus FlexAttention and NATTEN; historical complete-implementation comparison | Per-component accuracy and campaign validation; B300 unavailable, no model speedup claim | [Report](../../docs/neighborhood/reports/performance.md) / [timings](performance.json), [validation](performance-validation.json), [original figure](performance.svg) |
 | Schedule tuning / H100 | Former baseline arithmetic; bounded schedule retained by current default | Selection and held-out evaluation; qualified shapes only, preserved broader-suite failures | [Report](../../docs/neighborhood/reports/tuning.md) / [timings](tuning.json), [validation](tuning-validation.json) |

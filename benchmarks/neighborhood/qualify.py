@@ -9,6 +9,7 @@ import hashlib
 import importlib.metadata
 import json
 import subprocess
+from math import prod
 from pathlib import Path
 
 import torch
@@ -78,8 +79,32 @@ def cases(device="cuda"):
             yield "common-offset", inputs, torch.randn_like(q), (5, 9), (3, 3), sign * 0.125, True
 
 
+def volume_cases(device="cuda"):
+    """Small LTX window families plus cancellation-sensitive temporal seams."""
+    for dtype in (torch.float16, torch.bfloat16):
+        for spatial, window in (
+            ((3, 7, 9), (3, 7, 7)),
+            ((4, 5, 7), (3, 5, 5)),
+            ((3, 5, 7), (2, 3, 4)),
+            ((11, 11, 13), (11, 11, 11)),
+        ):
+            for scale in (1.0, -0.125, 0.0):
+                torch.manual_seed(319)
+                inputs = [torch.randn(1, 2, prod(spatial), 64, device=device, dtype=dtype) for _ in range(3)]
+                yield "3d-random", inputs, torch.randn_like(inputs[0]), spatial, window, scale, False
+        for scale in (1.0, -1.0):
+            torch.manual_seed(320)
+            inputs = [torch.zeros(1, 2, 105, 64, device=device, dtype=dtype) for _ in range(3)]
+            q, k, v = inputs
+            q[..., 0], q[..., 1], k[..., 0] = 64, 1, 64
+            k[..., 1] = torch.arange(105, device=device) % 7
+            v.copy_(torch.randn_like(v))
+            yield "3d-common-offset", inputs, torch.randn_like(q), (3, 5, 7), (2, 3, 4), scale, True
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dimensions", type=int, choices=(2, 3), default=2)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--source-revision", required=True, help="Expected snapshot base commit; file hashes also retain patches."
@@ -127,7 +152,8 @@ def main():
         "capability": list(torch.cuda.get_device_capability()),
         "sm_count": properties.multi_processor_count,
         "total_memory": properties.total_memory,
-        "scope": "Synthetic attention forward and backward correctness; no HDiT model, transforms, or latency measured.",
+        "scope": "Synthetic attention forward and backward correctness; no complete model, transforms, or latency measured.",
+        "dimensions": args.dimensions,
         "neighborhood_policy": "weighted_dq_reconstructed_dk",
         "key_statistics": "column_staged",
         "acceptance": {
@@ -149,7 +175,9 @@ def main():
     save()
     retained = None
     try:
-        for index, (label, inputs, dout, spatial, window, scale, directed) in enumerate(cases()):
+        for index, (label, inputs, dout, spatial, window, scale, directed) in enumerate(
+            volume_cases() if args.dimensions == 3 else cases()
+        ):
             # Preserve operands before a device error can make transfers fail.
             retained = {"inputs": [t.cpu() for t in inputs], "dout": dout.cpu()}
             functions = {
@@ -158,11 +186,11 @@ def main():
                 )
             }
             if args.compare_natten:
-                from natten import na2d
+                from natten import na2d, na3d
 
                 def natten(q, k, v):
-                    tensors = [t.reshape(t.shape[0], t.shape[1], *spatial, 64).permute(0, 2, 3, 1, 4) for t in (q, k, v)]
-                    out = na2d(
+                    tensors = [t.transpose(1, 2).reshape(t.shape[0], *spatial, t.shape[1], 64) for t in (q, k, v)]
+                    out = (na3d if len(spatial) == 3 else na2d)(
                         *tensors,
                         kernel_size=window,
                         stride=1,
@@ -171,7 +199,7 @@ def main():
                         scale=scale,
                         backend=args.natten_backend,
                     )
-                    return out.permute(0, 3, 1, 2, 4).flatten(2, 3)
+                    return out.flatten(1, len(spatial)).transpose(1, 2)
 
                 functions["natten"] = natten
             for implementation, function in functions.items():

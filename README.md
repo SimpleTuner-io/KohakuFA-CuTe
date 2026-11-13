@@ -43,7 +43,8 @@ out = automatic_scaled_dot_product_attention(q, k, v, is_causal=True)
 | `attention(...)` | Strict CuTe, implicit GQA, optional key centering |
 | `scaled_dot_product_attention(...)` | Strict CuTe with SDPA arguments |
 | `automatic_scaled_dot_product_attention(...)` | CuTe for supported calls; native SDPA otherwise |
-| `neighborhood_attention(...)` | Explicit experimental 2D shifted-window attention, D64 |
+| `neighborhood_attention(...)` | Explicit experimental 2D/3D shifted-window attention, D64 |
+| `neighborhood_attention_3d(...)` | LTX layout adapter with per-axis window clipping, D64 |
 
 CuTe accepts FP16/BF16 BHSD tensors, head dimensions 1–512, GQA, boolean masks,
 and dense or causal visibility on SM80/86/89/90/100/103/120/121. It supports

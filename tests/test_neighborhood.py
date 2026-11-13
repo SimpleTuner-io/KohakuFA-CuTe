@@ -139,7 +139,7 @@ class NeighborhoodAPITests(unittest.TestCase):
             patch.object(api, "_extension", side_effect=AssertionError("Dense dispatch")),
         ):
             self.assertIs(neighborhood_attention(q, q, q, spatial_shape=(3, 5), window_size=3), q)
-            forward.assert_called_once_with(q, q, q, 3, 5, 3, 3, 0.125)
+            forward.assert_called_once_with(q, q, q, [3, 5], [3, 3], 0.125)
             for scale in (float("nan"), float("inf"), 1e50):
                 with self.assertRaises(ValueError):
                     neighborhood_attention(q, q, q, spatial_shape=(3, 5), window_size=3, scale=scale)
@@ -155,14 +155,14 @@ class NeighborhoodAPITests(unittest.TestCase):
         stats = torch.empty(1, 2, 15)
         ctx = SimpleNamespace(mark_non_differentiable=lambda *args: None, set_materialize_grads=Mock())
         ctx.save_for_backward = lambda *args: setattr(ctx, "saved_tensors", args)
-        neighborhood_ops.setup_context(ctx, (*inputs, 3, 5, 2, 3, -0.125), (out, stats, stats))
+        neighborhood_ops.setup_context(ctx, (*inputs, [3, 5], [2, 3], -0.125), (out, stats, stats))
         ctx.set_materialize_grads.assert_called_once_with(False)
         with patch.object(neighborhood_ops, "backward", return_value=tuple(inputs)) as backward:
-            self.assertEqual(len(neighborhood_ops.autograd_backward(ctx, out, None, None)), 8)
+            self.assertEqual(len(neighborhood_ops.autograd_backward(ctx, out, None, None)), 6)
         self.assertIs(backward.call_args.args[3], out)
-        self.assertEqual(backward.call_args.args[-5:], (3, 5, 2, 3, -0.125))
+        self.assertEqual(backward.call_args.args[-3:], ([3, 5], [2, 3], -0.125))
         with patch.object(neighborhood_ops, "backward", side_effect=AssertionError("Unused output backward")):
-            self.assertEqual(neighborhood_ops.autograd_backward(ctx, None, None, None), (None,) * 8)
+            self.assertEqual(neighborhood_ops.autograd_backward(ctx, None, None, None), (None,) * 6)
 
     def test_fake_and_compiled_fake_shapes(self):
         from torch._subclasses.fake_tensor import FakeTensorMode
@@ -173,7 +173,7 @@ class NeighborhoodAPITests(unittest.TestCase):
             q = torch.empty(1, 2, 15, 64, dtype=torch.bfloat16, requires_grad=True)
 
             def call(q, k, v):
-                return neighborhood_ops.forward(q, k, v, 3, 5, 2, 3, 0.125)[0]
+                return neighborhood_ops.forward(q, k, v, [3, 5], [2, 3], 0.125)[0]
 
             out = call(q, q, q)
             self.assertEqual(out.shape, q.shape)

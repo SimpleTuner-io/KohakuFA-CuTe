@@ -8,11 +8,21 @@ import torch
 from cutlass.cute.runtime import make_fake_stream, make_fake_tensor
 
 from .kernels import Attention, JointBackward, copy_vector, descriptor
-from .neighborhood_geometry import full_row_tile_bounds, normalize_exact_contiguous, spatial_bounds, spatial_tile
-from .neighborhood_schedule import DEFAULT_KEY_STATISTICS, DEFAULT_PRECISION, default_schedule
+from .neighborhood_forward_precision import residual_product
+from .neighborhood_geometry import (
+    full_row_tile_bounds,
+    normalize_exact_contiguous,
+    spatial_bounds,
+    spatial_tile,
+    volume_bounds,
+    volume_tile,
+)
+from .neighborhood_schedule import DEFAULT_KEY_STATISTICS, DEFAULT_PRECISION, default_schedule, default_volume_schedule
 
 _bounds = cute.jit(spatial_bounds, preprocess=False)
 _tile = cute.jit(spatial_tile, preprocess=False)
+_volume_bounds = cute.jit(volume_bounds, preprocess=False)
+_volume_tile = cute.jit(volume_tile, preprocess=False)
 _full_rows = cute.jit(full_row_tile_bounds, preprocess=False)
 
 # Explicit benchmark experiments only. A complete forward/backward call must
@@ -20,10 +30,27 @@ _full_rows = cute.jit(full_row_tile_bounds, preprocess=False)
 # a supported public API. Benchmarks serialize these process-wide selections.
 # None selects the bounded production scheduling policy. Arithmetic is identical
 # on every device, including devices that retain the original C32 schedule.
+_experiment_volume_schedule = None
+_experiment_volume_precision = None
 _experiment_columns = None
 _experiment_exact_contiguous = None
 _experiment_precision = DEFAULT_PRECISION
 _experiment_key_statistics = DEFAULT_KEY_STATISTICS
+
+
+def set_experiment_volume(configuration=None, *, residual=None):
+    """Serialized 3D benchmark control; None restores production dispatch."""
+    if residual is not None and type(residual) is not bool:
+        raise ValueError("Expected a boolean or None for the 3D precision control.")
+    if configuration is not None and configuration is not False:
+        tile, hopper = configuration
+        if len(tile) != 3 or any(type(n) is not int or n < 1 for n in tile) or type(hopper) is not bool:
+            raise ValueError("Expected a positive spatial tile and a boolean Hopper selection.")
+        configuration = (tuple(tile), hopper)
+    global _experiment_volume_schedule, _experiment_volume_precision
+    previous = _experiment_volume_schedule, _experiment_volume_precision
+    _experiment_volume_schedule, _experiment_volume_precision = configuration, residual
+    return previous
 
 
 def set_experiment_key_statistics(mode):
@@ -129,21 +156,38 @@ class NeighborhoodAttention(Attention):
             kv_column_statistics=key_statistics in ("column", "column_staged"),
             stage_statistics=key_statistics in ("staged", "column_staged"),
         )
-        self.height, self.image_width = spatial
-        self.window_h, self.window_w = window
+        self.volume = len(spatial) == 3
+        self.residual_probability = self.volume and mode == "forward"
+        self.depth, self.height, self.image_width = spatial if self.volume else (1, *spatial)
+        self.window_d, self.window_h, self.window_w = window if self.volume else (1, *window)
         # Every owner then covers complete image rows, including the tail. The
         # active tiles are one interval in exactly the original traversal order.
-        self.exact_contiguous = exact_contiguous and self.rows % self.image_width == 0
+        self.exact_contiguous = not self.volume and exact_contiguous and self.rows % self.image_width == 0
+
+    @cute.jit
+    def product(self, weights, source, offset, mma, thread, tid, result, shared_weights: cutlass.Constexpr = False):
+        if cutlass.const_expr(self.residual_probability):
+            residual_product(self, weights, source, offset, mma, thread, tid, result)
+        else:
+            Attention.product(self, weights, source, offset, mma, thread, tid, result, shared_weights)
 
     @cute.jit
     def visible(self, mask, batch, head, row, col, sq, sk, full):
-        y = cutlass.min(cutlass.max(row // self.image_width - self.window_h // 2, 0), self.height - self.window_h)
+        query_y, key_y = row // self.image_width, col // self.image_width
+        temporal = True
+        if cutlass.const_expr(self.volume):
+            query_y, key_y = query_y % self.height, key_y % self.height
+            plane = self.height * self.image_width
+            z = cutlass.min(cutlass.max(row // plane - self.window_d // 2, 0), self.depth - self.window_d)
+            temporal = col // plane >= z and col // plane < z + self.window_d
+        y = cutlass.min(cutlass.max(query_y - self.window_h // 2, 0), self.height - self.window_h)
         x = cutlass.min(cutlass.max(row % self.image_width - self.window_w // 2, 0), self.image_width - self.window_w)
         return (
-            row < sq
+            temporal
+            and row < sq
             and col < sk
-            and col // self.image_width >= y
-            and col // self.image_width < y + self.window_h
+            and key_y >= y
+            and key_y < y + self.window_h
             and col % self.image_width >= x
             and col % self.image_width < x + self.window_w
         )
@@ -154,6 +198,23 @@ class NeighborhoodAttention(Attention):
 
     @cute.jit
     def traversal(self, start, length):
+        if cutlass.const_expr(self.volume):
+            bounds = _volume_bounds(
+                start,
+                self.rows,
+                self.depth,
+                self.height,
+                self.image_width,
+                self.window_d,
+                self.window_h,
+                self.window_w,
+                self.mode == "kv",
+                minimum=cutlass.min,
+                maximum=cutlass.max,
+            )
+            z0, z1, y0, y1, x0, x1 = bounds
+            slots = cute.ceil_div(x1 - x0 + self.columns - 1, self.columns)
+            return 0, (z1 - z0) * (y1 - y0) * slots, bounds
         bounds = _bounds(
             start,
             self.rows,
@@ -174,6 +235,11 @@ class NeighborhoodAttention(Attention):
 
     @cute.jit
     def traversal_block(self, iteration, bounds):
+        if cutlass.const_expr(self.volume):
+            z0, z1, y0, y1, x0, x1 = bounds
+            return _volume_tile(
+                iteration, z0, y0, y1, x0, x1, self.height, self.image_width, self.columns, maximum=cutlass.max
+            )
         if cutlass.const_expr(self.exact_contiguous):
             return iteration, True
         y0, y1, x0, x1 = bounds
@@ -206,6 +272,8 @@ def _compile(
     exact_contiguous,
     precision=DEFAULT_PRECISION,
     key_statistics=DEFAULT_KEY_STATISTICS,
+    volume_schedule=None,
+    volume_precision=None,
 ):
     dtypes = {
         torch.float16: cutlass.Float16,
@@ -222,7 +290,29 @@ def _compile(
     ]
     vector = copy_vector(tuple(descriptors[i] for i in (0, 1, 2, 4, 7, 9, 10, 11)))
     if mode == "forward":
-        program = NeighborhoodAttention(mode, spatial, window, vector, columns[0], exact_contiguous[0])
+        selected = volume_schedule
+        if len(spatial) == 3 and selected is None:
+            name, capability, sm_count = _device_schedule_metadata(device)
+            selected = default_volume_schedule(
+                device_name=name,
+                capability=capability,
+                sm_count=sm_count,
+                shape=descriptors[0][1],
+                spatial=spatial,
+                window=window,
+                dtype=str(descriptors[0][0]).split(".")[-1],
+                vector=vector,
+            )
+        if len(spatial) == 3 and selected and vector >= 2:
+            from .neighborhood_volume_forward import VolumeForward
+
+            tile, hopper = selected
+            program = VolumeForward(spatial, window, vector, tile)
+            program.hopper = hopper
+        else:
+            program = NeighborhoodAttention(mode, spatial, window, vector, columns[0], exact_contiguous[0])
+        if len(spatial) == 3 and volume_precision is not None:
+            program.residual_probability = volume_precision
     else:
         program = NeighborhoodBackward(
             spatial,
@@ -273,6 +363,8 @@ def launch(mode, tensors, spatial, window, scale):
         traversal,
         _experiment_precision,
         _experiment_key_statistics if mode == "backward" else "direct",
+        _experiment_volume_schedule if mode == "forward" else None,
+        _experiment_volume_precision if mode == "forward" else None,
     )
     with torch.cuda.device(tensors[0].device):
         function(*tensors, scale)

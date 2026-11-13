@@ -1,4 +1,4 @@
-"""Autograd and fake implementations for explicit 2D neighborhood attention."""
+"""Autograd and fake implementations for explicit 2D/3D neighborhood attention."""
 
 import torch
 
@@ -27,17 +27,17 @@ def _arguments(q, k, v, out, maximum, logsum, dout=None, gradients=None):
 
 @torch.library.custom_op("kohakufa_cute::neighborhood_forward", mutates_args=())
 def forward(
-    q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, height: int, width: int, window_h: int, window_w: int, scale: float
+    q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, spatial: list[int], window: list[int], scale: float
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     from .neighborhood_kernels import launch
 
-    out, maximum, logsum = forward_fake(q, k, v, height, width, window_h, window_w, scale)
-    launch("forward", _arguments(q, k, v, out, maximum, logsum), (height, width), (window_h, window_w), scale)
+    out, maximum, logsum = forward_fake(q, k, v, spatial, window, scale)
+    launch("forward", _arguments(q, k, v, out, maximum, logsum), tuple(spatial), tuple(window), scale)
     return out, maximum, logsum
 
 
 @forward.register_fake
-def forward_fake(q, k, v, height, width, window_h, window_w, scale):
+def forward_fake(q, k, v, spatial, window, scale):
     stats = torch.empty(q.shape[:-1], device=q.device, dtype=torch.float32)
     return torch.empty_like(q), stats, torch.empty_like(stats)
 
@@ -51,10 +51,8 @@ def backward(
     maximum: torch.Tensor,
     logsum: torch.Tensor,
     dout: torch.Tensor,
-    height: int,
-    width: int,
-    window_h: int,
-    window_w: int,
+    spatial: list[int],
+    window: list[int],
     scale: float,
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     from .neighborhood_kernels import launch
@@ -67,15 +65,15 @@ def backward(
     launch(
         "backward",
         _arguments(q, k, v, out, maximum, logsum, dout, gradients),
-        (height, width),
-        (window_h, window_w),
+        tuple(spatial),
+        tuple(window),
         scale,
     )
     return gradients
 
 
 @backward.register_fake
-def backward_fake(q, k, v, out, maximum, logsum, dout, height, width, window_h, window_w, scale):
+def backward_fake(q, k, v, out, maximum, logsum, dout, spatial, window, scale):
     return tuple(torch.empty_like(t) for t in (q, k, v))
 
 
@@ -91,8 +89,8 @@ def setup_context(ctx, inputs, output):
 
 def autograd_backward(ctx, dout, dmaximum, dlogsum):
     if dout is None:
-        return (None,) * 8
-    return *backward(*ctx.saved_tensors, dout, *ctx.parameters), None, None, None, None, None
+        return (None,) * 6
+    return *backward(*ctx.saved_tensors, dout, *ctx.parameters), None, None, None
 
 
 forward.register_autograd(autograd_backward, setup_context=setup_context)

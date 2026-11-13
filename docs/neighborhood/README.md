@@ -1,11 +1,12 @@
-# 2D neighborhood attention
+# Neighborhood attention
 
-`neighborhood_attention` is an explicit experimental API for noncausal 2D
-attention with shifted boundary windows. Operator qualification covers H100,
+`neighborhood_attention` is an explicit experimental API for noncausal 2D/3D
+attention with shifted boundary windows. The [3D guide](3d.md) covers the LTX
+layout adapter and its separate qualification. The recorded 2D qualification covers H100,
 B200, B300, RTX 4090, RTX 5090 and L40S. It is not selected by the automatic
 SDPA wrapper, and no complete HDiT model speedup or quality gain is established.
 
-## Use and supported inputs
+## 2D use and supported inputs
 
 ```python
 import torch
@@ -49,6 +50,7 @@ The public call enables normalized dQ and reconstructed dK corrections on
 every supported GPU, using `column_staged` statistics and separate correction
 storage. No opt-in flag is needed. The measured complete-call cost is accepted;
 dispatch does not revert to weaker arithmetic on slower GPUs or workloads.
+3D forward also uses a two-term probability product; see its [LTX study](reports/ltx-3d.md).
 The [precision contract](../precision.md#neighborhood-default) owns the equations
 and rounding rules. Ordinary attention retains its separate contract.
 

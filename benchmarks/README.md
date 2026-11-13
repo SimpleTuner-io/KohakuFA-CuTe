@@ -15,6 +15,7 @@ boundaries and [validation](../docs/validation.md) for acceptance criteria.
 | Default rounded-policy matrix | `benchmarks.qualify_baseline_precision` |
 | Standalone FlashAttention comparison | `benchmarks.compare_flashattention` |
 | Neighborhood versus FlexAttention and NATTEN | `benchmarks.neighborhood.benchmark` |
+| 3D attention versus the exact LTX helper | `benchmarks.neighborhood.benchmark_ltx` |
 | Neighborhood reference qualification | `benchmarks.neighborhood.qualify` |
 | Directed neighborhood mathematical diagnostics | `benchmarks.neighborhood.qualify_accuracy` |
 | Explicit dQ and dQ+dK studies | `benchmarks.neighborhood.test_precision`, `benchmarks.neighborhood.test_key_precision` |
@@ -31,7 +32,7 @@ listed in the [test map](../tests/README.md).
 
 | Directory | Contents |
 | --- | --- |
-| [neighborhood/](neighborhood) | Backends, independent references, qualification, tuning and report generators for 2D neighborhood attention |
+| [neighborhood/](neighborhood) | Backends, independent references, qualification, tuning and report generators for 2D/3D neighborhood attention |
 | [experiments/ampere/](experiments/ampere) | A100, A40, RTX 3090 and shared SM80/SM86 studies |
 | [experiments/ada/](experiments/ada) | RTX 4090 and L40S controls and validation |
 | [experiments/hopper/](experiments/hopper) | Hopper scheduling and experimental backend studies |

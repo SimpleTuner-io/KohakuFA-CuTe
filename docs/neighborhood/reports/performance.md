@@ -1,10 +1,12 @@
 # Neighborhood performance
 
-Historical method labels below describe the recorded campaign. The combined
-dQ+dK method with column-staged statistics is now the public neighborhood
-default; see the [current guide](../README.md#default-precision).
+**Study question:** How did the original baseline compare with FlexAttention and NATTEN on five GPUs?
 
-This is the original default-policy performance campaign, before the H100 scheduling and dQ/dK accuracy studies. B300 was unavailable for this campaign and was qualified later. See the [current guide](../README.md#performance-and-device-coverage) and [later five-device measurements](multigpu-precision.md) for the newer method and configurations.
+**Current relevance:** Baseline timings before H100 tuning and dQ/dK corrections. The [current guide](../README.md#performance-and-device-coverage) and [later five-device report](multigpu-precision.md) cover the corrected default, including B300.
+
+**Evidence:** [recorded data](../../../results/neighborhood/performance.json) (including source identities and measured runtime); [table generator](../../../benchmarks/neighborhood/summarize_performance.py).
+
+**On this page:**  [Results](#measured-results) · [Protocol](#protocol) · [Full tables](#complete-timing-tables)
 
 ## Measured results
 
@@ -97,8 +99,8 @@ loading, or compilation as part of resident call latency.
 The external contract is contiguous `[batch, heads, height*width, 64]` inputs,
 output, and each gradient, using identical rounded FP16 or BF16 operands,
 stride/dilation one, shifted boundary windows, and scale `0.125`. Each
-implementation retains its own internal precision policy. The candidate keeps
-the unchanged [default arithmetic](../../precision.md). This is a complete
+implementation retains its own internal precision policy. The candidate used
+the former baseline [ordinary-attention arithmetic](../../precision.md#arithmetic-contract). This is a complete
 implementation comparison, not an isolated scheduling comparison.
 
 The full matrix contains these five geometries in both dtypes:
@@ -179,6 +181,9 @@ Latencies are median device intervals in microseconds, followed by sample range.
 
 ### forward / eager
 
+<details>
+<summary>Complete timing rows</summary>
+
 | GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | h100 | 32×32 w7×7 B1H8 fp16 | 74.04 [72.92–74.69] | 65.74 [65.19–66.16] | 652.64 [646.28–677.28] | 0.888× | 8.815× |
@@ -232,7 +237,12 @@ Latencies are median device intervals in microseconds, followed by sample range.
 | l40s | 128×128 w7×7 B1H8 bf16 | 182.68 [181.62–183.28] | 192.05 [187.85–197.92] | 294.71 [289.11–297.58] | 1.051× | 1.613× |
 | l40s | 33×49 w7×7 B2H4 bf16 | 65.69 [64.87–67.01] | 54.66 [54.14–57.51] | 213.12 [211.31–217.42] | 0.832× | 3.245× |
 
+</details>
+
 ### forward / graph
+
+<details>
+<summary>Complete timing rows</summary>
 
 | GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -287,7 +297,12 @@ Latencies are median device intervals in microseconds, followed by sample range.
 | l40s | 128×128 w7×7 B1H8 bf16 | 183.06 [178.78–183.85] | 191.60 [189.79–197.27] | 287.28 [286.65–290.29] | 1.047× | 1.569× |
 | l40s | 33×49 w7×7 B2H4 bf16 | 20.76 [20.75–20.76] | 22.29 [22.29–22.29] | 30.37 [30.34–30.37] | 1.074× | 1.463× |
 
+</details>
+
 ### forward backward / eager
+
+<details>
+<summary>Complete timing rows</summary>
 
 | GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -342,7 +357,12 @@ Latencies are median device intervals in microseconds, followed by sample range.
 | l40s | 128×128 w7×7 B1H8 bf16 | 745.84 [731.41–751.81] | 841.12 [822.87–850.92] | 1438.90 [1426.39–1470.07] | 1.128× | 1.929× |
 | l40s | 33×49 w7×7 B2H4 bf16 | 381.89 [377.03–569.31] | 300.99 [300.23–326.28] | 661.41 [643.62–961.89] | 0.788× | 1.732× |
 
+</details>
+
 ### forward backward / graph
+
+<details>
+<summary>Complete timing rows</summary>
 
 | GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -396,5 +416,7 @@ Latencies are median device intervals in microseconds, followed by sample range.
 | l40s | 64×64 w13×13 B1H8 bf16 | 264.34 [264.09–265.08] | 221.99 [221.25–223.43] | 357.78 [352.52–360.92] | 0.840× | 1.353× |
 | l40s | 128×128 w7×7 B1H8 bf16 | 738.98 [729.50–742.57] | 839.04 [835.97–843.36] | 1402.51 [1400.58–1423.05] | 1.135× | 1.898× |
 | l40s | 33×49 w7×7 B2H4 bf16 | 80.94 [80.67–81.21] | 86.76 [86.64–87.12] | 172.12 [171.55–172.68] | 1.072× | 2.126× |
+
+</details>
 
 † A retained timing lacks required qualification, graph validation, paired rounds, or a kernel trace; inspect its exclusion list in JSON. No ratio is reported for it.

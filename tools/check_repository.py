@@ -60,8 +60,10 @@ def check_links(path):
 
 def main():
     sources = sorted(path for directory in SOURCE_DIRS for path in (ROOT / directory).rglob("*.py"))
-    documents = [ROOT / "README.md"] + sorted(
-        path for directory in ("docs", "benchmarks", "results") for path in (ROOT / directory).rglob("*.md")
+    documents = [ROOT / "README.md", ROOT / "AGENTS.md"] + sorted(
+        path
+        for directory in ("docs", "benchmarks", "results", "tests", "controls")
+        for path in (ROOT / directory).rglob("*.md")
     )
     errors = [error for path in sources for error in check_source(path)]
     errors += [error for path in documents for error in check_links(path)]

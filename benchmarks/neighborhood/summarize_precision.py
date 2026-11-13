@@ -507,11 +507,9 @@ def markdown(data):
     runtime = data["timing_metadata"]
     device = runtime["device"]
     lines = [
-        "# Experimental neighborhood precision",
+        "# Historical neighborhood dQ precision study",
         "",
-        "This report qualifies the dQ experiment. The [subsequent dK study](dk-precision.md) combines it with a reconstructed key-gradient correction; the [multi-GPU report](multigpu-precision.md) qualifies that combined method on five additional devices. Start with the [current guide](../README.md) for selection and coverage.",
-        "",
-        "The default arithmetic is unchanged. These explicit experiments compare stronger backward equations on identical rounded FP16/BF16 operands. They measure the neighborhood operator; no HDiT model or task quality was evaluated.",
+        "These experiments compared stronger backward equations on identical rounded FP16/BF16 operands. They measure the neighborhood operator; no HDiT model or task quality was evaluated.",
         "",
         "The combined method improves measured dQ accuracy, but dK remains a material limitation: the sharp negative-scale fixture has 98.12% BF16 and 9.81% FP16 dK relative norm error against mathematical FP64. Passing the prescribed rounded equations does not establish near-FP64 accuracy for every gradient.",
         "",
@@ -523,9 +521,9 @@ def markdown(data):
         "",
         "## Arithmetic",
         "",
-        "`fp32_p` keeps reconstructed P in FP32 through dS formation, then rounds dS once to the input dtype. dV still uses input-rounded P. `weighted_dq` uses the default dS and subtracts `sum(dS_low) * (P_low @ K) / sum(P_low)` from the unscaled FP32 dQ accumulation. `fp32_p_weighted_dq` combines both. The scale is applied after accumulation; delta comes from the actual rounded forward output in every GPU variant. Forward arithmetic is shared.",
+        "`fp32_p` keeps reconstructed P in FP32 through dS formation, then rounds dS once to the input dtype. dV still uses input-rounded P. `weighted_dq` uses the former baseline dS and subtracts `sum(dS_low) * (P_low @ K) / sum(P_low)` from the unscaled FP32 dQ accumulation. `fp32_p_weighted_dq` combines both. The scale is applied after accumulation; delta comes from the actual rounded forward output in every GPU variant. Forward arithmetic is shared.",
         "",
-        "The normalized weighted-key correction removes the spurious common-key term caused when rounded dS no longer sums to zero. This is a stronger numerical method, with an extra query-gradient product and reductions; it changes the default rounded equations. It does not recover discarded input bits.",
+        "The normalized weighted-key correction removes the spurious common-key term caused when rounded dS no longer sums to zero. This is a stronger numerical method, with an extra query-gradient product and reductions; it changes the former baseline rounded equations. It does not recover discarded input bits.",
         "",
         "## Large common-key offset",
         "",
@@ -674,7 +672,7 @@ def markdown(data):
             lines.append(f"| {name} | {record['status']} | {scope} |")
     lines += [
         "",
-        "Execution errors and unsupported calls have no successful timing. Worst-head comparisons can select different heads; all matched per-head records are retained. FP64 is finite precision, initial input quantization is excluded, and measurements on this H100 do not establish behavior on another GPU. The original default and its acceptance criteria remain unchanged.",
+        "Execution errors and unsupported calls have no successful timing. Worst-head comparisons can select different heads; all matched per-head records are retained. FP64 is finite precision, initial input quantization is excluded, and measurements on this H100 do not establish behavior on another GPU. The campaign preserved its original default and acceptance criteria.",
         "",
         "Reproduce the compact artifacts from retained completed reports:",
         "",
@@ -691,7 +689,11 @@ def markdown(data):
     return "\n".join(
         lines[:2]
         + [
-            "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).",
+            "**Study question:** How much do FP32 probabilities and normalized dQ correction improve the former baseline?",
+            "",
+            "**Current relevance:** Historical H100 dQ study. The [later dK study](dk-precision.md) completes the [current default](../README.md#default-precision), subsequently qualified in the [multi-GPU report](multigpu-precision.md).",
+            "",
+            "**Evidence:** [recorded data](../../../results/neighborhood/dq-precision.json) (including source identities and measured runtime); [report generator](../../../benchmarks/neighborhood/summarize_precision.py).",
             "",
         ]
         + lines[2:]

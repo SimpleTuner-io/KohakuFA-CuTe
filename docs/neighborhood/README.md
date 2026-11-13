@@ -46,55 +46,39 @@ independent enumeration, tails, views and graph checks.
 ## Default precision
 
 The public call enables normalized dQ and reconstructed dK corrections on
-every supported GPU. No benchmark context or opt-in flag is needed. It uses
-the qualified `column_staged` statistics schedule and separate FP32 storage
-for the actual-output delta and reconstructed correction.
+every supported GPU, using `column_staged` statistics and separate correction
+storage. No opt-in flag is needed. The measured complete-call cost is accepted;
+dispatch does not revert to weaker arithmetic on slower GPUs or workloads.
+The [precision contract](../precision.md#neighborhood-default) owns the equations
+and rounding rules. Ordinary attention retains its separate contract.
 
-This is the stronger neighborhood contract in
-[precision](../precision.md#neighborhood-default). Reconstructed probabilities
-remain FP32 while forming dS, the query gradient receives the normalized
-weighted-key correction, and the key gradient uses the correction reconstructed
-in the query pass. Gradient operands still round to the input dtype and
-products accumulate in FP32; attention scaling follows accumulation. Forward
-and input-rounded P for dV are unchanged. Ordinary dense attention retains its
-separate arithmetic contract.
+Independent references use **native FP64 on identical rounded inputs** and
+separately prescribed rounded equations with actual rounded O. They do not
+emulate tensor-core reduction order. FlexAttention and NATTEN are comparison
+implementations, not numerical oracles.
 
-The measured complete-call slowdown is accepted in exchange for the stronger
-accuracy on the defined workloads. Dispatch does not revert to the former
-arithmetic on slower GPUs or workloads. The bounded
-[H100 schedule](reports/tuning.md#default-dispatch) still selects traversal and
-tile ownership; it does not select a weaker numerical method.
-
-Independent references use **native FP64 on identical rounded inputs**, not
-emulated FP64. The independent policy reference also uses actual rounded O and
-the specified operand conversions; it does not emulate tensor-core reduction
-order. FlexAttention and NATTEN are independently assessed implementations.
-
-The corrected method passed the 29 saved-input qualifications on H100 and was
-requalified on B200, B300, RTX 4090, RTX 5090 and L40S. Across that five-device
+The corrected method passed 29 saved-input qualifications on H100 and was
+requalified on B200, B300, RTX 4090, RTX 5090 and L40S. In that five-device
 replay, the worst observed per-head component norm errors were **0.04289% FP16**
 and **0.28530% BF16**, within the declared 0.5% and 1% limits. All four observed
-component gates passed on all 29 fixtures. The eight zero/constant-dP controls
-retain their original dQ formula gates; mathematical dQ passes remain separate
-observations. These are defined-workload results, not universal error bounds.
+component gates passed on all 29 fixtures; the eight zero/constant-dP controls
+retain their original dQ formula gates, with mathematical dQ passes reported
+separately. These are defined-workload results, not universal error bounds.
+See the [multi-GPU report](reports/multigpu-precision.md) for the full scope.
 
-The [dQ study](reports/dq-precision.md), [dK study](reports/dk-precision.md) and
-[multi-GPU report](reports/multigpu-precision.md) retain their original labels:
-the now-default method was called `weighted_dq_reconstructed_dk` and explicitly
-selected in those runs. Recorded measurements and source hashes are unchanged.
-The old `baseline` arithmetic remains available only as a serialized benchmark
-control through `benchmarks.neighborhood.precision.variant("baseline")`.
-Use `key_statistics("direct")` too when reproducing the old statistics schedule;
-exiting those controls restores the corrected public default. They are research
-tools from a source checkout, not required installed-package configuration.
+A separate [H100 default-promotion receipt](../../results/neighborhood/default-promotion.json)
+records byte-identical public-default versus explicitly selected results on
+all 29 retained inputs, reuse of compiled kernels, the 16-method GPU suite and
+four sanitizer passes. This supplements the earlier method qualification;
+it is not a fresh six-device performance campaign.
 
-The default-policy promotion was checked separately on H100 with the retained
-29 inputs: the public call and explicit corrected method produced byte-identical
-O/dQ/dK/dV and reused the same compiled kernels. The 16-method neighborhood GPU
-suite passed, including changed-input/poisoned graph replay and separate scratch
-ownership. Memcheck, racecheck, initcheck and synccheck passed the resolved-schedule
-graph test. These default-selection checks supplement the earlier six-GPU method
-qualification; they do not claim a fresh six-device performance campaign.
+Historical reports called the now-default method `weighted_dq_reconstructed_dk`.
+Their labels, measurements and source hashes are preserved in the
+[evidence catalog](../../results/neighborhood/README.md). To reproduce the
+former arithmetic explicitly, use the serialized benchmark controls
+`benchmarks.neighborhood.precision.variant("baseline")` and
+`key_statistics("direct")`. Exiting them restores the corrected default.
+These controls are source-checkout research tools, not package configuration.
 
 ## Performance and device coverage
 

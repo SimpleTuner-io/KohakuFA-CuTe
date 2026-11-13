@@ -1,14 +1,14 @@
 # Experimental 2D neighborhood attention
 
-Historical method labels below describe the recorded campaign. The combined
-dQ+dK method with column-staged statistics is now the public neighborhood
-default; see the [current guide](../README.md#default-precision).
+**Study question:** How were shifted windows, inverse traversal and the first H100 implementation qualified?
 
-This is the initial H100 implementation report. Its nine-method suite and generic schedule describe that frozen source. Start with the [current guide](../README.md) for the later bounded H100 schedule, corrected precision default and six-GPU coverage.
+**Current relevance:** Initial H100 implementation and baseline-policy qualification. The [current guide](../README.md) covers later scheduling, corrected arithmetic and six-GPU coverage.
+
+**Evidence:** [recorded data](../../../results/neighborhood/qualification-h100.json) (including source identities and measured runtime); this implementation report is maintained by hand.
 
 This explicit experimental path has scoped correctness qualification on a full
 H100 PCIe, including independent references, changed-input graph replay, and all
-four Compute Sanitizer tools. It preserves the default arithmetic contract and
+four Compute Sanitizer tools. It preserved the then-default arithmetic contract and
 does not participate in automatic dispatch. The initial qualification measured
 no latency or HDiT model performance. Subsequent operator timings are documented
 in the [performance comparison](performance.md). The
@@ -51,7 +51,7 @@ boundaries without padding, wrapping, or truncation. Even windows use the anchor
 at `window//2`, matching the current
 [NATTEN mask definition](https://github.com/SHI-Labs/NATTEN/blob/39375ea1d2f3b1bb284315fa5f79f6ecbebb6382/csrc/include/natten/cuda/fna/na_utils.cuh).
 
-The [existing precision contract](../../precision.md) applies unchanged: separate
+The historical baseline used the [ordinary-attention equations](../../precision.md#arithmetic-contract): separate
 signed unscaled maxima and log2 normalization, FP32 QK/dP and gradient
 accumulation, one input-dtype P conversion before dS, one input-dtype dS
 conversion, and attention scaling after dQ/dK accumulation. Delta uses the
@@ -81,8 +81,8 @@ CuTe JIT. Enumeration deduplicates tiles spanning adjacent spatial rows and
 predicates extra alignment slots before loads. Per-element visibility still
 checks the true window and sequence tails. An owner spanning multiple spatial
 rows conservatively uses the full horizontal extent; this is a correctness-first
-schedule, with no claim of optimal spatial tiling. All devices use generic warp
-MMA, without architecture-specific presets. No dense mask, mask packing, or
+schedule, with no claim of optimal spatial tiling. That initial revision used generic warp
+MMA on all devices, without architecture-specific presets. No dense mask, mask packing, or
 device neighborhood table is allocated. Saved output/statistics and gradient
 workspace grow linearly with the input sequence length.
 

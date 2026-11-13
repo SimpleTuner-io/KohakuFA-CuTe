@@ -347,10 +347,6 @@ def markdown(report):
         "",
         "This report covers the explicit combined method on five devices, following its separate H100 qualification. Start with the [current guide](../README.md) for the default-policy distinction and usage. [Machine-readable evidence](../../../results/neighborhood/multigpu-precision.json) retains all samples and component errors.",
         "",
-        "The explicit dQ+dK experiment uses the same arithmetic and retained rounded inputs on every architecture. Default dispatch is unchanged.",
-        "",
-        "The [H100 dQ+dK study](dk-precision.md) specifies the experiment and its explicit selection controls.",
-        "",
         "The mathematical reference uses native FP64 on identical rounded Q/K/V/dO. The independent rounded-arithmetic reference uses the actual rounded forward output; it does not emulate tensor-core reduction order.",
         "",
         "The 21 historical fixtures gate output, dQ, dK and dV independently. The eight zero/constant-dP controls retain their declared output/dK/dV mathematical gates; dQ formula agreement and observed FP64 error remain reported. Limits are 0.5% for FP16 and 1% for BF16 per head and component.",
@@ -406,6 +402,9 @@ def markdown(report):
         "",
         "Baseline, prior dQ, combined dQ+dK, FlexAttention and NATTEN use different precision policies. These are complete-implementation comparisons, rather than isolated scheduling comparisons under identical arithmetic.",
         "",
+        "<details>",
+        "<summary>Complete timing matrix by GPU, workload and method</summary>",
+        "",
         "| GPU | Workload | Implementation | Status | Median (µs) | Change vs prior dQ |",
         "| --- | --- | --- | --- | ---: | ---: |",
     ]
@@ -423,13 +422,19 @@ def markdown(report):
             )
     lines += [
         "",
+        "</details>",
+        "",
         "All per-head errors, declared gates, observed control failures, source and input hashes, raw timing samples and compiled-path flags are retained in the companion JSON. Compiler artifacts establish target and selected flags; graph replay and numerical tests supply separate execution evidence. Results qualify these operator workloads and do not establish model-level quality or performance on other shapes.",
         "",
     ]
     return "\n".join(
         lines[:2]
         + [
-            "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).",
+            "**Study question:** Does the H100 combined method qualify on five additional GPUs?",
+            "",
+            "**Current relevance:** Five-device qualification of the [H100 combined method](dk-precision.md), explicitly selected during this campaign and now the [public default](../README.md#default-precision).",
+            "",
+            "**Evidence:** [recorded data](../../../results/neighborhood/multigpu-precision.json) (including source identities and measured runtime); [report generator](../../../benchmarks/neighborhood/summarize_multigpu_precision.py).",
             "",
         ]
         + lines[2:]

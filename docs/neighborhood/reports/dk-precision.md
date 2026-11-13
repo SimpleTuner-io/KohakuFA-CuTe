@@ -1,14 +1,16 @@
-# Experimental neighborhood key-gradient precision
+# Neighborhood dQ+dK precision study
 
-Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).
+**Study question:** Does reconstructed dK repair sharp-attention errors, and what does it cost?
 
-This H100 report defines the combined method. The [multi-GPU report](multigpu-precision.md) replays its frozen inputs on B200, B300, RTX 4090, RTX 5090 and L40S. See the [current guide](../README.md) for the API and explicit-selection example.
+**Current relevance:** H100 qualification of the combined method now used by the [public default](../README.md#default-precision). The [multi-GPU report](multigpu-precision.md) extends coverage; selection examples below reproduce this historical campaign.
 
-The default arithmetic is unchanged. This explicit follow-up reconstructs the softmax correction during the existing query pass to reduce the sharp-attention dK error. Results below concern defined neighborhood operators and already-rounded operands, rather than model quality or universal pointwise accuracy.
+**Evidence:** [recorded data](../../../results/neighborhood/dk-precision.json) (including source identities and measured runtime); [report generator](../../../benchmarks/neighborhood/summarize_key_precision.py).
 
-The main timing matrix meets its predefined incremental-cost goal, but independent held-out testing retains performance exceptions: `heldout-48x64-w9-bf16` adds 9.91% versus the prior dQ method. These misses of the 5% aim remain explicit; no tuning followed the verified held-out evaluation.
+This follow-up reconstructs the softmax correction during the existing query pass to reduce the sharp-attention dK error. Results below concern defined neighborhood operators and already-rounded operands, rather than model quality or universal pointwise accuracy.
 
 Measured device: NVIDIA H100 80GB HBM3, 132 SMs. Selected KV statistics schedule: `column_staged`. Exact stack, device, source hashes, all per-head component errors, raw timing samples and negative results are retained in [the compact JSON](../../../results/neighborhood/dk-precision.json).
+
+The main timing matrix meets its predefined incremental-cost goal, but independent held-out testing retains performance exceptions: `heldout-48x64-w9-bf16` adds 9.91% versus the prior dQ method. These misses of the 5% aim remain explicit; no tuning followed the verified held-out evaluation.
 
 ## Arithmetic and accuracy contract
 
@@ -139,7 +141,7 @@ Supplementary qualification receipts and direct-versus-selected byte checks:
 
 Earlier direct-load and alternative scheduling measurements remain in JSON under `negative_sweeps`; their failed goals, failed qualification and shape regressions are retained separately from the selected final timing matrix.
 
-The method is explicit experimental arithmetic. Automatic production dispatch and the default precision contract are unchanged. Measurements qualify this hardware, stack and workload set; they do not establish a universal numerical bound or a speedup on another GPU.
+The method was explicitly selected experimental arithmetic during this campaign. Its promotion to the public default came later. Measurements qualify this hardware, stack and workload set; they do not establish a universal numerical bound or a speedup on another GPU.
 
 Regenerate from retained completed reports:
 

@@ -1,15 +1,20 @@
 # H100 neighborhood scheduling
 
-Historical method labels below describe the recorded campaign. The combined
-dQ+dK method with column-staged statistics is now the public neighborhood
-default; see the [current guide](../README.md#default-precision).
+**Study question:** Which bounded H100 traversal and tile schedule improved complete-call latency?
+
+**Current relevance:** The schedule remains relevant; these timings used the former baseline arithmetic, before the [corrected public default](../README.md#default-precision).
+
+**Evidence:** [recorded data](../../../results/neighborhood/tuning.json) (including source identities and measured runtime); [table generator](../../../benchmarks/neighborhood/summarize_tuning.py).
+
+**On this page:** [Default schedule](#default-dispatch) · [Interventions](#measured-interventions) · [Qualification](#measurement-and-qualification) · [Full tables](#complete-timing-tables)
 
 The scheduling change keeps 32-column forward and dQ tiles, uses 64-column
 dK/dV tiles in a bounded H100 workload family, and removes two unused
 statistic-gradient fills. At image width 64, forward and dK/dV enumerate their
 contiguous active tile interval directly. dQ keeps its original traversal.
-The [precision contract](../../precision.md), operand conversions, unscaled
-statistics and FP32 accumulation remain the same.
+This scheduling campaign preserved the former baseline [ordinary-attention
+arithmetic](../../precision.md#arithmetic-contract), operand conversions, unscaled
+statistics and FP32 accumulation.
 
 On the representative B1/H8/D64 BF16 64 x 64/window-7 case, final resident
 training latency fell from **151.82 to 116.61 us**, a 23.2% reduction.
@@ -193,6 +198,9 @@ measurements evaluate those selections separately.
 
 ### initial-screen
 
+<details>
+<summary>Complete timing rows</summary>
+
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
 | 64sq-w7-bf16 | baseline | 36.96 | 153.00 | 152.88–153.10 |
@@ -220,7 +228,12 @@ measurements evaluate those selections separately.
 | tail-33x49-w7-bf16 | columns64_no_stat_fills | 22.61 | 78.48 | 78.35–79.03 |
 | tail-33x49-w7-bf16 | flex | 23.60 | 79.21 | 79.10–79.25 |
 
+</details>
+
 ### row-traversal-screen
+
+<details>
+<summary>Complete timing rows</summary>
 
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
@@ -249,7 +262,12 @@ measurements evaluate those selections separately.
 | tail-33x49-w7-bf16 | exactmixed_no_stat_fills | 25.03 | 78.55 | 77.79–79.20 |
 | tail-33x49-w7-bf16 | exactmixed128_no_stat_fills | 25.08 | 105.15 | 104.77–105.79 |
 
+</details>
+
 ### query-restoration-screen
+
+<details>
+<summary>Complete timing rows</summary>
 
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
@@ -269,7 +287,12 @@ measurements evaluate those selections separately.
 | tail-33x49-w7-bf16 | exactmixed_no_stat_fills | 25.13 | 79.18 | 78.51–79.21 |
 | tail-33x49-w7-bf16 | exactmixed_noq_no_stat_fills | 25.05 | 79.20 | 78.47–79.21 |
 
+</details>
+
 ### query-restoration-full
+
+<details>
+<summary>Complete timing rows</summary>
 
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
@@ -314,7 +337,12 @@ measurements evaluate those selections separately.
 | tail-33x49-w7-bf16 | flex | 23.64 | 79.19 | 79.14–79.78 |
 | tail-33x49-w7-bf16 | exactmixed_noq_no_stat_fills | 24.77 | 78.20 | 77.42–79.25 |
 
+</details>
+
 ### broad-default-full
+
+<details>
+<summary>Complete timing rows</summary>
 
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
@@ -359,7 +387,12 @@ measurements evaluate those selections separately.
 | tail-33x49-w7-bf16 | flex | 23.68 | 79.13 | 79.10–79.25 |
 | tail-33x49-w7-bf16 | production | 25.06 | 78.37 | 78.02–78.39 |
 
+</details>
+
 ### broad-default-evaluation
+
+<details>
+<summary>Complete timing rows</summary>
 
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
@@ -412,7 +445,12 @@ measurements evaluate those selections separately.
 | eval-64x47-w11-bf16 | flex | 35.57 | 123.97 | 123.91–124.99 |
 | eval-64x47-w11-bf16 | production | 45.22 | 152.46 | 152.38–152.50 |
 
+</details>
+
 ### final-default-matrix
+
+<details>
+<summary>Complete timing rows</summary>
 
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
@@ -457,7 +495,12 @@ measurements evaluate those selections separately.
 | tail-33x49-w7-bf16 | flex | 23.65 | 79.78 | 79.72–79.93 |
 | tail-33x49-w7-bf16 | production | 24.65 | 78.38 | 77.04–78.48 |
 
+</details>
+
 ### fresh-final-evaluation
+
+<details>
+<summary>Complete timing rows</summary>
 
 | case | variant | forward | forward + backward | training range |
 | --- | --- | ---: | ---: | ---: |
@@ -493,3 +536,5 @@ measurements evaluate those selections separately.
 | fresh-54x49-w11-bf16 | keyvalue64_no_stat_fills | 43.43 | 149.69 | 149.56–149.90 |
 | fresh-54x49-w11-bf16 | flex | 34.46 | 117.37 | 117.27–117.40 |
 | fresh-54x49-w11-bf16 | production | 43.42 | 159.54 | 159.38–159.67 |
+
+</details>

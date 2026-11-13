@@ -1,0 +1,137 @@
+{
+  "schema": "neighborhood-default-promotion-v1",
+  "status": "scoped-h100-default-selection-passed",
+  "record_kind": "Recovered compact receipt from the completed 2026-11-13 campaign; no new GPU execution.",
+  "scope": "Public neighborhood default selection, numerical checks, graph memory ownership and final organized source.",
+  "contract": "docs/precision.md#neighborhood-default",
+  "method": "weighted_dq_reconstructed_dk",
+  "statistics": "column_staged",
+  "source": {
+    "launch_base_revision": "1d0aca17e94b45eedf2cc928385642b9059defaf",
+    "launch_state": "Base revision plus uncommitted task patch; the base revision alone is not the tested source.",
+    "matching_commit": "f917d80667eb33d46230f8da1a3d949d1d8b4997",
+    "matching_commit_scope": "All 455 files in the final frozen source manifest match this commit and the archived source snapshot by SHA256.",
+    "manifest_sha256": "c8c9a9b2dca89b75225a62e7d2bc3c9c3cf8ec3317fcef4fab6a39839a5f9c7e",
+    "files_verified": 455,
+    "selected_file_sha256": {
+      "benchmarks/neighborhood/key_precision_reference.py": "47673cfbb017cca960c63386893cf398cef06f86c73fe3ea857b1df471bbec73",
+      "benchmarks/neighborhood/precision_reference.py": "ddc8c67f5f7c6de007ca062935d1e965a50c8ecafdb1ab1542988d273fd130c0",
+      "benchmarks/neighborhood/test_key_precision.py": "5c5a37f8e1823c5a267c8a9a5644c068f2f6b25dbbda56aabff0218418f73d95",
+      "src/kohakufa_cute/api.py": "25cfc8fd124af7e3e4e2b90290df40e748fe2ebea0b4886738c39745fa297227",
+      "src/kohakufa_cute/neighborhood_kernels.py": "4c24db20bd39ea740834921bfe6a925e7292cc3939a3e104e4cd1f55ea4132a6",
+      "src/kohakufa_cute/neighborhood_schedule.py": "b37ea0ec442eed79ae2ae78f5f539fbe67612b0dedad061ae057a21ff5361373",
+      "tests/test_neighborhood.py": "6fb5fe3315b8fbe067c045050b3441ec1a037ba8a984a7d042580234eb5b5a36",
+      "tests/test_neighborhood_key_precision.py": "21634d59db81d342cf2099b6f089a05a6252cd9a882a001099184a676c53311d",
+      "tests/test_neighborhood_precision.py": "797d0d99efe71ff005ad6e4ea29859ff6860e699b5f86d4dbd7500cd3a8ac04d"
+    }
+  },
+  "runtime": {
+    "device": "NVIDIA H100 80GB HBM3",
+    "capability": [
+      9,
+      0
+    ],
+    "sm_count": 132,
+    "memory_bytes": 85064286208,
+    "python": "3.13.18",
+    "torch": "2.13.0+cu130",
+    "cuda": "13.0",
+    "packages": {
+      "nvidia-cutlass-dsl": "4.8.1",
+      "apache-tvm-ffi": "0.1.15.post0",
+      "natten": "0.21.7+torch2130cu130",
+      "triton": "3.7.1"
+    }
+  },
+  "stages": {
+    "dispatch": {
+      "status": "pass",
+      "exit_status": 0,
+      "receipt_sha256": "e0c62ed25f43f1757b0220faca8571dc7cd9884d2142228edd7866120f099de5",
+      "log_sha256": "0db60606d02ed13bbeb4c3754de17b12d14fc0a35fe33132372ee03ce7de80be"
+    },
+    "cpu": {
+      "status": "pass",
+      "exit_status": 0,
+      "receipt_sha256": "147379fec578782bde9ab7c484027272b0b18a5ea0ebc2875ad0ed35947f3611",
+      "log_sha256": "f81455e2a9a52c653f5614590cd11681885249cc31b45c17afda273bc4492811",
+      "tests_run": 527,
+      "skipped": 228
+    },
+    "gpu": {
+      "status": "pass",
+      "exit_status": 0,
+      "receipt_sha256": "0f08006f8165b1c4b8c0e6b1ee6a5f3ecf4e880c3715d5bf888686cbf83e4050",
+      "log_sha256": "45927b8ce098360863840857a4df75f2bbee9e658392642480980c1e41a2e8e4",
+      "test_methods": 16,
+      "suites": [
+        "tests.test_neighborhood.NeighborhoodGPUTests",
+        "tests.test_neighborhood_precision.NeighborhoodPrecisionGPUTests",
+        "tests.test_neighborhood_key_precision.NeighborhoodKeyPrecisionGPUTests"
+      ]
+    },
+    "memcheck": {
+      "status": "pass",
+      "exit_status": 0,
+      "receipt_sha256": "e6e333198892c68dca6c71b2bffb1dc660a09967f2dede0dec857363bb704d53",
+      "log_sha256": "d5a3a3b54c85a617a342b5903cc64c43bf1f79b168aeba1a8e6a6ff3e094782f",
+      "tests_run": 1,
+      "test": "tests.test_neighborhood_key_precision.NeighborhoodKeyPrecisionGPUTests.test_resolved_schedule_changed_poisoned_graph"
+    },
+    "racecheck": {
+      "status": "pass",
+      "exit_status": 0,
+      "receipt_sha256": "c9c83b482321b486976398e108e65bb3c373972e2edd1b6326ece7c20b80dd02",
+      "log_sha256": "5eea7ace69374d533c29520be37fb0144623cd785408dbbf962bba516265832c",
+      "tests_run": 1,
+      "test": "tests.test_neighborhood_key_precision.NeighborhoodKeyPrecisionGPUTests.test_resolved_schedule_changed_poisoned_graph"
+    },
+    "initcheck": {
+      "status": "pass",
+      "exit_status": 0,
+      "receipt_sha256": "dc7606b75582fc9daf8e7abbd18b0584a99a5da7b6014079667cebcbbd0ff37b",
+      "log_sha256": "80697add8682133351bece5cbe5cffbb77cfcd711df8e784dd8fa53b516278e4",
+      "tests_run": 1,
+      "test": "tests.test_neighborhood_key_precision.NeighborhoodKeyPrecisionGPUTests.test_resolved_schedule_changed_poisoned_graph"
+    },
+    "synccheck": {
+      "status": "pass",
+      "exit_status": 0,
+      "receipt_sha256": "3596c0c72a5c3dc478c2555be44b997aedfb5dbbf54d3ffc6482937427b8bfa2",
+      "log_sha256": "f5d8c87b840625361c078ad5c908d18ba949b289c5b9df41459f07286ded5279",
+      "tests_run": 1,
+      "test": "tests.test_neighborhood_key_precision.NeighborhoodKeyPrecisionGPUTests.test_resolved_schedule_changed_poisoned_graph"
+    }
+  },
+  "default_equivalence": {
+    "status": "pass",
+    "test": "tests.test_neighborhood_key_precision.NeighborhoodKeyPrecisionGPUTests.test_default_matches_qualified_method_on_frozen_inputs",
+    "fixtures": 29,
+    "components": [
+      "O",
+      "dQ",
+      "dK",
+      "dV"
+    ],
+    "comparison": "Byte-identical public-default and explicitly selected qualified-method outputs and gradients; explicit call adds no compile-cache misses.",
+    "operand_identity": "Every fixture hash checked against the retained dK precision report.",
+    "operand_manifest_sha256": "d00908f0354c1893447ba91163d1e0212976ad375ccc694bc230806aaa772372",
+    "acceptance": "Unchanged policy-reference and selected mathematical component gates; 0.5% FP16 and 1% BF16 per-head component norm limits. Zero/constant-dP controls retain separate dQ formula gates.",
+    "acceptance_source": "benchmarks/neighborhood/test_key_precision.py"
+  },
+  "archive": {
+    "sha256": "a2d722a772e42048da8b4bb9253326767b3e0bccfe20da6946e7c62fbe49f9dc",
+    "members": 2450,
+    "bytes": 47042009,
+    "verification": "Recorded complete off-host verification; archive SHA256 and final snapshot file hashes independently checked during receipt recovery.",
+    "contents": "Three source snapshots, stage receipts and logs, frozen operands, compiler artifacts and preserved initial failed-reference run."
+  },
+  "limitations": [
+    "Scoped H100 default-selection qualification, not a new six-device performance campaign.",
+    "The earlier six-device method qualification and timing samples remain separate frozen reports.",
+    "No complete-model quality or speedup claim.",
+    "Ordinary-attention regression failures and the earlier H100 held-out performance-cost exception remain unresolved by these checks.",
+    "The initial reference failure is retained; passing final stages do not relabel the earlier run as successful.",
+    "Raw captures and operands are retained outside the repository; this receipt does not make the archive publicly downloadable."
+  ]
+}

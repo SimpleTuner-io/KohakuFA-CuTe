@@ -1,11 +1,12 @@
-# 2D neighborhood attention
+# Neighborhood attention
 
-`neighborhood_attention` is an explicit experimental API for noncausal 2D
-attention with shifted boundary windows. Operator qualification covers H100,
+`neighborhood_attention` is an explicit experimental API for noncausal 2D/3D
+attention with shifted boundary windows. The [3D guide](3d.md) covers the LTX
+layout adapter and its separate qualification. The recorded 2D qualification covers H100,
 B200, B300, RTX 4090, RTX 5090 and L40S. It is not selected by the automatic
 SDPA wrapper, and no complete HDiT model speedup or quality gain is established.
 
-## Use and supported inputs
+## 2D use and supported inputs
 
 ```python
 import torch

@@ -14,7 +14,7 @@ that a tuned specialization accepts every shape, layout or runtime.
 | Compiler/autograd | [_ops.py](../../src/kohakufa_cute/_ops.py) | Custom operators, fake implementations and saved backward operands for compiled calls |
 | Native host | [native.py](../../src/kohakufa_cute/native.py), [native.cpp](../../src/kohakufa_cute/native.cpp) | Extension build identity, compiler callbacks, runner families, cache, native dispatch, autograd and FFI launches |
 | Shared selection | [kernels.py](../../src/kohakufa_cute/kernels.py) | Shape/layout descriptors, device configurations, compilation cache and kernel construction |
-| Neighborhood | [neighborhood_ops.py](../../src/kohakufa_cute/neighborhood_ops.py), [neighborhood_kernels.py](../../src/kohakufa_cute/neighborhood_kernels.py) | Separate 2D geometry/autograd path and corrected neighborhood arithmetic |
+| Neighborhood | [neighborhood_ops.py](../../src/kohakufa_cute/neighborhood_ops.py), [neighborhood_kernels.py](../../src/kohakufa_cute/neighborhood_kernels.py) | Shared 2D/3D spatial geometry/autograd path and corrected neighborhood arithmetic |
 
 For eager ordinary calls, `api.py` tries the bounded RTX4090 S1024 path and
 qualified `fa4_sm80` selector before native generic dispatch. Compiled calls use

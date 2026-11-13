@@ -65,12 +65,15 @@ Atomic schedules do not promise bitwise-identical dQ between calls.
 ## Experimental neighborhood attention
 
 `neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None)`
-adds an explicit noncausal 2D path for matching FP16/BF16
-`[batch, heads, height*width, 64]` inputs, with stride and dilation one.
+adds an explicit noncausal 2D/3D path for matching FP16/BF16
+`[batch, heads, prod(spatial_shape), 64]` inputs, with stride and dilation one.
+`spatial_shape` is `(height, width)` or `(time, height, width)`.
+`neighborhood_attention_3d(q, k, v, kernel_size, is_causal=None, scale=None)`
+provides the [LTX layout adapter](neighborhood/3d.md) with per-axis window clipping.
 It generates spatial tiles without a dense mask and uses shifted boundary
 windows. See the [neighborhood guide](neighborhood/README.md) for the complete
 input contract, asymmetric backward visibility, usage and current evidence.
-Qualification covers H100, B200, B300, RTX 4090, RTX 5090 and L40S; the guide
+2D qualification covers H100, B200, B300, RTX 4090, RTX 5090 and L40S; the guide
 documents the corrected dQ+dK method now enabled by default on every device.
 The [H100 schedule](neighborhood/reports/tuning.md#default-dispatch) is bounded
 by device and workload and preserves the default precision contract.

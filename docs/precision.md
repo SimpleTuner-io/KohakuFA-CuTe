@@ -45,7 +45,8 @@ the previous-policy comparison and precision tradeoffs.
 
 ## Neighborhood default
 
-`neighborhood_attention()` uses the qualified normalized dQ correction and
+`neighborhood_attention()` (2D/3D) and its `neighborhood_attention_3d()` layout
+adapter use the normalized dQ correction and
 reconstructed dK correction by default on every supported GPU. No benchmark
 context is required. This is a stronger numerical contract than ordinary
 attention above; the measured complete-call cost is accepted in exchange for

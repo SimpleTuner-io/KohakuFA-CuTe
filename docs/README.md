@@ -13,7 +13,8 @@
 ## Neighborhood attention
 
 The [neighborhood guide](neighborhood/README.md) is the starting point for the
-explicit 2D D64 API. It explains the corrected dQ+dK default, six-GPU
+explicit 2D/3D D64 APIs, including the [LTX adapter](neighborhood/3d.md).
+It explains the corrected dQ+dK default, six-GPU 2D
 qualification, and the remaining performance gaps
 against FlexAttention and NATTEN. Its evidence table links the scoped reports;
 [recorded data](../results/neighborhood/README.md) retain the original sources,

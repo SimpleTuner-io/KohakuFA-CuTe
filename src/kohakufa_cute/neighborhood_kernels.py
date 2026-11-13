@@ -8,11 +8,20 @@ import torch
 from cutlass.cute.runtime import make_fake_stream, make_fake_tensor
 
 from .kernels import Attention, JointBackward, copy_vector, descriptor
-from .neighborhood_geometry import full_row_tile_bounds, normalize_exact_contiguous, spatial_bounds, spatial_tile
+from .neighborhood_geometry import (
+    full_row_tile_bounds,
+    normalize_exact_contiguous,
+    spatial_bounds,
+    spatial_tile,
+    volume_bounds,
+    volume_tile,
+)
 from .neighborhood_schedule import DEFAULT_KEY_STATISTICS, DEFAULT_PRECISION, default_schedule
 
 _bounds = cute.jit(spatial_bounds, preprocess=False)
 _tile = cute.jit(spatial_tile, preprocess=False)
+_volume_bounds = cute.jit(volume_bounds, preprocess=False)
+_volume_tile = cute.jit(volume_tile, preprocess=False)
 _full_rows = cute.jit(full_row_tile_bounds, preprocess=False)
 
 # Explicit benchmark experiments only. A complete forward/backward call must
@@ -129,21 +138,30 @@ class NeighborhoodAttention(Attention):
             kv_column_statistics=key_statistics in ("column", "column_staged"),
             stage_statistics=key_statistics in ("staged", "column_staged"),
         )
-        self.height, self.image_width = spatial
-        self.window_h, self.window_w = window
+        self.volume = len(spatial) == 3
+        self.depth, self.height, self.image_width = spatial if self.volume else (1, *spatial)
+        self.window_d, self.window_h, self.window_w = window if self.volume else (1, *window)
         # Every owner then covers complete image rows, including the tail. The
         # active tiles are one interval in exactly the original traversal order.
-        self.exact_contiguous = exact_contiguous and self.rows % self.image_width == 0
+        self.exact_contiguous = not self.volume and exact_contiguous and self.rows % self.image_width == 0
 
     @cute.jit
     def visible(self, mask, batch, head, row, col, sq, sk, full):
-        y = cutlass.min(cutlass.max(row // self.image_width - self.window_h // 2, 0), self.height - self.window_h)
+        query_y, key_y = row // self.image_width, col // self.image_width
+        temporal = True
+        if cutlass.const_expr(self.volume):
+            query_y, key_y = query_y % self.height, key_y % self.height
+            plane = self.height * self.image_width
+            z = cutlass.min(cutlass.max(row // plane - self.window_d // 2, 0), self.depth - self.window_d)
+            temporal = col // plane >= z and col // plane < z + self.window_d
+        y = cutlass.min(cutlass.max(query_y - self.window_h // 2, 0), self.height - self.window_h)
         x = cutlass.min(cutlass.max(row % self.image_width - self.window_w // 2, 0), self.image_width - self.window_w)
         return (
-            row < sq
+            temporal
+            and row < sq
             and col < sk
-            and col // self.image_width >= y
-            and col // self.image_width < y + self.window_h
+            and key_y >= y
+            and key_y < y + self.window_h
             and col % self.image_width >= x
             and col % self.image_width < x + self.window_w
         )
@@ -154,6 +172,23 @@ class NeighborhoodAttention(Attention):
 
     @cute.jit
     def traversal(self, start, length):
+        if cutlass.const_expr(self.volume):
+            bounds = _volume_bounds(
+                start,
+                self.rows,
+                self.depth,
+                self.height,
+                self.image_width,
+                self.window_d,
+                self.window_h,
+                self.window_w,
+                self.mode == "kv",
+                minimum=cutlass.min,
+                maximum=cutlass.max,
+            )
+            z0, z1, y0, y1, x0, x1 = bounds
+            slots = cute.ceil_div(x1 - x0 + self.columns - 1, self.columns)
+            return 0, (z1 - z0) * (y1 - y0) * slots, bounds
         bounds = _bounds(
             start,
             self.rows,
@@ -174,6 +209,11 @@ class NeighborhoodAttention(Attention):
 
     @cute.jit
     def traversal_block(self, iteration, bounds):
+        if cutlass.const_expr(self.volume):
+            z0, z1, y0, y1, x0, x1 = bounds
+            return _volume_tile(
+                iteration, z0, y0, y1, x0, x1, self.height, self.image_width, self.columns, maximum=cutlass.max
+            )
         if cutlass.const_expr(self.exact_contiguous):
             return iteration, True
         y0, y1, x0, x1 = bounds

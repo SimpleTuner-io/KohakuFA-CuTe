@@ -1,0 +1,339 @@
+{
+  "status": "pass",
+  "scope": "H100 synthetic 3D operator qualification, not full LTX decoder quality or latency. All norm errors are fractions, independently measured per head and component.",
+  "source_base_revision": "c373d7bf0a7096a9be0fcc7e488191414aac959c",
+  "source_identity": "Base revision plus retained patch and new files; not an unmodified base checkout.",
+  "source_snapshot_sha256": "3cfd20c800ea2e8082affe24846f3d1edb566bc0545e71a32714f16f204b9f83",
+  "source_manifest_sha256": "b10697f87a498df756e7f60f2ca50421b88072baddd5d4ef3a888e6f069f656d",
+  "qualified_source_sha256": {
+    "src/kohakufa_cute/__init__.py": "8c3a58a9e494de1bb58273854cef7483ecd2736285b1f389eb8fd4e07fa97a93",
+    "src/kohakufa_cute/api.py": "f52e84d6d7219f7968d52fa8393363edd6878080d0a4bf025ce4bc71956860e3",
+    "src/kohakufa_cute/neighborhood_geometry.py": "9c80b0e29432bb5c7aa9e588a23dba457d90fc2d4a1011498282ea1ffe6959c9",
+    "src/kohakufa_cute/neighborhood_kernels.py": "7a5e425f3637bd1672f882c6aca3d797fe93d470bd15d2331ec0313af96899a8",
+    "src/kohakufa_cute/neighborhood_ops.py": "0115fa08cf21ad1776a806d0507b894b7966f73904bd74f085ad5ba87ffb4670",
+    "benchmarks/neighborhood/qualify.py": "cd721a7667aae87036fb6268e98f3cc719f06735ef5da463aa41a9085fd9a16c",
+    "benchmarks/neighborhood/reference.py": "dbc18ae926c307b4abb7eabbfe18a5f5e53b85bc6ec85b0cfc062984d65254d9",
+    "benchmarks/neighborhood/key_precision_reference.py": "47673cfbb017cca960c63386893cf398cef06f86c73fe3ea857b1df471bbec73",
+    "benchmarks/neighborhood/precision_reference.py": "ddc8c67f5f7c6de007ca062935d1e965a50c8ecafdb1ab1542988d273fd130c0",
+    "benchmarks/reference.py": "6edbefe2bea7afff3cd5f024b1a4da70bc3f8d5af6b9e0e22b6360a7fcb541a7",
+    "tests/test_neighborhood.py": "5f60163ef71c91bb22a3e138d0e9ac737658c35d6a4771468d6578141cb9b07e",
+    "tests/test_neighborhood_3d.py": "0e08a2a8c3f05c77da7eeb0b6e860b15523e077737c0fb8c1b25265d25c16daa"
+  },
+  "device": {
+    "device": "NVIDIA H100 80GB HBM3",
+    "capability": [
+      9,
+      0
+    ],
+    "sm_count": 132,
+    "total_memory": 85009367040,
+    "cuda": "13.0"
+  },
+  "versions": {
+    "torch": "2.13.0+cu130",
+    "natten": "0.21.7+torch2130cu130",
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15.post0",
+    "cuda-bindings": "13.0.3",
+    "triton": "3.7.1"
+  },
+  "policy": "weighted_dq_reconstructed_dk",
+  "key_statistics": "column_staged",
+  "acceptance": {
+    "random": "Per-head mathematical FP64 norm error",
+    "directed": "Per-head prescribed neighborhood-policy norm error; historical rounded diagnostics retained",
+    "bf16": 0.01,
+    "fp16": 0.005
+  },
+  "candidate_cases": 28,
+  "candidate_case_passes": 28,
+  "cpu_and_cuda_reference_gates_pass": true,
+  "profiled_cases": 56,
+  "natten_backend": "cutlass-fna",
+  "comparison_scope": "Positive-scale rows compare accuracy. Retain nonpositive-scale comparator failures separately; they are not accuracy gains. Directed policy gates describe KohakuFA arithmetic, not NATTEN arithmetic.",
+  "nonpositive_natten_statuses": {
+    "numerical-failure": 18
+  },
+  "accuracy": [
+    {
+      "family": "random-positive",
+      "implementation": "kohakufa",
+      "dtype": "torch.float16",
+      "cases": 4,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.00021013079558276159,
+        "dq": 0.0002745446446946758,
+        "dk": 0.0003102772059163319,
+        "dv": 0.00027254749514800516
+      },
+      "policy_max_relative_norm_error": {
+        "out": 0.00021015218764029075,
+        "dq": 0.00023641565427610367,
+        "dk": 0.00021447331368320917,
+        "dv": 0.00021149070951544018
+      }
+    },
+    {
+      "family": "random-positive",
+      "implementation": "kohakufa",
+      "dtype": "torch.bfloat16",
+      "cases": 4,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.001662532899838643,
+        "dq": 0.0021379372326834132,
+        "dk": 0.0025334410995180487,
+        "dv": 0.0021822239207048627
+      },
+      "policy_max_relative_norm_error": {
+        "out": 0.0016625308431012465,
+        "dq": 0.0016869692993909063,
+        "dk": 0.001782784845517317,
+        "dv": 0.0016866492485098912
+      }
+    },
+    {
+      "family": "random-positive",
+      "implementation": "natten",
+      "dtype": "torch.float16",
+      "cases": 4,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.00021120406694003925,
+        "dq": 0.0010075382950675376,
+        "dk": 0.0010043103085460765,
+        "dv": 0.00027259386722862833
+      }
+    },
+    {
+      "family": "random-positive",
+      "implementation": "natten",
+      "dtype": "torch.bfloat16",
+      "cases": 4,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.0016679934520187154,
+        "dq": 0.007969005537103295,
+        "dk": 0.007647982500545712,
+        "dv": 0.0021826233351220116
+      }
+    },
+    {
+      "family": "common-offset-positive",
+      "implementation": "kohakufa",
+      "dtype": "torch.float16",
+      "cases": 1,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.00021870940065066248,
+        "dq": 0.0002720351761139477,
+        "dk": 0.00038765718040470075,
+        "dv": 0.00028170233540754825
+      },
+      "policy_max_relative_norm_error": {
+        "out": 0.00021870940065066597,
+        "dq": 0.00023507200218789636,
+        "dk": 0.0002685429406642248,
+        "dv": 0.00020943999174541142
+      }
+    },
+    {
+      "family": "common-offset-positive",
+      "implementation": "kohakufa",
+      "dtype": "torch.bfloat16",
+      "cases": 1,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.0018336337613042949,
+        "dq": 0.0021768225163105418,
+        "dk": 0.00249985631916028,
+        "dv": 0.001967541558138261
+      },
+      "policy_max_relative_norm_error": {
+        "out": 0.0018336337613042914,
+        "dq": 0.0017530259601813386,
+        "dk": 0.002205755520309256,
+        "dv": 0.0016662675860297403
+      }
+    },
+    {
+      "family": "common-offset-positive",
+      "implementation": "natten",
+      "dtype": "torch.float16",
+      "cases": 1,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.00022058961010834127,
+        "dq": 0.04847399314348412,
+        "dk": 0.0004742849244290773,
+        "dv": 0.00028156498393763
+      }
+    },
+    {
+      "family": "common-offset-positive",
+      "implementation": "natten",
+      "dtype": "torch.bfloat16",
+      "cases": 1,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.001758041612043065,
+        "dq": 0.3654703382925958,
+        "dk": 0.0026411211201669608,
+        "dv": 0.001967541558138261
+      }
+    },
+    {
+      "family": "all-scales",
+      "implementation": "kohakufa",
+      "dtype": "torch.float16",
+      "cases": 14,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.0002828167735801883,
+        "dq": 0.00029449343227462706,
+        "dk": 0.00038765718040470075,
+        "dv": 0.00032666530827306866
+      },
+      "policy_max_relative_norm_error": {
+        "out": 0.0002828172166648139,
+        "dq": 0.00023641565427610367,
+        "dk": 0.0002685429406642248,
+        "dv": 0.0002188040984221262
+      }
+    },
+    {
+      "family": "all-scales",
+      "implementation": "kohakufa",
+      "dtype": "torch.bfloat16",
+      "cases": 14,
+      "nonfinite_components": 0,
+      "fp64_max_relative_norm_error": {
+        "out": 0.0022596250389467078,
+        "dq": 0.0025233043345146396,
+        "dk": 0.0026531110845421377,
+        "dv": 0.0027587987813894894
+      },
+      "policy_max_relative_norm_error": {
+        "out": 0.0022596246333563266,
+        "dq": 0.0017530259601813386,
+        "dk": 0.002205755520309256,
+        "dv": 0.0017621298536217122
+      }
+    }
+  ],
+  "ltx_source": {
+    "revision": "6a61bd5f20a98e55425d7d54259d91566d79adb8",
+    "path": "simpletuner/helpers/models/ltxvideo2/na_kernels.py",
+    "sha256": "63341346ef9ef02d64e0c5f494521b7d479d219bc117e2d10fe365d52ae57822",
+    "identity": "Inspected working-tree file; the content hash identifies the exact helper, independently of its base revision."
+  },
+  "ltx_compatibility": [
+    {
+      "implementation": "kohakufa",
+      "dtype": "torch.float16",
+      "cases": 3,
+      "passed": true,
+      "fp64_max_relative_norm_error": {
+        "out": 0.0002694891896970874,
+        "dq": 0.0002897157875248438,
+        "dk": 0.0003021203180174966,
+        "dv": 0.00029743856040301167
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "dtype": "torch.bfloat16",
+      "cases": 3,
+      "passed": true,
+      "fp64_max_relative_norm_error": {
+        "out": 0.0021424654192988743,
+        "dq": 0.002335718733578015,
+        "dk": 0.002412882416694055,
+        "dv": 0.0024189139817910026
+      }
+    },
+    {
+      "implementation": "ltx-helper",
+      "dtype": "torch.float16",
+      "cases": 3,
+      "passed": true,
+      "fp64_max_relative_norm_error": {
+        "out": 0.00027581303625429495,
+        "dq": 0.00030584187266316667,
+        "dk": 0.00030556077177584253,
+        "dv": 0.00029736296369093767
+      }
+    },
+    {
+      "implementation": "ltx-helper",
+      "dtype": "torch.bfloat16",
+      "cases": 3,
+      "passed": true,
+      "fp64_max_relative_norm_error": {
+        "out": 0.002195642109529553,
+        "dq": 0.002476283727349086,
+        "dk": 0.0024330652459810444,
+        "dv": 0.0024189760170592054
+      }
+    }
+  ],
+  "validation": {
+    "cpu": {
+      "tests": 540,
+      "skipped": 234
+    },
+    "focused_gpu_and_reference": {
+      "tests": 47
+    },
+    "sanitizer_scope": "tests.test_neighborhood_3d.VolumeGPUTests.test_sanitizer_temporal_seams: FP16/BF16, strided views, asymmetric temporal windows and partial planes. References run on CPU."
+  },
+  "archive": {
+    "files": 744,
+    "bytes": 382168256,
+    "archive_sha256": "d33230aab60e2ba5d91334028941ae47599b02cfc2a25d63a2600ecde41c2290",
+    "inventory_sha256": "9391b2f450abeaf47fdf049b29689225a66839f12ec9b2c71b59f2138e0fd050"
+  },
+  "python": "3.13.18",
+  "stage_receipts": {
+    "cpu": {
+      "exit_status": 0,
+      "log_sha256": "13036f5da2090a59252a4fcfd0abcb72c93cf7c402568957535713c64f23eeb2"
+    },
+    "gpu": {
+      "exit_status": 0,
+      "log_sha256": "8a16597b9a2389074ae4ece8c8d6a6f1e14201636b7a8c6a939e4630626ed9f9"
+    },
+    "ltx": {
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accuracy": {
+      "exit_status": 0,
+      "log_sha256": "1d2296fa70111ae9f0ceea4df8e1a2d56bf6f1bc5aa9e1800536b64bcc7281be"
+    },
+    "memcheck": {
+      "exit_status": 0,
+      "log_sha256": "e11758ed62ff2683db972870bc2f08a3b13b5418c08f5e13fe5883cca4e6e1ef"
+    },
+    "racecheck": {
+      "exit_status": 0,
+      "log_sha256": "646144553b3942a714972a2ac644a1954fb28462bc5a908b2be7512ed41bf49c"
+    },
+    "initcheck": {
+      "exit_status": 0,
+      "log_sha256": "2986b4dd04d270eaccc17cb874830a3904151e83bf8ac2f338a40b5a3cfa902d"
+    },
+    "synccheck": {
+      "exit_status": 0,
+      "log_sha256": "4e486ebf0c699f168cc72d458718055ff83767466eb627b8b0cd4a0950b8fce9"
+    }
+  },
+  "raw_accuracy_sha256": "c8c0bf0bf903efd8d5306a3c343b4cb54a3ced859a2de6f419cab414c92e3809",
+  "raw_ltx_comparison_sha256": "ee76945e1e114d2e754c953c7d96277dd66cb65811e761ec45dfe9a7ea8b8882",
+  "machine_code": {
+    "ptx": 31,
+    "cubin": 31,
+    "sass": 31
+  }
+}

@@ -1,5 +1,9 @@
 # Neighborhood evidence
 
+The [3D H100 receipt](3d-h100.json) records the separate LTX-compatible 3D
+qualification. See the [3D guide](../../docs/neighborhood/3d.md) for scope,
+per-component FP64 errors and the distinction from existing 2D evidence.
+
 Start with the [current neighborhood guide](../../docs/neighborhood/README.md)
 for usage and the [precision contract](../../docs/precision.md#neighborhood-default).
 The combined normalized dQ and reconstructed dK method with column-staged

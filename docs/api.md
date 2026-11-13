@@ -61,3 +61,15 @@ owners; changing data in retained input storage is supported. Optional eager
 schedule selectors can fall back to ordinary CuTe for compiled calls.
 Enable the desired [determinism policy](determinism.md) before forward and capture.
 Atomic schedules do not promise bitwise-identical dQ between calls.
+
+## Experimental neighborhood attention
+
+`neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None)`
+adds an explicit noncausal 2D path for matching FP16/BF16
+`[batch, heads, height*width, 64]` inputs, with stride and dilation one.
+It generates spatial tiles without a dense mask and uses shifted boundary
+windows. See the [contract and scoped H100 qualification](experimental/neighborhood.md).
+The [H100 scheduling report](experimental/neighborhood-tuning.md) describes the
+bounded device and workload dispatch. Its tile choices preserve the same
+precision contract; the [FP64 report](experimental/neighborhood-accuracy.md)
+separates mathematical accuracy from rounded-arithmetic agreement.

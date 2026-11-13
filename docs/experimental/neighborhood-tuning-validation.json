@@ -1,0 +1,219 @@
+{
+  "schema": "neighborhood-tuning-validation-v1",
+  "status": "final-operator-qualified-and-archived",
+  "base_revision": "f621db22f90dc905d2cd67b841704c76f0c34945",
+  "source_snapshots": {
+    "initial": {
+      "source_files": 418,
+      "manifest_sha256": "29aa4b3f39317b3c964e008e47877ac3c9dfadaff348e67895b564b8bdf7d361"
+    },
+    "v2": {
+      "source_files": 418,
+      "manifest_sha256": "6882870ecc5dbceb5d2ff9cc0a80723ff34571294dc5db9a02561962f4409fa8"
+    },
+    "v3": {
+      "source_files": 419,
+      "manifest_sha256": "6642904c76dc9eda4f3b7f5554363eb33b93b0039e8c3043cccf94dda2e4b8f9"
+    },
+    "v4": {
+      "source_files": 421,
+      "manifest_sha256": "4d0a90988baed0630d91e464aefaae2d9810e7032a346a058511a358e1107d01"
+    },
+    "v5": {
+      "source_files": 422,
+      "manifest_sha256": "909e77dea228cbf737264e6767c97a64e92dd919cd077e1357e5138b6404569d"
+    },
+    "v6": {
+      "source_files": 422,
+      "manifest_sha256": "a9aa55002f62ddbe32e81e448870c15d05556092fd3d192f7bac46bd6c54bb8b"
+    }
+  },
+  "qualified_source": "v6",
+  "precision_contract": "docs/precision.md",
+  "cpu": {
+    "tests": 513,
+    "skipped": 221,
+    "exit_status": 0,
+    "location": "H100 host"
+  },
+  "gpu": {
+    "methods": 10,
+    "skipped": 0,
+    "exit_status": 0
+  },
+  "sanitizers": {
+    "memcheck": {
+      "methods": 3,
+      "skipped": 0,
+      "exit_status": 0,
+      "reported_errors": 0
+    },
+    "racecheck": {
+      "methods": 3,
+      "skipped": 0,
+      "exit_status": 0,
+      "reported_errors": 0
+    },
+    "initcheck": {
+      "methods": 3,
+      "skipped": 0,
+      "exit_status": 0,
+      "reported_errors": 0
+    },
+    "synccheck": {
+      "methods": 3,
+      "skipped": 0,
+      "exit_status": 0,
+      "reported_errors": 0
+    }
+  },
+  "timing": {
+    "final_original_rows": 40,
+    "fresh_final_rows": 32,
+    "samples_per_group": 7,
+    "graph_calls_per_replay": 8,
+    "final_modes": [
+      "graph"
+    ],
+    "separate_earlier_candidate_modes": [
+      "eager",
+      "graph"
+    ],
+    "fresh_training_improved_cases": 7,
+    "fresh_training_cases": 8,
+    "residual_regression": {
+      "case": "fresh-52x64-w5-fp16",
+      "baseline_us": 94.03,
+      "production_us": 95.65,
+      "relative_latency_increase": 0.017228544081676178
+    }
+  },
+  "accuracy": {
+    "candidate_cases": 11,
+    "candidate_failures": 0,
+    "external_unsupported_window_errors": 3,
+    "comparator_contract_differences": 12,
+    "actual_stage_exit_status": 1,
+    "reference": "Native torch.float64 CPU plus CUDA reference gates on identical already-rounded operands; no emulated-double algorithm.",
+    "tiny_probe_dispatch": "All C32/original traversal, confirmed by compiled owner records; optimized large-shape path separately qualified.",
+    "candidate_error_records_identical_to_initial": true,
+    "general_fp64_accuracy_win": false
+  },
+  "preserved_failures": {
+    "v2_remote_metadata_guard": "Failed for unconfigured runtime git identity; file text guard and actual publication checkout metadata guard passed separately.",
+    "v4_dispatch": "Broader predicate regressed one first-evaluation FP16 case; retained as refinement evidence before revised disjoint evaluation.",
+    "v4_production_fixture": "Default-stream autograd state followed by side-stream capture was rejected by PyTorch 2.13. Nine existing methods passed, new method failed; all four sanitizer-suite receipts remain failed despite zero diagnostics.",
+    "v5": "CPU/preflight only; GPU launch blocked by failed prerequisite qualification.",
+    "v6_optional_assembly": "Intentionally interrupted all-autotune-cache disassembly for archive deadline; exit -15 retained. Complete binaries/PTX and partial SASS retained."
+  },
+  "selected_code": {
+    "status": "pass",
+    "scope": "Separate untimed deployment; does not retroactively bind earlier benchmark launches.",
+    "launch_hooks_changed": false,
+    "independent_of_timed_deployment": true,
+    "selected_cubins_disassembled": 5,
+    "sass_and_resource_dumps_passed": true,
+    "opaque_cpp_association": "Original static function plus matching cache/configuration and installed construction source; not independent CUPTI capture."
+  },
+  "archive": {
+    "format": "kohakufa-final-multisnapshot-v1",
+    "files": 54088,
+    "bytes": 1307249311,
+    "sha256": "289f36bcbed9e6c0c6bb249eee26c6ab92113045992d75405d34db1d15440023",
+    "verified_source_snapshots": 6,
+    "all_payload_member_hashes_verified": true,
+    "all_four_component_hashes_verified": true
+  },
+  "cleanup": {
+    "provider": "Vast.ai",
+    "owned_instances_destroyed": 1,
+    "fresh_absence_confirmed": true,
+    "archive_verified_before_destruction": true
+  },
+  "archive_relative_stage_exits": {
+    "results/accuracy.receipt.json": 1,
+    "results/assembly-capture.receipt.json": 0,
+    "results/bootstrap-python.receipt.json": 0,
+    "results/bootstrap-system.receipt.json": 0,
+    "results/bootstrap.receipt.json": 0,
+    "results/dependency-capture.receipt.json": 0,
+    "results/runtime-preflight.receipt.json": 0,
+    "results/screen.receipt.json": 0,
+    "v2/results/accuracy-entrypoint-preflight.receipt.json": 0,
+    "v2/results/accuracy.receipt.json": 1,
+    "v2/results/assembly-capture.receipt.json": 0,
+    "v2/results/black-preflight.receipt.json": 0,
+    "v2/results/cpu-preflight.receipt.json": 0,
+    "v2/results/entrypoint-preflight.receipt.json": 0,
+    "v2/results/full.receipt.json": 0,
+    "v2/results/initcheck.receipt.json": 0,
+    "v2/results/install-check-tools.receipt.json": 0,
+    "v2/results/isort-preflight.receipt.json": 0,
+    "v2/results/memcheck.receipt.json": 0,
+    "v2/results/qualified-gpu-tests.receipt.json": 0,
+    "v2/results/racecheck.receipt.json": 0,
+    "v2/results/screen.receipt.json": 0,
+    "v2/results/source-import-preflight.receipt.json": 0,
+    "v2/results/synccheck.receipt.json": 0,
+    "v2/results/text-guard-files-preflight.receipt.json": 0,
+    "v2/results/text-guard-preflight.receipt.json": 1,
+    "v3/results/accuracy-entrypoint-preflight.receipt.json": 0,
+    "v3/results/assembly-capture.receipt.json": 0,
+    "v3/results/black-preflight.receipt.json": 0,
+    "v3/results/cpu-preflight.receipt.json": 0,
+    "v3/results/entrypoint-preflight.receipt.json": 0,
+    "v3/results/full.receipt.json": 0,
+    "v3/results/install-check-tools.receipt.json": 0,
+    "v3/results/isort-preflight.receipt.json": 0,
+    "v3/results/screen.receipt.json": 0,
+    "v3/results/source-import-preflight.receipt.json": 0,
+    "v3/results/text-guard-preflight.receipt.json": 0,
+    "v4/results/accuracy-entrypoint-preflight.receipt.json": 0,
+    "v4/results/accuracy.receipt.json": 1,
+    "v4/results/assembly-capture.receipt.json": 0,
+    "v4/results/black-preflight.receipt.json": 0,
+    "v4/results/cpu-preflight.receipt.json": 0,
+    "v4/results/entrypoint-preflight.receipt.json": 0,
+    "v4/results/full.receipt.json": 0,
+    "v4/results/heldout.receipt.json": 0,
+    "v4/results/initcheck.receipt.json": 1,
+    "v4/results/install-check-tools.receipt.json": 0,
+    "v4/results/isort-preflight.receipt.json": 0,
+    "v4/results/memcheck.receipt.json": 1,
+    "v4/results/qualified-gpu-tests.receipt.json": 1,
+    "v4/results/racecheck.receipt.json": 1,
+    "v4/results/source-import-preflight.receipt.json": 0,
+    "v4/results/synccheck.receipt.json": 1,
+    "v4/results/text-guard-preflight.receipt.json": 0,
+    "v5/results/accuracy-entrypoint-preflight.receipt.json": 0,
+    "v5/results/black-preflight.receipt.json": 0,
+    "v5/results/cpu-preflight.receipt.json": 0,
+    "v5/results/entrypoint-preflight.receipt.json": 0,
+    "v5/results/install-check-tools.receipt.json": 0,
+    "v5/results/isort-preflight.receipt.json": 0,
+    "v5/results/text-guard-preflight.receipt.json": 0,
+    "v6/results/accuracy-entrypoint-preflight.receipt.json": 0,
+    "v6/results/accuracy.receipt.json": 1,
+    "v6/results/assembly-capture.receipt.json": -15,
+    "v6/results/black-preflight.receipt.json": 0,
+    "v6/results/cpu-preflight.receipt.json": 0,
+    "v6/results/entrypoint-preflight.receipt.json": 0,
+    "v6/results/full.receipt.json": 0,
+    "v6/results/heldout.receipt.json": 0,
+    "v6/results/initcheck.receipt.json": 0,
+    "v6/results/install-check-tools.receipt.json": 0,
+    "v6/results/isort-preflight.receipt.json": 0,
+    "v6/results/memcheck.receipt.json": 0,
+    "v6/results/production-fixture-preflight.receipt.json": 0,
+    "v6/results/qualified-gpu-tests.receipt.json": 0,
+    "v6/results/racecheck.receipt.json": 0,
+    "v6/results/selected-binding.receipt.json": 0,
+    "v6/results/source-import-preflight.receipt.json": 0,
+    "v6/results/synccheck.receipt.json": 0,
+    "v6/results/text-guard-preflight.receipt.json": 0
+  },
+  "publication_code_audit": {
+    "qualified_python_and_precision_files": 345,
+    "unchanged_after_qualification": true
+  }
+}

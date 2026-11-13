@@ -1,4 +1,4 @@
-"""Experimental spatial owners of the existing single-rounded attention math."""
+"""Spatial owners with normalized dQ and reconstructed dK corrections by default."""
 
 from functools import lru_cache
 
@@ -9,7 +9,7 @@ from cutlass.cute.runtime import make_fake_stream, make_fake_tensor
 
 from .kernels import Attention, JointBackward, copy_vector, descriptor
 from .neighborhood_geometry import full_row_tile_bounds, normalize_exact_contiguous, spatial_bounds, spatial_tile
-from .neighborhood_schedule import default_schedule
+from .neighborhood_schedule import DEFAULT_KEY_STATISTICS, DEFAULT_PRECISION, default_schedule
 
 _bounds = cute.jit(spatial_bounds, preprocess=False)
 _tile = cute.jit(spatial_tile, preprocess=False)
@@ -22,8 +22,8 @@ _full_rows = cute.jit(full_row_tile_bounds, preprocess=False)
 # on every device, including devices that retain the original C32 schedule.
 _experiment_columns = None
 _experiment_exact_contiguous = None
-_experiment_precision = "baseline"
-_experiment_key_statistics = "direct"
+_experiment_precision = DEFAULT_PRECISION
+_experiment_key_statistics = DEFAULT_KEY_STATISTICS
 
 
 def set_experiment_key_statistics(mode):
@@ -36,7 +36,7 @@ def set_experiment_key_statistics(mode):
 
 
 def set_experiment_precision(name):
-    """Select explicitly requested stronger arithmetic for a serialized experiment."""
+    """Override the default method for a serialized benchmark control."""
     if name not in (
         "baseline",
         "fp32_p",
@@ -53,7 +53,7 @@ def set_experiment_precision(name):
 
 
 def requires_separate_delta():
-    """The reconstructed dK experiment owns a second FP32 row buffer."""
+    """Reconstructed dK owns a second FP32 row buffer, including by default."""
     return _experiment_precision in ("reconstructed_dk", "weighted_dq_reconstructed_dk")
 
 
@@ -197,7 +197,15 @@ class NeighborhoodBackward(JointBackward):
 
 @lru_cache(maxsize=128)
 def _compile(
-    device, mode, spatial, window, descriptors, columns, exact_contiguous, precision="baseline", key_statistics="direct"
+    device,
+    mode,
+    spatial,
+    window,
+    descriptors,
+    columns,
+    exact_contiguous,
+    precision=DEFAULT_PRECISION,
+    key_statistics=DEFAULT_KEY_STATISTICS,
 ):
     dtypes = {
         torch.float16: cutlass.Float16,

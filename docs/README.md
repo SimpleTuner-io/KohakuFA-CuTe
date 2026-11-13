@@ -8,8 +8,8 @@ limitations; [benchmarking](benchmarking.md) covers timing and profiling.
 ## Neighborhood attention
 
 The [neighborhood guide](neighborhood/README.md) is the starting point for the
-explicit 2D D64 API. It explains the current default, the separately selected
-dQ+dK experiment, six-GPU qualification, and the remaining performance gaps
+explicit 2D D64 API. It explains the corrected dQ+dK default, six-GPU
+qualification, and the remaining performance gaps
 against FlexAttention and NATTEN. Its evidence table links the scoped reports;
 [recorded data](../results/neighborhood/README.md) retain the original sources,
 metrics and failures.

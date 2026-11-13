@@ -34,8 +34,8 @@ source identity. Previous-policy controls require separate verification.
 ## Neighborhood attention
 
 Use `python -m benchmarks.neighborhood.benchmark` for the default API comparison
-and `python -m benchmarks.neighborhood.test_key_precision` for the explicit
-dQ+dK experiment. Run `--help` on the configured remote host before a campaign.
+and `python -m benchmarks.neighborhood.test_key_precision` for named
+dQ+dK controls. Run `--help` on the configured remote host before a campaign.
 The [neighborhood guide](neighborhood/README.md) defines inputs, arithmetic,
 measured stacks and timing scope. Its [data index](../results/neighborhood/README.md)
 separates the original baseline, H100 tuning and later accuracy qualifications.

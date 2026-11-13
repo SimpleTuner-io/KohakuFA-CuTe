@@ -56,9 +56,8 @@ fastest backend. Errors from a selected CuTe kernel propagate. See the
 
 For spatial attention, start with the [neighborhood guide](docs/neighborhood/README.md).
 It covers the FP16/BF16 D64 API, H100/B200/B300/RTX 4090/RTX 5090/L40S
-qualification, and comparisons with FlexAttention and NATTEN. The stronger
-dQ+dK accuracy method remains an explicit experiment; default arithmetic is
-unchanged.
+qualification, and comparisons with FlexAttention and NATTEN. The corrected dQ+dK method is the neighborhood default on every supported
+GPU; ordinary attention retains its own precision contract.
 
 ## Performance
 

@@ -1,6 +1,8 @@
 # Neighborhood accuracy against FP64
 
-This report diagnoses the original default arithmetic. Its cancellation-sensitive dQ/dK errors must not be attributed to the later explicit combined method. See the [current guide](../README.md#default-arithmetic-and-stronger-accuracy-experiment), [dQ study](dq-precision.md), and [dK study](dk-precision.md). The default policy itself remains unchanged.
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).
+
+This report diagnoses the original default arithmetic. Its cancellation-sensitive dQ/dK errors must not be attributed to the later explicit combined method. See the [current guide](../README.md#default-precision), [dQ study](dq-precision.md), and [dK study](dk-precision.md). That campaign predates promotion of the combined method to the public default.
 
 The retained ordinary-workload results do **not** demonstrate a general
 mathematical-accuracy gain over FlexAttention or NATTEN. On the 50 matched

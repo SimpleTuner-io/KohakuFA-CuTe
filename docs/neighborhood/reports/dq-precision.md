@@ -1,5 +1,7 @@
 # Experimental neighborhood precision
 
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).
+
 This report qualifies the dQ experiment. The [subsequent dK study](dk-precision.md) combines it with a reconstructed key-gradient correction; the [multi-GPU report](multigpu-precision.md) qualifies that combined method on five additional devices. Start with the [current guide](../README.md) for selection and coverage.
 
 The default arithmetic is unchanged. These explicit experiments compare stronger backward equations on identical rounded FP16/BF16 operands. They measure the neighborhood operator; no HDiT model or task quality was evaluated.

@@ -1,6 +1,7 @@
 """Qualify residual-centered dK and measure its complete training-call cost.
 
-Default arithmetic is unchanged. Historical fixtures reuse retained operands
+Named controls retain their equations; the combined method is now the public
+default. Historical fixtures reuse retained operands
 when supplied and must match their previous hashes. Every mathematical output
 and gradient remains visible, independently of prescribed-equation agreement.
 """

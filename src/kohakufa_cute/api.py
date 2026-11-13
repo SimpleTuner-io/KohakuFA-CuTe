@@ -132,7 +132,8 @@ def neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None):
     ``spatial_shape`` is (height, width); ``window_size`` is an int or (h, w).
     Each axis starts at clamp(query - window//2, 0, extent - window),
     matching NATTEN's shifted boundary windows, including even windows.
-    The arithmetic follows docs/precision.md. Qualification details are in
+    Normalized dQ and reconstructed dK corrections are enabled by default;
+    see the neighborhood contract in docs/precision.md. Qualification details are in
     docs/neighborhood/README.md.
     """
     if (

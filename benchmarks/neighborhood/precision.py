@@ -1,4 +1,4 @@
-"""Explicit stronger arithmetic experiments; never automatic dispatch.
+"""Serialized neighborhood arithmetic controls, including historical policies.
 
 All selections retain the production forward, actual rounded-O delta, FP32
 products and post-accumulation gradient scaling. ``fp32_p`` keeps reconstructed
@@ -15,7 +15,8 @@ rounded-O softmax center during the existing query traversal:
 preserves delta_O, and the two subtractions avoid adding a small correction
 back to a large center. No extra neighborhood pass or GEMM is required.
 ``weighted_dq_reconstructed_dk`` also retains the normalized weighted dQ
-projection. Neither variant changes dV, forward arithmetic, or default dispatch.
+projection. That combined method with ``column_staged`` statistics is now the
+public neighborhood default. Neither variant changes dV or forward arithmetic.
 """
 
 from contextlib import contextmanager
@@ -31,7 +32,7 @@ KEY_STATISTICS = ("direct", "column", "staged", "column_staged")
 def variant(name):
     """Select one serialized full forward/backward experiment and restore it.
 
-    The selection is a compile-cache key, so returning to baseline does not
+    The selection is a compile-cache key, so the historical baseline cannot
     reuse a stronger-arithmetic executable. Use the same context for warmup,
     graph capture, replay and changed-input eager validation.
     """
@@ -52,8 +53,8 @@ def key_statistics(mode):
 
     ``column`` hoists row statistics across key coordinates. ``staged`` copies
     the four FP32 statistics planes into CTA shared memory before consumption.
-    ``column_staged`` combines the two independent scheduling choices. Defaults
-    remain ``direct``. The concrete backward selection is a compile-cache key;
+    ``column_staged`` combines the two independent scheduling choices and is
+    the public default. The concrete backward selection is a compile-cache key;
     use one selection across warmup, full calls, capture and changed-data replay.
     """
     from kohakufa_cute.neighborhood_kernels import set_experiment_key_statistics

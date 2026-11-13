@@ -1,6 +1,10 @@
 # Experimental 2D neighborhood attention
 
-This is the initial H100 implementation report. Its nine-method suite and generic schedule describe that frozen source. Start with the [current guide](../README.md) for the later bounded H100 schedule, stronger precision experiment and six-GPU coverage.
+Historical method labels below describe the recorded campaign. The combined
+dQ+dK method with column-staged statistics is now the public neighborhood
+default; see the [current guide](../README.md#default-precision).
+
+This is the initial H100 implementation report. Its nine-method suite and generic schedule describe that frozen source. Start with the [current guide](../README.md) for the later bounded H100 schedule, corrected precision default and six-GPU coverage.
 
 This explicit experimental path has scoped correctness qualification on a full
 H100 PCIe, including independent references, changed-input graph replay, and all

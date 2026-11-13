@@ -1,7 +1,7 @@
 """Independent equations for residual-centered neighborhood key gradients.
 
-The new correction is a separate numerical policy. Production's default and
-the prior weighted-query experiment retain their original equations.
+The combined weighted-query and reconstructed-key method is the neighborhood
+default. Historical controls retain their original independent equations.
 """
 
 import torch
@@ -33,7 +33,8 @@ def key_terms(inputs, dout, spatial, window, scale, output):
         torch.backends.cuda.matmul.fp32_precision = precision
     visible = neighborhood_mask(spatial, window, device=q.device)
     signed = (scores if scale >= 0 else -scores).masked_fill(~visible, -torch.inf)
-    weights = torch.exp((signed - signed.amax(-1, keepdim=True)) * abs(scale))
+    shifted = ((signed - signed.amax(-1, keepdim=True)) * abs(scale)).masked_fill(~visible, -torch.inf)
+    weights = torch.exp(shifted)
     p = (weights / weights.sum(-1, keepdim=True)).float()
     delta = (output.float() * dout.float()).sum(-1, keepdim=True)
     residual = dp - delta

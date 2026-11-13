@@ -325,7 +325,7 @@ def markdown(report):
     lines = [
         "# Neighborhood accuracy against FP64",
         "",
-        "This report diagnoses the original default arithmetic. Its cancellation-sensitive dQ/dK errors must not be attributed to the later explicit combined method. See the [current guide](../README.md#default-arithmetic-and-stronger-accuracy-experiment), [dQ study](dq-precision.md), and [dK study](dk-precision.md). The default policy itself remains unchanged.",
+        "This report diagnoses the original default arithmetic. Its cancellation-sensitive dQ/dK errors must not be attributed to the later explicit combined method. See the [current guide](../README.md#default-precision), [dQ study](dq-precision.md), and [dK study](dk-precision.md). That campaign predates promotion of the combined method to the public default.",
         "",
         "The retained ordinary-workload results do **not** demonstrate a general",
         f"mathematical-accuracy gain over FlexAttention or NATTEN. On the {report['routine']['cases']} matched",
@@ -482,7 +482,17 @@ def markdown(report):
     ]
     for probe in report.get("probes", []):
         lines.extend(probe_markdown(probe))
-    return "\n".join(lines) + "\n"
+    return (
+        "\n".join(
+            lines[:2]
+            + [
+                "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).",
+                "",
+            ]
+            + lines[2:]
+        )
+        + "\n"
+    )
 
 
 def main():

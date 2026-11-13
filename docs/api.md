@@ -71,6 +71,6 @@ It generates spatial tiles without a dense mask and uses shifted boundary
 windows. See the [neighborhood guide](neighborhood/README.md) for the complete
 input contract, asymmetric backward visibility, usage and current evidence.
 Qualification covers H100, B200, B300, RTX 4090, RTX 5090 and L40S; the guide
-distinguishes default arithmetic from the explicit stronger dQ+dK experiment.
+documents the corrected dQ+dK method now enabled by default on every device.
 The [H100 schedule](neighborhood/reports/tuning.md#default-dispatch) is bounded
 by device and workload and preserves the default precision contract.

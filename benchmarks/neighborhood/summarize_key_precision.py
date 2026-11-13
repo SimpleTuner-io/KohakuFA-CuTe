@@ -888,7 +888,14 @@ def markdown(data):
         "Optional `--eager`, `--heldout`, `--path-audit`, `--kernel-evidence`, repeated `--validation LABEL=PATH` and `--negative-sweep LABEL=PATH` retain supplementary evidence. Selected held-out reports require context counters and the compiled-path audit.",
         "",
     ]
-    return "\n".join(lines)
+    return "\n".join(
+        lines[:2]
+        + [
+            "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).",
+            "",
+        ]
+        + lines[2:]
+    )
 
 
 def labeled(arguments):

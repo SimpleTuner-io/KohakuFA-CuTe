@@ -1,5 +1,7 @@
 # Experimental neighborhood key-gradient precision
 
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../../precision.md#neighborhood-default).
+
 This H100 report defines the combined method. The [multi-GPU report](multigpu-precision.md) replays its frozen inputs on B200, B300, RTX 4090, RTX 5090 and L40S. See the [current guide](../README.md) for the API and explicit-selection example.
 
 The default arithmetic is unchanged. This explicit follow-up reconstructs the softmax correction during the existing query pass to reduce the sharp-attention dK error. Results below concern defined neighborhood operators and already-rounded operands, rather than model quality or universal pointwise accuracy.

@@ -31,8 +31,8 @@ GPU qualification.
 
 For neighborhood attention, the [current guide](neighborhood/README.md) links
 the independent geometry/reference checks and six-GPU results. The combined
-dQ+dK experiment has its own prescribed equations and does not redefine the
-default policy. GPU tests include `tests.test_neighborhood`,
+dQ+dK method defines the neighborhood default; its prescribed equations
+are separate from ordinary attention and from the historical baseline. GPU tests include `tests.test_neighborhood`,
 `tests.test_neighborhood_precision` and `tests.test_neighborhood_key_precision`.
 Run numerical CPU references and GPU work on the remote qualification host.
 

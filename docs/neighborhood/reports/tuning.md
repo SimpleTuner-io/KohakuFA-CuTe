@@ -1,5 +1,9 @@
 # H100 neighborhood scheduling
 
+Historical method labels below describe the recorded campaign. The combined
+dQ+dK method with column-staged statistics is now the public neighborhood
+default; see the [current guide](../README.md#default-precision).
+
 The scheduling change keeps 32-column forward and dQ tiles, uses 64-column
 dK/dV tiles in a bounded H100 workload family, and removes two unused
 statistic-gradient fills. At image width 64, forward and dK/dV enumerate their

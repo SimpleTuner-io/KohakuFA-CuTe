@@ -4,6 +4,9 @@ The device-specific policy changes tile ownership and traversal only. Every
 schedule uses the same operand conversions and FP32 arithmetic contract.
 """
 
+DEFAULT_PRECISION = "weighted_dq_reconstructed_dk"
+DEFAULT_KEY_STATISTICS = "column_staged"
+
 BASELINE_COLUMNS = (32, 32, 32)
 BASELINE_TRAVERSAL = (False, False, False)
 

@@ -2,6 +2,7 @@
 
 import os
 import unittest
+from contextlib import nullcontext
 from pathlib import Path
 from unittest.mock import patch
 
@@ -20,6 +21,18 @@ from benchmarks.neighborhood.reference import neighborhoods
 
 
 class NeighborhoodKeyPrecisionReferenceTests(unittest.TestCase):
+    def test_zero_scale_preserves_hidden_edges_and_exact_gradients(self):
+        spatial, window = (2, 3), (1, 2)
+        for dtype in (torch.float16, torch.bfloat16):
+            q = torch.arange(24, dtype=dtype).reshape(1, 1, 6, 4)
+            inputs = [q, q + 1, q + 2]
+            dout = torch.ones_like(q)
+            exact = mathematical_reference(inputs, dout, spatial, window, 0.0)
+            for method in METHODS:
+                got = key_precision_reference(inputs, dout, spatial, window, 0.0, exact[0].to(dtype), method=method)
+                for actual, expected in zip(got, exact):
+                    torch.testing.assert_close(actual, expected, atol=0, rtol=0)
+
     def test_prior_controls_keep_their_original_equations(self):
         for dtype in (torch.float16, torch.bfloat16):
             torch.manual_seed(190)
@@ -83,6 +96,63 @@ class NeighborhoodKeyPrecisionReferenceTests(unittest.TestCase):
 
 @unittest.skipUnless(torch.cuda.is_available(), "CUDA qualification requires a rented GPU")
 class NeighborhoodKeyPrecisionGPUTests(unittest.TestCase):
+    def setUp(self):
+        from kohakufa_cute import neighborhood_kernels
+
+        self.assertEqual(neighborhood_kernels._experiment_precision, "weighted_dq_reconstructed_dk")
+        self.assertEqual(neighborhood_kernels._experiment_key_statistics, "column_staged")
+        self.assertTrue(neighborhood_kernels.requires_separate_delta())
+
+    def test_default_matches_qualified_method_on_frozen_inputs(self):
+        from benchmarks.neighborhood.precision import key_statistics, variant
+        from benchmarks.neighborhood.qualify_accuracy import tensor_hash
+        from benchmarks.neighborhood.test_key_precision import (
+            fixtures,
+            historical_hashes,
+            required_math_components,
+            selected_gate,
+        )
+        from kohakufa_cute import neighborhood_attention, neighborhood_kernels
+
+        retained = os.environ.get("NEIGHBORHOOD_FROZEN_OPERANDS")
+        frozen = Path(retained) if retained else None
+        hashes = historical_hashes(Path("results/neighborhood/dk-precision.json"))
+        method = "weighted_dq_reconstructed_dk"
+        checked = 0
+        for index, (label, inputs, dout, spatial, window, scale, stress, _) in enumerate(fixtures(frozen)):
+            with self.subTest(index=index, fixture=label, dtype=inputs[0].dtype):
+                cpu, gradient = [x.detach().cpu() for x in inputs], dout.cpu()
+                self.assertEqual(tensor_hash([*cpu, gradient]), hashes[index])
+                operation = lambda q, k, v: neighborhood_attention(
+                    q, k, v, spatial_shape=spatial, window_size=window, scale=scale
+                )
+                # This complete call has no experiment context or selector.
+                actual = execute(operation, inputs, dout)
+                compiled = neighborhood_kernels._compile.cache_info().misses
+                with variant(method), key_statistics("column_staged"):
+                    qualified = execute(operation, inputs, dout)
+                self.assertEqual(neighborhood_kernels._compile.cache_info().misses, compiled)
+                for got, want in zip(actual, qualified):
+                    self.assertTrue(torch.equal(got.contiguous().view(torch.uint8), want.contiguous().view(torch.uint8)))
+                expected = key_precision_reference(
+                    cpu, gradient, spatial, window, scale, actual[0].detach().cpu(), method=method
+                )
+                self.assertTrue(reference_gate(actual, expected, inputs[0].dtype)["passed"])
+                exact = mathematical_reference(cpu, gradient, spatial, window, scale)
+                gate = selected_gate(actual, exact, inputs[0].dtype, required_math_components(method, stress, label))
+                self.assertTrue(gate["passed"], gate)
+                checked += 1
+        self.assertEqual(checked, 29)
+        # A historical control must restore both the public arithmetic and its
+        # nonaliased correction ownership after its context exits.
+        with variant("baseline"), key_statistics("direct"):
+            self.assertFalse(neighborhood_kernels.requires_separate_delta())
+            execute(operation, inputs, dout)
+        self.setUp()
+        restored = execute(operation, inputs, dout)
+        for got, want in zip(restored, actual):
+            self.assertTrue(torch.equal(got.contiguous().view(torch.uint8), want.contiguous().view(torch.uint8)))
+
     def test_cpu_cuda_reference_agreement(self):
         q = torch.ones(1, 1, 6, 64, dtype=torch.float16)
         k = torch.zeros_like(q)
@@ -103,9 +173,14 @@ class NeighborhoodKeyPrecisionGPUTests(unittest.TestCase):
 
         spatial, window = (9, 17), (3, 4)
         for dtype in (torch.float16, torch.bfloat16):
-            for method in METHODS:
+            for selection in (*METHODS, "default"):
+                method = "weighted_dq_reconstructed_dk" if selection == "default" else selection
                 statistics = "column_staged" if method == "weighted_dq_reconstructed_dk" else "direct"
-                with self.subTest(dtype=dtype, method=method), variant(method), key_statistics(statistics):
+                with (
+                    self.subTest(dtype=dtype, method=selection),
+                    nullcontext() if selection == "default" else variant(method),
+                    nullcontext() if selection == "default" else key_statistics(statistics),
+                ):
                     torch.manual_seed(191)
                     inputs = [torch.randn(1, 2, 153, 64, dtype=dtype, device="cuda").requires_grad_() for _ in range(3)]
                     dout = torch.randn(*inputs[0].shape[:-1], 129, dtype=dtype, device="cuda")[..., 1::2]
@@ -176,7 +251,8 @@ class NeighborhoodKeyPrecisionGPUTests(unittest.TestCase):
         positions = sample_positions(spatial, count=6)
         original_arguments = neighborhood_ops._arguments
         for dtype in (torch.float16, torch.bfloat16):
-            for method in NEW_METHODS:
+            for selection in (*NEW_METHODS, "default"):
+                method = "weighted_dq_reconstructed_dk" if selection == "default" else selection
                 ownership = []
 
                 def checked_arguments(*arguments, **kwargs):
@@ -190,9 +266,9 @@ class NeighborhoodKeyPrecisionGPUTests(unittest.TestCase):
 
                 statistics = "column_staged" if method == "weighted_dq_reconstructed_dk" else "direct"
                 with (
-                    self.subTest(dtype=dtype, method=method),
-                    variant(method),
-                    key_statistics(statistics),
+                    self.subTest(dtype=dtype, method=selection),
+                    nullcontext() if selection == "default" else variant(method),
+                    nullcontext() if selection == "default" else key_statistics(statistics),
                     patch.object(neighborhood_ops, "_arguments", checked_arguments),
                 ):
                     torch.manual_seed(192)

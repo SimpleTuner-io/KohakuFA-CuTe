@@ -43,55 +43,65 @@ that attend each key, rather than applying the forward window around the key.
 The [implementation and initial qualification](reports/initial.md) describe the
 independent enumeration, tails, views and graph checks.
 
-## Default arithmetic and stronger accuracy experiment
+## Default precision
 
-The public call uses the same [precision contract](../precision.md) on every
-GPU: separate unscaled score extrema and logarithmic normalization, FP32
-products and accumulation, one input-dtype conversion of P before forming dS,
-one conversion of dS, and attention scaling after dQ/dK accumulation. Backward
-delta uses the actual rounded forward output. The bounded
-[H100 schedule](reports/tuning.md#default-dispatch) changes traversal and tile
-ownership without changing that arithmetic.
+The public call enables normalized dQ and reconstructed dK corrections on
+every supported GPU. No benchmark context or opt-in flag is needed. It uses
+the qualified `column_staged` statistics schedule and separate FP32 storage
+for the actual-output delta and reconstructed correction.
 
-The stronger dQ+dK method is **explicit research tooling**, not the default
-API policy. From a source checkout, select it around the complete call:
+This is the stronger neighborhood contract in
+[precision](../precision.md#neighborhood-default). Reconstructed probabilities
+remain FP32 while forming dS, the query gradient receives the normalized
+weighted-key correction, and the key gradient uses the correction reconstructed
+in the query pass. Gradient operands still round to the input dtype and
+products accumulate in FP32; attention scaling follows accumulation. Forward
+and input-rounded P for dV are unchanged. Ordinary dense attention retains its
+separate arithmetic contract.
 
-```python
-from benchmarks.neighborhood.precision import key_statistics, variant
-
-with variant("weighted_dq_reconstructed_dk"), key_statistics("column_staged"):
-    out = neighborhood_attention(q, k, v, spatial_shape=(height, width), window_size=7)
-    dq, dk, dv = torch.autograd.grad(out, (q, k, v), dout)
-```
-
-Here `dout` has the output shape and dtype. These process-wide controls must
-also cover warmup and graph capture; serialize experiments using different
-settings. They are not shipped as a supported installed-package configuration.
-The method retains FP32 reconstructed probabilities for dQ and reconstructs
-the dK softmax correction in the existing query traversal. The
-[dQ study](reports/dq-precision.md) and [dK study](reports/dk-precision.md)
-specify the equations, unchanged components and retained failed controls.
+The measured complete-call slowdown is accepted in exchange for the stronger
+accuracy on the defined workloads. Dispatch does not revert to the former
+arithmetic on slower GPUs or workloads. The bounded
+[H100 schedule](reports/tuning.md#default-dispatch) still selects traversal and
+tile ownership; it does not select a weaker numerical method.
 
 Independent references use **native FP64 on identical rounded inputs**, not
-emulated FP64 and not another attention implementation as the oracle. The
-rounded-equation reference uses actual O and separates operand rounding from
-mathematical error; it does not emulate tensor-core reduction order.
+emulated FP64. The independent policy reference also uses actual rounded O and
+the specified operand conversions; it does not emulate tensor-core reduction
+order. FlexAttention and NATTEN are independently assessed implementations.
 
-The stronger method passed the 29 saved-input qualifications on H100 and was
-requalified on all five other GPUs. Across the five-device replay, the worst
-observed per-head component norm errors were **0.04289% FP16** and
-**0.28530% BF16**, within the declared 0.5% and 1% limits. All four observed
+The corrected method passed the 29 saved-input qualifications on H100 and was
+requalified on B200, B300, RTX 4090, RTX 5090 and L40S. Across that five-device
+replay, the worst observed per-head component norm errors were **0.04289% FP16**
+and **0.28530% BF16**, within the declared 0.5% and 1% limits. All four observed
 component gates passed on all 29 fixtures. The eight zero/constant-dP controls
-retain their originally declared dQ formula checks; observed mathematical dQ
-passes are reported separately. These are defined-workload results, not
-universal error bounds. See the [full qualification](reports/multigpu-precision.md).
+retain their original dQ formula gates; mathematical dQ passes remain separate
+observations. These are defined-workload results, not universal error bounds.
+
+The [dQ study](reports/dq-precision.md), [dK study](reports/dk-precision.md) and
+[multi-GPU report](reports/multigpu-precision.md) retain their original labels:
+the now-default method was called `weighted_dq_reconstructed_dk` and explicitly
+selected in those runs. Recorded measurements and source hashes are unchanged.
+The old `baseline` arithmetic remains available only as a serialized benchmark
+control through `benchmarks.neighborhood.precision.variant("baseline")`.
+Use `key_statistics("direct")` too when reproducing the old statistics schedule;
+exiting those controls restores the corrected public default. They are research
+tools from a source checkout, not required installed-package configuration.
+
+The default-policy promotion was checked separately on H100 with the retained
+29 inputs: the public call and explicit corrected method produced byte-identical
+O/dQ/dK/dV and reused the same compiled kernels. The 16-method neighborhood GPU
+suite passed, including changed-input/poisoned graph replay and separate scratch
+ownership. Memcheck, racecheck, initcheck and synccheck passed the resolved-schedule
+graph test. These default-selection checks supplement the earlier six-GPU method
+qualification; they do not claim a fresh six-device performance campaign.
 
 ## Performance and device coverage
 
 Representative resident forward-plus-backward CUDA graph medians, microseconds,
 for B1/H8, 64×64, window 7, D64, BF16:
 
-| GPU | Default | Explicit dQ+dK | FlexAttention | NATTEN |
+| GPU | Former baseline | Corrected method (now default) | FlexAttention | NATTEN |
 | --- | ---: | ---: | ---: | ---: |
 | B200 | 148.60 | 151.28 | 140.77 | 207.83 |
 | B300 | 141.51 | 140.85 | 141.46 | 201.21 |
@@ -103,6 +113,7 @@ These values come from the [five-device requalification](reports/multigpu-precis
 with seven timing samples per row and required layout copies included.
 Compilation and immutable preparation are excluded. Power limits and selected
 backends are recorded there; the RTX 4090 and RTX 5090 ran at 350 W and 400 W.
+These recorded timings used explicit selection of the now-default method.
 Different precision policies make these complete-implementation comparisons.
 Window 13 and some tail cases still favor FlexAttention or NATTEN.
 

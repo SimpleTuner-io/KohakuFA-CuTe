@@ -46,8 +46,8 @@ The `test_*` neighborhood runners launch experiments; unit tests live in
 The root retains shared references, adapters, artifact capture and common
 drivers. Each device study keeps its controls beside its validation scripts.
 No compatibility wrappers or hidden import redirection are installed for old
-benchmark module names. For example, `benchmarks.tune_neighborhood` is now
-`benchmarks.neighborhood.tune`, and `benchmarks.compare_ada` is now
+benchmark module names. For example, `benchmarks.neighborhood.tune` is now
+`benchmarks.neighborhood.tune`, and `benchmarks.experiments.ada.compare_ada` is now
 `benchmarks.experiments.ada.compare_ada`.
 
 ## Reports and reproducibility

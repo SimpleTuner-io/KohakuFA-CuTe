@@ -1,5 +1,9 @@
 # Neighborhood performance
 
+Historical method labels below describe the recorded campaign. The combined
+dQ+dK method with column-staged statistics is now the public neighborhood
+default; see the [current guide](../README.md#default-precision).
+
 This is the original default-policy performance campaign, before the H100 scheduling and dQ/dK accuracy studies. B300 was unavailable for this campaign and was qualified later. See the [current guide](../README.md#performance-and-device-coverage) and [later five-device measurements](multigpu-precision.md) for the newer method and configurations.
 
 ## Measured results

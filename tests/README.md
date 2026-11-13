@@ -16,9 +16,12 @@ The [source map](../docs/internals/source-map.md) identifies implementation owne
 | CPU numerical checks | [test_row_metrics.py](test_row_metrics.py), [test_baseline_precision.py](test_baseline_precision.py), reference fixtures | Numerical work belongs on the configured remote host, even with CUDA hidden. |
 | GPU contract and backend checks | [test_kernels.py](test_kernels.py) and device suites below | Qualified runtime and actual target GPU. Skip conditions are not qualification results. |
 
-Full CPU discovery on the configured remote host:
+Install the development dependencies on the configured remote host before full
+CPU discovery. NumPy is required by the operand-hashing tests through PyTorch's
+NumPy bridge:
 
 ```sh
+python3 -m pip install -e '.[dev]'
 CUDA_VISIBLE_DEVICES='' python3 -m unittest discover -v -f
 ```
 

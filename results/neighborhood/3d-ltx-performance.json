@@ -1,0 +1,3359 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "date": "2026-11-13",
+  "scope": "Complete warm eager 3D attention forward; synthetic normalized LTX-layout operands. No complete decoder or backward timing.",
+  "precision_contract": "docs/precision.md#neighborhood-default",
+  "device": {
+    "name": "NVIDIA H100 PCIe",
+    "capability": [
+      9,
+      0
+    ],
+    "sm_count": 114,
+    "memory_bytes": 85019590656,
+    "power_limit_w": 350,
+    "driver": "595.71.05",
+    "cpu_model": "AMD EPYC 7713 64-Core Processor",
+    "torch_threads": 4,
+    "host_limits": {
+      "cpu_affinity_count": 256,
+      "cgroup_limits": {
+        "cpu.max": "6143999 100000",
+        "memory.max": "519328235520"
+      }
+    }
+  },
+  "runtime": {
+    "torch": "2.13.0+cu130",
+    "natten": "0.21.7+torch2130cu130",
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15.post0",
+    "cuda-bindings": "13.0.3",
+    "triton": "3.7.1",
+    "python": "3.13.18"
+  },
+  "source": {
+    "base_revision": "ce13ba0311726c8cc57ab67fe3a7c73107f2f201",
+    "timed_snapshot_sha256": "4caf4426f0b58cadfc519b6b795cd4dc9e1644a8cdbbcbe20ee6242e807f3b8a",
+    "benchmark_sha256": "159082db3bc1824e2301a76f281179636f3dac7eebec53d84b5acf9981aa1f2f",
+    "ltx_revision": "6a61bd5f20a98e55425d7d54259d91566d79adb8",
+    "ltx_helper_sha256": "63341346ef9ef02d64e0c5f494521b7d479d219bc117e2d10fe365d52ae57822",
+    "timed_runtime_files": {
+      "src/kohakufa_cute/kernels.py": "359c2f824a5b0caf52c8c8bfe8fe8cd1f874881c28115dbb691ab4b244d25872",
+      "src/kohakufa_cute/neighborhood_forward_precision.py": "5bcfd88f957753660746e323b8d3bd8ef698e2154152a29396f0c8796fa3d4b5",
+      "src/kohakufa_cute/neighborhood_geometry.py": "5dfd23c51aed8a94a3e35fd9bef9ec57fc88e54a3f06644041f101599b7e3369",
+      "src/kohakufa_cute/neighborhood_kernels.py": "19bdc318c55f5a8d9ab50f65328c0e1a73a12bea757ff81fc18685ddcca1b109",
+      "src/kohakufa_cute/neighborhood_ops.py": "0115fa08cf21ad1776a806d0507b894b7966f73904bd74f085ad5ba87ffb4670",
+      "src/kohakufa_cute/neighborhood_schedule.py": "1285ca32b69c6c18e384c74a741919a4aa6b15024040daacd8e8eb1a0a76802b",
+      "src/kohakufa_cute/neighborhood_volume_forward.py": "c590881efaabdceece3af8f5c5bc9941fc6d1f63391363b4e2734dc11b3547ab"
+    },
+    "qualified_runtime_files": {
+      "src/kohakufa_cute/kernels.py": "359c2f824a5b0caf52c8c8bfe8fe8cd1f874881c28115dbb691ab4b244d25872",
+      "src/kohakufa_cute/neighborhood_forward_precision.py": "5bcfd88f957753660746e323b8d3bd8ef698e2154152a29396f0c8796fa3d4b5",
+      "src/kohakufa_cute/neighborhood_geometry.py": "5dfd23c51aed8a94a3e35fd9bef9ec57fc88e54a3f06644041f101599b7e3369",
+      "src/kohakufa_cute/neighborhood_kernels.py": "19bdc318c55f5a8d9ab50f65328c0e1a73a12bea757ff81fc18685ddcca1b109",
+      "src/kohakufa_cute/neighborhood_ops.py": "0115fa08cf21ad1776a806d0507b894b7966f73904bd74f085ad5ba87ffb4670",
+      "src/kohakufa_cute/neighborhood_schedule.py": "0d2c85535cea7d7da8a36b746e441ba439aa9e7e769e298173bbd206cd78b27f",
+      "src/kohakufa_cute/neighborhood_volume_forward.py": "c590881efaabdceece3af8f5c5bc9941fc6d1f63391363b4e2734dc11b3547ab"
+    },
+    "qualified_snapshot_sha256": "ba6a5fe2b41c033f9e143c250a05bb4683c60420caca6e827975b4056c30dec9",
+    "post_timing_change": "Compact dispatch narrowed from vector>=2 to the measured vector==8; timed eight-element layouts unchanged. Final CPU and aligned/unaligned GPU dispatch checks passed."
+  },
+  "measurement": {
+    "seed": 1729,
+    "samples": 9,
+    "target_ms": 200,
+    "extra_reference_queries": 128,
+    "timing": "Complete warm eager attention calls, including mask construction, stacking, copies, output layout and Python work. Synchronized wall time is primary; CUDA-event spans include host launch gaps. No graph capture or complete decoder timing.",
+    "input_contract": "B1, D64, contiguous LTX BTHWHD layout, normalized synthetic Q/K, Q pre-scaled by 0.125, scale=1.0, no autograd.",
+    "order": "Alternating order per repeat; previous control included in the same process.",
+    "gate": {
+      "float16": 0.005,
+      "bfloat16": 0.01
+    }
+  },
+  "rows": [
+    {
+      "name": "stage1",
+      "spatial": [
+        5,
+        16,
+        16
+      ],
+      "heads": 32,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 4,
+      "dtype": "float16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.11920452334379661,
+        "minimum": 0.11890703778287086,
+        "maximum": 0.12434042188639675,
+        "mean": 0.12032571829776215,
+        "stdev": 0.0021053167325522227
+      },
+      "iterations_per_sample": 768,
+      "wall_samples_ms": [
+        0.12434042188639675,
+        0.11890703778287086,
+        0.12050464723264061,
+        0.1191354217553453,
+        0.11920452334379661,
+        0.1235127160725824,
+        0.11910730988044331,
+        0.11921823443117319,
+        0.11900115229461032
+      ],
+      "event_samples_ms": [
+        0.12427737315495808,
+        0.11888266603151958,
+        0.12046946088473003,
+        0.1191097895304362,
+        0.11917174855868022,
+        0.12348820765813191,
+        0.11907558639844258,
+        0.11919445792833964,
+        0.11896974841753642
+      ],
+      "output_norm_error_max": 0.00021224633524248885,
+      "output_rounding_floor_max": 0.00021224462389628893,
+      "worst_error_to_floor_ratio": 1.0000284409828424,
+      "query_positions": 131,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_13212806426214406420481_tensorptrf16_gmem_align16_o_1321280642621440642_0"
+      ]
+    },
+    {
+      "name": "stage1",
+      "spatial": [
+        5,
+        16,
+        16
+      ],
+      "heads": 32,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 4,
+      "dtype": "float16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.5925350336865314,
+        "minimum": 0.5662735371760079,
+        "maximum": 0.6080130558224646,
+        "mean": 0.5892836724316847,
+        "stdev": 0.015370784653761595
+      },
+      "iterations_per_sample": 268,
+      "wall_samples_ms": [
+        0.6080130558224646,
+        0.5662735371760079,
+        0.589663783564413,
+        0.6037886678449699,
+        0.5925350336865314,
+        0.5736341304667016,
+        0.6021680036705654,
+        0.5963143393911644,
+        0.5711625002623438
+      ],
+      "event_samples_ms": [
+        0.6079480754795359,
+        0.5662079996137477,
+        0.5895938019254314,
+        0.6037160389458955,
+        0.5924429822323928,
+        0.573565013373076,
+        0.6020986073052705,
+        0.5962491960667852,
+        0.5710895595265858
+      ],
+      "output_norm_error_max": 0.0002742572052614459,
+      "output_rounding_floor_max": 0.00021224462389628893,
+      "worst_error_to_floor_ratio": 1.313399726632232,
+      "query_positions": 131,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 35,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage1",
+      "spatial": [
+        5,
+        16,
+        16
+      ],
+      "heads": 32,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 4,
+      "dtype": "float16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.10882352859385303,
+        "minimum": 0.1082596930320149,
+        "maximum": 0.11827949327887484,
+        "mean": 0.11178313234954819,
+        "stdev": 0.004012582167571657
+      },
+      "iterations_per_sample": 821,
+      "wall_samples_ms": [
+        0.10882352859385303,
+        0.11827949327887484,
+        0.11353347740894984,
+        0.10873492930229667,
+        0.10880535447473176,
+        0.11740137264813125,
+        0.1086840512691549,
+        0.1082596930320149,
+        0.11352629113792648
+      ],
+      "event_samples_ms": [
+        0.1088011691689346,
+        0.11824986298685387,
+        0.11350758560682475,
+        0.10870419872808978,
+        0.10877493557482776,
+        0.11736785479788368,
+        0.10866057829212183,
+        0.10823031203610307,
+        0.1135017032600059
+      ],
+      "output_norm_error_max": 0.00027037044302701094,
+      "output_rounding_floor_max": 0.00021224462389628893,
+      "worst_error_to_floor_ratio": 1.3119522705038222,
+      "query_positions": 131,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_13212806426214406420481_tensorptrf16_gmem_align16_o_1321280642621440642_0"
+      ]
+    },
+    {
+      "name": "stage2",
+      "spatial": [
+        5,
+        32,
+        32
+      ],
+      "heads": 16,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 6,
+      "dtype": "float16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.2882630560464426,
+        "minimum": 0.2873568223336729,
+        "maximum": 0.28894571739762465,
+        "mean": 0.28821542522524746,
+        "stdev": 0.0005481821649562397
+      },
+      "iterations_per_sample": 428,
+      "wall_samples_ms": [
+        0.28860270808381244,
+        0.28797577104801053,
+        0.2875065210136089,
+        0.2882630560464426,
+        0.28894571739762465,
+        0.28885473583163435,
+        0.28813754428160665,
+        0.2873568223336729,
+        0.28829595099081434
+      ],
+      "event_samples_ms": [
+        0.28848052693304616,
+        0.28792060424234267,
+        0.2874388828455845,
+        0.2882057617757922,
+        0.2888693051917531,
+        0.2887989472005969,
+        0.2880649744907272,
+        0.2872881488265278,
+        0.2882246748309269
+      ],
+      "output_norm_error_max": 0.00021013778119431719,
+      "output_rounding_floor_max": 0.00021013524099028414,
+      "worst_error_to_floor_ratio": 1.0000282404650158,
+      "query_positions": 135,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_11651206452428806410241_tensorptrf16_gmem_align16_o_1165120645242880641_0"
+      ]
+    },
+    {
+      "name": "stage2",
+      "spatial": [
+        5,
+        32,
+        32
+      ],
+      "heads": 16,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 6,
+      "dtype": "float16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 1.4678330075365442,
+        "minimum": 1.4551374279246985,
+        "maximum": 1.477149747959018,
+        "mean": 1.4675570399310058,
+        "stdev": 0.00937756499707818
+      },
+      "iterations_per_sample": 131,
+      "wall_samples_ms": [
+        1.466435382057351,
+        1.4678330075365442,
+        1.4551374279246985,
+        1.4765682978598216,
+        1.477149747959018,
+        1.4553645950962455,
+        1.4746657027045393,
+        1.4767966869479145,
+        1.4580625112929189
+      ],
+      "event_samples_ms": [
+        1.4662564110209924,
+        1.4676619668043296,
+        1.454967702618082,
+        1.4763847525793177,
+        1.4768915540389431,
+        1.4551890132991412,
+        1.4744930121734852,
+        1.4766123531428912,
+        1.4578603496988312
+      ],
+      "output_norm_error_max": 0.00027345805478216364,
+      "output_rounding_floor_max": 0.00021013524099028414,
+      "worst_error_to_floor_ratio": 1.3049619126113328,
+      "query_positions": 135,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 35,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage2",
+      "spatial": [
+        5,
+        32,
+        32
+      ],
+      "heads": 16,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 6,
+      "dtype": "float16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.25996608528066273,
+        "minimum": 0.25932746939361095,
+        "maximum": 0.26137404672884784,
+        "mean": 0.26006312444473784,
+        "stdev": 0.0006635052910574923
+      },
+      "iterations_per_sample": 492,
+      "wall_samples_ms": [
+        0.25953326423508605,
+        0.25981846544702303,
+        0.25936926036459823,
+        0.26137404672884784,
+        0.2606393740042984,
+        0.25996608528066273,
+        0.260350737830518,
+        0.26018941671799534,
+        0.25932746939361095
+      ],
+      "event_samples_ms": [
+        0.25948370956793065,
+        0.2597510950352118,
+        0.2593210421926607,
+        0.26131116665475734,
+        0.26059180158909745,
+        0.2598957433933165,
+        0.26029279755383006,
+        0.2601223457150343,
+        0.2592807862816787
+      ],
+      "output_norm_error_max": 0.000270089414069243,
+      "output_rounding_floor_max": 0.00021013524099028414,
+      "worst_error_to_floor_ratio": 1.2927327856815396,
+      "query_positions": 135,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_11651206452428806410241_tensorptrf16_gmem_align16_o_1165120645242880641_0"
+      ]
+    },
+    {
+      "name": "stage3",
+      "spatial": [
+        9,
+        32,
+        32
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 4,
+      "dtype": "float16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.21141720716641235,
+        "minimum": 0.21084755632816063,
+        "maximum": 0.21205351892007535,
+        "mean": 0.21140660992973756,
+        "stdev": 0.000406762448638405
+      },
+      "iterations_per_sample": 372,
+      "wall_samples_ms": [
+        0.21141720716641235,
+        0.21205351892007535,
+        0.21084755632816063,
+        0.2114803496477825,
+        0.2110833627602426,
+        0.21191201327989498,
+        0.21163988964862482,
+        0.21111868291852937,
+        0.21110690869791535
+      ],
+      "event_samples_ms": [
+        0.21130289057249663,
+        0.21195372714791247,
+        0.21076265970865884,
+        0.2114156497422085,
+        0.2110087692096669,
+        0.21185325294412594,
+        0.21156370511618994,
+        0.2110563503798618,
+        0.21101996719196278
+      ],
+      "output_norm_error_max": 0.00021142391883160002,
+      "output_rounding_floor_max": 0.00021142278869723972,
+      "worst_error_to_floor_ratio": 1.000022154061019,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_189216644718592645121_tensorptrf16_gmem_align16_o_189216644718592645121_0"
+      ]
+    },
+    {
+      "name": "stage3",
+      "spatial": [
+        9,
+        32,
+        32
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 4,
+      "dtype": "float16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 2.1386402863804457,
+        "minimum": 2.094368538614567,
+        "maximum": 2.1714860442923483,
+        "mean": 2.1329709855778205,
+        "stdev": 0.026633595039219127
+      },
+      "iterations_per_sample": 91,
+      "wall_samples_ms": [
+        2.169688813040381,
+        2.1714860442923483,
+        2.1386402863804457,
+        2.1123431768821,
+        2.1400068679333226,
+        2.094368538614567,
+        2.1418187252992946,
+        2.1086081320031003,
+        2.119778285754824
+      ],
+      "event_samples_ms": [
+        2.169439965552026,
+        2.171229268168355,
+        2.1383978875128777,
+        2.112104814131181,
+        2.139762962257469,
+        2.0941261039985406,
+        2.1415670206258586,
+        2.1083436064667755,
+        2.119511530949519
+      ],
+      "output_norm_error_max": 0.00026243682702737823,
+      "output_rounding_floor_max": 0.00021142278869723972,
+      "worst_error_to_floor_ratio": 1.2651615849491018,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 70,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage3",
+      "spatial": [
+        9,
+        32,
+        32
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 4,
+      "dtype": "float16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.19694270183316478,
+        "minimum": 0.1968024322226391,
+        "maximum": 0.1975878526582935,
+        "mean": 0.19707206918168707,
+        "stdev": 0.0002791881061629566
+      },
+      "iterations_per_sample": 590,
+      "wall_samples_ms": [
+        0.1975878526582935,
+        0.1973791762207777,
+        0.1968756018174907,
+        0.1968024322226391,
+        0.1970255662592412,
+        0.19692666769438125,
+        0.19694270183316478,
+        0.19681846616410856,
+        0.19729015776508693
+      ],
+      "event_samples_ms": [
+        0.1975448349774894,
+        0.19732995760642877,
+        0.19683726682501324,
+        0.196752102092161,
+        0.19698614346778998,
+        0.19687869831667107,
+        0.19690413394216763,
+        0.19676870572364935,
+        0.19724419803942664
+      ],
+      "output_norm_error_max": 0.0002594355063013445,
+      "output_rounding_floor_max": 0.00021142278869723972,
+      "worst_error_to_floor_ratio": 1.2531708588008146,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_189216644718592645121_tensorptrf16_gmem_align16_o_189216644718592645121_0"
+      ]
+    },
+    {
+      "name": "stage4",
+      "spatial": [
+        17,
+        64,
+        64
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 2,
+      "dtype": "float16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 2.009627869879098,
+        "minimum": 2.0094397275344185,
+        "maximum": 2.0136968814767897,
+        "mean": 2.0102606533749867,
+        "stdev": 0.0013601813556724251
+      },
+      "iterations_per_sample": 92,
+      "wall_samples_ms": [
+        2.0136968814767897,
+        2.009627869879098,
+        2.0094397275344185,
+        2.0094522168738362,
+        2.0105278691398385,
+        2.0095619889300154,
+        2.009598848298597,
+        2.0105838256827355,
+        2.0098566525595505
+      ],
+      "event_samples_ms": [
+        2.012939453125,
+        2.0093322422193443,
+        2.0090856137483017,
+        2.009193752122962,
+        2.010167992633322,
+        2.0092647386633833,
+        2.0092451676078467,
+        2.0103064827297046,
+        2.0094758738642153
+      ],
+      "output_norm_error_max": 0.0002086268366141424,
+      "output_rounding_floor_max": 0.00020862489041954306,
+      "worst_error_to_floor_ratio": 1.0000120725497266,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_18696326435651584645121_tensorptrf16_gmem_align16_o_1869632643565158464_0"
+      ]
+    },
+    {
+      "name": "stage4",
+      "spatial": [
+        17,
+        64,
+        64
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 2,
+      "dtype": "float16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 12.351919562206604,
+        "minimum": 12.194745439046528,
+        "maximum": 12.71246574469842,
+        "mean": 12.389052728798966,
+        "stdev": 0.14676238571195813
+      },
+      "iterations_per_sample": 16,
+      "wall_samples_ms": [
+        12.406934998580255,
+        12.50906693894649,
+        12.352610247035045,
+        12.31868669128744,
+        12.194745439046528,
+        12.71246574469842,
+        12.325419687840622,
+        12.351919562206604,
+        12.32962524954928
+      ],
+      "event_samples_ms": [
+        12.405271530151367,
+        12.507555961608887,
+        12.351156234741211,
+        12.316991806030273,
+        12.193008422851562,
+        12.710782051086426,
+        12.32388973236084,
+        12.350403785705566,
+        12.328105926513672
+      ],
+      "output_norm_error_max": 0.0002681480447647934,
+      "output_rounding_floor_max": 0.00020862489041954306,
+      "worst_error_to_floor_ratio": 1.2878094499797252,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 343,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage4",
+      "spatial": [
+        17,
+        64,
+        64
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 2,
+      "dtype": "float16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 2.0863361907808966,
+        "minimum": 2.0827994606028613,
+        "maximum": 2.088641112126159,
+        "mean": 2.086120706601545,
+        "stdev": 0.0016466515764061251
+      },
+      "iterations_per_sample": 89,
+      "wall_samples_ms": [
+        2.0863361907808966,
+        2.0864130445138627,
+        2.0827994606028613,
+        2.088641112126159,
+        2.0865679671464674,
+        2.0859392014530935,
+        2.0846548199841983,
+        2.087450427986849,
+        2.086284134819518
+      ],
+      "event_samples_ms": [
+        2.0860439686293013,
+        2.086002649885885,
+        2.0825305038623596,
+        2.088282552997718,
+        2.0862795369008955,
+        2.0855628881561623,
+        2.0843423564782304,
+        2.087081394838483,
+        2.0859786472963484
+      ],
+      "output_norm_error_max": 0.000262769155099728,
+      "output_rounding_floor_max": 0.00020862489041954306,
+      "worst_error_to_floor_ratio": 1.2619767613724093,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_18696326435651584645121_tensorptrf16_gmem_align16_o_1869632643565158464_0"
+      ]
+    },
+    {
+      "name": "stage5",
+      "spatial": [
+        17,
+        128,
+        128
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": 8,
+      "dtype": "float16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 21.706405805889517,
+        "minimum": 21.667559898924083,
+        "maximum": 21.875515999272466,
+        "mean": 21.72436197935086,
+        "stdev": 0.05930508648192715
+      },
+      "iterations_per_sample": 10,
+      "wall_samples_ms": [
+        21.875515999272466,
+        21.727988694328815,
+        21.71529980842024,
+        21.706405805889517,
+        21.723307704087347,
+        21.667559898924083,
+        21.698128699790686,
+        21.70354559784755,
+        21.70150560559705
+      ],
+      "event_samples_ms": [
+        21.869660949707033,
+        21.725567626953126,
+        21.711859130859374,
+        21.703811645507812,
+        21.71964111328125,
+        21.66517791748047,
+        21.694729614257813,
+        21.701072692871094,
+        21.69783935546875
+      ],
+      "output_norm_error_max": 0.00021000266013116215,
+      "output_rounding_floor_max": 0.0002098736464711988,
+      "worst_error_to_floor_ratio": 1.0006147206289717,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_volume_forwardVolumeForward_object_at__tensorptrf16_gmem_align16_o_142785286471303168642561_tensorptrf16_gmem_align16_o_1427852864713031686_0"
+      ]
+    },
+    {
+      "name": "stage5",
+      "spatial": [
+        17,
+        128,
+        128
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": 8,
+      "dtype": "float16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 30.214297003112733,
+        "minimum": 29.540949151851237,
+        "maximum": 30.464205707955575,
+        "mean": 30.163013858587615,
+        "stdev": 0.2670349630595328
+      },
+      "iterations_per_sample": 7,
+      "wall_samples_ms": [
+        30.464205707955575,
+        30.144681854705727,
+        30.27539956383407,
+        30.214297003112733,
+        30.138824434418762,
+        29.540949151851237,
+        30.4049171474097,
+        30.234639433079533,
+        30.04921043092119
+      ],
+      "event_samples_ms": [
+        30.460484095982142,
+        30.13926042829241,
+        30.27162606375558,
+        30.210372924804688,
+        30.134778703962052,
+        29.536812918526785,
+        30.401362827845983,
+        30.230743408203125,
+        30.045157296316965
+      ],
+      "output_norm_error_max": 0.0002866110826134913,
+      "output_rounding_floor_max": 0.0002098736464711988,
+      "worst_error_to_floor_ratio": 1.365636359936326,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 1070,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage5",
+      "spatial": [
+        17,
+        128,
+        128
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": 8,
+      "dtype": "float16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 50.14407949056476,
+        "minimum": 50.02692074049264,
+        "maximum": 50.16984976828098,
+        "mean": 50.12481536444587,
+        "stdev": 0.049164128306664036
+      },
+      "iterations_per_sample": 4,
+      "wall_samples_ms": [
+        50.02692074049264,
+        50.10918775224127,
+        50.065325252944604,
+        50.16984976828098,
+        50.15967949293554,
+        50.15989451203495,
+        50.14407949056476,
+        50.157864519860595,
+        50.130536750657484
+      ],
+      "event_samples_ms": [
+        50.02075958251953,
+        50.10020065307617,
+        50.05913543701172,
+        50.1611442565918,
+        50.15369415283203,
+        50.1516227722168,
+        50.13768005371094,
+        50.148433685302734,
+        50.12413787841797
+      ],
+      "output_norm_error_max": 0.0002858089398793649,
+      "output_rounding_floor_max": 0.0002098736464711988,
+      "worst_error_to_floor_ratio": 1.3618143329805192,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_142785286471303168642561_tensorptrf16_gmem_align16_o_142785286471303168_0"
+      ]
+    },
+    {
+      "name": "stage5-49f-768x512",
+      "spatial": [
+        49,
+        128,
+        192
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": null,
+      "dtype": "float16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 98.8252986765777,
+        "minimum": 98.69908867403865,
+        "maximum": 101.62332533703496,
+        "mean": 99.25220889056584,
+        "stdev": 0.9736845972911189
+      },
+      "iterations_per_sample": 3,
+      "wall_samples_ms": [
+        99.0084483443449,
+        98.75364935336013,
+        98.8252986765777,
+        98.7375423234577,
+        98.82944166505088,
+        98.69908867403865,
+        98.81308465264738,
+        99.98000098858029,
+        101.62332533703496
+      ],
+      "event_samples_ms": [
+        98.9801025390625,
+        98.74484252929688,
+        98.81353759765625,
+        98.72898356119792,
+        98.8165791829427,
+        98.69052124023438,
+        98.80140177408855,
+        99.9696553548177,
+        101.6113789876302
+      ],
+      "output_norm_error_max": 0.00020882082584712205,
+      "output_rounding_floor_max": 0.0002087354919711682,
+      "worst_error_to_floor_ratio": 1.0005526413148833,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_volume_forwardVolumeForward_object_at__tensorptrf16_gmem_align16_o_14120422464308281344642561_tensorptrf16_gmem_align16_o_14120422464308281_0"
+      ]
+    },
+    {
+      "name": "stage5-49f-768x512",
+      "spatial": [
+        49,
+        128,
+        192
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": null,
+      "dtype": "float16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 112.94129397720098,
+        "minimum": 112.16646950924769,
+        "maximum": 118.79726051120088,
+        "mean": 113.61334688263014,
+        "stdev": 2.0378915693489295
+      },
+      "iterations_per_sample": 2,
+      "wall_samples_ms": [
+        113.57250699074939,
+        112.52816749038175,
+        112.16646950924769,
+        112.85288550425321,
+        112.30833799345419,
+        114.0872779651545,
+        113.26592200202867,
+        112.94129397720098,
+        118.79726051120088
+      ],
+      "event_samples_ms": [
+        113.55843353271484,
+        112.51513671875,
+        112.15245056152344,
+        112.83924865722656,
+        112.29467010498047,
+        114.07331085205078,
+        113.25252532958984,
+        112.92151641845703,
+        118.78304290771484
+      ],
+      "output_norm_error_max": 0.00028462671183020476,
+      "output_rounding_floor_max": 0.0002087354919711682,
+      "worst_error_to_floor_ratio": 1.3659998417211423,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 2897,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage5-49f-768x512",
+      "spatial": [
+        49,
+        128,
+        192
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": null,
+      "dtype": "float16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 234.3442509882152,
+        "minimum": 234.26894308067858,
+        "maximum": 236.1673089908436,
+        "mean": 234.61163667444555,
+        "stdev": 0.6245147405632069
+      },
+      "iterations_per_sample": 1,
+      "wall_samples_ms": [
+        234.41499308682978,
+        234.41251297481358,
+        234.26894308067858,
+        234.3039329862222,
+        234.3442509882152,
+        234.30094099603593,
+        234.99176697805524,
+        234.3000799883157,
+        236.1673089908436
+      ],
+      "event_samples_ms": [
+        234.38479614257812,
+        234.37478637695312,
+        234.2441864013672,
+        234.2691192626953,
+        234.31094360351562,
+        234.2659149169922,
+        234.9669189453125,
+        234.26693725585938,
+        236.13955688476562
+      ],
+      "output_norm_error_max": 0.00028235555242916315,
+      "output_rounding_floor_max": 0.0002087354919711682,
+      "worst_error_to_floor_ratio": 1.3558333161352587,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrf16_gmem_align16_o_14120422464308281344642561_tensorptrf16_gmem_align16_o_1412042246430828_0"
+      ]
+    },
+    {
+      "name": "stage1",
+      "spatial": [
+        5,
+        16,
+        16
+      ],
+      "heads": 32,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 4,
+      "dtype": "bfloat16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.12312695569914556,
+        "minimum": 0.12284936414661027,
+        "maximum": 0.13364125271603183,
+        "mean": 0.1268180673562264,
+        "stdev": 0.0049732556713828185
+      },
+      "iterations_per_sample": 744,
+      "wall_samples_ms": [
+        0.12669277015036992,
+        0.12284936414661027,
+        0.13364125271603183,
+        0.12297022312263688,
+        0.12312695569914556,
+        0.13307886156228482,
+        0.12303942874554664,
+        0.12293562633536195,
+        0.1330281237280497
+      ],
+      "event_samples_ms": [
+        0.12650546207222887,
+        0.12282051578644783,
+        0.13359122122487715,
+        0.12294004296743742,
+        0.12308258138677125,
+        0.13291384584160262,
+        0.12299643280685589,
+        0.1229053722914829,
+        0.13297974166049753
+      ],
+      "output_norm_error_max": 0.0017101321408817427,
+      "output_rounding_floor_max": 0.0017101293015214353,
+      "worst_error_to_floor_ratio": 1.000002622948793,
+      "query_positions": 131,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_13212806426214406420481_tensorptrbf16_gmem_align16_o_13212806426214406_0"
+      ]
+    },
+    {
+      "name": "stage1",
+      "spatial": [
+        5,
+        16,
+        16
+      ],
+      "heads": 32,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 4,
+      "dtype": "bfloat16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.7430607360287534,
+        "minimum": 0.7040301619175201,
+        "maximum": 0.7467199719502349,
+        "mean": 0.7308570416826264,
+        "stdev": 0.01837696416721199
+      },
+      "iterations_per_sample": 216,
+      "wall_samples_ms": [
+        0.7430607360287534,
+        0.7327856065886509,
+        0.7081957915539129,
+        0.745366231529732,
+        0.7467199719502349,
+        0.7088183796171237,
+        0.745568681008148,
+        0.7431678149495619,
+        0.7040301619175201
+      ],
+      "event_samples_ms": [
+        0.7429622367576316,
+        0.7326797202781394,
+        0.7080988000940394,
+        0.7452708350287544,
+        0.7466207433629919,
+        0.7087238453052662,
+        0.7454674332230179,
+        0.7430305480957031,
+        0.7039323029694734
+      ],
+      "output_norm_error_max": 0.002200588069896621,
+      "output_rounding_floor_max": 0.0017101293015214353,
+      "worst_error_to_floor_ratio": 1.3092622833191807,
+      "query_positions": 131,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 35,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage1",
+      "spatial": [
+        5,
+        16,
+        16
+      ],
+      "heads": 32,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 4,
+      "dtype": "bfloat16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.12087612749418823,
+        "minimum": 0.11919148611431053,
+        "maximum": 0.13249113534071755,
+        "mean": 0.12401255073167514,
+        "stdev": 0.005691639080019018
+      },
+      "iterations_per_sample": 761,
+      "wall_samples_ms": [
+        0.12003393821129466,
+        0.12171053867322074,
+        0.13249113534071755,
+        0.11919148611431053,
+        0.12022054661799629,
+        0.1321320040163715,
+        0.12087612749418823,
+        0.11964267947063653,
+        0.12981450064634015
+      ],
+      "event_samples_ms": [
+        0.12000613519615945,
+        0.12166610497212754,
+        0.13246107665373993,
+        0.11914815413967539,
+        0.1201911154307141,
+        0.13208817871735382,
+        0.12084406528147072,
+        0.11959586224950723,
+        0.1297851442194173
+      ],
+      "output_norm_error_max": 0.0021734488417243453,
+      "output_rounding_floor_max": 0.0017101293015214353,
+      "worst_error_to_floor_ratio": 1.2990716961390452,
+      "query_positions": 131,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_13212806426214406420481_tensorptrbf16_gmem_align16_o_13212806426214406_0"
+      ]
+    },
+    {
+      "name": "stage2",
+      "spatial": [
+        5,
+        32,
+        32
+      ],
+      "heads": 16,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 6,
+      "dtype": "bfloat16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.29729761591357967,
+        "minimum": 0.2970259845314371,
+        "maximum": 0.298335337723558,
+        "mean": 0.29747791560666,
+        "stdev": 0.0004291433775314911
+      },
+      "iterations_per_sample": 453,
+      "wall_samples_ms": [
+        0.29771395128376565,
+        0.2974963599968101,
+        0.2971959624657403,
+        0.2972639094376176,
+        0.2970861170284664,
+        0.2978860020789649,
+        0.2970259845314371,
+        0.298335337723558,
+        0.29729761591357967
+      ],
+      "event_samples_ms": [
+        0.29757936321873274,
+        0.29744338147161287,
+        0.29711610907750413,
+        0.2972056070963542,
+        0.29701128490186945,
+        0.2978305100868343,
+        0.2969369109366377,
+        0.29827742755544634,
+        0.29722221323985926
+      ],
+      "output_norm_error_max": 0.001707343894220359,
+      "output_rounding_floor_max": 0.0017073416582031504,
+      "worst_error_to_floor_ratio": 1.0000018622635105,
+      "query_positions": 135,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_11651206452428806410241_tensorptrbf16_gmem_align16_o_11651206452428806_0"
+      ]
+    },
+    {
+      "name": "stage2",
+      "spatial": [
+        5,
+        32,
+        32
+      ],
+      "heads": 16,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 6,
+      "dtype": "bfloat16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 1.3873257771429184,
+        "minimum": 1.3668880364087095,
+        "maximum": 1.4071367478346546,
+        "mean": 1.3873836713851238,
+        "stdev": 0.012774823843248401
+      },
+      "iterations_per_sample": 139,
+      "wall_samples_ms": [
+        1.398342553519463,
+        1.3873257771429184,
+        1.4071367478346546,
+        1.377017561366393,
+        1.3767915179872576,
+        1.3990385823032196,
+        1.3900674819249472,
+        1.3838447839785502,
+        1.3668880364087095
+      ],
+      "event_samples_ms": [
+        1.3981468145795863,
+        1.3871574127416817,
+        1.406966614208633,
+        1.3768352261550134,
+        1.3765857065324303,
+        1.398871991274168,
+        1.3898988353262702,
+        1.3836708343286308,
+        1.3666813253498764
+      ],
+      "output_norm_error_max": 0.0021852012887534395,
+      "output_rounding_floor_max": 0.0017073416582031504,
+      "worst_error_to_floor_ratio": 1.2978612323415,
+      "query_positions": 135,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 35,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage2",
+      "spatial": [
+        5,
+        32,
+        32
+      ],
+      "heads": 16,
+      "window": [
+        3,
+        7,
+        7
+      ],
+      "blocks": 6,
+      "dtype": "bfloat16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.27213716158494666,
+        "minimum": 0.27145306920210105,
+        "maximum": 0.2727013405612005,
+        "mean": 0.2720113512966434,
+        "stdev": 0.00041511391858064335
+      },
+      "iterations_per_sample": 476,
+      "wall_samples_ms": [
+        0.272187268842763,
+        0.2723445777366517,
+        0.27189666195968243,
+        0.2727013405612005,
+        0.2715837226558414,
+        0.27213716158494666,
+        0.2715737625424351,
+        0.2722245965841688,
+        0.27145306920210105
+      ],
+      "event_samples_ms": [
+        0.2721314951151359,
+        0.2722729274204799,
+        0.27184234747365743,
+        0.2726118905203683,
+        0.27152156028426994,
+        0.27206507450392264,
+        0.2715239645052357,
+        0.2721501839261095,
+        0.271402503262047
+      ],
+      "output_norm_error_max": 0.002177042533834569,
+      "output_rounding_floor_max": 0.0017073416582031504,
+      "worst_error_to_floor_ratio": 1.291685800243374,
+      "query_positions": 135,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_11651206452428806410241_tensorptrbf16_gmem_align16_o_11651206452428806_0"
+      ]
+    },
+    {
+      "name": "stage3",
+      "spatial": [
+        9,
+        32,
+        32
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 4,
+      "dtype": "bfloat16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.21485264414715916,
+        "minimum": 0.21433779013631502,
+        "maximum": 0.21617087718676045,
+        "mean": 0.21490956622202756,
+        "stdev": 0.0005304270280437073
+      },
+      "iterations_per_sample": 562,
+      "wall_samples_ms": [
+        0.21617087718676045,
+        0.21472750347624683,
+        0.21492120469307188,
+        0.2145357241479554,
+        0.21495001064944894,
+        0.21433779013631502,
+        0.21485264414715916,
+        0.21457426507668934,
+        0.21511607648460096
+      ],
+      "event_samples_ms": [
+        0.21603079962136482,
+        0.21468566405815587,
+        0.21485027978428742,
+        0.21448819577906056,
+        0.2148784623875737,
+        0.2142965377861919,
+        0.214787819207351,
+        0.21453170504858485,
+        0.21504427275199484
+      ],
+      "output_norm_error_max": 0.0016713927409000913,
+      "output_rounding_floor_max": 0.0016713923484645867,
+      "worst_error_to_floor_ratio": 1.0000010242143051,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_189216644718592645121_tensorptrbf16_gmem_align16_o_1892166447185926451_0"
+      ]
+    },
+    {
+      "name": "stage3",
+      "spatial": [
+        9,
+        32,
+        32
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 4,
+      "dtype": "bfloat16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 2.151389365705351,
+        "minimum": 2.126354744864835,
+        "maximum": 2.18771762188731,
+        "mean": 2.150827093642021,
+        "stdev": 0.0188312066563299
+      },
+      "iterations_per_sample": 90,
+      "wall_samples_ms": [
+        2.18771762188731,
+        2.126354744864835,
+        2.1582726777220764,
+        2.1440060886864862,
+        2.142394199553463,
+        2.1642466334419117,
+        2.128287278012269,
+        2.154775232904487,
+        2.151389365705351
+      ],
+      "event_samples_ms": [
+        2.1874574449327255,
+        2.1260718451605904,
+        2.158014594184028,
+        2.1437535603841145,
+        2.1420845879448787,
+        2.1639979044596354,
+        2.1280149671766493,
+        2.154506598578559,
+        2.151119656032986
+      ],
+      "output_norm_error_max": 0.002098085925292874,
+      "output_rounding_floor_max": 0.0016713923484645867,
+      "worst_error_to_floor_ratio": 1.2790471339668283,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 70,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage3",
+      "spatial": [
+        9,
+        32,
+        32
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 4,
+      "dtype": "bfloat16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 0.20338484889590272,
+        "minimum": 0.203190537114792,
+        "maximum": 0.20365116081437937,
+        "mean": 0.20342274817023304,
+        "stdev": 0.00015444982896243643
+      },
+      "iterations_per_sample": 510,
+      "wall_samples_ms": [
+        0.20365116081437937,
+        0.20360073129482129,
+        0.2034078078234897,
+        0.203190537114792,
+        0.2033786727206818,
+        0.20334325895151673,
+        0.20327698644798467,
+        0.20357072946852914,
+        0.20338484889590272
+      ],
+      "event_samples_ms": [
+        0.20360659431008732,
+        0.20353517719343597,
+        0.20336276783662685,
+        0.20311027975643384,
+        0.20333434460209865,
+        0.2032781862745098,
+        0.20322409237132352,
+        0.2035027447868796,
+        0.20333791994581035
+      ],
+      "output_norm_error_max": 0.0020727939177223294,
+      "output_rounding_floor_max": 0.0016713923484645867,
+      "worst_error_to_floor_ratio": 1.2697075110392941,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_189216644718592645121_tensorptrbf16_gmem_align16_o_1892166447185926451_0"
+      ]
+    },
+    {
+      "name": "stage4",
+      "spatial": [
+        17,
+        64,
+        64
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 2,
+      "dtype": "bfloat16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 2.1300632988327535,
+        "minimum": 2.1290952519074766,
+        "maximum": 2.1345062521232783,
+        "mean": 2.13038202792663,
+        "stdev": 0.001601375533453575
+      },
+      "iterations_per_sample": 87,
+      "wall_samples_ms": [
+        2.1345062521232783,
+        2.129528472125102,
+        2.1300632988327535,
+        2.1290952519074766,
+        2.129873057463388,
+        2.1295578730153455,
+        2.130293264589005,
+        2.130111540271633,
+        2.1304092410116873
+      ],
+      "event_samples_ms": [
+        2.133594556786548,
+        2.1291766988820044,
+        2.1295371220029633,
+        2.1287932998832617,
+        2.129382254063398,
+        2.129249134282956,
+        2.1297442556797774,
+        2.129803712340607,
+        2.129840894677173
+      ],
+      "output_norm_error_max": 0.0016898988192087087,
+      "output_rounding_floor_max": 0.0016898971906874204,
+      "worst_error_to_floor_ratio": 1.0000010760642875,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_18696326435651584645121_tensorptrbf16_gmem_align16_o_18696326435651584_0"
+      ]
+    },
+    {
+      "name": "stage4",
+      "spatial": [
+        17,
+        64,
+        64
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 2,
+      "dtype": "bfloat16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 12.367228997926063,
+        "minimum": 12.216278235428035,
+        "maximum": 12.380871236981715,
+        "mean": 12.336305124240813,
+        "stdev": 0.06349387120809577
+      },
+      "iterations_per_sample": 17,
+      "wall_samples_ms": [
+        12.37989023930448,
+        12.216278235428035,
+        12.380453175865114,
+        12.378781410755918,
+        12.367228997926063,
+        12.245732701986151,
+        12.316011056742248,
+        12.361499063177583,
+        12.380871236981715
+      ],
+      "event_samples_ms": [
+        12.37770170323989,
+        12.214745914234834,
+        12.37888740090763,
+        12.377234963809743,
+        12.365779203527113,
+        12.244133444393382,
+        12.314563526826745,
+        12.359932394588695,
+        12.379341574276195
+      ],
+      "output_norm_error_max": 0.0021304803982814383,
+      "output_rounding_floor_max": 0.0016898971906874204,
+      "worst_error_to_floor_ratio": 1.2764089517599424,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 343,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage4",
+      "spatial": [
+        17,
+        64,
+        64
+      ],
+      "heads": 8,
+      "window": [
+        3,
+        5,
+        5
+      ],
+      "blocks": 2,
+      "dtype": "bfloat16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 1.9858857949755044,
+        "minimum": 1.9852334410653159,
+        "maximum": 1.987741924622046,
+        "mean": 1.9860965613689687,
+        "stdev": 0.0008540352652439965
+      },
+      "iterations_per_sample": 93,
+      "wall_samples_ms": [
+        1.9870283875754604,
+        1.987741924622046,
+        1.9854241932031287,
+        1.9864657961372887,
+        1.9852334410653159,
+        1.9862103008074306,
+        1.9853868702005955,
+        1.9858857949755044,
+        1.9854923437339485
+      ],
+      "event_samples_ms": [
+        1.9867637388167843,
+        1.9872405349567372,
+        1.9851543467531922,
+        1.985929919827369,
+        1.984962381342406,
+        1.9857445173366095,
+        1.9850911786479335,
+        1.9854314660513273,
+        1.984911846858199
+      ],
+      "output_norm_error_max": 0.002101195830780686,
+      "output_rounding_floor_max": 0.0016898971906874204,
+      "worst_error_to_floor_ratio": 1.2588640430452083,
+      "query_positions": 136,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_18696326435651584645121_tensorptrbf16_gmem_align16_o_18696326435651584_0"
+      ]
+    },
+    {
+      "name": "stage5",
+      "spatial": [
+        17,
+        128,
+        128
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": 8,
+      "dtype": "bfloat16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 21.98646522851454,
+        "minimum": 21.961468892792862,
+        "maximum": 22.000713118662436,
+        "mean": 21.985592212769443,
+        "stdev": 0.011751010235857782
+      },
+      "iterations_per_sample": 9,
+      "wall_samples_ms": [
+        22.000713118662436,
+        21.961468892792862,
+        21.98213544518997,
+        21.986697554691798,
+        21.981865335773264,
+        21.990734113690753,
+        22.00009399611089,
+        21.980156229498487,
+        21.98646522851454
+      ],
+      "event_samples_ms": [
+        21.994517008463543,
+        21.958616468641495,
+        21.977006700303818,
+        21.98391384548611,
+        21.97699483235677,
+        21.988018459743923,
+        21.991953531901043,
+        21.976593017578125,
+        21.98111300998264
+      ],
+      "output_norm_error_max": 0.0016571988273213778,
+      "output_rounding_floor_max": 0.0016571972839722242,
+      "worst_error_to_floor_ratio": 1.0000042180309405,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_volume_forwardVolumeForward_object_at__tensorptrbf16_gmem_align16_o_142785286471303168642561_tensorptrbf16_gmem_align16_o_14278528647130316_0"
+      ]
+    },
+    {
+      "name": "stage5",
+      "spatial": [
+        17,
+        128,
+        128
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": 8,
+      "dtype": "bfloat16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 30.260756711608597,
+        "minimum": 30.098400577636703,
+        "maximum": 31.040830720615173,
+        "mean": 30.34970105167419,
+        "stdev": 0.29770131067538236
+      },
+      "iterations_per_sample": 7,
+      "wall_samples_ms": [
+        30.33000372150647,
+        30.158019009312348,
+        30.161810290467525,
+        30.260756711608597,
+        30.18607443664223,
+        30.098400577636703,
+        30.316774999456747,
+        30.594638997821935,
+        31.040830720615173
+      ],
+      "event_samples_ms": [
+        30.326485770089285,
+        30.15423583984375,
+        30.15787833077567,
+        30.25610569545201,
+        30.182460239955358,
+        30.09436253138951,
+        30.30971418108259,
+        30.590783255440847,
+        31.036799839564733
+      ],
+      "output_norm_error_max": 0.002272328046769579,
+      "output_rounding_floor_max": 0.0016571972839722242,
+      "worst_error_to_floor_ratio": 1.3825083762435035,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 1070,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage5",
+      "spatial": [
+        17,
+        128,
+        128
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": 8,
+      "dtype": "bfloat16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 47.84785839729011,
+        "minimum": 47.8197226068005,
+        "maximum": 47.867558407597244,
+        "mean": 47.8448286652565,
+        "stdev": 0.015629711223641988
+      },
+      "iterations_per_sample": 5,
+      "wall_samples_ms": [
+        47.84026260022074,
+        47.867558407597244,
+        47.8197226068005,
+        47.84785839729011,
+        47.824576194398105,
+        47.850030194967985,
+        47.860721801407635,
+        47.852797992527485,
+        47.8399297920987
+      ],
+      "event_samples_ms": [
+        47.835348510742186,
+        47.857138061523436,
+        47.81418151855469,
+        47.83918151855469,
+        47.81971130371094,
+        47.841067504882815,
+        47.855410766601565,
+        47.844390869140625,
+        47.83438720703125
+      ],
+      "output_norm_error_max": 0.0022672080814913793,
+      "output_rounding_floor_max": 0.0016571972839722242,
+      "worst_error_to_floor_ratio": 1.379393335308613,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_142785286471303168642561_tensorptrbf16_gmem_align16_o_1427852864713031_0"
+      ]
+    },
+    {
+      "name": "stage5-49f-768x512",
+      "spatial": [
+        49,
+        128,
+        192
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": null,
+      "dtype": "bfloat16",
+      "implementation": "kohakufa",
+      "status": "pass",
+      "wall_ms": {
+        "median": 101.91445231127243,
+        "minimum": 98.85965396339695,
+        "maximum": 106.86000665494551,
+        "mean": 101.86485736630857,
+        "stdev": 2.9942930858100962
+      },
+      "iterations_per_sample": 3,
+      "wall_samples_ms": [
+        99.02486003314455,
+        98.85965396339695,
+        98.98391331080347,
+        99.62132968939841,
+        102.55601901250581,
+        103.44049035726736,
+        101.91445231127243,
+        105.52299096404265,
+        106.86000665494551
+      ],
+      "event_samples_ms": [
+        98.99656168619792,
+        98.85079956054688,
+        98.95736694335938,
+        99.61090087890625,
+        102.53110758463542,
+        103.43126424153645,
+        101.88704427083333,
+        105.5133056640625,
+        106.83836873372395
+      ],
+      "output_norm_error_max": 0.001658933648651221,
+      "output_rounding_floor_max": 0.0016589284744413758,
+      "worst_error_to_floor_ratio": 1.0000071435888584,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_volume_forwardVolumeForward_object_at__tensorptrbf16_gmem_align16_o_14120422464308281344642561_tensorptrbf16_gmem_align16_o_141204224643082_0"
+      ]
+    },
+    {
+      "name": "stage5-49f-768x512",
+      "spatial": [
+        49,
+        128,
+        192
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": null,
+      "dtype": "bfloat16",
+      "implementation": "ltx_helper",
+      "status": "pass",
+      "wall_ms": {
+        "median": 119.4918510154821,
+        "minimum": 112.81200050143525,
+        "maximum": 125.97745296079665,
+        "mean": 118.44335682690144,
+        "stdev": 5.07278990062475
+      },
+      "iterations_per_sample": 2,
+      "wall_samples_ms": [
+        113.40915248729289,
+        112.81200050143525,
+        113.70775004616007,
+        113.6181855108589,
+        122.37673497293144,
+        119.4918510154821,
+        122.44623847072944,
+        122.15084547642618,
+        125.97745296079665
+      ],
+      "event_samples_ms": [
+        113.39568328857422,
+        112.79814147949219,
+        113.6905288696289,
+        113.60564422607422,
+        122.36199951171875,
+        119.47526550292969,
+        122.43199920654297,
+        122.1343994140625,
+        125.96234893798828
+      ],
+      "output_norm_error_max": 0.002250367475343244,
+      "output_rounding_floor_max": 0.0016589284744413758,
+      "worst_error_to_floor_ratio": 1.3624865114944609,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "gpu_activity_count": 2897,
+      "attention_kernel_symbols": [
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_7_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+      ]
+    },
+    {
+      "name": "stage5-49f-768x512",
+      "spatial": [
+        49,
+        128,
+        192
+      ],
+      "heads": 4,
+      "window": [
+        11,
+        11,
+        11
+      ],
+      "blocks": null,
+      "dtype": "bfloat16",
+      "implementation": "previous",
+      "status": "pass",
+      "wall_ms": {
+        "median": 230.28992407489568,
+        "minimum": 229.7958160052076,
+        "maximum": 250.45677390880883,
+        "mean": 234.88192177481122,
+        "stdev": 7.061964672276978
+      },
+      "iterations_per_sample": 1,
+      "wall_samples_ms": [
+        229.87452801316977,
+        230.27617495972663,
+        229.7958160052076,
+        230.28992407489568,
+        239.213761058636,
+        230.27155199088156,
+        239.63191697839648,
+        234.12684898357838,
+        250.45677390880883
+      ],
+      "event_samples_ms": [
+        229.8446044921875,
+        230.1971893310547,
+        229.77090454101562,
+        230.21420288085938,
+        239.1878662109375,
+        230.2008056640625,
+        239.60643005371094,
+        234.0650177001953,
+        250.43069458007812
+      ],
+      "output_norm_error_max": 0.0022400407356522284,
+      "output_rounding_floor_max": 0.0016589284744413758,
+      "worst_error_to_floor_ratio": 1.3549139378639805,
+      "query_positions": 138,
+      "all_heads_pass": true,
+      "full_output_finite": true,
+      "sdpa_operators": [],
+      "gpu_activity_count": 1,
+      "attention_kernel_symbols": [
+        "kernel_cutlass_kernel_kohakufa_cuteneighborhood_kernelsNeighborhoodAttention_object_at__tensorptrbf16_gmem_align16_o_14120422464308281344642561_tensorptrbf16_gmem_align16_o_14120422464308_0"
+      ]
+    }
+  ],
+  "weighted_attention_estimates": {
+    "float16": {
+      "milliseconds": {
+        "kohakufa": 180.72256744519382,
+        "ltx_helper": 286.14991447480224,
+        "previous": 408.108169739472
+      },
+      "relative_to_ltx": 0.6315660369037359,
+      "scope": "Sum of stage medians weighted by decoder block counts (4,6,4,2,8), one diffusion step, 17-frame 512x512 configuration. Not a measured decoder latency."
+    },
+    "bfloat16": {
+      "milliseconds": {
+        "kohakufa": 183.28755252064852,
+        "ltx_helper": 286.7222667585148,
+        "previous": 389.68450564334194
+      },
+      "relative_to_ltx": 0.6392511980069486,
+      "scope": "Sum of stage medians weighted by decoder block counts (4,6,4,2,8), one diffusion step, 17-frame 512x512 configuration. Not a measured decoder latency."
+    }
+  },
+  "full_coordinate_accuracy": {
+    "seed": 99173,
+    "scope": "Independent full-coordinate native CPU FP64 on held-out normalized LTX-layout synthetic inputs. Actual-output corrected policy separately checked for our gradients.",
+    "rows": [
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "kohakufa",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00020593552429769283,
+            0.00020666190490520043
+          ],
+          "dQ": [
+            0.00029283663585367477,
+            0.0002915993617387454
+          ],
+          "dK": [
+            0.0002891922366991943,
+            0.0002914219256844679
+          ],
+          "dV": [
+            0.0002897353457218782,
+            0.00029947159970581
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.0002097310553254234,
+            0.00020858759538056477
+          ],
+          "dK": [
+            0.0002093480348805986,
+            0.0002066802437120746
+          ],
+          "dV": [
+            0.000205149287670305,
+            0.00021131430686830606
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "compact",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00020593523517377143,
+            0.00020666200146899645
+          ],
+          "dQ": [
+            0.00029284789949708917,
+            0.00029163208451260335
+          ],
+          "dK": [
+            0.0002891922366991943,
+            0.00029146968232513973
+          ],
+          "dV": [
+            0.0002897353457218782,
+            0.00029970225292377887
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.00020971842175221086,
+            0.00020858743215808892
+          ],
+          "dK": [
+            0.0002093480348805986,
+            0.00020668195484025068
+          ],
+          "dV": [
+            0.000205149287670305,
+            0.00021137485257004645
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "ltx_helper",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00026744076730266935,
+            0.00027029935371403825
+          ],
+          "dQ": [
+            0.0003017987782573796,
+            0.00029998207986881053
+          ],
+          "dK": [
+            0.0002916061762288492,
+            0.0002917587137221275
+          ],
+          "dV": [
+            0.00028969137290629966,
+            0.0002997055292942268
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "previous",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0002626935317024461,
+            0.0002658978042783276
+          ],
+          "dQ": [
+            0.0002929149788849411,
+            0.0002920728571091211
+          ],
+          "dK": [
+            0.00028924309094986283,
+            0.0002914219256844679
+          ],
+          "dV": [
+            0.0002897353457218782,
+            0.00029947159970581
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "kohakufa",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00020995941398207723,
+            0.00020868979481226767
+          ],
+          "dQ": [
+            0.0002823157300534694,
+            0.0002867341015243469
+          ],
+          "dK": [
+            0.00028727435529409635,
+            0.00029404275731683256
+          ],
+          "dV": [
+            0.0002973684702327386,
+            0.0002961293766517973
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.000205042558389708,
+            0.00020834809294967318
+          ],
+          "dK": [
+            0.00020615032958656745,
+            0.00021373664948553834
+          ],
+          "dV": [
+            0.00020880286695856533,
+            0.0002112718331009663
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "compact",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00020995924828662521,
+            0.00020868996136709777
+          ],
+          "dQ": [
+            0.00028232225544096634,
+            0.00028658803226907684
+          ],
+          "dK": [
+            0.0002872727629587144,
+            0.000294079087185204
+          ],
+          "dV": [
+            0.0002973684702327386,
+            0.0002961293766517973
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.00020508121264640395,
+            0.00020832031881457452
+          ],
+          "dK": [
+            0.0002061417167173206,
+            0.00021344236620706274
+          ],
+          "dV": [
+            0.00020880286695856533,
+            0.0002112718331009663
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "ltx_helper",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00026792852668477773,
+            0.0002652269259932323
+          ],
+          "dQ": [
+            0.0002946707311917327,
+            0.00029994661280109794
+          ],
+          "dK": [
+            0.00029443952680820775,
+            0.00029674049775012896
+          ],
+          "dV": [
+            0.0002972523117965834,
+            0.00029619761492797285
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "previous",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0002639712719875643,
+            0.0002597588347911528
+          ],
+          "dQ": [
+            0.00028130050484121794,
+            0.000288014270625932
+          ],
+          "dK": [
+            0.00028727435529409635,
+            0.00029413511025328296
+          ],
+          "dV": [
+            0.0002973684702327386,
+            0.0002961293766517973
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "kohakufa",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00020730651997229256,
+            0.00020720477153488332
+          ],
+          "dQ": [
+            0.00029278197552196295,
+            0.0002923884684652737
+          ],
+          "dK": [
+            0.00029293096269975797,
+            0.0002942318665895494
+          ],
+          "dV": [
+            0.00029056720569283254,
+            0.0002955862583128604
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.00020751830984311282,
+            0.00020757088970249993
+          ],
+          "dK": [
+            0.00020802797260819397,
+            0.00020821333752713716
+          ],
+          "dV": [
+            0.00020755322634891584,
+            0.00020789093274366685
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "compact",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00020731564245307743,
+            0.0002072140197868296
+          ],
+          "dQ": [
+            0.0002927623589379017,
+            0.00029242450360769564
+          ],
+          "dK": [
+            0.0002930724732404751,
+            0.0002942878154526928
+          ],
+          "dV": [
+            0.00029052306223291695,
+            0.00029564378270564525
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.00020765284536187136,
+            0.00020741341624073078
+          ],
+          "dK": [
+            0.00020799415265125056,
+            0.00020817133287671783
+          ],
+          "dV": [
+            0.00020758163217954545,
+            0.00020785022161748428
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "ltx_helper",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0002784527997451526,
+            0.000277240879870711
+          ],
+          "dQ": [
+            0.0002990907062786752,
+            0.00029874024135705346
+          ],
+          "dK": [
+            0.0002940885912019313,
+            0.00029380016358350686
+          ],
+          "dV": [
+            0.00029067087575151843,
+            0.00029548926142226325
+          ]
+        }
+      },
+      {
+        "dtype": "torch.float16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "previous",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00027823561289721724,
+            0.00027671141749192966
+          ],
+          "dQ": [
+            0.00029307501758317754,
+            0.0002926636248111966
+          ],
+          "dK": [
+            0.00029290290867344605,
+            0.00029421790272631085
+          ],
+          "dV": [
+            0.00029056720569283254,
+            0.0002955862583128604
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "kohakufa",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0016558686296907267,
+            0.0016239042674750107
+          ],
+          "dQ": [
+            0.0023588402620207806,
+            0.00227569675483744
+          ],
+          "dK": [
+            0.002360214545281491,
+            0.002299276439441607
+          ],
+          "dV": [
+            0.002311372246840551,
+            0.0023458498512403773
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.0016685125997847423,
+            0.0016280310820076312
+          ],
+          "dK": [
+            0.0016386679334917556,
+            0.0016518813754063748
+          ],
+          "dV": [
+            0.0016695640052134676,
+            0.001637401327962959
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "compact",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0016558683799703915,
+            0.0016239036884499326
+          ],
+          "dQ": [
+            0.002358799144937875,
+            0.0022755736551955254
+          ],
+          "dK": [
+            0.002360214545281491,
+            0.002299276439441607
+          ],
+          "dV": [
+            0.002311372246840551,
+            0.002346028245493537
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.001668511115520293,
+            0.0016279694367091185
+          ],
+          "dK": [
+            0.0016386679334917556,
+            0.0016518813754063748
+          ],
+          "dV": [
+            0.0016695640052134676,
+            0.0016374083321894664
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "ltx_helper",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0021702981899766032,
+            0.0021639946051939486
+          ],
+          "dQ": [
+            0.0024595954827950814,
+            0.0023439925129969384
+          ],
+          "dK": [
+            0.0023799994981728305,
+            0.002366402175282242
+          ],
+          "dV": [
+            0.002311310368546801,
+            0.0023451282170490906
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          3,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          7,
+          7
+        ],
+        "implementation": "previous",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.002134075673508803,
+            0.002117485392185794
+          ],
+          "dQ": [
+            0.002323990888848351,
+            0.0022651377557291923
+          ],
+          "dK": [
+            0.002360214545281491,
+            0.002299276439441607
+          ],
+          "dV": [
+            0.002311372246840551,
+            0.0023458498512403773
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "kohakufa",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0016763971232768593,
+            0.0016612712959554509
+          ],
+          "dQ": [
+            0.002274370843143054,
+            0.00230493985276861
+          ],
+          "dK": [
+            0.0023106805399211745,
+            0.002361895691460843
+          ],
+          "dV": [
+            0.0023939142736731506,
+            0.0023451225234398837
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.001655770229694662,
+            0.0016601839468616552
+          ],
+          "dK": [
+            0.0016687673147301708,
+            0.001674404045285039
+          ],
+          "dV": [
+            0.0016458169811531438,
+            0.0016630164899296416
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "compact",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0016763972152537467,
+            0.0016612712671440143
+          ],
+          "dQ": [
+            0.002273902904478123,
+            0.0023047126187484258
+          ],
+          "dK": [
+            0.0023108277402910343,
+            0.002361895691460843
+          ],
+          "dV": [
+            0.0023939086804543918,
+            0.002345191015555074
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.0016558032061500352,
+            0.0016603295857981265
+          ],
+          "dK": [
+            0.0016687256220692906,
+            0.001674404045285039
+          ],
+          "dV": [
+            0.0016458690819076234,
+            0.0016631694927670016
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "ltx_helper",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.002132066998019429,
+            0.002113604380330667
+          ],
+          "dQ": [
+            0.0023942861656684883,
+            0.002443612550046284
+          ],
+          "dK": [
+            0.002333664769036811,
+            0.0024070369934947487
+          ],
+          "dV": [
+            0.0023939086804543918,
+            0.0023451225234398837
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          5,
+          8,
+          8
+        ],
+        "window": [
+          3,
+          5,
+          5
+        ],
+        "implementation": "previous",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.002090640153193343,
+            0.002070660138073812
+          ],
+          "dQ": [
+            0.002281824387325188,
+            0.0023114083062935804
+          ],
+          "dK": [
+            0.0023106805399211745,
+            0.002361895691460843
+          ],
+          "dV": [
+            0.0023939142736731506,
+            0.0023451225234398837
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "kohakufa",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0016570993119971633,
+            0.0016611554325593973
+          ],
+          "dQ": [
+            0.0023426411471613455,
+            0.002337424555040568
+          ],
+          "dK": [
+            0.0023532710419840717,
+            0.002339719578176124
+          ],
+          "dV": [
+            0.002333249714042206,
+            0.002351541452193187
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.001659486376837,
+            0.0016624970942656176
+          ],
+          "dK": [
+            0.0016695052811593334,
+            0.0016545478786601437
+          ],
+          "dV": [
+            0.001663659069057144,
+            0.0016533697857553699
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "compact",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0016570995173805071,
+            0.0016611561923530588
+          ],
+          "dQ": [
+            0.0023424097815624117,
+            0.002337274599133456
+          ],
+          "dK": [
+            0.0023533807958851243,
+            0.0023399374875110713
+          ],
+          "dV": [
+            0.0023332193631853404,
+            0.002351325686111956
+          ]
+        },
+        "policy_gradient_norm_error_per_head": {
+          "dQ": [
+            0.001659583262535384,
+            0.0016623010181503121
+          ],
+          "dK": [
+            0.0016694057019775417,
+            0.001654295608080088
+          ],
+          "dV": [
+            0.0016637104108749722,
+            0.0016533340268650605
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "ltx_helper",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.0022338270070394197,
+            0.0022195368589393877
+          ],
+          "dQ": [
+            0.002396227772086171,
+            0.0023797761789612036
+          ],
+          "dK": [
+            0.0023567596057961215,
+            0.0023446911607390855
+          ],
+          "dV": [
+            0.002332816166582641,
+            0.0023520059375324335
+          ]
+        }
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "spatial": [
+          11,
+          16,
+          16
+        ],
+        "window": [
+          11,
+          11,
+          11
+        ],
+        "implementation": "previous",
+        "pass": true,
+        "fp64_norm_error_per_head": {
+          "O": [
+            0.00222772431367785,
+            0.002215518396323708
+          ],
+          "dQ": [
+            0.002337369090600318,
+            0.00233352730709632
+          ],
+          "dK": [
+            0.0023531433324229458,
+            0.0023398199461871837
+          ],
+          "dV": [
+            0.002333249714042206,
+            0.002351541452193187
+          ]
+        }
+      }
+    ],
+    "status": "pass"
+  },
+  "validation": {
+    "focused_gpu": {
+      "exit_status": 0,
+      "tests": 37,
+      "skipped": 1
+    },
+    "new_tests": {
+      "exit_status": 0,
+      "tests": 6,
+      "skipped": 0
+    },
+    "cpu": {
+      "exit_status": 0,
+      "tests": 546,
+      "skipped": 238
+    },
+    "ordinary": {
+      "exit_status": 0,
+      "tests": 3,
+      "skipped": 0
+    },
+    "dispatch": {
+      "exit_status": 0,
+      "cases": 12
+    },
+    "memcheck": {
+      "exit_status": 0,
+      "reported_errors": 0,
+      "fixture": "tests.test_neighborhood_volume_forward.CompactVolumeGPUTests.test_sanitizer_compact",
+      "dtypes": [
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "racecheck": {
+      "exit_status": 0,
+      "reported_errors": 0,
+      "fixture": "tests.test_neighborhood_volume_forward.CompactVolumeGPUTests.test_sanitizer_compact",
+      "dtypes": [
+        "float16",
+        "bfloat16"
+      ],
+      "reported_hazards": 0
+    },
+    "initcheck": {
+      "exit_status": 0,
+      "reported_errors": 0,
+      "fixture": "tests.test_neighborhood_volume_forward.CompactVolumeGPUTests.test_sanitizer_compact",
+      "dtypes": [
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "synccheck": {
+      "exit_status": 0,
+      "reported_errors": 0,
+      "fixture": "tests.test_neighborhood_volume_forward.CompactVolumeGPUTests.test_sanitizer_compact",
+      "dtypes": [
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "ordinary_initial_attempt": "Environment error before kernel execution: Ninja was installed but its launcher was absent from PATH. Retry exposed the existing runtime bin directory and passed all three tests.",
+    "local": {
+      "public_text_tests": 24,
+      "repository_check": true,
+      "wheel_build": true
+    }
+  },
+  "archives": {
+    "initial_comparison": {
+      "files": 584,
+      "bytes": 925254122,
+      "archive_sha256": "79c7281ec3dec1391f276ea109e7b87f0ab51a22566345d6a5d331c0aa28bc2b",
+      "verified": true
+    },
+    "optimization": {
+      "files": 5414,
+      "bytes": 571391379,
+      "archive_sha256": "e9471c0a363202b03926d545e0837939dc5d23d67561196288733253074b164c",
+      "verified": true
+    }
+  },
+  "qualification_notes": [
+    "Measured valid eight-element vector copies; final compact dispatch is restricted to that layout. Two-term forward applies to all 3D fallbacks too.",
+    "Native CPU FP64, not emulation. Random sample seed 1729 is disjoint from tuning seed 521; full-coordinate evaluation seed 99173 is separate.",
+    "dQ/dK corrections and input-rounded P for dV remain the existing neighborhood contract. Gradient improvements are not universal per coordinate or head.",
+    "Raw traces, binaries, failed operands and frozen experiment snapshots are retained outside the tracked tree.",
+    "Nsight Compute reported ERR_NVGPUCTRPERM. No measured stall, cache-hit or occupancy claims. Code captures are separate untimed same-configuration replays."
+  ],
+  "code_inspection": {
+    "scope": "Separate untimed same-configuration replay, not binary extraction from timed process.",
+    "kernels": 12,
+    "baseline_bf16_stage5": {
+      "tensor_instruction": "HMMA.16816.F32.BF16",
+      "registers_per_thread": 128,
+      "dynamic_shared_bytes": 16384,
+      "static_shared_bytes": 1024,
+      "stack_bytes": 0,
+      "local_bytes": 0
+    },
+    "candidate_bf16_stage5": {
+      "tensor_instruction": "HGMMA.64x64x16.F32.BF16",
+      "registers_per_thread": 126,
+      "dynamic_shared_bytes": 24576,
+      "static_shared_bytes": 1024,
+      "stack_bytes": 0,
+      "local_bytes": 0
+    },
+    "resident_cta_limit_from_resources": 4,
+    "ltx_runtime_generated_sass": "Exact profiled symbol not found in packaged cuDNN shared libraries; no substitute symbol used.",
+    "hardware_counters": "ERR_NVGPUCTRPERM"
+  },
+  "telemetry_summary": {
+    "period_ms": 200,
+    "scope": "Whole campaign samples at GPU utilization >=90%; not per-call clocks or a cycle normalization.",
+    "samples": 678,
+    "active_samples": 198,
+    "power.draw [W]": {
+      "minimum": 86.24,
+      "median": 271.95000000000005,
+      "maximum": 337.81
+    },
+    "clocks.current.sm [MHz]": {
+      "minimum": 1260.0,
+      "median": 1500.0,
+      "maximum": 1500.0
+    },
+    "temperature.gpu": {
+      "minimum": 43.0,
+      "median": 73.0,
+      "maximum": 87.0
+    }
+  }
+}

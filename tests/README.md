@@ -79,6 +79,7 @@ class/method skip conditions before choosing a command.
 [neighborhood](test_neighborhood.py), [neighborhood_accuracy](test_neighborhood_accuracy.py), [neighborhood_backends](test_neighborhood_backends.py), [neighborhood_benchmark](test_neighborhood_benchmark.py), [neighborhood_key_precision](test_neighborhood_key_precision.py), [neighborhood_performance_summary](test_neighborhood_performance_summary.py), [neighborhood_precision](test_neighborhood_precision.py), [neighborhood_schedule](test_neighborhood_schedule.py), [neighborhood_tuning](test_neighborhood_tuning.py), [tune_neighborhood](test_tune_neighborhood.py).
 
 [3D neighborhood tests](test_neighborhood_3d.py): independent forward/inverse volume traversal, LTX layout, corrected gradients, graph replay and plane seams (CPU and GPU sections).
+[Compact 3D forward tests](test_neighborhood_volume_forward.py): spatial ownership, two-term probability accuracy, corrected gradients and changed-input replay (CPU geometry and Hopper GPU sections).
 
 ### Benchmark adapters and reporting
 

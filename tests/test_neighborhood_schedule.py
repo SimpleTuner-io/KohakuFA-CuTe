@@ -80,5 +80,40 @@ class NeighborhoodScheduleTests(unittest.TestCase):
         self.assertEqual(self.select(shape=(1, 8, 1024, 64), spatial=(16, 64), window=(17, 17)), baseline)
 
 
+class VolumeScheduleTests(unittest.TestCase):
+    def select(self, **changes):
+        from kohakufa_cute.neighborhood_schedule import default_volume_schedule
+
+        args = dict(
+            device_name="NVIDIA H100 PCIe",
+            capability=(9, 0),
+            sm_count=114,
+            shape=(1, 4, 17 * 128 * 128, 64),
+            spatial=(17, 128, 128),
+            window=(11, 11, 11),
+            dtype="bfloat16",
+            vector=8,
+        )
+        args.update(changes)
+        return default_volume_schedule(**args)
+
+    def test_qualified_owner_and_fallbacks(self):
+        self.assertEqual(self.select(), ((1, 8, 8), True))
+        for changes in (
+            {"sm_count": 132},
+            {"device_name": "NVIDIA H100 MIG"},
+            {"capability": (12, 0)},
+            {"device_name": "NVIDIA H20"},
+            {"vector": 1},
+            {"vector": 2},
+            {"vector": 4},
+            {"window": (3, 7, 7)},
+            {"spatial": (17, 128, 129)},
+            {"dtype": "float32"},
+            {"shape": (1, 4, 17 * 128 * 128, 128)},
+        ):
+            self.assertIs(self.select(**changes), False)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -99,3 +99,62 @@ def volume_tile(iteration, z0, y0, y1, x0, x1, height, width, columns, maximum=m
     first = maximum((row * width + x0) // columns, ((previous * width + x1 + columns - 1) // columns) * (row_index > 0))
     block = first + iteration % slots
     return block, block < (row * width + x1 + columns - 1) // columns
+
+
+def compact_volume_row(row, height, width, tile_d, tile_h, tile_w):
+    """Map a compact tile index to the original width-fastest sequence index."""
+    size = tile_d * tile_h * tile_w
+    blocks_w, blocks_h = width // tile_w, height // tile_h
+    block, inner = row // size, row % size
+    x = block % blocks_w * tile_w + inner % tile_w
+    y = block // blocks_w % blocks_h * tile_h + inner // tile_w % tile_h
+    z = block // (blocks_w * blocks_h) * tile_d + inner // (tile_w * tile_h)
+    return (z * height + y) * width + x
+
+
+def compact_volume_bounds(
+    start,
+    depth,
+    height,
+    width,
+    window_d,
+    window_h,
+    window_w,
+    tile_d,
+    tile_h,
+    tile_w,
+    minimum=min,
+    maximum=max,
+    key_tile_d=0,
+    key_tile_h=0,
+    key_tile_w=0,
+):
+    size = tile_d * tile_h * tile_w
+    block = start // size
+    x = block % (width // tile_w) * tile_w
+    y = block // (width // tile_w) % (height // tile_h) * tile_h
+    z = block // ((width // tile_w) * (height // tile_h)) * tile_d
+    z0 = minimum(maximum(z - window_d // 2, 0), depth - window_d)
+    z1 = minimum(maximum(z + tile_d - 1 - window_d // 2, 0), depth - window_d) + window_d
+    y0 = minimum(maximum(y - window_h // 2, 0), height - window_h)
+    y1 = minimum(maximum(y + tile_h - 1 - window_h // 2, 0), height - window_h) + window_h
+    x0 = minimum(maximum(x - window_w // 2, 0), width - window_w)
+    x1 = minimum(maximum(x + tile_w - 1 - window_w // 2, 0), width - window_w) + window_w
+    tile_d = key_tile_d or tile_d
+    tile_h = key_tile_h or tile_h
+    tile_w = key_tile_w or tile_w
+    return (
+        z0 // tile_d,
+        (z1 + tile_d - 1) // tile_d,
+        y0 // tile_h,
+        (y1 + tile_h - 1) // tile_h,
+        x0 // tile_w,
+        (x1 + tile_w - 1) // tile_w,
+    )
+
+
+def compact_volume_tile(iteration, z0, z1, y0, y1, x0, x1, blocks_h, blocks_w):
+    x = x0 + iteration % (x1 - x0)
+    y = y0 + iteration // (x1 - x0) % (y1 - y0)
+    z = z0 + iteration // ((x1 - x0) * (y1 - y0))
+    return (z * blocks_h + y) * blocks_w + x

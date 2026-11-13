@@ -41,3 +41,29 @@ def neighborhood_mask(spatial_shape, window_size, *, device="cpu"):
     for query, keys in enumerate(edges):
         mask[query, list(keys)] = True
     return mask
+
+
+@torch.no_grad()
+def two_term_forward_reference(inputs, spatial_shape, window_size, scale):
+    """Independent rounding diagnostic for 3D's two-term forward probability.
+
+    One global row maximum and FP64 final products isolate the high/low operand
+    conversions. This is not an exact replay of online tile rescaling or FP32
+    tensor-core accumulation; retain mathematical FP64 alongside this result.
+    """
+    q, k, v = inputs
+    precision = torch.backends.cuda.matmul.fp32_precision
+    try:
+        torch.backends.cuda.matmul.fp32_precision = "ieee"
+        with torch.autocast(device_type=q.device.type, enabled=False):
+            scores = q.float() @ k.float().transpose(-1, -2)
+    finally:
+        torch.backends.cuda.matmul.fp32_precision = precision
+    visible = neighborhood_mask(spatial_shape, window_size, device=q.device)
+    signed = (scores if scale >= 0 else -scores).masked_fill(~visible, -torch.inf)
+    shifted = ((signed - signed.amax(-1, keepdim=True)) * abs(scale)).masked_fill(~visible, -torch.inf)
+    weights = shifted.double().exp().float()
+    high = weights.to(q.dtype).float()
+    low = (weights - high).to(q.dtype).float()
+    numerator = high.double() @ v.double() + low.double() @ v.double()
+    return numerator / weights.sum(-1, keepdim=True).double()

@@ -53,3 +53,24 @@ def default_schedule(*, device_name, capability, sm_count, shape, spatial, windo
         return baseline
     exact = width == 64
     return (32, 32, 64), (exact, False, exact)
+
+
+def default_volume_schedule(*, device_name, capability, sm_count, shape, spatial, window, dtype, vector):
+    """Measured H100 PCIe large-window owner; arithmetic never varies by device."""
+    normalized_name = "".join(device_name.upper().split())
+    if (
+        len(spatial) == 3
+        and len(shape) == 4
+        and "H100PCIE" in normalized_name
+        and "MIG" not in normalized_name
+        and tuple(capability) == (9, 0)
+        and sm_count == 114
+        and shape[-1] == 64
+        and dtype in ("float16", "bfloat16")
+        and vector == 8
+        and tuple(window) == (11, 11, 11)
+        and spatial[0] >= 11
+        and all(extent >= 64 and extent % 8 == 0 for extent in spatial[1:])
+    ):
+        return ((1, 8, 8), True)
+    return False

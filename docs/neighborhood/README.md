@@ -50,6 +50,7 @@ The public call enables normalized dQ and reconstructed dK corrections on
 every supported GPU, using `column_staged` statistics and separate correction
 storage. No opt-in flag is needed. The measured complete-call cost is accepted;
 dispatch does not revert to weaker arithmetic on slower GPUs or workloads.
+3D forward also uses a two-term probability product; see its [LTX study](reports/ltx-3d.md).
 The [precision contract](../precision.md#neighborhood-default) owns the equations
 and rounding rules. Ordinary attention retains its separate contract.
 

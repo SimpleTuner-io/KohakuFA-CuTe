@@ -393,7 +393,7 @@ class Attention:
         self.kernel(
             q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, delta_base, scale, mma, tma_args
         ).launch(
-            grid=launch_grid(cute.ceil_div(length, self.grid_rows), q.shape[0] * heads, widths),
+            grid=launch_grid(cute.ceil_div(self.owner_length(length), self.grid_rows), q.shape[0] * heads, widths),
             block=(32 * self.warps, 1, 1),
             stream=stream,
         )
@@ -1415,10 +1415,18 @@ class Attention:
         return iteration, True
 
     @cute.jit
+    def owner_length(self, length):
+        return length
+
+    @cute.jit
+    def output_row(self, row):
+        return row
+
+    @cute.jit
     def grid_coordinates(self, q, k):
         length = k.shape[2] if cutlass.const_expr(self.mode == "kv") else q.shape[2]
         heads = k.shape[1] if cutlass.const_expr(self.mode == "kv") else q.shape[1]
-        return block_indices(cute.ceil_div(length, self.grid_rows), q.shape[0] * heads)
+        return block_indices(cute.ceil_div(self.owner_length(length), self.grid_rows), q.shape[0] * heads)
 
     @cute.kernel
     def kernel(self, q, k, v, mask, out, maximum, logsum, dout, delta, dq, dk, dv, blocks, delta_base, scale, mma, tma_args):
@@ -1713,7 +1721,7 @@ class Attention:
                     total = normalizer_add(total, normalizer_carry[r])
                 denom = total if total > 0.0 else cutlass.Float32(1.0)
                 av[r, None] = av[r, None].load() / denom
-                row = start + rc[r, 0][0]
+                row = self.output_row(start + rc[r, 0][0])
                 publish = True
                 if cutlass.const_expr(self.forward_columns):
                     publish = tid < 32 * (self.warps // self.column_warps)

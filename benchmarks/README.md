@@ -15,6 +15,7 @@ boundaries and [validation](../docs/validation.md) for acceptance criteria.
 | Default rounded-policy matrix | `benchmarks.qualify_baseline_precision` |
 | Standalone FlashAttention comparison | `benchmarks.compare_flashattention` |
 | Neighborhood versus FlexAttention and NATTEN | `benchmarks.neighborhood.benchmark` |
+| 3D attention versus the exact LTX helper | `benchmarks.neighborhood.benchmark_ltx` |
 | Neighborhood reference qualification | `benchmarks.neighborhood.qualify` |
 | Directed neighborhood mathematical diagnostics | `benchmarks.neighborhood.qualify_accuracy` |
 | Explicit dQ and dQ+dK studies | `benchmarks.neighborhood.test_precision`, `benchmarks.neighborhood.test_key_precision` |

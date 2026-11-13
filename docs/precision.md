@@ -62,8 +62,22 @@ It also accumulates `t = sum_FP32(P32 * (dP - delta_O)) / sum_FP32(P32)`.
 The KV pass uses `dS_k = round_input(P32 * ((dP - delta_O) - t))` with two
 separate subtractions. Actual-output delta and t occupy distinct FP32 buffers.
 Gradient products accumulate in FP32; scaling follows dQ/dK accumulation and
-precedes final input-dtype conversion. Forward and input-rounded P for dV are
-unchanged. KV statistics use the qualified `column_staged` schedule.
+precedes final input-dtype conversion. Input-rounded P for dV is unchanged.
+KV statistics use the qualified `column_staged` schedule. 2D forward retains its original arithmetic.
+
+3D forward additionally splits each unnormalized FP32 softmax weight `w`
+into `hi = round_input(w)` and `lo = round_input(w - FP32(hi))`.
+It accumulates both `hi @ V` and `lo @ V` in FP32, with the same online
+rescaling and FP32 normalization. The final output is converted once to the
+input dtype. Separate unscaled maxima and logarithmic normalization remain
+available to the unchanged corrected backward method, whose delta uses this
+actual rounded output. This stronger 3D forward contract applies on every
+GPU, including generic scheduling fallbacks. The second input-dtype term
+reduces probability-rounding error; it does not eliminate expected underflow
+or provide FP64 accumulation. The independent diagnostic is
+`benchmarks.neighborhood.reference.two_term_forward_reference`; its global
+maximum and FP64 final products isolate rounding without reproducing tile order.
+See the [3D LTX study](neighborhood/reports/ltx-3d.md) for scope and complete-call costs.
 
 The independent equations are in
 `benchmarks/neighborhood/key_precision_reference.py`. The

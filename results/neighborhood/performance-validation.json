@@ -1,0 +1,301 @@
+{
+  "status": "five_gpu_campaigns_passed_b300_pending_capacity",
+  "base_revision": "f621db22f90dc905d2cd67b841704c76f0c34945",
+  "tested_source_snapshot": {
+    "files": 402,
+    "sha256": "4322c2399fea9c2d099f034056093a4309ed2ab539c88025d2a88190648d79c0"
+  },
+  "scope": "Complete contiguous BHSD D64 operator implementations; all three backends share rounded operands within each GPU. Cross-GPU bitwise operand equality is not asserted. No application or equal-internal-precision claim.",
+  "measured_gpus": {
+    "h100": {
+      "device": {
+        "name": "NVIDIA H100 80GB HBM3",
+        "capability": [
+          9,
+          0
+        ],
+        "sm_count": 132,
+        "memory_bytes": 85064286208
+      },
+      "packages": {
+        "torch": "2.13.0+cu130",
+        "nvidia-cutlass-dsl": "4.8.1",
+        "apache-tvm-ffi": "0.1.15.post0",
+        "natten": "0.21.7+torch2130cu130",
+        "triton": "3.7.1",
+        "cuda-bindings": "13.0.3"
+      },
+      "source_files_verified": 402,
+      "performance": {
+        "implementation_workload_rows": 30,
+        "timing_groups": 120,
+        "samples_per_group": 7,
+        "sampled_accuracy_rows_passed": 30,
+        "changed_input_graph_checks_passed": 60
+      },
+      "candidate_gpu_unittest": {
+        "methods": 9,
+        "exit_status": 0
+      },
+      "targeted_memcheck": {
+        "methods": 2,
+        "exit_status": 0,
+        "errors": 0
+      },
+      "stage_exit_statuses": {
+        "bootstrap": 0,
+        "performance": 0,
+        "candidate-correctness": 0,
+        "candidate-memcheck": 0,
+        "dependency-capture": 0,
+        "assembly-capture": 0
+      },
+      "offhost_archive": {
+        "format": "modular with separately verified identical installed package",
+        "payload_files": 5563,
+        "archive_sha256": "13d98c88041269cc2d2fe14dc5283d90f72bbee8a32c4130437bc32811e95555"
+      },
+      "owned_resource_destroyed_after_verification": true,
+      "fresh_read_confirms_absence": true
+    },
+    "b200": {
+      "device": {
+        "name": "NVIDIA B200",
+        "capability": [
+          10,
+          0
+        ],
+        "sm_count": 148,
+        "memory_bytes": 191495471104
+      },
+      "packages": {
+        "torch": "2.13.0+cu130",
+        "nvidia-cutlass-dsl": "4.8.1",
+        "apache-tvm-ffi": "0.1.15.post0",
+        "natten": "0.21.7+torch2130cu130",
+        "triton": "3.7.1",
+        "cuda-bindings": "13.0.3"
+      },
+      "source_files_verified": 402,
+      "performance": {
+        "implementation_workload_rows": 30,
+        "timing_groups": 120,
+        "samples_per_group": 7,
+        "sampled_accuracy_rows_passed": 30,
+        "changed_input_graph_checks_passed": 60
+      },
+      "candidate_gpu_unittest": {
+        "methods": 9,
+        "exit_status": 0
+      },
+      "targeted_memcheck": {
+        "methods": 2,
+        "exit_status": 0,
+        "errors": 0
+      },
+      "stage_exit_statuses": {
+        "bootstrap": 0,
+        "performance": 0,
+        "candidate-correctness": 0,
+        "candidate-memcheck": 0,
+        "dependency-capture": 0,
+        "assembly-capture": 0
+      },
+      "offhost_archive": {
+        "format": "full",
+        "payload_files": 5573,
+        "archive_sha256": "09ad2ca2c2d02bf6934d255167dcad6cc50857eba2534e0ec241488a97ae9e4f"
+      },
+      "owned_resource_destroyed_after_verification": true,
+      "fresh_read_confirms_absence": true
+    },
+    "rtx4090": {
+      "device": {
+        "name": "NVIDIA GeForce RTX 4090",
+        "capability": [
+          8,
+          9
+        ],
+        "sm_count": 128,
+        "memory_bytes": 25250627584
+      },
+      "packages": {
+        "torch": "2.13.0+cu130",
+        "nvidia-cutlass-dsl": "4.8.1",
+        "apache-tvm-ffi": "0.1.15.post0",
+        "natten": "0.21.7+torch2130cu130",
+        "triton": "3.7.1",
+        "cuda-bindings": "13.0.3"
+      },
+      "source_files_verified": 402,
+      "performance": {
+        "implementation_workload_rows": 30,
+        "timing_groups": 120,
+        "samples_per_group": 7,
+        "sampled_accuracy_rows_passed": 30,
+        "changed_input_graph_checks_passed": 60
+      },
+      "candidate_gpu_unittest": {
+        "methods": 9,
+        "exit_status": 0
+      },
+      "targeted_memcheck": {
+        "methods": 2,
+        "exit_status": 0,
+        "errors": 0
+      },
+      "stage_exit_statuses": {
+        "bootstrap": 0,
+        "performance": 0,
+        "candidate-correctness": 0,
+        "candidate-memcheck": 0,
+        "dependency-capture": 0,
+        "assembly-capture": 0
+      },
+      "offhost_archive": {
+        "format": "modular with separately verified identical installed package",
+        "payload_files": 5551,
+        "archive_sha256": "bc4e96f04f88a75a8d0d40f4acc8057d472159dfd645ffa2679873b1b96d9c00"
+      },
+      "owned_resource_destroyed_after_verification": true,
+      "fresh_read_confirms_absence": true
+    },
+    "rtx5090": {
+      "device": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "capability": [
+          12,
+          0
+        ],
+        "sm_count": 170,
+        "memory_bytes": 33766572032
+      },
+      "packages": {
+        "torch": "2.13.0+cu130",
+        "nvidia-cutlass-dsl": "4.8.1",
+        "apache-tvm-ffi": "0.1.15.post0",
+        "natten": "0.21.7+torch2130cu130",
+        "triton": "3.7.1",
+        "cuda-bindings": "13.0.3"
+      },
+      "source_files_verified": 402,
+      "performance": {
+        "implementation_workload_rows": 30,
+        "timing_groups": 120,
+        "samples_per_group": 7,
+        "sampled_accuracy_rows_passed": 30,
+        "changed_input_graph_checks_passed": 60
+      },
+      "candidate_gpu_unittest": {
+        "methods": 9,
+        "exit_status": 0
+      },
+      "targeted_memcheck": {
+        "methods": 2,
+        "exit_status": 0,
+        "errors": 0
+      },
+      "stage_exit_statuses": {
+        "bootstrap": 0,
+        "performance": 0,
+        "candidate-correctness": 0,
+        "candidate-memcheck": 0,
+        "dependency-capture": 0,
+        "assembly-capture": 0
+      },
+      "offhost_archive": {
+        "format": "modular with separately verified identical installed package",
+        "payload_files": 5830,
+        "archive_sha256": "8bb91f7ac8331a275486d83cb39eedb0ceb9f98d5dbb1a167a9a04e753e2a548"
+      },
+      "owned_resource_destroyed_after_verification": true,
+      "fresh_read_confirms_absence": true
+    },
+    "l40s": {
+      "device": {
+        "name": "NVIDIA L40S",
+        "capability": [
+          8,
+          9
+        ],
+        "sm_count": 142,
+        "memory_bytes": 47751888896
+      },
+      "packages": {
+        "torch": "2.13.0+cu130",
+        "nvidia-cutlass-dsl": "4.8.1",
+        "apache-tvm-ffi": "0.1.15.post0",
+        "natten": "0.21.7+torch2130cu130",
+        "triton": "3.7.1",
+        "cuda-bindings": "13.0.3"
+      },
+      "source_files_verified": 402,
+      "performance": {
+        "implementation_workload_rows": 30,
+        "timing_groups": 120,
+        "samples_per_group": 7,
+        "sampled_accuracy_rows_passed": 30,
+        "changed_input_graph_checks_passed": 60
+      },
+      "candidate_gpu_unittest": {
+        "methods": 9,
+        "exit_status": 0
+      },
+      "targeted_memcheck": {
+        "methods": 2,
+        "exit_status": 0,
+        "errors": 0
+      },
+      "stage_exit_statuses": {
+        "bootstrap": 0,
+        "performance": 0,
+        "candidate-correctness": 0,
+        "candidate-memcheck": 0,
+        "dependency-capture": 0,
+        "assembly-capture": 0
+      },
+      "offhost_archive": {
+        "format": "modular with separately verified identical installed package",
+        "payload_files": 5467,
+        "archive_sha256": "361a9fcf6c48e7a63637ea9f44ef8634e25ce22babd1e42e59f28e55a9283c8b"
+      },
+      "owned_resource_destroyed_after_verification": true,
+      "fresh_read_confirms_absence": true
+    }
+  },
+  "b300": {
+    "status": "pending_capacity",
+    "created_or_queued": false,
+    "rentable_single_card_offers": 0,
+    "rental_types_checked": [
+      "on-demand",
+      "bid",
+      "reserved"
+    ],
+    "cpu_architecture_filter_used_in_final_check": false,
+    "available_gb300_station_not_substituted": true,
+    "manufacturer_product_table": "https://docs.nvidia.com/datacenter/tesla/mig-user-guide/latest/supported-gpus.html"
+  },
+  "local_checks": {
+    "python": "3.13.18",
+    "torch": "2.15.0",
+    "black": "24.8.0",
+    "isort": "5.13.2",
+    "cpu_unittest": {
+      "tests": 494,
+      "skipped": 218,
+      "exit_status": 0
+    },
+    "public_text_guard_unittest": {
+      "tests": 24,
+      "exit_status": 0
+    },
+    "matplotlib": "3.11.2"
+  },
+  "artifact_limits": [
+    "Raw captures and infrastructure diagnostics remain outside the tracked tree.",
+    "All installed package content, compiler/cache binaries, traces and every archived payload file have verified inventories and hashes.",
+    "Selected NATTEN packaged PTX was unavailable; packaged SASS and compiler-cache code are not CUPTI loaded-module bindings.",
+    "NATTEN uses automatic/default presets, not exhaustive configuration selection."
+  ]
+}

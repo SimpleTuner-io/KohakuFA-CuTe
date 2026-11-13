@@ -79,7 +79,7 @@ class NativeDeterminismTests(unittest.TestCase):
                         torch.autograd.grad(output, inputs, dout)
 
     def test_native_warning_only_reports_and_preserves_math(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         for dtype in (torch.float16, torch.bfloat16):
             inputs = self.operands(dtype)
@@ -102,7 +102,7 @@ class NativeDeterminismTests(unittest.TestCase):
             torch.autograd.grad(output, inputs, torch.randn_like(output))
 
     def test_public_strict_fallback_repeats_bitwise(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         for dtype in (torch.float16, torch.bfloat16):
             inputs = self.operands(dtype, length=129)
@@ -120,7 +120,7 @@ class NativeDeterminismTests(unittest.TestCase):
             assess(expected, inputs, dout, causal=True, scale=None, directed=False, pointwise=False)
 
     def test_python_warp_backward_enforces_strict_and_warning_only(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute.fa4_sm80._attention import attention
 
         for dtype in (torch.float16, torch.bfloat16):
@@ -137,8 +137,8 @@ class NativeDeterminismTests(unittest.TestCase):
             assess((output, *gradients), inputs, dout, causal=True, scale=None, directed=False, pointwise=False)
 
     def test_native_warning_only_graph_reads_changed_inputs(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         inputs = self.operands(torch.bfloat16, length=129)
         dout = torch.randn_like(inputs[0])
@@ -160,7 +160,7 @@ class NativeDeterminismTests(unittest.TestCase):
         assess(actual, operands, graph_dout, causal=True, scale=None, directed=False, pointwise=False)
 
     def test_owned_short_backward_is_allowed(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute.native import extension
 
         prop = torch.cuda.get_device_properties(0)

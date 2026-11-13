@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 
 import torch
 
-from benchmarks.rtx4090_predicate_candidates import python_compatible
+from benchmarks.experiments.ada.rtx4090_predicate_candidates import python_compatible
 from kohakufa_cute import api, fa4_sm80
 from kohakufa_cute.fa4_sm80 import rtx4090
 

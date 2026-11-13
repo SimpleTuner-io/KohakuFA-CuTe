@@ -220,7 +220,7 @@ class Sm80SelectionTests(unittest.TestCase):
 )
 class Sm80KernelTests(unittest.TestCase):
     def public_output(self, inputs, *, causal=False, scale=None, function=None):
-        from benchmarks.validate_sm80_static import statistics
+        from benchmarks.experiments.ampere.validate_sm80_static import statistics
 
         function = api.scaled_dot_product_attention if function is None else function
         selected = fa4_sm80.compatible(*inputs, None, 0, causal, scale, False)
@@ -270,8 +270,8 @@ class Sm80KernelTests(unittest.TestCase):
         self.assertFalse(module.a100_medium_metadata_compatible(strided, values[1], values[2]))
 
     def test_medium_causal_training_replay_and_negative_statistics(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         previous_threads = torch.get_num_threads()
         torch.set_num_threads(4)
@@ -314,7 +314,7 @@ class Sm80KernelTests(unittest.TestCase):
                 self.assertEqual(len(saved), 6)
                 actual = output, *torch.autograd.grad(output, inputs, dout)
                 checkpoint("backward", inputs, actual, saved[-2:])
-                from benchmarks.validate_sm80_static import statistics
+                from benchmarks.experiments.ampere.validate_sm80_static import statistics
 
                 for head in range(8):
                     statistics(
@@ -481,8 +481,8 @@ class Sm80KernelTests(unittest.TestCase):
                                     self.assertLess(error["relative_error"], 0.01 if dtype == torch.bfloat16 else 0.005)
 
     def test_public_repeated_calls_graph_symbols_and_compiled_native_fallback(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.compare_l40s import graph_kernels
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ada.compare_l40s import graph_kernels
 
         torch.manual_seed(817)
         inputs = [torch.randn(1, 16, 4096, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
@@ -503,8 +503,8 @@ class Sm80KernelTests(unittest.TestCase):
         self.assertTrue(any("kohakufa_cute" in symbol for symbol in symbols))
 
     def test_cached_public_scales_statistics_and_changed_graph(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         for dtype, heads, dimension, causal in (
             (torch.bfloat16, 8, 64, False),

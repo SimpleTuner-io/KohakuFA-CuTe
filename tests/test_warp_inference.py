@@ -18,7 +18,7 @@ class WarpInferenceTests(unittest.TestCase):
         return extension().AttentionRunner("warp", asdict(a100_schedule(dimension, sequence, causal)))
 
     def test_gradient_and_layout_contracts(self):
-        from benchmarks.warp_inference import assess_output, references
+        from benchmarks.experiments.shared.warp_inference import assess_output, references
 
         runner = self.runner(64, 129, False)
         inputs = [torch.randn(1, 2, 129, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3)]
@@ -67,8 +67,8 @@ class WarpInferenceTests(unittest.TestCase):
             assess_output(runner.inference(*small, causal=True), references(small, True))
 
     def test_output_and_training_cache_alternation(self):
-        from benchmarks.validate_sm80_static import assess, statistics
-        from benchmarks.warp_inference import assess_output, references
+        from benchmarks.experiments.ampere.validate_sm80_static import assess, statistics
+        from benchmarks.experiments.shared.warp_inference import assess_output, references
 
         for dtype in (torch.bfloat16, torch.float16):
             for dimension in (64, 128):
@@ -105,10 +105,10 @@ class WarpInferenceTests(unittest.TestCase):
                                 assess_output(runner.inference(*inputs, scale=0.17, causal=causal), expected)
 
     def test_poisoned_graphs_and_current_stream(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.compare_l40s import graph_kernels
-        from benchmarks.validate_sm80_static import assess
-        from benchmarks.warp_inference import assess_output, references
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ada.compare_l40s import graph_kernels
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
+        from benchmarks.experiments.shared.warp_inference import assess_output, references
 
         for dtype, dimension, causal in ((torch.bfloat16, 64, True), (torch.float16, 128, False)):
             torch.manual_seed(1019)

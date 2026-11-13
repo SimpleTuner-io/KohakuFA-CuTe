@@ -11,7 +11,7 @@ from tests.hopper_runtime import full_h200_runtime
 class HopperRunnerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from benchmarks.configured_hopper import make_attention
+        from benchmarks.experiments.hopper.configured_hopper import make_attention
 
         cls.operation = staticmethod(make_attention())
 

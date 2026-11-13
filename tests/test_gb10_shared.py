@@ -28,7 +28,7 @@ class Gb10SharedTests(unittest.TestCase):
     def setUp(self):
         gb10._qualified_device.cache_clear()
         self.addCleanup(gb10._qualified_device.cache_clear)
-        from benchmarks.gb10_metadata_controls import parent
+        from benchmarks.experiments.gb10.gb10_metadata_controls import parent
 
         reference = parent()
         reference._qualified_device.cache_clear()

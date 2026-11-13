@@ -31,7 +31,7 @@ class ConfiguredHostTests(unittest.TestCase):
         torch.manual_seed(9703)
 
     def test_configured_frames_statistics_and_cache_isolation(self):
-        from benchmarks.validate_sm80_static import assess, statistics
+        from benchmarks.experiments.ampere.validate_sm80_static import assess, statistics
         from kohakufa_cute.native import extension
 
         module = extension()
@@ -58,8 +58,8 @@ class ConfiguredHostTests(unittest.TestCase):
                                 assess(actual, inputs, dout, causal=causal, scale=None, directed=False, pointwise=False)
 
     def test_changed_graph_with_unaligned_output_gradient(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute.native import extension
 
         for dtype in (torch.bfloat16, torch.float16):
@@ -85,7 +85,7 @@ class ConfiguredHostTests(unittest.TestCase):
                     assess(actual, operands, dout, causal=True, scale=None, directed=False, pointwise=False)
 
     def test_runner_lifetime_and_rejected_contracts(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute.native import extension
 
         inputs = [torch.randn(1, 2, 129, 64, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)]
@@ -115,7 +115,7 @@ class ConfiguredHostTests(unittest.TestCase):
             assess(actual, inputs, dout, causal=True, scale=scale, directed=False, pointwise=False)
 
     def test_wide_query_tile_tail_scratch(self):
-        from benchmarks.validate_sm80_static import assess, statistics
+        from benchmarks.experiments.ampere.validate_sm80_static import assess, statistics
         from kohakufa_cute.native import extension
 
         options = configuration(64)
@@ -126,8 +126,7 @@ class ConfiguredHostTests(unittest.TestCase):
                 for causal in (False, True):
                     with self.subTest(dtype=dtype, sequence=sequence, causal=causal):
                         inputs = [
-                            torch.randn(1, 2, sequence, 64, device="cuda", dtype=dtype, requires_grad=True)
-                            for _ in range(3)
+                            torch.randn(1, 2, sequence, 64, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)
                         ]
                         dout = torch.randn_like(inputs[0])
                         saved = []

@@ -24,7 +24,7 @@ class L40sShortPolicyGpuTests(unittest.TestCase):
     def test_both_semantic_namespaces_and_policy_routing(self):
         if not _l40s.is_device(torch.device("cuda", torch.cuda.current_device())) or not fa4_sm80.available():
             self.skipTest("Qualified full L40S runtime required")
-        from benchmarks.l40s_short_optimized_controls import make_attention
+        from benchmarks.experiments.ada.l40s_short_optimized_controls import make_attention
         from kohakufa_cute import native
 
         module = native.extension()
@@ -38,9 +38,7 @@ class L40sShortPolicyGpuTests(unittest.TestCase):
             modes.append(mode)
             return original(mode, *args, **kwargs)
 
-        q, k, v = [
-            torch.randn(1, 16, 128, 16, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)
-        ]
+        q, k, v = [torch.randn(1, 16, 128, 16, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)]
         dout = torch.randn_like(q)
         with patch.object(native, "compile_kernel", side_effect=record):
             for mode in ("parent", "public"):

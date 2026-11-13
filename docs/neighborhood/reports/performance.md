@@ -1,0 +1,400 @@
+# Neighborhood performance
+
+Historical method labels below describe the recorded campaign. The combined
+dQ+dK method with column-staged statistics is now the public neighborhood
+default; see the [current guide](../README.md#default-precision).
+
+This is the original default-policy performance campaign, before the H100 scheduling and dQ/dK accuracy studies. B300 was unavailable for this campaign and was qualified later. See the [current guide](../README.md#performance-and-device-coverage) and [later five-device measurements](multigpu-precision.md) for the newer method and configurations.
+
+## Measured results
+
+Five full GPUs completed the matrix: 150 implementation/workload rows and 600
+phase/mode timing groups, with seven samples per group. Every independent
+accuracy gate and changed-input graph check passed. B300 had no measured result in this initial campaign:
+no rentable single card was available across on-demand, reserved, or interruptible
+offers. That campaign left it pending rather than renting a multi-card bundle.
+GB300 was not counted as B300: NVIDIA lists the 252 GB DGX Station product and
+the 288 GB B300 as [distinct products](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/latest/supported-gpus.html),
+even though they share a GPU microarchitecture and compute capability. ARM
+package support was checked and was not the capacity limitation.
+
+![Neighborhood attention performance](../../../results/neighborhood/performance.svg)
+
+For the predeclared 64 x 64, 7 x 7 window, B1 H8 D64 BF16 case, resident
+forward-plus-backward CUDA graph medians were:
+
+| GPU | Candidate, microseconds | FlexAttention | NATTEN automatic preset |
+| --- | ---: | ---: | ---: |
+| H100 SXM | 153.1 | 121.5 | 255.7 |
+| B200 | 151.1 | 140.6 | 211.6 |
+| RTX 4090 | 157.1 | 197.0 | 335.9 |
+| RTX 5090 | 166.2 | 183.9 | 578.6 |
+| L40S | 138.2 | 155.7 | 329.6 |
+
+Performance depends on GPU and window size. In this case FlexAttention had
+lower training latency on H100 and B200; the candidate had lower latency on the
+three other devices. At window 13, NATTEN had lower training latency than the
+candidate on H100 and B200. The [complete tables](performance.md#complete-timing-tables)
+retain every geometry, dtype, execution mode, sample range, and comparison;
+the [machine-readable summary](../../../results/neighborhood/performance.json) also retains
+preparation costs, source hashes, selected backends and numerical diagnostics.
+The [validation record](../../../results/neighborhood/performance-validation.json) retains stage
+exit statuses, qualified source and archive hashes, and resource cleanup status.
+
+These NATTEN measurements use its automatic backend priority and default tile
+presets, with native Hopper and Blackwell FNA on the data-center GPUs and
+generic CUTLASS FNA on the other three. They do not establish the fastest
+possible NATTEN configuration. FlexAttention uses AUTO kernel selection and
+`max-autotune-no-cudagraphs`. The BHSD contract includes conversions that would
+differ for an application storing its activations natively in BHWD. Eager
+intervals include host dispatch and depend on each machine's CPU; graph
+intervals amortize replay launch gaps over eight complete calls.
+
+The actual deployed hardware, rather than advertised catalog fields, was:
+
+| GPU | capability | SMs | visible memory, GiB | driver | power limit, W |
+| --- | --- | ---: | ---: | --- | ---: |
+| H100 SXM | 9.0 | 132 | 79.22 | 615.71.09 | 700 |
+| B200 | 10.0 | 148 | 178.34 | 595.71.05 | 1000 |
+| RTX 4090 | 8.9 | 128 | 23.52 | 580.105.08 | 450 |
+| RTX 5090 | 12.0 | 170 | 31.45 | 615.71.09 | 450 |
+| L40S | 8.9 | 142 | 44.47 | 615.71.09 | 350 |
+
+All devices were unpartitioned, with no other compute process at preflight.
+The RTX 5090 was configured with a 450 W limit. These results qualify these
+deployed machines and runtime versions, without attributing rankings to power
+limits or claiming stock-card performance. Each GPU used identical rounded
+operands across its three implementations. Across GPUs, configuration and seed
+match; bitwise identity of CUDA-generated operands was not established.
+
+Each device also passed the nine-method candidate GPU suite and the two
+focused memcheck methods with zero reported errors. The earlier H100 qualification
+contains broader sanitizer coverage. These operator checks do not establish
+that the entire repository GPU suite passes; its separately retained baseline
+failures remain documented in the [neighborhood qualification](initial.md).
+
+Profiler traces verify one candidate forward kernel and six training launches
+(four CuTe kernels plus two statistic-gradient fills), versus one and three for
+FlexAttention. NATTEN launches ten and twenty-eight on Hopper/Blackwell and
+five and thirteen for generic CUTLASS, including required layout and token
+permutation work. Graph traces contain exactly eight times the corresponding
+eager call count. Profiling is separate from the uninstrumented samples.
+
+Full source, stage receipts, failed infrastructure attempts, raw samples,
+traces, compiler/cache binaries and disassembly are retained off-host. Identical
+installed NATTEN package files are shared only after every file's inventory and
+hash is verified. Selected packaged NATTEN PTX was unavailable; packaged SASS
+and compiler/cache disassembly do not imply a CUPTI loaded-module binding.
+
+## Protocol
+
+This campaign compares the explicit neighborhood API, compiled FlexAttention,
+and architecture-selected NATTEN in the same process and software stack. It
+measures synthetic operator calls, including required layout conversions. It
+does not measure an HDiT model, projections, normalization, rotary transforms,
+loading, or compilation as part of resident call latency.
+
+The external contract is contiguous `[batch, heads, height*width, 64]` inputs,
+output, and each gradient, using identical rounded FP16 or BF16 operands,
+stride/dilation one, shifted boundary windows, and scale `0.125`. Each
+implementation retains its own internal precision policy. The candidate keeps
+the unchanged [default arithmetic](../../precision.md). This is a complete
+implementation comparison, not an isolated scheduling comparison.
+
+The full matrix contains these five geometries in both dtypes:
+
+| image | window | batch | heads |
+| --- | --- | ---: | ---: |
+| 32 x 32 | 7 x 7 | 1 | 8 |
+| 64 x 64 | 7 x 7 | 1 | 8 |
+| 64 x 64 | 13 x 13 | 1 | 8 |
+| 128 x 128 | 7 x 7 | 1 | 8 |
+| 33 x 49 | 7 x 7 | 2 | 4 |
+
+The timing boundaries are inference forward and forward plus backward using
+`torch.autograd.grad`, including contiguous gradient restoration. Eager runs
+record CUDA-event time and host wall time separately. CUDA graphs contain eight
+complete calls; reported device time is replay time divided by that call count.
+Compilation, five warmup calls, capture, changed-input checks, calibration, and
+three sustained warmup samples precede measurement. Seven paired rounds rotate
+and alternate backend order, targeting 100 ms per sample and retaining every
+sample, median, range, and standard deviation. Profiling uses separate calls.
+Timed calls repeatedly read the same resident input buffers after warmup; the
+changed-input validation runs separately.
+
+NATTEN's BHSD-to-BHWD input copies and BHWD-to-BHSD output/gradient restoration
+remain inside each timed call. FlexAttention receives directly enumerated
+spatial block lists via the official `BlockMask.from_kv_blocks` factory, with
+its exact shifted-window predicate and the factory's backward transpose. There
+is no token-level dense mask preparation. Geometry preparation is measured
+separately, with three repeated preparation samples and retained storage size;
+resident timings reuse this immutable geometry. Preparation-inclusive cold-call
+costs and resident costs must be reported separately.
+
+Sparse independent FP64 and rounded-arithmetic probes check output and each
+gradient per head at boundary and interior positions on every workload. Key
+gradient references include every contributing query, found independently from
+forward neighborhoods. The random-workload gates retain 0.5% FP16 and 1% BF16
+per-head FP64 norm-error limits. Rounded diagnostics use actual rounded O.
+Every graph must read changed Q/K/V/dO and agree with fresh eager execution;
+original operands are restored before measurement. Failed, unsupported, or
+out-of-memory paths are retained as failures, not timing results.
+
+The pinned shared Linux stack is Python 3.13, PyTorch 2.13.0+cu130, NATTEN
+0.21.7+torch2130cu130, CUTLASS DSL 4.8.1, TVM FFI 0.1.15.post0, and CUDA
+bindings 13.0.3. PyTorch 2.13 is retained for the newest prebuilt pairing in
+[NATTEN's installation documentation](https://natten.org/install/). Its
+[backend documentation](https://natten.org/backends/) and
+[versioned capability checks](https://github.com/SHI-Labs/NATTEN/blob/v0.21.7/src/natten/backends/configs/checks.py)
+describe dedicated Hopper and SM100/103 Blackwell paths; Ada and SM120 use
+generic CUTLASS FNA. Actual selected backends and launched kernels are recorded
+on each deployed GPU rather than inferred from package names.
+
+Reproduce from the repository root after warming the selected runtime:
+
+```sh
+python3 -m benchmarks.neighborhood.benchmark \
+    --source-revision "$(git rev-parse HEAD)" \
+    --output "$NEIGHBORHOOD_RESULTS/performance.json" \
+    --suite full --samples 7 --target-ms 100 --capture-batch 8 --profile
+```
+
+Raw captures stay outside the tracked tree. The durable campaign preserves full
+source snapshots, exact launch scripts, immutable stage identities and exit
+receipts, failed operands, timing samples, eager and graph traces, actual
+compiler artifacts, installed NATTEN binaries, and one-second power/clock/
+temperature/process observations. Hardware records include actual memory, SM
+count, capability, power limits, partitioning and driver versions. Coarse
+telemetry does not establish utilization, occupancy, cycle normalization, or a
+performance ceiling. Owned machines have bounded lifetimes; complete off-host
+archives must verify before destruction.
+
+## Complete timing tables
+
+Complete contiguous BHSD D64 neighborhood API; resident GPU inputs, geometry preparation reported separately. No complete-model or equal-internal-precision claim.
+
+Device-event interval includes GPU work and launch gaps; graph measurements amortize each replay over capture_batch complete calls. Synchronized host wall intervals are retained separately.
+
+Latencies are median device intervals in microseconds, followed by sample range. Flex / ours and NATTEN / ours greater than one mean lower candidate latency. Failures and missing verification are excluded from ratios. Cold setup and preparation are retained separately in JSON.
+
+### forward / eager
+
+| GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| h100 | 32×32 w7×7 B1H8 fp16 | 74.04 [72.92–74.69] | 65.74 [65.19–66.16] | 652.64 [646.28–677.28] | 0.888× | 8.815× |
+| h100 | 64×64 w7×7 B1H8 fp16 | 83.21 [82.29–84.02] | 73.51 [73.37–73.86] | 705.59 [700.83–736.02] | 0.883× | 8.480× |
+| h100 | 64×64 w13×13 B1H8 fp16 | 84.32 [83.30–90.63] | 73.48 [72.44–75.31] | 709.88 [706.93–715.92] | 0.871× | 8.419× |
+| h100 | 128×128 w7×7 B1H8 fp16 | 229.85 [224.77–232.06] | 164.57 [161.53–166.37] | 708.50 [705.01–711.36] | 0.716× | 3.082× |
+| h100 | 33×49 w7×7 B2H4 fp16 | 84.43 [82.96–123.21] | 74.26 [73.16–111.65] | 722.00 [715.83–1062.17] | 0.880× | 8.552× |
+| h100 | 32×32 w7×7 B1H8 bf16 | 84.73 [82.67–86.02] | 73.14 [72.82–74.09] | 704.67 [702.42–712.19] | 0.863× | 8.317× |
+| h100 | 64×64 w7×7 B1H8 bf16 | 83.64 [82.50–87.38] | 73.62 [72.42–73.82] | 715.85 [713.12–720.74] | 0.880× | 8.558× |
+| h100 | 64×64 w13×13 B1H8 bf16 | 83.30 [82.43–83.68] | 72.94 [71.50–73.93] | 706.98 [697.58–719.23] | 0.876× | 8.488× |
+| h100 | 128×128 w7×7 B1H8 bf16 | 223.57 [217.10–223.71] | 162.34 [161.53–166.60] | 718.77 [712.43–725.86] | 0.726× | 3.215× |
+| h100 | 33×49 w7×7 B2H4 bf16 | 83.38 [82.92–84.19] | 74.20 [73.31–74.92] | 706.24 [703.06–717.09] | 0.890× | 8.470× |
+| b200 | 32×32 w7×7 B1H8 fp16 | 61.36 [59.08–62.32] | 56.59 [55.22–59.74] | 542.13 [530.81–569.60] | 0.922× | 8.836× |
+| b200 | 64×64 w7×7 B1H8 fp16 | 69.39 [68.95–70.63] | 64.74 [64.22–64.89] | 581.85 [574.17–608.11] | 0.933× | 8.386× |
+| b200 | 64×64 w13×13 B1H8 fp16 | 69.35 [68.51–69.94] | 63.49 [63.01–64.17] | 589.88 [589.14–592.80] | 0.915× | 8.506× |
+| b200 | 128×128 w7×7 B1H8 fp16 | 183.94 [183.92–184.02] | 186.15 [186.06–186.25] | 598.83 [587.69–604.06] | 1.012× | 3.256× |
+| b200 | 33×49 w7×7 B2H4 fp16 | 69.26 [69.00–70.15] | 63.88 [62.34–64.15] | 594.46 [593.33–598.80] | 0.922× | 8.583× |
+| b200 | 32×32 w7×7 B1H8 bf16 | 69.97 [68.52–71.06] | 63.97 [63.69–69.00] | 591.04 [587.68–598.55] | 0.914× | 8.447× |
+| b200 | 64×64 w7×7 B1H8 bf16 | 69.19 [68.76–70.24] | 63.57 [62.95–64.00] | 595.46 [589.93–599.48] | 0.919× | 8.606× |
+| b200 | 64×64 w13×13 B1H8 bf16 | 70.53 [69.43–71.32] | 63.30 [62.79–64.22] | 588.02 [581.92–592.66] | 0.898× | 8.337× |
+| b200 | 128×128 w7×7 B1H8 bf16 | 185.86 [185.79–185.89] | 186.03 [186.00–186.13] | 600.45 [594.00–601.35] | 1.001× | 3.231× |
+| b200 | 33×49 w7×7 B2H4 bf16 | 68.71 [68.21–68.94] | 62.79 [62.06–63.46] | 581.41 [576.59–584.17] | 0.914× | 8.462× |
+| rtx4090 | 32×32 w7×7 B1H8 fp16 | 112.60 [103.83–124.61] | 98.22 [96.24–108.86] | 308.10 [281.21–322.02] | 0.872× | 2.736× |
+| rtx4090 | 64×64 w7×7 B1H8 fp16 | 118.65 [118.11–121.03] | 107.00 [106.24–109.22] | 314.86 [310.82–329.24] | 0.902× | 2.654× |
+| rtx4090 | 64×64 w13×13 B1H8 fp16 | 118.35 [115.94–124.12] | 105.69 [104.50–106.87] | 312.21 [311.13–334.51] | 0.893× | 2.638× |
+| rtx4090 | 128×128 w7×7 B1H8 fp16 | 193.36 [189.67–195.15] | 228.48 [227.72–234.91] | 317.89 [309.18–337.23] | 1.182× | 1.644× |
+| rtx4090 | 33×49 w7×7 B2H4 fp16 | 120.06 [117.16–128.43] | 108.41 [106.00–119.77] | 316.92 [314.62–339.80] | 0.903× | 2.640× |
+| rtx4090 | 32×32 w7×7 B1H8 bf16 | 121.37 [118.27–128.51] | 109.88 [107.84–118.57] | 317.87 [312.93–332.43] | 0.905× | 2.619× |
+| rtx4090 | 64×64 w7×7 B1H8 bf16 | 120.08 [117.48–133.86] | 107.24 [105.96–118.40] | 311.37 [308.84–361.02] | 0.893× | 2.593× |
+| rtx4090 | 64×64 w13×13 B1H8 bf16 | 124.39 [117.36–141.65] | 110.34 [107.44–121.52] | 320.17 [312.80–379.36] | 0.887× | 2.574× |
+| rtx4090 | 128×128 w7×7 B1H8 bf16 | 188.76 [185.50–191.31] | 227.58 [227.19–231.49] | 313.46 [312.06–362.76] | 1.206× | 1.661× |
+| rtx4090 | 33×49 w7×7 B2H4 bf16 | 137.65 [135.30–149.00] | 124.03 [123.39–134.10] | 360.20 [353.76–365.43] | 0.901× | 2.617× |
+| rtx5090 | 32×32 w7×7 B1H8 fp16 | 121.24 [117.78–125.10] | 105.30 [101.53–106.45] | 311.39 [300.00–320.78] | 0.869× | 2.568× |
+| rtx5090 | 64×64 w7×7 B1H8 fp16 | 136.12 [133.59–137.22] | 117.08 [115.57–119.52] | 343.77 [339.79–384.16] | 0.860× | 2.526× |
+| rtx5090 | 64×64 w13×13 B1H8 fp16 | 139.08 [136.31–153.23] | 118.80 [115.25–130.74] | 353.80 [344.81–383.66] | 0.854× | 2.544× |
+| rtx5090 | 128×128 w7×7 B1H8 fp16 | 184.73 [184.64–184.82] | 219.56 [219.37–219.70] | 341.15 [339.49–341.58] | 1.189× | 1.847× |
+| rtx5090 | 33×49 w7×7 B2H4 fp16 | 135.34 [134.78–136.00] | 115.04 [114.22–116.46] | 343.25 [341.71–353.11] | 0.850× | 2.536× |
+| rtx5090 | 32×32 w7×7 B1H8 bf16 | 134.54 [133.98–135.71] | 115.93 [114.89–116.16] | 340.18 [338.94–346.17] | 0.862× | 2.528× |
+| rtx5090 | 64×64 w7×7 B1H8 bf16 | 135.65 [134.36–137.57] | 115.70 [114.32–116.17] | 344.55 [341.36–347.46] | 0.853× | 2.540× |
+| rtx5090 | 64×64 w13×13 B1H8 bf16 | 134.71 [134.04–135.28] | 115.69 [114.77–116.08] | 342.05 [340.89–347.94] | 0.859× | 2.539× |
+| rtx5090 | 128×128 w7×7 B1H8 bf16 | 184.45 [184.36–184.99] | 220.03 [219.98–220.32] | 341.56 [339.91–343.40] | 1.193× | 1.852× |
+| rtx5090 | 33×49 w7×7 B2H4 bf16 | 135.26 [134.40–135.89] | 116.65 [116.24–116.88] | 342.50 [341.17–344.43] | 0.862× | 2.532× |
+| l40s | 32×32 w7×7 B1H8 fp16 | 53.85 [53.48–54.39] | 44.87 [44.64–45.48] | 187.76 [185.71–189.25] | 0.833× | 3.487× |
+| l40s | 64×64 w7×7 B1H8 fp16 | 64.62 [64.32–68.32] | 54.37 [53.84–56.02] | 210.14 [209.17–212.70] | 0.841× | 3.252× |
+| l40s | 64×64 w13×13 B1H8 fp16 | 65.24 [64.48–65.99] | 54.15 [53.76–54.91] | 212.09 [210.41–213.11] | 0.830× | 3.251× |
+| l40s | 128×128 w7×7 B1H8 fp16 | 188.90 [188.17–191.62] | 199.58 [193.37–204.06] | 289.17 [265.76–295.85] | 1.057× | 1.531× |
+| l40s | 33×49 w7×7 B2H4 fp16 | 65.33 [64.70–67.51] | 53.67 [53.06–56.50] | 212.95 [211.72–215.08] | 0.822× | 3.260× |
+| l40s | 32×32 w7×7 B1H8 bf16 | 64.26 [63.84–65.63] | 53.00 [52.09–53.26] | 208.59 [207.74–210.53] | 0.825× | 3.246× |
+| l40s | 64×64 w7×7 B1H8 bf16 | 65.19 [64.54–65.57] | 54.10 [53.28–54.51] | 212.83 [212.11–213.21] | 0.830× | 3.265× |
+| l40s | 64×64 w13×13 B1H8 bf16 | 65.58 [65.04–67.40] | 55.60 [54.12–58.31] | 214.69 [212.62–217.66] | 0.848× | 3.274× |
+| l40s | 128×128 w7×7 B1H8 bf16 | 182.68 [181.62–183.28] | 192.05 [187.85–197.92] | 294.71 [289.11–297.58] | 1.051× | 1.613× |
+| l40s | 33×49 w7×7 B2H4 bf16 | 65.69 [64.87–67.01] | 54.66 [54.14–57.51] | 213.12 [211.31–217.42] | 0.832× | 3.245× |
+
+### forward / graph
+
+| GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| h100 | 32×32 w7×7 B1H8 fp16 | 11.85 [11.85–11.85] | 8.52 [8.52–8.52] | 37.47 [37.47–37.48] | 0.719× | 3.162× |
+| h100 | 64×64 w7×7 B1H8 fp16 | 37.69 [37.67–37.70] | 32.64 [32.46–32.68] | 80.27 [80.25–80.28] | 0.866× | 2.130× |
+| h100 | 64×64 w13×13 B1H8 fp16 | 66.26 [66.17–66.60] | 44.00 [43.98–44.19] | 80.44 [80.41–80.46] | 0.664× | 1.214× |
+| h100 | 128×128 w7×7 B1H8 fp16 | 224.19 [222.85–224.36] | 159.54 [159.49–160.29] | 263.11 [263.02–263.88] | 0.712× | 1.174× |
+| h100 | 33×49 w7×7 B2H4 fp16 | 25.60 [25.54–25.75] | 23.66 [23.66–23.75] | 50.82 [50.80–50.87] | 0.924× | 1.985× |
+| h100 | 32×32 w7×7 B1H8 bf16 | 11.76 [11.76–11.85] | 9.41 [9.41–9.44] | 37.35 [37.35–37.36] | 0.800× | 3.175× |
+| h100 | 64×64 w7×7 B1H8 bf16 | 37.39 [37.22–37.69] | 32.68 [32.48–32.86] | 80.22 [80.16–80.41] | 0.874× | 2.146× |
+| h100 | 64×64 w13×13 B1H8 bf16 | 65.76 [65.30–66.07] | 44.04 [43.96–44.30] | 80.60 [80.55–80.86] | 0.670× | 1.226× |
+| h100 | 128×128 w7×7 B1H8 bf16 | 215.14 [215.04–217.80] | 159.47 [159.46–159.52] | 263.17 [263.13–263.81] | 0.741× | 1.223× |
+| h100 | 33×49 w7×7 B2H4 bf16 | 25.39 [25.13–25.62] | 23.69 [23.69–23.86] | 51.34 [51.29–51.53] | 0.933× | 2.022× |
+| b200 | 32×32 w7×7 B1H8 fp16 | 11.78 [11.78–11.79] | 12.03 [12.03–12.03] | 48.39 [48.38–48.42] | 1.021× | 4.106× |
+| b200 | 64×64 w7×7 B1H8 fp16 | 36.59 [36.58–36.59] | 43.07 [43.06–43.07] | 78.86 [78.85–78.88] | 1.177× | 2.155× |
+| b200 | 64×64 w13×13 B1H8 fp16 | 64.02 [64.02–64.02] | 58.42 [58.42–58.42] | 78.97 [78.95–78.98] | 0.913× | 1.234× |
+| b200 | 128×128 w7×7 B1H8 fp16 | 183.33 [183.28–183.35] | 185.40 [185.37–185.43] | 268.51 [268.44–268.54] | 1.011× | 1.465× |
+| b200 | 33×49 w7×7 B2H4 fp16 | 24.31 [24.31–24.32] | 37.87 [37.87–37.88] | 67.53 [67.52–67.55] | 1.558× | 2.777× |
+| b200 | 32×32 w7×7 B1H8 bf16 | 11.78 [11.78–11.79] | 12.03 [12.03–12.03] | 48.38 [48.38–48.39] | 1.021× | 4.105× |
+| b200 | 64×64 w7×7 B1H8 bf16 | 36.29 [36.28–36.30] | 43.04 [43.04–43.04] | 78.96 [78.95–78.99] | 1.186× | 2.176× |
+| b200 | 64×64 w13×13 B1H8 bf16 | 63.21 [63.20–63.22] | 58.38 [58.38–58.39] | 78.97 [78.96–78.99] | 0.924× | 1.249× |
+| b200 | 128×128 w7×7 B1H8 bf16 | 185.11 [185.09–185.13] | 185.32 [185.31–185.33] | 271.88 [271.83–271.92] | 1.001× | 1.469× |
+| b200 | 33×49 w7×7 B2H4 bf16 | 25.86 [25.86–25.86] | 37.87 [37.87–37.88] | 67.53 [67.52–67.54] | 1.465× | 2.611× |
+| rtx4090 | 32×32 w7×7 B1H8 fp16 | 10.25 [10.25–10.25] | 11.43 [11.40–11.44] | 24.53 [24.52–24.54] | 1.115× | 2.393× |
+| rtx4090 | 64×64 w7×7 B1H8 fp16 | 34.47 [34.37–34.54] | 45.67 [45.51–45.78] | 47.42 [47.41–47.63] | 1.325× | 1.376× |
+| rtx4090 | 64×64 w13×13 B1H8 fp16 | 60.75 [60.59–60.81] | 62.57 [62.34–63.02] | 75.53 [75.49–75.85] | 1.030× | 1.243× |
+| rtx4090 | 128×128 w7×7 B1H8 fp16 | 194.12 [191.79–196.31] | 228.23 [226.78–228.64] | 243.02 [242.71–245.24] | 1.176× | 1.252× |
+| rtx4090 | 33×49 w7×7 B2H4 fp16 | 23.09 [23.07–23.15] | 26.37 [26.36–26.43] | 35.20 [35.19–35.28] | 1.142× | 1.525× |
+| rtx4090 | 32×32 w7×7 B1H8 bf16 | 10.22 [10.21–10.23] | 11.42 [11.41–11.43] | 24.37 [24.36–24.38] | 1.118× | 2.384× |
+| rtx4090 | 64×64 w7×7 B1H8 bf16 | 35.68 [35.65–35.76] | 45.31 [45.24–45.33] | 47.25 [47.15–47.26] | 1.270× | 1.324× |
+| rtx4090 | 64×64 w13×13 B1H8 bf16 | 62.71 [62.59–62.79] | 62.11 [62.05–62.17] | 75.33 [75.23–75.37] | 0.990× | 1.201× |
+| rtx4090 | 128×128 w7×7 B1H8 bf16 | 189.17 [188.28–191.14] | 226.41 [226.24–228.20] | 242.71 [242.69–243.97] | 1.197× | 1.283× |
+| rtx4090 | 33×49 w7×7 B2H4 bf16 | 22.27 [22.26–22.29] | 26.55 [26.54–26.57] | 35.19 [35.11–35.20] | 1.192× | 1.580× |
+| rtx5090 | 32×32 w7×7 B1H8 fp16 | 12.84 [12.83–12.84] | 12.26 [12.23–12.26] | 30.12 [30.11–30.13] | 0.954× | 2.346× |
+| rtx5090 | 64×64 w7×7 B1H8 fp16 | 40.43 [40.40–40.44] | 49.28 [49.26–49.29] | 62.04 [62.02–62.06] | 1.219× | 1.534× |
+| rtx5090 | 64×64 w13×13 B1H8 fp16 | 71.68 [71.68–71.73] | 68.39 [68.35–68.41] | 90.00 [89.96–90.09] | 0.954× | 1.256× |
+| rtx5090 | 128×128 w7×7 B1H8 fp16 | 184.26 [184.21–184.31] | 218.87 [218.82–218.92] | 214.44 [214.34–214.48] | 1.188× | 1.164× |
+| rtx5090 | 33×49 w7×7 B2H4 fp16 | 26.81 [26.81–26.82] | 29.58 [29.55–29.61] | 37.91 [37.81–37.94] | 1.103× | 1.414× |
+| rtx5090 | 32×32 w7×7 B1H8 bf16 | 13.42 [13.41–13.42] | 12.08 [12.07–12.09] | 32.94 [32.92–33.01] | 0.901× | 2.455× |
+| rtx5090 | 64×64 w7×7 B1H8 bf16 | 40.10 [40.09–40.12] | 49.24 [49.23–49.26] | 63.24 [63.23–63.25] | 1.228× | 1.577× |
+| rtx5090 | 64×64 w13×13 B1H8 bf16 | 71.07 [71.03–71.09] | 68.33 [68.29–68.35] | 95.13 [95.06–95.16] | 0.961× | 1.339× |
+| rtx5090 | 128×128 w7×7 B1H8 bf16 | 183.51 [183.42–183.56] | 218.86 [218.84–218.91] | 219.77 [219.69–219.86] | 1.193× | 1.198× |
+| rtx5090 | 33×49 w7×7 B2H4 bf16 | 26.60 [26.59–26.64] | 29.51 [29.50–29.52] | 40.22 [40.13–40.25] | 1.109× | 1.512× |
+| l40s | 32×32 w7×7 B1H8 fp16 | 9.56 [9.56–9.56] | 9.65 [9.65–9.65] | 24.79 [24.79–24.79] | 1.009× | 2.592× |
+| l40s | 64×64 w7×7 B1H8 fp16 | 34.72 [34.71–34.78] | 36.01 [35.81–36.13] | 48.92 [48.85–49.11] | 1.037× | 1.409× |
+| l40s | 64×64 w13×13 B1H8 fp16 | 60.65 [60.15–61.08] | 49.25 [49.01–50.30] | 84.50 [83.94–85.28] | 0.812× | 1.393× |
+| l40s | 128×128 w7×7 B1H8 fp16 | 188.30 [185.90–190.69] | 197.42 [192.88–200.41] | 287.61 [286.24–291.03] | 1.048× | 1.527× |
+| l40s | 33×49 w7×7 B2H4 fp16 | 20.25 [20.24–20.25] | 22.26 [22.25–22.26] | 30.27 [30.26–30.27] | 1.099× | 1.495× |
+| l40s | 32×32 w7×7 B1H8 bf16 | 9.47 [9.47–9.47] | 9.72 [9.72–9.72] | 24.79 [24.79–24.79] | 1.026× | 2.618× |
+| l40s | 64×64 w7×7 B1H8 bf16 | 34.68 [34.36–35.24] | 35.68 [35.63–35.75] | 48.55 [48.47–49.14] | 1.029× | 1.400× |
+| l40s | 64×64 w13×13 B1H8 bf16 | 61.28 [61.06–61.85] | 48.42 [48.32–49.44] | 82.81 [82.04–83.22] | 0.790× | 1.351× |
+| l40s | 128×128 w7×7 B1H8 bf16 | 183.06 [178.78–183.85] | 191.60 [189.79–197.27] | 287.28 [286.65–290.29] | 1.047× | 1.569× |
+| l40s | 33×49 w7×7 B2H4 bf16 | 20.76 [20.75–20.76] | 22.29 [22.29–22.29] | 30.37 [30.34–30.37] | 1.074× | 1.463× |
+
+### forward backward / eager
+
+| GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| h100 | 32×32 w7×7 B1H8 fp16 | 1141.07 [1063.53–1167.01] | 853.79 [797.42–919.97] | 6787.04 [6717.48–7084.40] | 0.748× | 5.948× |
+| h100 | 64×64 w7×7 B1H8 fp16 | 1125.11 [1029.05–1140.89] | 779.73 [763.24–812.56] | 6405.19 [6320.25–6719.96] | 0.693× | 5.693× |
+| h100 | 64×64 w13×13 B1H8 fp16 | 542.45 [502.15–715.29] | 398.56 [368.10–561.77] | 3122.28 [2701.45–5205.18] | 0.735× | 5.756× |
+| h100 | 128×128 w7×7 B1H8 fp16 | 996.12 [938.05–1046.10] | 667.39 [642.44–713.05] | 5999.05 [5840.30–6255.38] | 0.670× | 6.022× |
+| h100 | 33×49 w7×7 B2H4 fp16 | 1005.81 [900.81–1066.53] | 671.82 [506.12–688.47] | 5882.12 [4929.28–6184.69] | 0.668× | 5.848× |
+| h100 | 32×32 w7×7 B1H8 bf16 | 958.44 [871.05–1006.97] | 649.57 [558.14–677.26] | 5827.41 [5544.73–5957.32] | 0.678× | 6.080× |
+| h100 | 64×64 w7×7 B1H8 bf16 | 976.78 [917.10–1030.59] | 660.27 [582.32–681.68] | 5873.99 [5625.05–6271.57] | 0.676× | 6.014× |
+| h100 | 64×64 w13×13 B1H8 bf16 | 799.09 [449.35–967.97] | 354.19 [326.37–652.95] | 4742.97 [2585.00–5788.59] | 0.443× | 5.935× |
+| h100 | 128×128 w7×7 B1H8 bf16 | 912.64 [864.50–962.05] | 629.74 [614.41–661.20] | 5690.66 [5308.87–5845.71] | 0.690× | 6.235× |
+| h100 | 33×49 w7×7 B2H4 bf16 | 932.73 [837.70–961.29] | 641.78 [588.41–650.15] | 5744.77 [5245.18–5795.89] | 0.688× | 6.159× |
+| b200 | 32×32 w7×7 B1H8 fp16 | 763.15 [602.75–857.81] | 736.51 [470.13–787.18] | 2407.60 [2359.50–2494.88] | 0.965× | 3.155× |
+| b200 | 64×64 w7×7 B1H8 fp16 | 838.48 [801.33–842.35] | 745.47 [687.89–770.70] | 2427.72 [2399.05–2436.70] | 0.889× | 2.895× |
+| b200 | 64×64 w13×13 B1H8 fp16 | 851.91 [816.03–885.17] | 751.64 [732.19–792.39] | 2438.72 [2413.43–2451.53] | 0.882× | 2.863× |
+| b200 | 128×128 w7×7 B1H8 fp16 | 809.23 [773.03–864.21] | 716.87 [634.66–742.30] | 2399.91 [2371.35–2437.13] | 0.886× | 2.966× |
+| b200 | 33×49 w7×7 B2H4 fp16 | 716.36 [553.82–833.28] | 430.00 [399.82–755.29] | 2342.14 [2257.86–2511.82] | 0.600× | 3.269× |
+| b200 | 32×32 w7×7 B1H8 bf16 | 794.93 [778.27–821.13] | 729.43 [683.63–743.20] | 2415.31 [2394.21–2461.18] | 0.918× | 3.038× |
+| b200 | 64×64 w7×7 B1H8 bf16 | 839.07 [776.29–855.50] | 732.50 [697.32–778.55] | 2412.38 [2395.45–2441.60] | 0.873× | 2.875× |
+| b200 | 64×64 w13×13 B1H8 bf16 | 803.16 [761.41–854.11] | 711.76 [679.83–745.69] | 2414.17 [2387.12–2486.10] | 0.886× | 3.006× |
+| b200 | 128×128 w7×7 B1H8 bf16 | 818.36 [785.41–832.23] | 702.76 [669.37–774.41] | 2406.87 [2394.84–2419.22] | 0.859× | 2.941× |
+| b200 | 33×49 w7×7 B2H4 bf16 | 825.19 [799.89–855.05] | 749.78 [666.27–781.90] | 2426.55 [2391.30–2482.13] | 0.909× | 2.941× |
+| rtx4090 | 32×32 w7×7 B1H8 fp16 | 605.51 [548.66–1036.58] | 465.35 [414.48–805.19] | 1101.52 [950.39–1789.22] | 0.769× | 1.819× |
+| rtx4090 | 64×64 w7×7 B1H8 fp16 | 475.35 [468.48–979.54] | 358.65 [352.65–709.85] | 842.47 [838.39–1194.69] | 0.755× | 1.772× |
+| rtx4090 | 64×64 w13×13 B1H8 fp16 | 586.49 [479.44–657.74] | 459.63 [363.39–663.01] | 1040.34 [837.35–1244.91] | 0.784× | 1.774× |
+| rtx4090 | 128×128 w7×7 B1H8 fp16 | 803.63 [800.92–825.70] | 1041.33 [1034.39–1054.29] | 1369.81 [1365.94–1411.27] | 1.296× | 1.705× |
+| rtx4090 | 33×49 w7×7 B2H4 fp16 | 507.82 [488.27–640.97] | 421.55 [390.99–445.04] | 905.69 [851.14–1182.26] | 0.830× | 1.783× |
+| rtx4090 | 32×32 w7×7 B1H8 bf16 | 534.64 [473.61–717.12] | 406.78 [356.82–533.30] | 923.71 [838.46–1054.04] | 0.761× | 1.728× |
+| rtx4090 | 64×64 w7×7 B1H8 bf16 | 503.88 [478.28–800.39] | 363.95 [356.14–447.17] | 849.41 [842.13–1017.62] | 0.722× | 1.686× |
+| rtx4090 | 64×64 w13×13 B1H8 bf16 | 485.94 [471.25–700.78] | 387.66 [355.60–456.13] | 858.22 [843.94–963.41] | 0.798× | 1.766× |
+| rtx4090 | 128×128 w7×7 B1H8 bf16 | 848.03 [843.20–863.48] | 1032.14 [1025.71–1065.93] | 1372.19 [1363.00–1378.40] | 1.217× | 1.618× |
+| rtx4090 | 33×49 w7×7 B2H4 bf16 | 581.50 [466.92–658.64] | 442.26 [380.28–500.68] | 973.43 [868.34–1108.69] | 0.761× | 1.674× |
+| rtx5090 | 32×32 w7×7 B1H8 fp16 | 896.85 [512.65–1082.48] | 656.63 [379.43–813.92] | 1313.37 [883.69–1939.02] | 0.732× | 1.464× |
+| rtx5090 | 64×64 w7×7 B1H8 fp16 | 1055.95 [765.65–1196.17] | 781.30 [519.20–901.72] | 1743.77 [1343.89–1897.97] | 0.740× | 1.651× |
+| rtx5090 | 64×64 w13×13 B1H8 fp16 | 642.98 [604.74–875.32] | 565.86 [473.72–612.44] | 1204.45 [926.42–1489.08] | 0.880× | 1.873× |
+| rtx5090 | 128×128 w7×7 B1H8 fp16 | 1050.11 [968.45–1150.69] | 920.45 [919.53–923.31] | 1748.49 [1709.59–1930.83] | 0.877× | 1.665× |
+| rtx5090 | 33×49 w7×7 B2H4 fp16 | 1149.69 [1106.44–1164.14] | 855.06 [834.88–873.08] | 1933.10 [1878.63–1981.71] | 0.744× | 1.681× |
+| rtx5090 | 32×32 w7×7 B1H8 bf16 | 754.08 [749.88–1018.09] | 522.19 [503.61–735.60] | 1333.16 [1317.21–1845.62] | 0.692× | 1.768× |
+| rtx5090 | 64×64 w7×7 B1H8 bf16 | 1011.12 [951.86–1133.75] | 725.32 [646.55–741.11] | 1790.48 [1764.91–1821.40] | 0.717× | 1.771× |
+| rtx5090 | 64×64 w13×13 B1H8 bf16 | 956.96 [913.08–1029.45] | 627.59 [506.27–703.45] | 1769.89 [1737.23–1789.71] | 0.656× | 1.849× |
+| rtx5090 | 128×128 w7×7 B1H8 bf16 | 1123.94 [953.37–1151.66] | 922.64 [921.53–923.32] | 1883.11 [1876.92–1898.53] | 0.821× | 1.675× |
+| rtx5090 | 33×49 w7×7 B2H4 bf16 | 755.83 [754.75–763.48] | 510.95 [507.29–677.49] | 1324.76 [1322.60–1747.35] | 0.676× | 1.753× |
+| l40s | 32×32 w7×7 B1H8 fp16 | 702.07 [654.47–797.85] | 492.68 [481.88–508.02] | 1255.24 [1171.86–1263.54] | 0.702× | 1.788× |
+| l40s | 64×64 w7×7 B1H8 fp16 | 647.71 [521.14–699.77] | 489.43 [484.68–493.73] | 1133.42 [905.93–1249.87] | 0.756× | 1.750× |
+| l40s | 64×64 w13×13 B1H8 fp16 | 591.99 [534.29–623.59] | 324.86 [319.24–333.16] | 963.68 [927.86–1135.79] | 0.549× | 1.628× |
+| l40s | 128×128 w7×7 B1H8 fp16 | 727.98 [717.98–743.88] | 870.22 [853.94–912.96] | 1459.40 [1449.19–1502.11] | 1.195× | 2.005× |
+| l40s | 33×49 w7×7 B2H4 fp16 | 583.71 [361.56–651.20] | 322.33 [251.86–323.90] | 936.06 [890.74–1082.65] | 0.552× | 1.604× |
+| l40s | 32×32 w7×7 B1H8 bf16 | 590.00 [557.59–629.87] | 320.68 [318.72–325.93] | 943.11 [902.81–1054.38] | 0.544× | 1.599× |
+| l40s | 64×64 w7×7 B1H8 bf16 | 506.03 [426.85–595.80] | 325.29 [322.67–343.67] | 909.59 [906.06–953.10] | 0.643× | 1.797× |
+| l40s | 64×64 w13×13 B1H8 bf16 | 500.61 [492.06–552.40] | 325.82 [321.74–335.87] | 900.59 [848.46–929.47] | 0.651× | 1.799× |
+| l40s | 128×128 w7×7 B1H8 bf16 | 745.84 [731.41–751.81] | 841.12 [822.87–850.92] | 1438.90 [1426.39–1470.07] | 1.128× | 1.929× |
+| l40s | 33×49 w7×7 B2H4 bf16 | 381.89 [377.03–569.31] | 300.99 [300.23–326.28] | 661.41 [643.62–961.89] | 0.788× | 1.732× |
+
+### forward backward / graph
+
+| GPU | Workload | Ours, µs | Flex, µs | NATTEN, µs | Flex / ours | NATTEN / ours |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| h100 | 32×32 w7×7 B1H8 fp16 | 54.27 [54.25–54.46] | 27.85 [27.84–27.86] | 113.72 [113.70–113.73] | 0.513× | 2.095× |
+| h100 | 64×64 w7×7 B1H8 fp16 | 168.31 [166.88–169.51] | 124.04 [122.35–126.70] | 255.92 [255.75–259.00] | 0.737× | 1.521× |
+| h100 | 64×64 w13×13 B1H8 fp16 | 293.26 [289.96–296.34] | 175.51 [172.14–176.86] | 257.39 [256.51–260.39] | 0.598× | 0.878× |
+| h100 | 128×128 w7×7 B1H8 fp16 | 697.61 [697.33–708.79] | 601.24 [601.06–613.09] | 861.89 [861.55–863.17] | 0.862× | 1.235× |
+| h100 | 33×49 w7×7 B2H4 fp16 | 83.97 [83.82–84.15] | 79.95 [79.58–80.02] | 177.24 [176.69–177.46] | 0.952× | 2.111× |
+| h100 | 32×32 w7×7 B1H8 bf16 | 49.24 [48.94–49.67] | 27.75 [27.75–28.16] | 116.28 [116.13–116.44] | 0.564× | 2.361× |
+| h100 | 64×64 w7×7 B1H8 bf16 | 153.08 [152.92–153.66] | 121.50 [121.09–122.97] | 255.72 [255.38–255.91] | 0.794× | 1.671× |
+| h100 | 64×64 w13×13 B1H8 bf16 | 270.63 [269.37–271.41] | 174.94 [173.52–178.10] | 256.98 [256.66–260.33] | 0.646× | 0.950× |
+| h100 | 128×128 w7×7 B1H8 bf16 | 798.85 [794.63–802.73] | 601.12 [600.53–608.26] | 862.24 [861.59–863.76] | 0.752× | 1.079× |
+| h100 | 33×49 w7×7 B2H4 bf16 | 86.39 [85.86–86.94] | 79.89 [79.45–80.79] | 177.89 [177.22–178.39] | 0.925× | 2.059× |
+| b200 | 32×32 w7×7 B1H8 fp16 | 52.79 [52.78–52.80] | 38.56 [38.51–38.59] | 112.33 [112.31–112.34] | 0.731× | 2.128× |
+| b200 | 64×64 w7×7 B1H8 fp16 | 154.42 [154.35–154.65] | 140.39 [140.24–140.48] | 209.39 [209.35–209.44] | 0.909× | 1.356× |
+| b200 | 64×64 w13×13 B1H8 fp16 | 263.11 [263.01–263.16] | 200.24 [199.95–200.51] | 211.61 [211.59–211.64] | 0.761× | 0.804× |
+| b200 | 128×128 w7×7 B1H8 fp16 | 651.26 [651.21–651.48] | 628.95 [628.71–629.14] | 651.80 [651.75–651.94] | 0.966× | 1.001× |
+| b200 | 33×49 w7×7 B2H4 fp16 | 81.59 [81.55–81.61] | 106.10 [105.97–106.20] | 159.43 [159.41–159.44] | 1.300× | 1.954× |
+| b200 | 32×32 w7×7 B1H8 bf16 | 50.49 [50.48–50.50] | 38.61 [38.59–38.62] | 112.32 [112.31–112.33] | 0.765× | 2.224× |
+| b200 | 64×64 w7×7 B1H8 bf16 | 151.09 [150.97–151.14] | 140.60 [140.55–140.72] | 211.65 [211.63–211.70] | 0.931× | 1.401× |
+| b200 | 64×64 w13×13 B1H8 bf16 | 259.52 [259.48–259.57] | 200.16 [199.82–200.38] | 211.56 [211.53–211.57] | 0.771× | 0.815× |
+| b200 | 128×128 w7×7 B1H8 bf16 | 700.45 [700.33–700.53] | 628.64 [628.48–628.77] | 656.06 [655.91–656.14] | 0.897× | 0.937× |
+| b200 | 33×49 w7×7 B2H4 bf16 | 86.43 [86.39–86.46] | 106.01 [105.93–106.10] | 160.88 [160.86–160.89] | 1.227× | 1.861× |
+| rtx4090 | 32×32 w7×7 B1H8 fp16 | 40.45 [40.41–40.50] | 38.95 [38.94–38.95] | 151.08 [150.95–151.12] | 0.963× | 3.735× |
+| rtx4090 | 64×64 w7×7 B1H8 fp16 | 149.35 [149.10–149.45] | 194.98 [194.93–195.11] | 338.32 [338.28–338.56] | 1.306× | 2.265× |
+| rtx4090 | 64×64 w13×13 B1H8 fp16 | 266.12 [266.00–266.37] | 280.96 [280.81–281.05] | 368.32 [368.02–368.62] | 1.056× | 1.384× |
+| rtx4090 | 128×128 w7×7 B1H8 fp16 | 797.59 [792.65–806.94] | 1044.61 [1027.10–1050.04] | 1358.82 [1353.72–1379.89] | 1.310× | 1.704× |
+| rtx4090 | 33×49 w7×7 B2H4 fp16 | 91.23 [90.98–91.24] | 96.18 [96.15–96.34] | 211.87 [211.63–212.06] | 1.054× | 2.322× |
+| rtx4090 | 32×32 w7×7 B1H8 bf16 | 43.69 [43.65–43.74] | 39.48 [39.47–39.53] | 150.04 [149.96–150.16] | 0.904× | 3.434× |
+| rtx4090 | 64×64 w7×7 B1H8 bf16 | 157.06 [157.00–157.20] | 196.99 [196.84–197.01] | 335.90 [335.56–336.16] | 1.254× | 2.139× |
+| rtx4090 | 64×64 w13×13 B1H8 bf16 | 281.36 [281.02–281.75] | 280.36 [280.14–280.47] | 367.07 [366.94–367.27] | 0.996× | 1.305× |
+| rtx4090 | 128×128 w7×7 B1H8 bf16 | 837.70 [836.86–838.23] | 1027.66 [1005.55–1034.30] | 1344.15 [1342.48–1359.02] | 1.227× | 1.605× |
+| rtx4090 | 33×49 w7×7 B2H4 bf16 | 93.51 [93.29–93.68] | 96.10 [95.99–96.16] | 211.20 [210.75–213.10] | 1.028× | 2.259× |
+| rtx5090 | 32×32 w7×7 B1H8 fp16 | 52.67 [52.62–52.69] | 37.46 [37.42–37.48] | 242.96 [242.79–243.15] | 0.711× | 4.613× |
+| rtx5090 | 64×64 w7×7 B1H8 fp16 | 169.08 [168.98–169.23] | 183.50 [183.28–183.68] | 495.52 [495.26–496.10] | 1.085× | 2.931× |
+| rtx5090 | 64×64 w13×13 B1H8 fp16 | 303.38 [303.14–303.75] | 262.18 [262.01–262.38] | 561.25 [560.73–562.00] | 0.864× | 1.850× |
+| rtx5090 | 128×128 w7×7 B1H8 fp16 | 740.10 [739.70–740.37] | 913.32 [912.93–914.15] | 1563.60 [1562.89–1564.75] | 1.234× | 2.113× |
+| rtx5090 | 33×49 w7×7 B2H4 fp16 | 112.28 [112.24–112.32] | 102.20 [102.10–102.27] | 271.45 [270.66–271.73] | 0.910× | 2.417× |
+| rtx5090 | 32×32 w7×7 B1H8 bf16 | 52.47 [52.44–52.49] | 37.23 [37.20–37.24] | 299.88 [299.67–300.22] | 0.710× | 5.715× |
+| rtx5090 | 64×64 w7×7 B1H8 bf16 | 166.18 [166.10–166.25] | 183.92 [183.72–184.05] | 578.62 [578.09–579.12] | 1.107× | 3.482× |
+| rtx5090 | 64×64 w13×13 B1H8 bf16 | 300.30 [300.22–300.39] | 262.09 [262.03–262.23] | 634.16 [633.36–635.95] | 0.873× | 2.112× |
+| rtx5090 | 128×128 w7×7 B1H8 bf16 | 756.11 [755.79–756.50] | 913.22 [911.91–913.75] | 1850.77 [1849.58–1851.49] | 1.208× | 2.448× |
+| rtx5090 | 33×49 w7×7 B2H4 bf16 | 116.31 [116.28–116.35] | 102.73 [102.63–102.84] | 312.62 [311.99–312.86] | 0.883× | 2.688× |
+| l40s | 32×32 w7×7 B1H8 fp16 | 35.82 [35.71–35.91] | 32.19 [32.16–32.31] | 149.02 [148.84–149.22] | 0.899× | 4.160× |
+| l40s | 64×64 w7×7 B1H8 fp16 | 132.69 [131.81–133.17] | 155.48 [155.04–157.76] | 323.53 [320.77–325.35] | 1.172× | 2.438× |
+| l40s | 64×64 w13×13 B1H8 fp16 | 254.00 [253.31–255.26] | 226.85 [224.60–228.30] | 356.40 [355.40–363.47] | 0.893× | 1.403× |
+| l40s | 128×128 w7×7 B1H8 fp16 | 721.34 [686.41–741.30] | 866.24 [848.05–869.79] | 1429.70 [1417.90–1460.67] | 1.201× | 1.982× |
+| l40s | 33×49 w7×7 B2H4 fp16 | 73.48 [73.29–73.71] | 88.44 [88.21–88.63] | 172.49 [171.95–173.01] | 1.204× | 2.348× |
+| l40s | 32×32 w7×7 B1H8 bf16 | 39.45 [39.36–39.55] | 33.99 [33.95–34.03] | 148.99 [148.94–149.38] | 0.862× | 3.776× |
+| l40s | 64×64 w7×7 B1H8 bf16 | 138.24 [137.99–138.64] | 155.69 [154.21–156.70] | 329.61 [327.52–333.44] | 1.126× | 2.384× |
+| l40s | 64×64 w13×13 B1H8 bf16 | 264.34 [264.09–265.08] | 221.99 [221.25–223.43] | 357.78 [352.52–360.92] | 0.840× | 1.353× |
+| l40s | 128×128 w7×7 B1H8 bf16 | 738.98 [729.50–742.57] | 839.04 [835.97–843.36] | 1402.51 [1400.58–1423.05] | 1.135× | 1.898× |
+| l40s | 33×49 w7×7 B2H4 bf16 | 80.94 [80.67–81.21] | 86.76 [86.64–87.12] | 172.12 [171.55–172.68] | 1.072× | 2.126× |
+
+† A retained timing lacks required qualification, graph validation, paired rounds, or a kernel trace; inspect its exclusion list in JSON. No ratio is reported for it.

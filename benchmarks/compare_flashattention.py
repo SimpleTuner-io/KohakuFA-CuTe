@@ -115,8 +115,8 @@ def main():
     if args.export_code:
         args.export_code.mkdir(parents=True, exist_ok=True)
         os.environ.update(CUTE_DSL_KEEP="ptx,cubin", CUTE_DSL_DUMP_DIR=str(args.export_code.resolve()))
-    from benchmarks.compare_ada import capture, measure
-    from benchmarks.compare_l40s import board_state, driver_api_version, graph_kernels, loaded_libraries
+    from benchmarks.experiments.ada.compare_ada import capture, measure
+    from benchmarks.experiments.ada.compare_l40s import board_state, driver_api_version, graph_kernels, loaded_libraries
     from kohakufa_cute import kernels
 
     compiled, compiler_artifacts, seen_artifacts = [], [], set()

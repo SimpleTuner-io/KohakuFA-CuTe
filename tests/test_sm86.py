@@ -175,7 +175,7 @@ class AmpereScheduleTests(unittest.TestCase):
                 self.compare(self.run_attention(q, k, v, dout, causal=causal), q, k, v, dout, causal=causal, norm_only=True)
 
     def test_d256_thresholds_tails_rectangles_and_poisoned_graphs(self):
-        from benchmarks.compare_sm86 import graph_metadata
+        from benchmarks.experiments.ampere.compare_sm86 import graph_metadata
         from kohakufa_cute import kernels, native
 
         cases = (
@@ -253,7 +253,7 @@ class AmpereScheduleTests(unittest.TestCase):
         return graph, (operands, dout, None, actual)
 
     def test_d64_long_bounds_cache_compiled_calls_and_poisoned_replay(self):
-        from benchmarks.compare_sm86 import graph_metadata
+        from benchmarks.experiments.ampere.compare_sm86 import graph_metadata
         from kohakufa_cute import kernels, native, scaled_dot_product_attention
 
         cases = (
@@ -306,7 +306,7 @@ class AmpereScheduleTests(unittest.TestCase):
             torch.compiler.reset()
 
     def test_d64_masks_gqa_batch_and_vector_fallbacks(self):
-        from benchmarks.compare_sm86 import graph_metadata
+        from benchmarks.experiments.ampere.compare_sm86 import graph_metadata
 
         for dtype, kind in itertools.product((torch.float16, torch.bfloat16), ("stride", "batch", "gqa", "padding", "full")):
             with self.subTest(dtype=dtype, kind=kind):
@@ -340,7 +340,7 @@ class AmpereScheduleTests(unittest.TestCase):
                         self.assertEqual(torch.count_nonzero(storage[3][1][:, :, -1]).item(), 0)
 
     def test_d64_selected_bf16_and_fp16_fallback_preserve_directed_coordinates(self):
-        from benchmarks.compare_sm86 import graph_metadata
+        from benchmarks.experiments.ampere.compare_sm86 import graph_metadata
         from tests.test_key_precision import key_cancellation
         from tests.test_value_precision import square_value_cancellation, value_residual_underflow
 

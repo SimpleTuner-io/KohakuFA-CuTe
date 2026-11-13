@@ -97,7 +97,7 @@ class ClefHopperForwardTests(unittest.TestCase):
                     torch.testing.assert_close(got.double(), want, atol=0.02, rtol=0.02)
 
     def test_causal_gqa_graph_reads_changed_inputs(self):
-        from benchmarks.clef_forward import fp64_forward_chunks
+        from benchmarks.experiments.shared.clef_forward import fp64_forward_chunks
         from kohakufa_cute import attention, kernels, native
 
         native.extension().clear_cache()

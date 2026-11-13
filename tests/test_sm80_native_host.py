@@ -11,8 +11,8 @@ from kohakufa_cute import fa4_sm80
 )
 class Sm80NativeHostTests(unittest.TestCase):
     def check_case(self, inputs, dout, *, causal=False, scale=None, directed=False, pointwise=False):
-        from benchmarks.sm80_native_host import attention
-        from benchmarks.validate_sm80_static import assess, statistics
+        from benchmarks.experiments.ampere.sm80_native_host import attention
+        from benchmarks.experiments.ampere.validate_sm80_static import assess, statistics
 
         saved = []
 
@@ -58,10 +58,10 @@ class Sm80NativeHostTests(unittest.TestCase):
             self.check_case(inputs, dout, scale=scale, directed=True, pointwise=True)
 
     def test_changed_poisoned_graph(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.compare_l40s import graph_kernels
-        from benchmarks.sm80_native_host import attention
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ada.compare_l40s import graph_kernels
+        from benchmarks.experiments.ampere.sm80_native_host import attention
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         for dtype, causal in ((torch.bfloat16, True), (torch.float16, False)):
             inputs = [torch.randn(1, 2, 129, 128, device="cuda", dtype=dtype) for _ in range(3)]
@@ -84,8 +84,8 @@ class Sm80NativeHostTests(unittest.TestCase):
                 assess(actual, operands, dout, causal=causal, scale=None, directed=False, pointwise=False)
 
     def test_expanded_dout_and_rejected_inputs(self):
+        from benchmarks.experiments.ampere.sm80_native_host import attention
         from benchmarks.reference import fp64_reference, metrics
-        from benchmarks.sm80_native_host import attention
 
         for dtype in (torch.bfloat16, torch.float16):
             inputs = [torch.randn(1, 2, 257, 128, device="cuda", dtype=dtype, requires_grad=True) for _ in range(3)]

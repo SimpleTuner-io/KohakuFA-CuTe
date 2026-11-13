@@ -25,12 +25,10 @@ class L40sSelectionTests(unittest.TestCase):
         self.properties = SimpleNamespace(
             name="NVIDIA L40S", multi_processor_count=142, shared_memory_per_block_optin=101376
         )
-        from benchmarks.l40s_public_metadata_controls import python_compatible
+        from benchmarks.experiments.ada.l40s_public_metadata_controls import python_compatible
 
         self.native_predicate = Mock(
-            side_effect=lambda q, k, v, causal, short_owned=True: python_compatible(
-                q, k, v, None, 0, causal, None, False
-            )
+            side_effect=lambda q, k, v, causal, short_owned=True: python_compatible(q, k, v, None, 0, causal, None, False)
         )
         for control in (
             patch.object(torch.cuda, "get_device_capability", return_value=(8, 9)),
@@ -99,9 +97,7 @@ class L40sSelectionTests(unittest.TestCase):
         self.assertIs(_l40s.schedule(128, 4096, False), _l40s.schedule(128, 4096, False))
         _l40s.is_device.cache_clear()
         with patch.object(self.properties, "name", "NVIDIA GeForce RTX 4090"):
-            with patch(
-                "kohakufa_cute.fa4_sm80._host.native_runner", return_value=Mock(return_value=object())
-            ) as preceding:
+            with patch("kohakufa_cute.fa4_sm80._host.native_runner", return_value=Mock(return_value=object())) as preceding:
                 fa4_sm80.attention(q, q, q)
             preceding.assert_called_once()
 
@@ -131,7 +127,7 @@ class L40sSelectionTests(unittest.TestCase):
                     self.assertEqual(_l40s.schedule(dimension, sequence, causal).causal_head_group, expected)
 
     def test_forward_m_control_keeps_its_existing_scope(self):
-        from benchmarks.l40s_schedules import make_attention
+        from benchmarks.experiments.ada.l40s_schedules import make_attention
         from kohakufa_cute.fa4_sm80 import _host, _l40s
 
         for dimension, causal in ((64, False), (64, True), (128, False), (128, True)):
@@ -151,7 +147,7 @@ class L40sSelectionTests(unittest.TestCase):
     def test_causal_group_control_preserves_other_schedule_fields(self):
         from dataclasses import replace
 
-        from benchmarks.l40s_schedules import make_attention
+        from benchmarks.experiments.ada.l40s_schedules import make_attention
         from kohakufa_cute.fa4_sm80 import _host, _l40s
 
         for dimension, causal in ((64, False), (64, True), (128, False), (128, True)):
@@ -211,7 +207,7 @@ class L40sSelectionTests(unittest.TestCase):
 )
 class L40sPublicKernelTests(unittest.TestCase):
     def test_native_public_statistics_and_gradients(self):
-        from benchmarks.validate_sm80_static import assess, statistics
+        from benchmarks.experiments.ampere.validate_sm80_static import assess, statistics
 
         for dtype in (torch.bfloat16, torch.float16):
             for dimension in (64, 128):
@@ -228,9 +224,7 @@ class L40sPublicKernelTests(unittest.TestCase):
                         self.assertTrue(fa4_sm80.compatible(*inputs, None, 0, causal, None, False))
                         saved = []
                         with torch.autograd.graph.saved_tensors_hooks(lambda t: saved.append(t) or t, lambda t: t):
-                            with patch.object(
-                                api, "_extension", side_effect=AssertionError("Unexpected native fallback")
-                            ):
+                            with patch.object(api, "_extension", side_effect=AssertionError("Unexpected native fallback")):
                                 out = api.scaled_dot_product_attention(*inputs, is_causal=causal)
                         self.assertEqual(len(saved), 6)
                         statistics(inputs, saved[-2], saved[-1], causal, dimension**-0.5)
@@ -238,7 +232,7 @@ class L40sPublicKernelTests(unittest.TestCase):
                         assess(actual, inputs, dout, causal=causal, scale=None, directed=False, pointwise=False)
 
     def test_all_three_public_entries_execute_the_native_schedule(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute.fa4_sm80 import _l40s
 
         for dimension, sequence, causal in (
@@ -273,9 +267,7 @@ class L40sPublicKernelTests(unittest.TestCase):
             (1024, 128, False, True),
         ):
             inputs = [
-                torch.randn(
-                    1, 16, sequence, dimension, device="cuda", dtype=torch.bfloat16, requires_grad=not inference
-                )
+                torch.randn(1, 16, sequence, dimension, device="cuda", dtype=torch.bfloat16, requires_grad=not inference)
                 for _ in range(3)
             ]
             self.assertFalse(fa4_sm80.compatible(*inputs, None, 0, causal, None, False))
@@ -299,8 +291,8 @@ class L40sPublicKernelTests(unittest.TestCase):
                 torch.testing.assert_close(output, preceding(), atol=0, rtol=0)
 
     def test_changed_poisoned_graph_and_unaligned_output_gradient(self):
-        from benchmarks.compare_ada import capture
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.compare_ada import capture
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
 
         for dtype in (torch.bfloat16, torch.float16):
             for dimension, causal in ((64, True), (128, True), (128, False)):

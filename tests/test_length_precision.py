@@ -2,7 +2,7 @@ import unittest
 
 import torch
 
-from benchmarks.length_precision import sweep
+from benchmarks.validation.length_precision import sweep
 
 
 class LengthPrecisionTests(unittest.TestCase):

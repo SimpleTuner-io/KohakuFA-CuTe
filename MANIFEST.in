@@ -1,5 +1,6 @@
-recursive-include benchmarks *.py
+recursive-include benchmarks *.py *.md *.json *.patch *.cu *.sh
 recursive-include tests *.py
+recursive-include controls *.py
 recursive-include results *.md *.json *.svg
 recursive-include docs *.md
 include AGENTS.md

@@ -61,3 +61,16 @@ owners; changing data in retained input storage is supported. Optional eager
 schedule selectors can fall back to ordinary CuTe for compiled calls.
 Enable the desired [determinism policy](determinism.md) before forward and capture.
 Atomic schedules do not promise bitwise-identical dQ between calls.
+
+## Experimental neighborhood attention
+
+`neighborhood_attention(q, k, v, *, spatial_shape, window_size, scale=None)`
+adds an explicit noncausal 2D path for matching FP16/BF16
+`[batch, heads, height*width, 64]` inputs, with stride and dilation one.
+It generates spatial tiles without a dense mask and uses shifted boundary
+windows. See the [neighborhood guide](neighborhood/README.md) for the complete
+input contract, asymmetric backward visibility, usage and current evidence.
+Qualification covers H100, B200, B300, RTX 4090, RTX 5090 and L40S; the guide
+documents the corrected dQ+dK method now enabled by default on every device.
+The [H100 schedule](neighborhood/reports/tuning.md#default-dispatch) is bounded
+by device and workload and preserves the default precision contract.

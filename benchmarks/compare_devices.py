@@ -16,7 +16,7 @@ from unittest.mock import patch
 
 import torch
 
-from benchmarks.compare_ada import capture, measure
+from benchmarks.experiments.ada.compare_ada import capture, measure
 from benchmarks.precision import evaluate
 from benchmarks.reference import fp64_reference, metrics
 from kohakufa_cute import kernels, native, scaled_dot_product_attention
@@ -123,7 +123,11 @@ def main():
         },
         "benchmark_sha256": {
             name: hashlib.sha256(Path(name).read_bytes()).hexdigest()
-            for name in ("benchmarks/compare_devices.py", "benchmarks/compare_ada.py", "benchmarks/reference.py")
+            for name in (
+                "benchmarks/compare_devices.py",
+                "benchmarks/experiments/ada/compare_ada.py",
+                "benchmarks/reference.py",
+            )
         },
         "scope": "Current main CuTe vs actual default SDPA, B1/H16 contiguous BHSD, FP16/BF16 dense/causal. Resident GPU work through warmed CUDA graphs; forward retains autograd and joint includes all three gradients. CPU dispatch, compilation and full-model costs excluded.",
         "protocol": {

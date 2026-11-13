@@ -5,7 +5,7 @@ import unittest
 
 class A100PublicControlsTests(unittest.TestCase):
     def test_exact_api_bodies_have_isolated_selectors_and_loader_caches(self):
-        from benchmarks.a100_public_api_controls import make_attention
+        from benchmarks.experiments.ampere.a100_public_api_controls import make_attention
         from kohakufa_cute import api, fa4_sm80
 
         previous, candidate = make_attention(previous=True), make_attention(previous=False)

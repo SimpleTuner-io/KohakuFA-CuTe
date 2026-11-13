@@ -24,7 +24,7 @@ class ShortOptimizedCacheTests(unittest.TestCase):
     def test_actual_distinct_semantic_namespaces_and_fixed_schedules(self):
         if torch.cuda.get_device_name() != "NVIDIA GeForce RTX 4090" or not fa4_sm80.available():
             self.skipTest("Qualified full RTX 4090 runtime required")
-        from benchmarks.rtx4090_short_optimized_controls import make_attention
+        from benchmarks.experiments.ada.rtx4090_short_optimized_controls import make_attention
         from kohakufa_cute import native
 
         module = native.extension()

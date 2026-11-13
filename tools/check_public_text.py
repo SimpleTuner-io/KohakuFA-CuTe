@@ -163,9 +163,7 @@ def main():
     parser.add_argument("--metadata", action="store_true", help="Scan exact author and committer identities.")
     parser.add_argument("--history", action="store_true", help="Scan all objects reachable from local refs.")
     parser.add_argument("--push-refs", action="store_true", help="Also scan pre-push tips from standard input.")
-    parser.add_argument(
-        "--message-stdin", action="store_true", help="Scan an exact commit message from standard input."
-    )
+    parser.add_argument("--message-stdin", action="store_true", help="Scan an exact commit message from standard input.")
     parser.add_argument("--message-file", action="append", default=[], metavar="FILE")
     parser.add_argument("--text-file", action="append", default=[], metavar="FILE")
     parser.add_argument("--file", action="append", default=[], metavar="FILE")

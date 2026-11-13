@@ -1,6 +1,6 @@
 # Gradient precision
 
-The default targets low-precision attention with FP32 accumulation. It preserves
+Ordinary attention targets low-precision attention with FP32 accumulation. It preserves
 separate unscaled score maxima and logarithmic normalization, shifts scores before
 scaling, and applies the attention scale after gradient accumulation. These choices
 address lost normalization information at large logits and premature gradient
@@ -38,10 +38,39 @@ do not establish an indexing, reconstruction, or synchronization defect.
 
 ## Optional stronger accuracy experiments
 
-Residual P/dS products, compensated reductions, and weighted-key dQ corrections
-implement a stronger accuracy target. They are excluded from default dispatch on
-every GPU. The [experiment record](../benchmarks/experiments/README.md) retains
+For ordinary attention, residual P/dS products, compensated reductions, and
+weighted-key dQ corrections remain separate accuracy experiments. They are
+excluded from ordinary-attention default dispatch on every GPU. The [experiment record](../benchmarks/experiments/README.md) retains
 the previous-policy comparison and precision tradeoffs.
+
+## Neighborhood default
+
+`neighborhood_attention()` uses the qualified normalized dQ correction and
+reconstructed dK correction by default on every supported GPU. No benchmark
+context is required. This is a stronger numerical contract than ordinary
+attention above; the measured complete-call cost is accepted in exchange for
+better accuracy on the defined workloads. There is no device-specific fallback
+to the former neighborhood arithmetic.
+
+Reconstruct P in FP32 from the separate unscaled extrema and logarithmic
+normalization. Let `delta_O = sum(FP32(O) * FP32(dO))`, using actual rounded O,
+and `dP = dO @ V.T` with FP32 accumulation. The query pass forms
+`dS_q = round_input(P32 * (dP - delta_O))` and subtracts the rounded dS row sum
+times the normalized, input-rounded-P weighted key mean from unscaled dQ.
+It also accumulates `t = sum_FP32(P32 * (dP - delta_O)) / sum_FP32(P32)`.
+The KV pass uses `dS_k = round_input(P32 * ((dP - delta_O) - t))` with two
+separate subtractions. Actual-output delta and t occupy distinct FP32 buffers.
+Gradient products accumulate in FP32; scaling follows dQ/dK accumulation and
+precedes final input-dtype conversion. Forward and input-rounded P for dV are
+unchanged. KV statistics use the qualified `column_staged` schedule.
+
+The independent equations are in
+`benchmarks/neighborhood/key_precision_reference.py`. The
+[H100 study](neighborhood/reports/dk-precision.md) and
+[five-device replay](neighborhood/reports/multigpu-precision.md) retain
+the original measurements made while this method was explicitly selected.
+Their historical labels and source hashes are preserved. The old `baseline`
+policy remains an explicit benchmark control, not the public default.
 
 ## Diagnose rounding separately from implementation errors
 

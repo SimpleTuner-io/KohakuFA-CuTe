@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import torch
 
-from benchmarks.paired_gb10_schedules import eager_call, graph_call
+from benchmarks.experiments.gb10.paired_gb10_schedules import eager_call, graph_call
 
 
 class Gb10BenchmarkCallTests(unittest.TestCase):

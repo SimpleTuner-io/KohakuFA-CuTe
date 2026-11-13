@@ -6,7 +6,7 @@ from unittest.mock import patch
 import torch
 import torch.nn.functional as functional
 
-from benchmarks.clef_forward import attention_scope, fp64_forward_chunks, parser, run
+from benchmarks.experiments.shared.clef_forward import attention_scope, fp64_forward_chunks, parser, run
 
 
 class AttentionCall(torch.nn.Module):

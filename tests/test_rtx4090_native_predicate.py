@@ -16,7 +16,7 @@ class Rtx4090NativePredicateTests(unittest.TestCase):
             self.skipTest("The qualified full RTX 4090 runtime is required")
 
     def test_qualified_python_parity_on_actual_mutable_metadata(self):
-        from benchmarks.rtx4090_predicate_candidates import python_compatible
+        from benchmarks.experiments.ada.rtx4090_predicate_candidates import python_compatible
 
         checked = 0
 

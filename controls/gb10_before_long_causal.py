@@ -83,11 +83,7 @@ def compatible(q, k, v, mask=None, dropout=0.0, causal=False, scale=None, gqa=Fa
 def scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0, is_causal=False, scale=None, enable_gqa=False):
     """Run the explicit measured family and preserve the public fallback API."""
     if compatible(q, k, v, attn_mask, dropout_p, is_causal, scale, enable_gqa):
-        return native_runner(schedule(q.shape[2], is_causal, q.shape[1], q.dtype))(
-            q, k, v, scale=scale, causal=is_causal
-        )
+        return native_runner(schedule(q.shape[2], is_causal, q.shape[1], q.dtype))(q, k, v, scale=scale, causal=is_causal)
     from kohakufa_cute import api
 
-    return api.scaled_dot_product_attention(
-        q, k, v, attn_mask, dropout_p, is_causal, scale=scale, enable_gqa=enable_gqa
-    )
+    return api.scaled_dot_product_attention(q, k, v, attn_mask, dropout_p, is_causal, scale=scale, enable_gqa=enable_gqa)

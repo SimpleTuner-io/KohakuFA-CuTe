@@ -1,0 +1,1165 @@
+{
+  "status": "scoped-neighborhood-qualification-passed",
+  "base_revision": "f621db22f90dc905d2cd67b841704c76f0c34945",
+  "date_utc": "2026-11-06",
+  "scope": "Synthetic attention forward and backward correctness; no HDiT model, transforms, or latency measured.",
+  "precision_contract": "docs/precision.md",
+  "source_sha256": {
+    "src/kohakufa_cute/__init__.py": "d6aa144facd1884c3f536608fd63f69429f3ac964ae1079e1cfbec35d7d88525",
+    "src/kohakufa_cute/_ops.py": "0fc0519202f8b4b3eef68b0ff4e0ecb23909efbc727055530f60b47ca641b4ca",
+    "src/kohakufa_cute/ada.py": "b875706983267097f1ec335d077438888037aa88146213363b641b5b47498a91",
+    "src/kohakufa_cute/api.py": "53355d6fa4706cd25389dea6eedb0d262f587dd820505db1d9ee796a2849755a",
+    "src/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "src/kohakufa_cute/blackwell_pipeline.py": "93c0df74a609af7702284a2ee9e1a5aee49a58bfb287ae74bcc4bc3db9c27387",
+    "src/kohakufa_cute/blackwell_register_aux.py": "9b12f76a1eac7a2824a81e5251bc4ce8673218e4559ce392c2edb44398184b19",
+    "src/kohakufa_cute/determinism.py": "a1e26f80a73ef8822769d5239e1c1b6bbcc9e599b959e62022b0b5d485b1419e",
+    "src/kohakufa_cute/fa4_hopper/__init__.py": "bba1ee77f3a30e4f270b0b3456839c346f6ba7266652c2768113927d599cc466",
+    "src/kohakufa_cute/fa4_hopper/_attention.py": "fa21cfc64103b618fd7d2c61f9fdea0899a4d7bf3372c9e3d0808065f427fb68",
+    "src/kohakufa_cute/fa4_hopper/_backward.py": "075f47b462e7af2e9728b5622091599a00459185761e6ca282c8f21cdad1a3bf",
+    "src/kohakufa_cute/fa4_hopper/_forward.py": "3a8a6361a0f1917a83f906aec0010b11719a1902112638caa7045f2482f6fcc4",
+    "src/kohakufa_cute/fa4_hopper/_native.py": "0c71ec83e3c93d6b18e13894d4b095c04c4033c8bf16d6ade18a77a614fa6318",
+    "src/kohakufa_cute/fa4_hopper/_persistent.py": "903d4732df88142fbbcb79506b0b59c54eff60952dd59fd09b2756e18f87bba1",
+    "src/kohakufa_cute/fa4_hopper/_preprocess.py": "5db6b16485a601a1416fbd0edab0760e2b2a3925101966437c4cc61ea163b9a0",
+    "src/kohakufa_cute/fa4_hopper/_private_api.py": "94ae436c1d85884feaab898c047923342424a2b8feaad232e768c3301e6e2b1c",
+    "src/kohakufa_cute/fa4_hopper/_softmax.py": "f9bd803b4bd706188eaac5d29f8b6c6b226878730ed986b2aff02bfebdbd7e08",
+    "src/kohakufa_cute/fa4_sm80/__init__.py": "d65fa90fb4cc172e836765b6291833727711e68f3e2f270586d7cf100230a1ab",
+    "src/kohakufa_cute/fa4_sm80/_attention.py": "49b589c4622a5f05a46c4b6048a2bb740ab0a879e12f0b7e0391a24cb781ab43",
+    "src/kohakufa_cute/fa4_sm80/_backward.py": "d1b73a88e07c1da01b887e149d88ac93d8c98c427179bc7d95cf93d351fb5611",
+    "src/kohakufa_cute/fa4_sm80/_forward.py": "ea08bd1ffe61c609566492d2533e681c653db547cf0b872599ef3d53df9df595",
+    "src/kohakufa_cute/fa4_sm80/_host.py": "1c5333f3ef986b26fa24db3bd7e81aa5cf6cbadfa33e12b3a0b763ea69dd2574",
+    "src/kohakufa_cute/fa4_sm80/_l40s.py": "b676a29389a122a9f729185d8b51f11af70bbe78658e03f530be6b877f7c4c4d",
+    "src/kohakufa_cute/fa4_sm80/_native.py": "80bd9cca675d56cca389b4d05a086794bab063eaa6667e15ddea4a431a2cfd13",
+    "src/kohakufa_cute/fa4_sm80/_preprocess.py": "9beb2c7280ee5b583023611a4e94122cd1b05a4517b2b66665b4e0eb7f30ee60",
+    "src/kohakufa_cute/fa4_sm80/_private_api.py": "1b70b88344b0da3c87300a869ae689e68b38482a4dd85518c6d520bed8b4a91e",
+    "src/kohakufa_cute/fa4_sm80/_schedules.py": "7edce334b76fcefe23e0cf9e59f541c710cf77e52af5aa9c98829697ae78a451",
+    "src/kohakufa_cute/fa4_sm80/_sm120.py": "001782de2f25e0a79523633d7408c6b98d8661b09581cfe0fbd8d9156518b9c8",
+    "src/kohakufa_cute/fa4_sm80/_softmax.py": "ba6568cf0ac95ae9cc847b798d994db00ca7becf92770858c10ef45a892502e9",
+    "src/kohakufa_cute/fa4_sm80/a40.py": "2f0b6118ddda91885fbd87badfd14794359cea48e345b82f5c7585f897fadbde",
+    "src/kohakufa_cute/fa4_sm80/gb10.py": "250c1ae57216e5d66939f0c3fa97e95e902c77f01f0b5ec6e82905b85102fcaf",
+    "src/kohakufa_cute/fa4_sm80/rtx4090.py": "b49ab88e1a8f124db316af4ab4e261b606a2c73de7eae08b687b4f2c033d4d20",
+    "src/kohakufa_cute/hopper_forward.py": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+    "src/kohakufa_cute/kernels.py": "bc72982b0e0d26a11498f89568723216ef1c96ebd3d406c25afe54b6c75409fb",
+    "src/kohakufa_cute/l40s.py": "97b34f5bc2e7020fb1a7545d373b916c80f55bfa6487669eff0499848bace406",
+    "src/kohakufa_cute/launch.py": "450b6d27ed26346e2174c49fe40a652d7b78076bf116970bd4b7ddcbd2982a70",
+    "src/kohakufa_cute/medium_backward.py": "4df4b7b1c369c7ddf4cafafb9e2afecad2ebb5241ebcaab76bdff0d9d74cbd48",
+    "src/kohakufa_cute/native.py": "36f0cc154dae23bfe6eea99ac4bc84d404e84c40247d217cb721a6a13248aa5a",
+    "src/kohakufa_cute/neighborhood_geometry.py": "e7e109c4263c109c37183aaa550d1a2d0abcb139d2fdf9a430e9c9348bb76697",
+    "src/kohakufa_cute/neighborhood_kernels.py": "a65fb10cc55a8a71b58c93b4edba4867a552278d3dcb361850d0953a16c86b36",
+    "src/kohakufa_cute/neighborhood_ops.py": "9f1730e1f4523c580fdd375812c55d345036aa83e496155a2b776f6c9d58aff8",
+    "src/kohakufa_cute/precision.py": "c60f4a0430567865a454c849799966bc01f45a5536f040a52dc170046ff038a9",
+    "src/kohakufa_cute/rtx3090.py": "8c9a9cda8364ff5100e3a49e505c744930a24dc14bd3d9d59982a84d1d6ad7c5",
+    "src/kohakufa_cute/short_forward.py": "4b08931d4978d3b70be4f419db50661695c937944e9ad3b9b854fa3a9c219fdb",
+    "src/kohakufa_cute/short_key32_owned.py": "3607e42aefa41345a83cd91ea12d637dda60c0b9f60f9dcc13a3e96945c8bd09",
+    "src/kohakufa_cute/short_key_quad_skip_owned.py": "7316421c169d289e1c0c6366d9d80ee833aefcb3d9ef356e0636a2b990889c72",
+    "src/kohakufa_cute/short_key_stats_owned.py": "c4783ace3179b027ab547f861766c57ac84f9df7ef9d8269396132c6b139e365",
+    "src/kohakufa_cute/short_owned.py": "97913a8c623edbde19ceacc324fd32159fbee8b10cf35b3a687c355a1b748dfa",
+    "src/kohakufa_cute/short_reciprocal.py": "8238258a7ced42cd0c08c45e1313dc5793526f358ea0175f621e524c42864098",
+    "src/kohakufa_cute/sm103.py": "0c310638eda9c17a157091ca3dcf51ea08cd83baf34778c415e080d9d77a57e6",
+    "src/kohakufa_cute/sm120_backward.py": "34bc6d05dd40eaeaec73f867ff3b03073b5cd5ae67d649e17bde1e6b7f5492fd",
+    "src/kohakufa_cute/sm120_schedule.py": "e5c2ecd79a80582203a9913d0c4bfb2b5323229699920c661b23e44374fe9244",
+    "src/kohakufa_cute/sm86.py": "49f8b8b50809315f77978425420d65fa76729f20ace0f1a118b1e31574fc5d37",
+    "src/kohakufa_cute/sm86_backward.py": "2381cb376b2a1490e2ef488c8f768f0283e9b2f21fa83834b2627ea591c5ef35",
+    "src/kohakufa_cute/split_forward.py": "75f7d43144b200d9caedb6fbf713aed6335ec4005d1a3ba8b801dafa74818578",
+    "src/kohakufa_cute/weight_precision.py": "e33312450a22d65a3752522483e3910f2f38042b6e3a27aa73cc778e89d90884",
+    "src/kohakufa_cute/wide_backward.py": "5ce2d2b9039b5b33253b28c1e72f57a239e3540c09b6b343ae2af2f57d2d6b47",
+    "benchmarks/qualify_neighborhood.py": "ca996bc67c2182f769764c4b3ac7a69ea8f3aef80ac6e8ce849577656f962d60",
+    "benchmarks/neighborhood_reference.py": "b73ae0bcba5daa3f0ababeb8a2a116be5a2fd670210d84abf0c0b954430de2f5",
+    "benchmarks/reference.py": "6edbefe2bea7afff3cd5f024b1a4da70bc3f8d5af6b9e0e22b6360a7fcb541a7",
+    "tests/test_neighborhood.py": "10f1fcddfacb996a4bd0a6def6cbb6d286d5b3afce69b9c533805b38fc503a89",
+    "docs/precision.md": "9d0e2910a7ae02c10c8f99635d1d83587069783d9436f36ce4dd0d169c60df07"
+  },
+  "runtime": {
+    "python": "3.13.18",
+    "torch": "2.13.0+cu130",
+    "nvidia-cutlass-dsl": "4.8.1",
+    "apache-tvm-ffi": "0.1.15.post0",
+    "natten": "0.21.7+torch2130cu130",
+    "cuda_bindings": "13.0.3",
+    "cuda": "13.0",
+    "driver": "580.159.03"
+  },
+  "runtime_selection": "Torch 2.13 retained for the newest documented prebuilt NATTEN pairing; cu130 index also had 2.14.1. CPU checks used Torch 2.15.0.",
+  "device": {
+    "name": "NVIDIA H100 PCIe",
+    "capability": [
+      9,
+      0
+    ],
+    "sm_count": 114,
+    "memory_bytes": 85017493504,
+    "partition": "full device; MIG disabled",
+    "power_limit_watts": 350
+  },
+  "acceptance": {
+    "random": "Per-head mathematical FP64 norm error",
+    "directed": "Per-head rounded norm error",
+    "bf16": 0.01,
+    "fp16": 0.005,
+    "components": [
+      "out",
+      "dq",
+      "dk",
+      "dv"
+    ],
+    "zero_reference": "exact zero required",
+    "directed_backward": "rounded_reference with actual rounded forward output",
+    "pointwise_or_bitwise_equality_required": false
+  },
+  "candidate_matrix": {
+    "cases": 22,
+    "passed": 22,
+    "cpu_and_device_gates": true,
+    "geometry": [
+      {
+        "spatial": [
+          3,
+          5
+        ],
+        "window": [
+          3,
+          3
+        ]
+      },
+      {
+        "spatial": [
+          9,
+          17
+        ],
+        "window": [
+          3,
+          4
+        ]
+      },
+      {
+        "spatial": [
+          5,
+          7
+        ],
+        "window": [
+          5,
+          7
+        ]
+      },
+      {
+        "spatial": [
+          5,
+          9
+        ],
+        "window": [
+          3,
+          3
+        ],
+        "fixture": "common-offset"
+      }
+    ]
+  },
+  "gpu_unittest": {
+    "module": "tests.test_neighborhood.NeighborhoodGPUTests",
+    "methods": 9,
+    "exit_status": 0
+  },
+  "sanitizers": {
+    "memcheck": {
+      "exit_status": 0,
+      "errors": 0,
+      "tested_methods": 9
+    },
+    "racecheck": {
+      "exit_status": 0,
+      "errors": 0,
+      "tested_methods": 9
+    },
+    "initcheck": {
+      "exit_status": 0,
+      "errors": 0,
+      "tested_methods": 9
+    },
+    "synccheck": {
+      "exit_status": 0,
+      "errors": 0,
+      "tested_methods": 9
+    }
+  },
+  "cpu_unittest": {
+    "command": "CUDA_VISIBLE_DEVICES='' python3 -m unittest discover -v -f",
+    "methods": 472,
+    "skipped": 219,
+    "exit_status": 0
+  },
+  "comparator": {
+    "version": "0.21.7+torch2130cu130",
+    "requested_backend": "cutlass-fna",
+    "cases": 22,
+    "passed": 6,
+    "numerical_failures": 16,
+    "scope": "Complete implementation comparison; negative/zero scales are compatibility probes. No best-backend or speed claim."
+  },
+  "ordinary_attention_regression": {
+    "modules": [
+      "tests.test_baseline_precision",
+      "tests.test_key_precision",
+      "tests.test_value_precision",
+      "tests.test_kernels"
+    ],
+    "methods": 72,
+    "skipped": 26,
+    "failed_subcases": 6,
+    "failed_methods": 3,
+    "exit_status": 1,
+    "upstream_control": {
+      "revision": "f621db22f90dc905d2cd67b841704c76f0c34945",
+      "methods": 3,
+      "failed_subcases": 6,
+      "same_failed_subcases": true,
+      "exit_status": 1,
+      "failing_operands_retained": 6
+    },
+    "resolution": "Unresolved baseline failures; thresholds unchanged."
+  },
+  "repaired_or_retained_failures": [
+    "Initial CuTe staging compile failure repaired with branch-free runtime scalar bounds.",
+    "CUDA bindings 13.4.4 memcheck: 41 API lookup reports; final 13.0.3 reruns have zero reports without suppressions.",
+    "Intermediate new graph fixture stale NegViewBackward0 stream reference: construct logical-view nodes within each warmup/capture call on its explicit stream."
+  ],
+  "artifacts": {
+    "storage": "Off-repository verified campaign archive",
+    "retained": [
+      "full source snapshots and base bundle",
+      "launch scripts and immutable job identities",
+      "actual stage exit receipts",
+      "numerical diagnostics and failing operands",
+      "per-case Chrome traces",
+      "loaded-library hashes",
+      "compiler PTX and cubins",
+      "candidate SASS/resource exports",
+      "installed NATTEN binary and selected packaged SM90 SASS"
+    ],
+    "limitations": [
+      "No selected NATTEN packaged PTX obtained",
+      "Packaged NATTEN disassembly is not CUPTI-bound loaded-module evidence",
+      "No latency or complete-model measurements"
+    ]
+  },
+  "grouped_worst_head_errors": [
+    {
+      "implementation": "kohakufa",
+      "case": "random",
+      "dtype": "torch.float16",
+      "scale": 0.125,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.00026439647559349175
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0004094998078372429
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0003875253234549408
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00032421648347717605
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.0002643947886726911
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0002086515187555223
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00021458242921352247
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00020969854771823028
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "random",
+      "dtype": "torch.float16",
+      "scale": 0.125,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.00026424788159706
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.000405314337923378
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00039805336357180866
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00032421648347717605
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.00026424538074571504
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.00044295941490289295
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00042621305991404534
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00020969854771823028
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "random",
+      "dtype": "torch.float16",
+      "scale": -0.125,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.000262622537397892
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0004219694251765764
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0003982165948496306
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0002977386238891611
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.00026262479341279985
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.00021052840157580825
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00021922188402794484
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00021665771913218187
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "random",
+      "dtype": "torch.float16",
+      "scale": -0.125,
+      "passed": 0,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "random",
+      "dtype": "torch.float16",
+      "scale": 0.0,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.00021521711830453988
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00036265395731399684
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.00021521711830453988
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00023052767289183607
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "random",
+      "dtype": "torch.float16",
+      "scale": 0.0,
+      "passed": 0,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 1.2147807106000454
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 1.3496318651128316
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 1.2147807106000454
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 1.3499614714119639
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "common-offset",
+      "dtype": "torch.float16",
+      "scale": 0.125,
+      "passed": 1,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.0002568366754528301
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.016091781242056995
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00040155952215827415
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0003098231568795646
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.0002568366754528355
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0002803802054340652
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00023822341301256894
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00021334734046124984
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "common-offset",
+      "dtype": "torch.float16",
+      "scale": 0.125,
+      "passed": 0,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.00026544970919798887
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.017979351851820095
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00044804588684017394
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00031385019772376256
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.000265449709197993
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.016494310300533766
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00038911907285256545
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00026834071144760173
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "common-offset",
+      "dtype": "torch.float16",
+      "scale": -0.125,
+      "passed": 1,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.00025560552574963697
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.013545611935027306
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.00043295331709082845
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0003043424991269268
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.00025560552574963854
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0002737340159684752
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.000291772346722033
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.00021211629915423978
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "common-offset",
+      "dtype": "torch.float16",
+      "scale": -0.125,
+      "passed": 0,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "random",
+      "dtype": "torch.bfloat16",
+      "scale": 0.125,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.0020976898303508604
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.004339343817187928
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.004253333456185688
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.002407158912428988
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.0020976924068970533
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.001709284449895494
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0016983523435257838
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0016943316426243054
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "random",
+      "dtype": "torch.bfloat16",
+      "scale": 0.125,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.002107353602605631
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.00429569030471893
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.004259015404917557
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.002407158912428988
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.0021073561016966003
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.003688847170647656
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.003715442457537063
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0016943316426243054
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "random",
+      "dtype": "torch.bfloat16",
+      "scale": -0.125,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.002061779642567604
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.003189091256528092
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.003177809093324854
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0024250196789246566
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.00206177595162885
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0017277618972444278
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0017432603179637508
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.001713757643834187
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "random",
+      "dtype": "torch.bfloat16",
+      "scale": -0.125,
+      "passed": 0,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "random",
+      "dtype": "torch.bfloat16",
+      "scale": 0.0,
+      "passed": 3,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.0019245136950212555
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.002544743024584984
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.0019245136950212555
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0017801655543273317
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "random",
+      "dtype": "torch.bfloat16",
+      "scale": 0.0,
+      "passed": 0,
+      "cases": 3,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 1.2148006487297585
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 1.349333101117016
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 1.2148006487297585
+          },
+          "dq": {
+            "finite": true,
+            "value": null
+          },
+          "dk": {
+            "finite": true,
+            "value": null
+          },
+          "dv": {
+            "finite": true,
+            "value": 1.3496626056328265
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "common-offset",
+      "dtype": "torch.bfloat16",
+      "scale": 0.125,
+      "passed": 1,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.001956258282024631
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.12156743116788613
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0036442293491613154
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.002381794267749113
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.0019562582820246205
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0017439292272499332
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0020216412916382173
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0017181698397822141
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "common-offset",
+      "dtype": "torch.bfloat16",
+      "scale": 0.125,
+      "passed": 0,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.0019800534146260833
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.12672895225808023
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0033326440875170154
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.002393383131658268
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.0019800534146260738
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.07250744109315188
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0022990814169372765
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0018100954682777586
+          }
+        }
+      }
+    },
+    {
+      "implementation": "kohakufa",
+      "case": "common-offset",
+      "dtype": "torch.bfloat16",
+      "scale": -0.125,
+      "passed": 1,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": true,
+            "value": 0.0018611040684698332
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.11688306613257714
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.002969748920123737
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.0024022493906414337
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": true,
+            "value": 0.001861104068469824
+          },
+          "dq": {
+            "finite": true,
+            "value": 0.0018328648394115687
+          },
+          "dk": {
+            "finite": true,
+            "value": 0.0014388498492745561
+          },
+          "dv": {
+            "finite": true,
+            "value": 0.001721063612904825
+          }
+        }
+      }
+    },
+    {
+      "implementation": "natten",
+      "case": "common-offset",
+      "dtype": "torch.bfloat16",
+      "scale": -0.125,
+      "passed": 0,
+      "cases": 1,
+      "worst_head_relative_error": {
+        "fp64": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        },
+        "rounded": {
+          "out": {
+            "finite": false,
+            "value": null
+          },
+          "dq": {
+            "finite": false,
+            "value": null
+          },
+          "dk": {
+            "finite": false,
+            "value": null
+          },
+          "dv": {
+            "finite": false,
+            "value": null
+          }
+        }
+      }
+    }
+  ]
+}

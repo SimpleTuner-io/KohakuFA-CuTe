@@ -1,6 +1,6 @@
 import unittest
 
-from benchmarks.tune_sm120 import candidates
+from benchmarks.experiments.blackwell.tune_sm120 import candidates
 
 
 class SM120TuningTests(unittest.TestCase):

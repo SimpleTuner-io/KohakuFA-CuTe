@@ -21,7 +21,7 @@ class A100GroupPolicyTests(unittest.TestCase):
                         )
 
     def test_before_and_after_api_modules_retain_independent_schedule_sources(self):
-        from benchmarks.a100_group_api_controls import make_attention
+        from benchmarks.experiments.ampere.a100_group_api_controls import make_attention
         from kohakufa_cute import api
 
         previous, candidate = make_attention(previous=True), make_attention(previous=False)

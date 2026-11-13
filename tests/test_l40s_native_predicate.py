@@ -8,7 +8,7 @@ from unittest.mock import Mock, patch
 
 import torch
 
-from benchmarks.l40s_public_metadata_controls import python_compatible
+from benchmarks.experiments.ada.l40s_public_metadata_controls import python_compatible
 from kohakufa_cute import fa4_sm80
 from kohakufa_cute.fa4_sm80 import _l40s
 
@@ -171,8 +171,8 @@ class L40sNativePredicateTests(unittest.TestCase):
                     function(q, q, q, **options)
 
     def test_actual_public_namespaces_cold_and_warm_and_parameter_gradients(self):
-        from benchmarks.l40s_public_metadata_controls import parent_api
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.l40s_public_metadata_controls import parent_api
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute import api, native
         from kohakufa_cute.fa4_sm80 import _host
 
@@ -200,8 +200,8 @@ class L40sNativePredicateTests(unittest.TestCase):
                         assess(actual, inputs, dout, causal=True, scale=None, directed=False, pointwise=False)
 
     def test_public_parent_fallbacks_preserve_mask_scale_shape_and_grad_mode(self):
-        from benchmarks.l40s_public_metadata_controls import parent_api
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ada.l40s_public_metadata_controls import parent_api
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute import api
 
         parent = parent_api()
@@ -217,11 +217,7 @@ class L40sNativePredicateTests(unittest.TestCase):
                 torch.randn(1, heads, sequence, 128, device="cuda", dtype=torch.bfloat16, requires_grad=True)
                 for _ in range(3)
             ]
-            mask = (
-                None
-                if mask_kind is None
-                else (torch.arange(sequence, device="cuda") % 3 != 0).reshape(1, 1, 1, sequence)
-            )
+            mask = None if mask_kind is None else (torch.arange(sequence, device="cuda") % 3 != 0).reshape(1, 1, 1, sequence)
             dout = torch.randn_like(inputs[0])
             for current, before in (
                 (api.attention, parent.attention),
@@ -261,14 +257,12 @@ class L40sNativePredicateTests(unittest.TestCase):
                 )
 
     def test_compiled_call_keeps_the_existing_fallback(self):
-        from benchmarks.validate_sm80_static import assess
+        from benchmarks.experiments.ampere.validate_sm80_static import assess
         from kohakufa_cute import api
 
         torch.compiler.reset()
         self.addCleanup(torch.compiler.reset)
-        inputs = [
-            torch.randn(1, 16, 129, 128, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)
-        ]
+        inputs = [torch.randn(1, 16, 129, 128, device="cuda", dtype=torch.bfloat16, requires_grad=True) for _ in range(3)]
         dout = torch.randn_like(inputs[0])
         operation = torch.compile(api.scaled_dot_product_attention, backend="eager", fullgraph=True)
         with patch.object(

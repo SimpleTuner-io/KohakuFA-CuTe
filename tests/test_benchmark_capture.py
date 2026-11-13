@@ -8,7 +8,7 @@ import torch
 @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required")
 class BenchmarkCaptureTests(unittest.TestCase):
     def test_external_history_and_inputs_are_independent_of_capture(self):
-        from benchmarks.compare_ada import capture
+        from benchmarks.experiments.ada.compare_ada import capture
         from kohakufa_cute import scaled_dot_product_attention
 
         for backend in (torch.nn.functional.scaled_dot_product_attention, scaled_dot_product_attention):

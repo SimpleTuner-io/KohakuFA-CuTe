@@ -3,8 +3,8 @@ from types import SimpleNamespace
 
 import torch
 
-from benchmarks.plot_profile import representative
-from benchmarks.profile_attention import launch_report, profile_phase
+from benchmarks.profiling.profile_attention import launch_report, profile_phase
+from benchmarks.reporting.plot_profile import representative
 
 
 class ProfileTests(unittest.TestCase):

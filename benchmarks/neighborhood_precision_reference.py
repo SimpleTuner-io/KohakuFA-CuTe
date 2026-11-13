@@ -36,7 +36,8 @@ def precision_reference(inputs, dout, spatial, window, scale, output, *, fp32_p=
         torch.backends.cuda.matmul.fp32_precision = precision
     visible = neighborhood_mask(spatial, window, device=q.device)
     signed = (scores if scale >= 0 else -scores).masked_fill(~visible, -torch.inf)
-    weights = torch.exp((signed - signed.amax(-1, keepdim=True)) * abs(scale))
+    shifted = ((signed - signed.amax(-1, keepdim=True)) * abs(scale)).masked_fill(~visible, -torch.inf)
+    weights = torch.exp(shifted)
     probability = weights / weights.sum(-1, keepdim=True)
     rounded_p = probability.float().to(q.dtype).float()
     derivative_p = probability.float() if fp32_p else rounded_p
@@ -104,7 +105,8 @@ def counterfactual_dq(inputs, dout, spatial, window, scale, output):
     finally:
         torch.backends.cuda.matmul.fp32_precision = precision
     signed = (scores if scale >= 0 else -scores).masked_fill(~visible, -torch.inf)
-    p = torch.softmax((signed - signed.amax(-1, keepdim=True)) * abs(scale), -1).float()
+    shifted = ((signed - signed.amax(-1, keepdim=True)) * abs(scale)).masked_fill(~visible, -torch.inf)
+    p = torch.softmax(shifted, -1).float()
     exact_scores = (q.double() @ k.double().transpose(-1, -2)) * scale
     exact_p = exact_scores.masked_fill(~visible, -torch.inf).softmax(-1)
     exact_dp = dout.double() @ v.double().transpose(-1, -2)

@@ -424,7 +424,14 @@ def markdown(report):
         "All per-head errors, declared gates, observed control failures, source and input hashes, raw timing samples and compiled-path flags are retained in the companion JSON. Compiler artifacts establish target and selected flags; graph replay and numerical tests supply separate execution evidence. Results qualify these operator workloads and do not establish model-level quality or performance on other shapes.",
         "",
     ]
-    return "\n".join(lines)
+    return "\n".join(
+        lines[:2]
+        + [
+            "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).",
+            "",
+        ]
+        + lines[2:]
+    )
 
 
 def main():

@@ -70,6 +70,7 @@ adds an explicit noncausal 2D path for matching FP16/BF16
 It generates spatial tiles without a dense mask and uses shifted boundary
 windows. See the [contract and scoped H100 qualification](experimental/neighborhood.md).
 The [H100 scheduling report](experimental/neighborhood-tuning.md) describes the
-bounded device and workload dispatch. Its tile choices preserve the same
-precision contract; the [FP64 report](experimental/neighborhood-accuracy.md)
-separates mathematical accuracy from rounded-arithmetic agreement.
+bounded device and workload dispatch. The normalized dQ and reconstructed dK
+corrections now run by default on every supported GPU, using the
+[neighborhood precision contract](precision.md#neighborhood-default).
+Historical studies retain their original method labels and measurements.

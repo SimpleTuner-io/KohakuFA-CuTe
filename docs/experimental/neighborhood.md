@@ -1,5 +1,10 @@
 # Experimental 2D neighborhood attention
 
+This is the initial qualification report. The public neighborhood API now uses
+normalized dQ and reconstructed dK corrections by default, with column-staged
+statistics. See [the current arithmetic contract](../precision.md#neighborhood-default).
+The measurements below retain their original source and method.
+
 This explicit experimental path has scoped correctness qualification on a full
 H100 PCIe, including independent references, changed-input graph replay, and all
 four Compute Sanitizer tools. It preserves the default arithmetic contract and

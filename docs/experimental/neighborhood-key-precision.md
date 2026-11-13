@@ -1,5 +1,7 @@
 # Experimental neighborhood key-gradient precision
 
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).
+
 The default arithmetic is unchanged. This explicit follow-up reconstructs the softmax correction during the existing query pass to reduce the sharp-attention dK error. Results below concern defined neighborhood operators and already-rounded operands, rather than model quality or universal pointwise accuracy.
 
 The main timing matrix meets its predefined incremental-cost goal, but independent held-out testing retains performance exceptions: `heldout-48x64-w9-bf16` adds 9.91% versus the prior dQ method. These misses of the 5% aim remain explicit; no tuning followed the verified held-out evaluation.

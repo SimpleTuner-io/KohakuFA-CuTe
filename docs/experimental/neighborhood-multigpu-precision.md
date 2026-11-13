@@ -1,5 +1,7 @@
 # Neighborhood precision across GPUs
 
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).
+
 The explicit dQ+dK experiment uses the same arithmetic and retained rounded inputs on every architecture. Default dispatch is unchanged.
 
 The [H100 dQ+dK study](neighborhood-key-precision.md) specifies the experiment and its explicit selection controls.

@@ -402,6 +402,9 @@ def main():
         protocol=dict(
             scope="Synthetic D64 2D stride-one dilation-one neighborhood attention; complete implementation comparison, no HDiT application claim.",
             canonical_layout="contiguous BHSD Q/K/V/output/dQ/dK/dV",
+            neighborhood_policy="weighted_dq_reconstructed_dk",
+            key_statistics="column_staged",
+            rounded_diagnostic_policy="Historical single-rounded-P/dS equations; not the current neighborhood contract.",
             preparation="Geometry and BlockMask preparation measured separately; resident timings reuse immutable geometry. Mandatory tensor layout conversions remain inside every call.",
             phases=["forward", "forward_backward"],
             modes=["eager", "graph"],

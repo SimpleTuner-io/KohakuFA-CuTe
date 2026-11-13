@@ -686,7 +686,14 @@ def markdown(data):
         "Use `--forensic`, `--forensic-receipt`, `--compiler-metadata` and `--qualification` with the retained compact metadata to include the supplementary evidence.",
         "",
     ]
-    return "\n".join(lines)
+    return "\n".join(
+        lines[:2]
+        + [
+            "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).",
+            "",
+        ]
+        + lines[2:]
+    )
 
 
 def main():

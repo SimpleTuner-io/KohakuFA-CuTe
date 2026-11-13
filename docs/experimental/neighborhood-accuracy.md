@@ -1,5 +1,7 @@
 # Neighborhood accuracy against FP64
 
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).
+
 The retained ordinary-workload results do **not** demonstrate a general
 mathematical-accuracy gain over FlexAttention or NATTEN. On the 50 matched
 device/workload cases, the candidate's worst-head sampled dQ error was

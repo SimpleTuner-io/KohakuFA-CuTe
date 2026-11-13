@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 
 import torch
 
+from benchmarks.neighborhood_key_precision_reference import key_precision_reference
 from benchmarks.neighborhood_reference import neighborhood_mask, neighborhoods
 from benchmarks.reference import fp64_reference, metrics, rounded_reference
 from kohakufa_cute import api, neighborhood_attention
@@ -112,10 +113,10 @@ class NeighborhoodGeometryTests(unittest.TestCase):
         # Delta must use the rounded O just supplied to the candidate assessment.
         reference = rounded_reference(inputs, dout, neighborhood_mask((3, 5), (3, 3)), output=actual[0])
         actual[1:] = [t.to(torch.float16) for t in reference[1:]]
-        records = assess(actual, inputs, dout, (3, 5), (3, 3), None, directed=True)
+        records = assess(actual, inputs, dout, (3, 5), (3, 3), None, directed=True, policy="baseline")
         self.assertTrue(all(r["pass"] for r in records))
         actual[2][1, 0].zero_()
-        records = assess(actual, inputs, dout, (3, 5), (3, 3), None, directed=True)
+        records = assess(actual, inputs, dout, (3, 5), (3, 3), None, directed=True, policy="baseline")
         failures = [(r["component"], r["batch"], r["head"]) for r in records if not r["pass"]]
         self.assertEqual(failures, [("dk", 1, 0)])
 
@@ -195,7 +196,15 @@ class NeighborhoodGPUTests(unittest.TestCase):
         mask = neighborhood_mask(spatial, window)
         # Keep references off the GPU, including during Compute Sanitizer runs.
         cpu = [t.detach().cpu() for t in inputs]
-        rounded = rounded_reference(cpu, dout.cpu(), mask, scale=scale, output=out.detach().cpu())
+        rounded = key_precision_reference(
+            cpu,
+            dout.cpu(),
+            spatial,
+            window,
+            0.125 if scale is None else scale,
+            out.detach().cpu(),
+            method="weighted_dq_reconstructed_dk",
+        )
         references = [rounded]
         if mathematical:
             references.append(fp64_reference(cpu, dout.cpu(), mask, scale=scale))
@@ -284,7 +293,15 @@ class NeighborhoodGPUTests(unittest.TestCase):
                     cpu = [t.detach().cpu() for t in inputs]
                     base_cpu = [t.detach().cpu() for t in bases]
                     exact = fp64_reference(cpu, dout.cpu(), mask)
-                    rounded = rounded_reference(cpu, dout.cpu(), mask, output=out.detach().cpu())
+                    rounded = key_precision_reference(
+                        cpu,
+                        dout.cpu(),
+                        spatial,
+                        window,
+                        0.125,
+                        out.detach().cpu(),
+                        method="weighted_dq_reconstructed_dk",
+                    )
                     for reference in (exact, rounded):
                         expected = reference[0], *base_gradients(reference[1:], negative[:3], base_cpu, strided=True)
                         for got, want in zip(actual, expected):

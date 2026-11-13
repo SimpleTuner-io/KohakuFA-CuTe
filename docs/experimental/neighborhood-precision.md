@@ -1,5 +1,7 @@
 # Experimental neighborhood precision
 
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).
+
 The default arithmetic is unchanged. These explicit experiments compare stronger backward equations on identical rounded FP16/BF16 operands. They measure the neighborhood operator; no HDiT model or task quality was evaluated.
 
 The combined method improves measured dQ accuracy, but dK remains a material limitation: the sharp negative-scale fixture has 98.12% BF16 and 9.81% FP16 dK relative norm error against mathematical FP64. Passing the prescribed rounded equations does not establish near-FP64 accuracy for every gradient.

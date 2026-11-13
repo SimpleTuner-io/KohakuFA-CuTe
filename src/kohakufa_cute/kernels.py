@@ -222,7 +222,7 @@ class Attention:
         self.full_copies = full_copies
         self.packed_statistics = packed_statistics
         self.baseline_precision = True
-        # Explicit neighborhood accuracy experiments; default dispatch never sets these.
+        # Neighborhood methods set these explicitly; ordinary attention leaves them off.
         self.experiment_fp32_probability = False
         self.experiment_weighted_dq = False
         self.experiment_normalized_mean = False

@@ -1,5 +1,7 @@
 # Neighborhood performance
 
+Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).
+
 ## Measured results
 
 Five full GPUs completed the matrix: 150 implementation/workload rows and 600

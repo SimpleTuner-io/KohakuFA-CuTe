@@ -480,7 +480,17 @@ def markdown(report):
     ]
     for probe in report.get("probes", []):
         lines.extend(probe_markdown(probe))
-    return "\n".join(lines) + "\n"
+    return (
+        "\n".join(
+            lines[:2]
+            + [
+                "Historical method labels below describe the recorded campaign. The combined dQ+dK method with column-staged statistics is now the public neighborhood default; see [the current contract](../precision.md#neighborhood-default).",
+                "",
+            ]
+            + lines[2:]
+        )
+        + "\n"
+    )
 
 
 def main():

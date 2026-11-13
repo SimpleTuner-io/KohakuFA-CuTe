@@ -13,28 +13,39 @@ from pathlib import Path
 
 import torch
 
+from benchmarks.neighborhood_key_precision_reference import key_precision_reference
 from benchmarks.neighborhood_reference import neighborhood_mask
 from benchmarks.reference import fp64_reference, metrics, rounded_reference
 from kohakufa_cute import neighborhood_attention
 
 
-def assess(actual, inputs, dout, spatial, window, scale, *, directed, device="cpu"):
+def assess(actual, inputs, dout, spatial, window, scale, *, directed, device="cpu", policy="weighted_dq_reconstructed_dk"):
     operands = [t.detach().to(device) for t in inputs]
     outputs = [t.detach().to(device) for t in actual]
     gradient = dout.detach().to(device)
     mask = neighborhood_mask(spatial, window, device=device)
     exact = fp64_reference(operands, gradient, mask, scale=scale)
     rounded = rounded_reference(operands, gradient, mask, scale=scale, output=outputs[0])
+    prescribed = key_precision_reference(
+        operands,
+        gradient,
+        spatial,
+        window,
+        inputs[0].shape[-1] ** -0.5 if scale is None else scale,
+        outputs[0],
+        method=policy,
+    )
     limit = 0.01 if inputs[0].dtype == torch.bfloat16 else 0.005
     records = []
-    for name, got, mathematical, contract in zip(("out", "dq", "dk", "dv"), outputs, exact, rounded):
+    for name, got, mathematical, contract, selected in zip(("out", "dq", "dk", "dv"), outputs, exact, rounded, prescribed):
         for batch in range(got.shape[0]):
             for head in range(got.shape[1]):
                 errors = {
                     "fp64": metrics(got[batch, head], mathematical[batch, head]),
                     "rounded": metrics(got[batch, head], contract[batch, head]),
+                    "policy": metrics(got[batch, head], selected[batch, head]),
                 }
-                required = errors["rounded" if directed else "fp64"]
+                required = errors["policy" if directed else "fp64"]
                 passed = required["finite"] and (
                     required["relative_error"] < limit if required["reference_norm"] else required["max_absolute_error"] == 0
                 )
@@ -99,6 +110,8 @@ def main():
     sources = sorted((root / "src/kohakufa_cute").rglob("*.py")) + [
         Path(__file__),
         root / "benchmarks/neighborhood_reference.py",
+        root / "benchmarks/neighborhood_key_precision_reference.py",
+        root / "benchmarks/neighborhood_precision_reference.py",
         root / "benchmarks/reference.py",
         root / "tests/test_neighborhood.py",
         root / "docs/precision.md",
@@ -115,9 +128,11 @@ def main():
         "sm_count": properties.multi_processor_count,
         "total_memory": properties.total_memory,
         "scope": "Synthetic attention forward and backward correctness; no HDiT model, transforms, or latency measured.",
+        "neighborhood_policy": "weighted_dq_reconstructed_dk",
+        "key_statistics": "column_staged",
         "acceptance": {
             "random": "Per-head mathematical FP64 norm error",
-            "directed": "Per-head rounded norm error",
+            "directed": "Per-head prescribed neighborhood-policy norm error; historical rounded diagnostics retained",
             "bf16": 0.01,
             "fp16": 0.005,
         },

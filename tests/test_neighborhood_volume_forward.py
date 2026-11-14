@@ -2,6 +2,7 @@
 
 import unittest
 from math import prod
+from unittest.mock import patch
 
 import torch
 
@@ -34,16 +35,14 @@ class CompactGeometryTests(unittest.TestCase):
                         self.assertTrue(required <= actual)
 
 
-@unittest.skipUnless(
-    torch.cuda.is_available() and torch.cuda.get_device_capability() == (9, 0), "Requires Hopper and the CuTe runtime"
-)
-class CompactVolumeGPUTests(unittest.TestCase):
+class _CompactVolumeChecks:
     qualify = existing.NeighborhoodGPUTests.qualify
+    configuration = ((1, 8, 8), True)
 
     def setUp(self):
         from kohakufa_cute.neighborhood_kernels import set_experiment_volume
 
-        self.previous = set_experiment_volume(((1, 8, 8), True))
+        self.previous = set_experiment_volume(self.configuration)
         torch.manual_seed(1729)
 
     def tearDown(self):
@@ -112,7 +111,7 @@ class CompactVolumeGPUTests(unittest.TestCase):
             corrected = neighborhood_attention(*inputs, spatial_shape=(3, 8, 16), window_size=(2, 4, 5)).cpu().double()
             set_experiment_volume(False, residual=False)
             previous = neighborhood_attention(*inputs, spatial_shape=(3, 8, 16), window_size=(2, 4, 5)).cpu().double()
-            set_experiment_volume(((1, 8, 8), True))
+            set_experiment_volume(self.configuration)
             for head in range(2):
                 floor = torch.linalg.vector_norm(expected[0, head].to(dtype).double() - expected[0, head])
                 error = torch.linalg.vector_norm(corrected[0, head] - expected[0, head])
@@ -121,3 +120,115 @@ class CompactVolumeGPUTests(unittest.TestCase):
                 self.assertLess(float(error), float(old_error))
                 rounded_error = torch.linalg.vector_norm(corrected[0, head] - rounded[0, head])
                 self.assertLess(float(rounded_error), 1.05 * float(floor))
+
+
+@unittest.skipUnless(
+    torch.cuda.is_available() and torch.cuda.get_device_capability() == (9, 0), "Requires Hopper and the CuTe runtime"
+)
+class CompactVolumeGPUTests(_CompactVolumeChecks, unittest.TestCase):
+    pass
+
+
+@unittest.skipUnless(
+    torch.cuda.is_available() and torch.cuda.get_device_capability() in ((8, 0), (8, 6), (8, 9)),
+    "Requires an Ampere or Ada GPU and the CuTe runtime",
+)
+class WarpCompactVolumeGPUTests(_CompactVolumeChecks, unittest.TestCase):
+    configuration = ((1, 4, 8), False)
+
+    def test_sanitizer_compact(self):
+        spatial, window = (3, 8, 16), (2, 4, 5)
+        for dtype in (torch.float16, torch.bfloat16):
+            inputs = [
+                torch.randn(2, prod(spatial), 3, 96, device="cuda", dtype=dtype)[..., 8:72].transpose(1, 2) for _ in range(3)
+            ]
+            self.qualify(inputs, torch.randn_like(inputs[0]), spatial, window, 1.0)
+
+    def test_public_dispatch_and_changed_graph_inputs(self):
+        from kohakufa_cute import neighborhood_attention
+        from kohakufa_cute.neighborhood_kernels import set_experiment_volume
+        from kohakufa_cute.neighborhood_schedule import default_volume_schedule
+        from kohakufa_cute.neighborhood_volume_forward import VolumeForward
+
+        spatial, window = (13, 64, 96), (11, 11, 11)
+        properties = torch.cuda.get_device_properties(0)
+        selected = default_volume_schedule(
+            device_name=properties.name,
+            capability=torch.cuda.get_device_capability(),
+            sm_count=properties.multi_processor_count,
+            shape=(1, 2, prod(spatial), 64),
+            spatial=spatial,
+            window=window,
+            dtype="bfloat16",
+            vector=8,
+        )
+        if selected != self.configuration:
+            self.skipTest("This device has no qualified compact warp default")
+        inputs = [
+            torch.randn(1, prod(spatial), 2, 64, device="cuda", dtype=torch.bfloat16).transpose(1, 2).requires_grad_()
+            for _ in range(3)
+        ]
+        dout = torch.randn_like(inputs[0])
+
+        def call():
+            out = neighborhood_attention(*inputs, spatial_shape=spatial, window_size=window)
+            return out, *torch.autograd.grad(out, inputs, dout)
+
+        stream = torch.cuda.Stream()
+        stream.wait_stream(torch.cuda.current_stream())
+        created = []
+        initialize = VolumeForward.__init__
+
+        def record_owner(program, *args, **kwargs):
+            initialize(program, *args, **kwargs)
+            created.append((program.tile_d, program.tile_h, program.tile_w))
+
+        set_experiment_volume()
+        with torch.cuda.stream(stream):
+            with patch.object(VolumeForward, "__init__", record_owner):
+                actual = call()
+            self.assertEqual(created, [self.configuration[0]])
+            set_experiment_volume(self.configuration)
+            explicit = call()
+            set_experiment_volume()
+            for _ in range(2):
+                call()
+        stream.synchronize()
+        for got, want in zip(actual, explicit):
+            torch.testing.assert_close(got, want, atol=0, rtol=0)
+        graph = torch.cuda.CUDAGraph()
+        with torch.cuda.graph(graph, stream=stream):
+            actual = call()
+        with torch.no_grad():
+            for tensor in (*inputs, dout):
+                tensor.copy_(torch.randn_like(tensor))
+            for tensor in actual:
+                tensor.fill_(torch.nan)
+        graph.replay()
+        torch.cuda.synchronize()
+        stream.wait_stream(torch.cuda.current_stream())
+        with torch.cuda.stream(stream):
+            expected = call()
+        stream.synchronize()
+        for got, want in zip(actual, expected):
+            torch.testing.assert_close(got, want, atol=0, rtol=0)
+
+    def test_large_window_outputs_and_individual_gradients(self):
+        spatial, window = (11, 12, 16), (11, 11, 11)
+        for dtype in (torch.float16, torch.bfloat16):
+            inputs = [torch.randn(1, prod(spatial), 2, 64, device="cuda", dtype=dtype).transpose(1, 2) for _ in range(3)]
+            self.qualify(inputs, torch.randn_like(inputs[0]), spatial, window, 0.125)
+
+    def test_common_offset_and_sharp_logits(self):
+        spatial, window = (3, 8, 16), (2, 4, 5)
+        for dtype in (torch.float16, torch.bfloat16):
+            inputs = [torch.zeros(2, 2, prod(spatial), 64, device="cuda", dtype=dtype) for _ in range(3)]
+            q, k, v = inputs
+            q[..., 0], q[..., 1], k[..., 0] = 64, 1, 64
+            k[..., 1] = torch.arange(prod(spatial), device="cuda") % 7
+            v.copy_(torch.randn_like(v))
+            for scale in (1.0, -1.0):
+                self.qualify(inputs, torch.randn_like(q), spatial, window, scale, mathematical=False)
+            q.copy_(torch.randn_like(q) * 8)
+            k.copy_(torch.randn_like(k) * 8)
+            self.qualify(inputs, torch.randn_like(q), spatial, window, 0.125, mathematical=False)

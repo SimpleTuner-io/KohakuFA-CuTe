@@ -2,9 +2,10 @@
 
 `neighborhood_attention` is an explicit experimental API for noncausal 2D/3D
 attention with shifted boundary windows. The [3D guide](3d.md) covers the LTX
-layout adapter and its separate qualification. The recorded 2D qualification covers H100,
-B200, B300, RTX 4090, RTX 5090 and L40S. It is not selected by the automatic
-SDPA wrapper, and no complete HDiT model speedup or quality gain is established.
+layout adapter and its separate qualification. The recorded 2D qualification
+covers H100, B200, B300, RTX 4090, RTX 5090, L40S, A100, RTX 3090 and GB10.
+It is not selected by the automatic SDPA wrapper, and no complete HDiT model
+speedup or quality gain is established.
 
 ## 2D use and supported inputs
 
@@ -50,7 +51,8 @@ The public call enables normalized dQ and reconstructed dK corrections on
 every supported GPU, using `column_staged` statistics and separate correction
 storage. No opt-in flag is needed. The measured complete-call cost is accepted;
 dispatch does not revert to weaker arithmetic on slower GPUs or workloads.
-3D forward also uses a two-term probability product; see its [LTX study](reports/ltx-3d.md).
+3D forward also uses a two-term probability product; see the [H100 LTX study](reports/ltx-3d.md)
+and [Ampere/Ada tile qualification](reports/3d-tiles.md).
 The [precision contract](../precision.md#neighborhood-default) owns the equations
 and rounding rules. Ordinary attention retains its separate contract.
 
@@ -108,6 +110,11 @@ H100 was measured separately: the [dK study](reports/dk-precision.md) records
 Its held-out 48×64/window-9 BF16 case added 9.91%, exceeding the 5% incremental
 cost aim. Do not combine timings from distinct campaigns into paired speedups.
 
+The [Ampere and GB10 extension](reports/2d-architecture-extension.md) adds
+paired NATTEN comparisons and independent FP64 checks on A100, RTX 3090 and
+GB10. It uses the public corrected default and retains separate forward-only,
+training, eager and graph timings; the earlier six-device evidence is unchanged.
+
 ## Reproduce and inspect
 
 The measured neighborhood stack is Python 3.13.18, PyTorch 2.13.0+cu130,
@@ -147,3 +154,4 @@ traces and receipts remain in the off-host campaign archives.
 | What improved dQ? | [dQ precision](reports/dq-precision.md) |
 | What improved dK, and at what complete-call cost? | [dK precision](reports/dk-precision.md) |
 | Does the stronger method pass on the other architectures? | [Multi-GPU precision](reports/multigpu-precision.md) |
+| How does the public default compare with NATTEN on A100, RTX 3090 and GB10? | [Architecture extension](reports/2d-architecture-extension.md) |

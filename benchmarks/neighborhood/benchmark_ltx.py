@@ -36,6 +36,15 @@ def workloads():
     ]
 
 
+def heldout_workloads():
+    """Independent geometry checks for the large-window scheduling family."""
+    return [
+        dict(name="heldout-13f", spatial=(13, 64, 96), heads=2, window=(11, 11, 11), blocks=None),
+        dict(name="heldout-33f", spatial=(33, 96, 128), heads=1, window=(11, 11, 11), blocks=None),
+        dict(name="fallback-tail", spatial=(13, 64, 65), heads=2, window=(11, 11, 11), blocks=None),
+    ]
+
+
 def positions(spatial, extra_queries=0, seed=0):
     depth, height, width = spatial
     count = math.prod(spatial)
@@ -106,15 +115,23 @@ def main():
     parser.add_argument("--source-revision", required=True)
     parser.add_argument("--samples", type=int, default=9)
     parser.add_argument("--target-ms", type=float, default=200)
-    parser.add_argument("--cases", nargs="+", choices=[case["name"] for case in workloads()])
+    parser.add_argument("--cases", nargs="+", choices=[case["name"] for case in workloads() + heldout_workloads()])
     parser.add_argument("--dtypes", nargs="+", choices=("float16", "bfloat16"), default=("float16", "bfloat16"))
     parser.add_argument("--seed", type=int, default=521)
     parser.add_argument("--reference-queries", type=int, default=0, help="Extra independently sampled FP64 query positions.")
     parser.add_argument("--include-previous", action="store_true", help="Explicit original 3D C32/single-P forward control.")
+    parser.add_argument(
+        "--include-generic", action="store_true", help="Explicit generic owner with the current two-term P arithmetic."
+    )
+    parser.add_argument(
+        "--warp-volume-tile", nargs=3, type=int, metavar=("T", "H", "W"), help="Explicit compact warp-MMA tile experiment."
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     if args.output.resolve().is_relative_to(root) or args.samples < 3 or args.target_ms <= 0 or args.reference_queries < 0:
         parser.error("Use an external output directory, at least three samples, and a positive duration.")
+    if args.warp_volume_tile and (min(args.warp_volume_tile) < 1 or math.prod(args.warp_volume_tile) not in (16, 32, 64)):
+        parser.error("The experimental warp tile must contain 16, 32, or 64 positive-volume rows.")
     revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     if revision != args.source_revision or not torch.cuda.is_available():
         parser.error("CUDA and the declared source revision are required.")
@@ -144,6 +161,8 @@ def main():
         reference="Independent sampled native CPU FP64 on identical rounded inputs. Per-head output norm gates: FP16 0.5%, BF16 1%.",
         samples=args.samples,
         target_ms=args.target_ms,
+        warp_volume_tile=args.warp_volume_tile,
+        include_generic=args.include_generic,
         telemetry=[snapshot_gpu()],
         rows=[],
     )
@@ -151,7 +170,7 @@ def main():
     try:
         with torch.inference_mode():
             for dtype_name in args.dtypes:
-                for case in workloads():
+                for case in workloads() + (heldout_workloads() if args.cases else []):
                     if args.cases and case["name"] not in args.cases:
                         continue
                     torch.cuda.empty_cache()
@@ -171,9 +190,12 @@ def main():
                     from kohakufa_cute.neighborhood_kernels import set_experiment_volume
 
                     def execute(name):
-                        set_experiment_volume(
-                            False if name == "previous" else None, residual=False if name == "previous" else None
-                        )
+                        selection = None
+                        if name in ("previous", "generic_control"):
+                            selection = False
+                        elif name == "compact_candidate":
+                            selection = (tuple(args.warp_volume_tile), False)
+                        set_experiment_volume(selection, residual=False if name == "previous" else None)
                         if name == "ltx_helper":
                             return ltx.na3d(*inputs, case["window"], None, 1.0)
                         return neighborhood_attention_3d(*inputs, case["window"], None, 1.0)
@@ -184,6 +206,10 @@ def main():
                     }
                     if args.include_previous:
                         functions["previous"] = lambda: execute("previous")
+                    if args.include_generic:
+                        functions["generic_control"] = lambda: execute("generic_control")
+                    if args.warp_volume_tile:
+                        functions["compact_candidate"] = lambda: execute("compact_candidate")
                     rows = {}
                     counts = {}
                     for name, function in functions.items():

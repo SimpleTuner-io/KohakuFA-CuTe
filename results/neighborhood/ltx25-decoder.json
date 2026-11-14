@@ -1,0 +1,824 @@
+{
+  "schema_version": 1,
+  "status": "imported_published_measurements",
+  "date": "2026-11-14",
+  "source": {
+    "repository": "SimpleTuner-io/ComfyUI-CuTe-Attention",
+    "revision": "f185a2dc2d857ae0037a40196887fda2f77bdf96",
+    "report": "https://github.com/SimpleTuner-io/ComfyUI-CuTe-Attention/blob/f185a2dc2d857ae0037a40196887fda2f77bdf96/results/ltx25-na3d-2026-11-14.md",
+    "measurements": "https://github.com/SimpleTuner-io/ComfyUI-CuTe-Attention/blob/f185a2dc2d857ae0037a40196887fda2f77bdf96/results/ltx25-na3d-2026-11-14.json",
+    "measurements_sha256": "c5bef6ce8a45bc6a90d54f86b828316b20972a7858203baa6b5434383bd73655",
+    "measurements_git_blob": "38c4c1a966cfd45fec06a6bc58f229d5e93920cc",
+    "harness": "https://github.com/SimpleTuner-io/ComfyUI-CuTe-Attention/blob/f185a2dc2d857ae0037a40196887fda2f77bdf96/tests/ltx_decode_smoke.py",
+    "verification": "Published measurement blob equals the supplied file. Tested integration source hashes match the supplied snapshot. Medians, sample counts, call counts and pixel gates recomputed during import; no new GPU run or raw-archive revalidation."
+  },
+  "upstream_revision": "70d5f0bff4c6c22b044611b6c44312e6bb1a016f",
+  "previous_upstream_revision": "cf97ce0e204f0ba970b04dcd5af5ad7d5c6e560d",
+  "comfyui_revision": "35060f0156181ae78a86b10f098f67ce8e83697f",
+  "model_revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+  "model": {
+    "filename": "vae/ltx-2.5-video-vae-bf16.safetensors",
+    "sha256": "847e14ca7f3355debca0cea4eaa24ac0fbcdf0061da054ac89ca638a869ddba3"
+  },
+  "input_latent_sha256": "b8b54cce6d9d80a0c82ed0e51ccf0919a3d165fa9122bebaa188c25d3154f851",
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "sm": "12.0",
+    "multiprocessors": 170,
+    "memory_mib": 32607,
+    "power_limit_watts": 575,
+    "driver": "610.57.04",
+    "python": "3.13.18",
+    "torch": "2.13.0+cu130",
+    "cuda": "13.0",
+    "triton": "3.7.1",
+    "cutlass_dsl": "4.8.1",
+    "tvm_ffi": "0.1.15.post0"
+  },
+  "workload": {
+    "model": "LTX 2.5 diffusion video VAE",
+    "dtype": "bfloat16",
+    "latent_shape": [
+      1,
+      128,
+      5,
+      8,
+      12
+    ],
+    "output_shape": [
+      33,
+      256,
+      384,
+      3
+    ],
+    "prompt_seed": 1729,
+    "sampling_steps_in_original_workflow": 8,
+    "neighborhood_blocks": 24,
+    "regular_attention_shapes": [
+      [
+        [
+          1,
+          7,
+          8,
+          12,
+          32,
+          64
+        ],
+        "torch.bfloat16",
+        [
+          3,
+          7,
+          7
+        ],
+        1.0
+      ],
+      [
+        [
+          1,
+          7,
+          16,
+          24,
+          16,
+          64
+        ],
+        "torch.bfloat16",
+        [
+          3,
+          7,
+          7
+        ],
+        1.0
+      ],
+      [
+        [
+          1,
+          13,
+          16,
+          24,
+          8,
+          64
+        ],
+        "torch.bfloat16",
+        [
+          3,
+          5,
+          5
+        ],
+        1.0
+      ],
+      [
+        [
+          1,
+          25,
+          32,
+          48,
+          8,
+          64
+        ],
+        "torch.bfloat16",
+        [
+          3,
+          5,
+          5
+        ],
+        1.0
+      ],
+      [
+        [
+          1,
+          33,
+          64,
+          96,
+          4,
+          64
+        ],
+        "torch.bfloat16",
+        [
+          11,
+          11,
+          11
+        ],
+        1.0
+      ]
+    ]
+  },
+  "protocol": {
+    "boundary": "Complete regular decode node with CUDA synchronization before and after; resident weights for warm measurements. Includes decoder projections, normalization, RoPE, convolutions, residuals, attention and node output handling.",
+    "exclusions": [
+      "diffusion sampling",
+      "video encoding",
+      "HTTP queue overhead",
+      "post-call pixel comparison and image saving",
+      "first-use model preparation and compilation from warm medians"
+    ],
+    "warm_samples_per_backend": 7,
+    "order": "Alternating backend order; one first call per backend excluded. Separate sequential old/new and Kitchen-version runs on the same device.",
+    "tiled": "One execution per backend per run; correctness evidence only. Spatial size256/overlap64, temporal size24/overlap8.",
+    "gates": {
+      "max_mae": 0.00784313725490196,
+      "min_psnr_db": 35
+    },
+    "limitations": [
+      "One prompt, seed and small video on one RTX5090 at575W.",
+      "Pixel agreement with Kitchen is not a perceptual-quality or FP64 model-level oracle.",
+      "Partially populated caches make first calls unsuitable as cold-start comparisons.",
+      "No complete text-to-video generation speedup measured."
+    ]
+  },
+  "cases": {
+    "new-kitchen040": {
+      "upstream_revision": "70d5f0bff4c6c22b044611b6c44312e6bb1a016f",
+      "comfy_kitchen": "0.2.40",
+      "runs": [
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "first_call",
+          "seconds": 1.008495302987285,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "first_call",
+          "seconds": 75.50843467505183,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.13063460192643106,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17440932895988226,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17269907891750336,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.12665733299218118,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.12741286004893482,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.16988300997763872,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1699771590065211,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.12691481900401413,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1267685720231384,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17060528707224876,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17110566806513816,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1277118850266561,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1268401100533083,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1701559660723433,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": true,
+          "phase": "first_call",
+          "seconds": 0.3141089689452201,
+          "cute_calls": 0,
+          "comfy_calls": 96,
+          "peak_allocated_bytes": 2067480064
+        },
+        {
+          "backend": "cute",
+          "tiled": true,
+          "phase": "first_call",
+          "seconds": 20.818245203001425,
+          "cute_calls": 96,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2067480064
+        }
+      ],
+      "pixel_comparisons": [
+        {
+          "tiled": false,
+          "mae": 0.000495477463118732,
+          "psnr_db": 61.981738860595456,
+          "max_absolute_error": 0.0068359375
+        },
+        {
+          "tiled": true,
+          "mae": 0.0004961971426382661,
+          "psnr_db": 62.13129349765573,
+          "max_absolute_error": 0.0078125
+        }
+      ],
+      "warm_median_ms": {
+        "cute": 126.91481900401413,
+        "comfy": 170.60528707224876
+      },
+      "speedup_vs_kitchen": 1.3442503279845732,
+      "latency_reduction_percent": 25.609093843458886
+    },
+    "old-kitchen040": {
+      "upstream_revision": "cf97ce0e204f0ba970b04dcd5af5ad7d5c6e560d",
+      "comfy_kitchen": "0.2.40",
+      "runs": [
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "first_call",
+          "seconds": 0.9373032670700923,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "first_call",
+          "seconds": 16.580180892022327,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.2559513699961826,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.16828888899181038,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.18869572400581092,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.25256630999501795,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.2509125400101766,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1701268149772659,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.18847983703017235,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.25224229600280523,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.25077251193579286,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.186949365073815,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.18869367300067097,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.2528584849787876,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.2585692530265078,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.16883061896078289,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "comfy",
+          "tiled": true,
+          "phase": "first_call",
+          "seconds": 0.3165389950154349,
+          "cute_calls": 0,
+          "comfy_calls": 96,
+          "peak_allocated_bytes": 2067479040
+        },
+        {
+          "backend": "cute",
+          "tiled": true,
+          "phase": "first_call",
+          "seconds": 14.09254228696227,
+          "cute_calls": 96,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2067479040
+        }
+      ],
+      "pixel_comparisons": [
+        {
+          "tiled": false,
+          "mae": 0.0004949349677190185,
+          "psnr_db": 61.98747547869984,
+          "max_absolute_error": 0.0068359375
+        },
+        {
+          "tiled": true,
+          "mae": 0.000495117565151304,
+          "psnr_db": 62.15894065287151,
+          "max_absolute_error": 0.006103515625
+        }
+      ],
+      "warm_median_ms": {
+        "cute": 252.56630999501795,
+        "comfy": 186.949365073815
+      },
+      "speedup_vs_kitchen": 0.740199138505459,
+      "latency_reduction_percent": -35.098779231100785
+    },
+    "new-kitchen041": {
+      "upstream_revision": "70d5f0bff4c6c22b044611b6c44312e6bb1a016f",
+      "comfy_kitchen": "0.2.41",
+      "runs": [
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "first_call",
+          "seconds": 1.0285719790263101,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557528576
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "first_call",
+          "seconds": 44.33087978500407,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.13237549702171236,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.16816153493709862,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.16926052595954388,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.12991119106300175,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.13199413393158466,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17232722998596728,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17030191607773304,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.13088683306705207,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.13005190901458263,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17376370495185256,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1699430129956454,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.1339272690238431,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "cute",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.13211620098445565,
+          "cute_calls": 24,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": false,
+          "phase": "warm",
+          "seconds": 0.17113354103639722,
+          "cute_calls": 0,
+          "comfy_calls": 24,
+          "peak_allocated_bytes": 2557529600
+        },
+        {
+          "backend": "comfy",
+          "tiled": true,
+          "phase": "first_call",
+          "seconds": 0.3149334939662367,
+          "cute_calls": 0,
+          "comfy_calls": 96,
+          "peak_allocated_bytes": 2067480064
+        },
+        {
+          "backend": "cute",
+          "tiled": true,
+          "phase": "first_call",
+          "seconds": 20.80355127400253,
+          "cute_calls": 96,
+          "comfy_calls": 0,
+          "peak_allocated_bytes": 2067480064
+        }
+      ],
+      "pixel_comparisons": [
+        {
+          "tiled": false,
+          "mae": 0.000495477463118732,
+          "psnr_db": 61.981738860595456,
+          "max_absolute_error": 0.0068359375
+        },
+        {
+          "tiled": true,
+          "mae": 0.0004961971426382661,
+          "psnr_db": 62.13129349765573,
+          "max_absolute_error": 0.0078125
+        }
+      ],
+      "warm_median_ms": {
+        "cute": 131.99413393158466,
+        "comfy": 170.30191607773304
+      },
+      "speedup_vs_kitchen": 1.2902233683051711,
+      "latency_reduction_percent": 22.49404060061373
+    }
+  },
+  "integration_validation": {
+    "cpu_passed": 71,
+    "privacy_tests_included": 26,
+    "na3d_gpu_passed": 4,
+    "dense_gpu_passed": 5,
+    "dense_gpu_skipped": 4,
+    "neighborhood_2d_gpu_passed": 3,
+    "queue_decoder_replay": "passed",
+    "queue_seconds": 50.49031200201716,
+    "full_diffusion_rerun": false
+  },
+  "tested_source_sha256": {
+    "cute_attention/__init__.py": "14a93756188d7a95ef6f17b29856d86947dfecf85a7000c0470bf3c2cd161a35",
+    "cute_attention/attention.py": "1a0f81297fb7f1833713e853b64bd756c03da204c1e4f627aaeaeaac9b5665d2",
+    "cute_attention/ltx_node.py": "5cd77040bcbfd7e5fc9f6f2c0795b6a44993a73295a70f421fff3a88e3341417",
+    "cute_attention/neighborhood.py": "a4680c66d3b01f4942cd202cdff2ac3e44ad2623dbd540ef27caa52d90423d75",
+    "cute_attention/nodes.py": "30625ed38371ab46f8891c97fa0c7ae398de69ece7ab5bccf5338deff0188e6b",
+    "cute_attention/pmrf_node.py": "743e5a77f8b0c190ea70927875447dc39f7f1165c0b766d406761f237d757f68",
+    "cute_attention/runtime.py": "fd85928d977952525d08e1eb63059ed14b2ec66beb0770c7be37fd018ba8ae75",
+    "cute_attention/vendor/__init__.py": "8f2915875a03b55f46efbecb26bed25b8717df083a24921739be00fa85acd28a",
+    "cute_attention/vendor/kohakufa_cute/__init__.py": "8c3a58a9e494de1bb58273854cef7483ecd2736285b1f389eb8fd4e07fa97a93",
+    "cute_attention/vendor/kohakufa_cute/_ops.py": "2d19cae8c26f6ba1fe2a1357a2a76d764edc111da898ca642f9b22a3588c5243",
+    "cute_attention/vendor/kohakufa_cute/ada.py": "b875706983267097f1ec335d077438888037aa88146213363b641b5b47498a91",
+    "cute_attention/vendor/kohakufa_cute/api.py": "292e0718cd02cd6117be0325309fe0f52d217026384bd5eb704e7e8260fe49ce",
+    "cute_attention/vendor/kohakufa_cute/blackwell.py": "93a745a61cf50678924c38012e62be61dca18198381fb8cd49bb9fb9fa6f9e04",
+    "cute_attention/vendor/kohakufa_cute/blackwell_pipeline.py": "93c0df74a609af7702284a2ee9e1a5aee49a58bfb287ae74bcc4bc3db9c27387",
+    "cute_attention/vendor/kohakufa_cute/blackwell_register_aux.py": "1592977944359565137e3a9488c50088b5ffd6a2856ac9c06b5773162fc4bffb",
+    "cute_attention/vendor/kohakufa_cute/determinism.py": "1f286440157840da45e18c310f0247ecc18eec98e4201b937392eb6b4649fa5c",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/__init__.py": "bba1ee77f3a30e4f270b0b3456839c346f6ba7266652c2768113927d599cc466",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_attention.py": "fa21cfc64103b618fd7d2c61f9fdea0899a4d7bf3372c9e3d0808065f427fb68",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_backward.py": "075f47b462e7af2e9728b5622091599a00459185761e6ca282c8f21cdad1a3bf",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_forward.py": "3a8a6361a0f1917a83f906aec0010b11719a1902112638caa7045f2482f6fcc4",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_native.py": "0c71ec83e3c93d6b18e13894d4b095c04c4033c8bf16d6ade18a77a614fa6318",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_persistent.py": "903d4732df88142fbbcb79506b0b59c54eff60952dd59fd09b2756e18f87bba1",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_preprocess.py": "5db6b16485a601a1416fbd0edab0760e2b2a3925101966437c4cc61ea163b9a0",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_private_api.py": "94ae436c1d85884feaab898c047923342424a2b8feaad232e768c3301e6e2b1c",
+    "cute_attention/vendor/kohakufa_cute/fa4_hopper/_softmax.py": "f9bd803b4bd706188eaac5d29f8b6c6b226878730ed986b2aff02bfebdbd7e08",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/__init__.py": "d65fa90fb4cc172e836765b6291833727711e68f3e2f270586d7cf100230a1ab",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_attention.py": "49b589c4622a5f05a46c4b6048a2bb740ab0a879e12f0b7e0391a24cb781ab43",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_backward.py": "d1b73a88e07c1da01b887e149d88ac93d8c98c427179bc7d95cf93d351fb5611",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_forward.py": "ea08bd1ffe61c609566492d2533e681c653db547cf0b872599ef3d53df9df595",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_host.py": "057fc9fd69de10200f0c511a58712e05f09b05bfa6038ad21abe20b0a903a8db",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_l40s.py": "96f1fc44dafb24c46188c5ab149ffb140c8f93dcfa1b061317ebe4850ed90c6d",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_native.py": "80bd9cca675d56cca389b4d05a086794bab063eaa6667e15ddea4a431a2cfd13",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_preprocess.py": "9beb2c7280ee5b583023611a4e94122cd1b05a4517b2b66665b4e0eb7f30ee60",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_private_api.py": "1b70b88344b0da3c87300a869ae689e68b38482a4dd85518c6d520bed8b4a91e",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_schedules.py": "7edce334b76fcefe23e0cf9e59f541c710cf77e52af5aa9c98829697ae78a451",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_sm120.py": "001782de2f25e0a79523633d7408c6b98d8661b09581cfe0fbd8d9156518b9c8",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/_softmax.py": "ba6568cf0ac95ae9cc847b798d994db00ca7becf92770858c10ef45a892502e9",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/a40.py": "033405f3266942111b6f21e2f4864637a505279c7f92924c918e09a73fa4b3df",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/gb10.py": "f11c60b44f46907c16c7df36ed0307e3e6f195d50c429b52943357e9c980f8cb",
+    "cute_attention/vendor/kohakufa_cute/fa4_sm80/rtx4090.py": "2937aede6678e095df217e40a722e454fe3d7e347960046f8b2da47ebd893b77",
+    "cute_attention/vendor/kohakufa_cute/hopper_forward.py": "a3ad55bc361a3f6d55f0216037deb04eb1553a632c8b20032b4c0cf011cb0272",
+    "cute_attention/vendor/kohakufa_cute/kernels.py": "2674e16857fc2b8c1cbc1053ec8b6d80cc5213eb2e56e960307ea6641dc82053",
+    "cute_attention/vendor/kohakufa_cute/l40s.py": "97b34f5bc2e7020fb1a7545d373b916c80f55bfa6487669eff0499848bace406",
+    "cute_attention/vendor/kohakufa_cute/launch.py": "450b6d27ed26346e2174c49fe40a652d7b78076bf116970bd4b7ddcbd2982a70",
+    "cute_attention/vendor/kohakufa_cute/medium_backward.py": "4df4b7b1c369c7ddf4cafafb9e2afecad2ebb5241ebcaab76bdff0d9d74cbd48",
+    "cute_attention/vendor/kohakufa_cute/native.cpp": "5f3cb3e84751f32a75d89ffefd0f9b568bfc847c00b4a7e71c514bb4aa82bbf1",
+    "cute_attention/vendor/kohakufa_cute/native.py": "6b35b3492c13e2e317a4e21489a6c00741441018490c3ece355257620c3ceb0e",
+    "cute_attention/vendor/kohakufa_cute/neighborhood_forward_precision.py": "5bcfd88f957753660746e323b8d3bd8ef698e2154152a29396f0c8796fa3d4b5",
+    "cute_attention/vendor/kohakufa_cute/neighborhood_geometry.py": "7fc10580e58fc8869382f7996be80322fcbf26a584572f725657dbc787b27ee9",
+    "cute_attention/vendor/kohakufa_cute/neighborhood_kernels.py": "6e570e57c9bf75eb70092b18a05f8ac7563b8a86dd59fb284eb9365436d03c54",
+    "cute_attention/vendor/kohakufa_cute/neighborhood_ops.py": "d842aef9af6bdbb27fd846a4cd91966770f91f6915071285002f004abd68be7b",
+    "cute_attention/vendor/kohakufa_cute/neighborhood_schedule.py": "4fd6aeb5de627405a8a7de2cad0c12c99e50ca1970c798c4a7acd0662f076f97",
+    "cute_attention/vendor/kohakufa_cute/neighborhood_volume_forward.py": "c420faf35ed148d044918c810cc5df7bee5be8fdf46882d2d6b358fc295c13e6",
+    "cute_attention/vendor/kohakufa_cute/precision.py": "c7e8dc4cc5f0a523b21955c9d6d2485f24b0c6aa27f1200653e27859981d4260",
+    "cute_attention/vendor/kohakufa_cute/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cute_attention/vendor/kohakufa_cute/rtx3090.py": "8c9a9cda8364ff5100e3a49e505c744930a24dc14bd3d9d59982a84d1d6ad7c5",
+    "cute_attention/vendor/kohakufa_cute/short_forward.py": "4b08931d4978d3b70be4f419db50661695c937944e9ad3b9b854fa3a9c219fdb",
+    "cute_attention/vendor/kohakufa_cute/short_key32_owned.py": "3607e42aefa41345a83cd91ea12d637dda60c0b9f60f9dcc13a3e96945c8bd09",
+    "cute_attention/vendor/kohakufa_cute/short_key_quad_skip_owned.py": "7316421c169d289e1c0c6366d9d80ee833aefcb3d9ef356e0636a2b990889c72",
+    "cute_attention/vendor/kohakufa_cute/short_key_stats_owned.py": "c4783ace3179b027ab547f861766c57ac84f9df7ef9d8269396132c6b139e365",
+    "cute_attention/vendor/kohakufa_cute/short_owned.py": "97913a8c623edbde19ceacc324fd32159fbee8b10cf35b3a687c355a1b748dfa",
+    "cute_attention/vendor/kohakufa_cute/short_reciprocal.py": "8238258a7ced42cd0c08c45e1313dc5793526f358ea0175f621e524c42864098",
+    "cute_attention/vendor/kohakufa_cute/sm103.py": "0c310638eda9c17a157091ca3dcf51ea08cd83baf34778c415e080d9d77a57e6",
+    "cute_attention/vendor/kohakufa_cute/sm120_backward.py": "34bc6d05dd40eaeaec73f867ff3b03073b5cd5ae67d649e17bde1e6b7f5492fd",
+    "cute_attention/vendor/kohakufa_cute/sm120_schedule.py": "e5c2ecd79a80582203a9913d0c4bfb2b5323229699920c661b23e44374fe9244",
+    "cute_attention/vendor/kohakufa_cute/sm86.py": "49f8b8b50809315f77978425420d65fa76729f20ace0f1a118b1e31574fc5d37",
+    "cute_attention/vendor/kohakufa_cute/sm86_backward.py": "2381cb376b2a1490e2ef488c8f768f0283e9b2f21fa83834b2627ea591c5ef35",
+    "cute_attention/vendor/kohakufa_cute/split_forward.py": "75f7d43144b200d9caedb6fbf713aed6335ec4005d1a3ba8b801dafa74818578",
+    "cute_attention/vendor/kohakufa_cute/weight_precision.py": "3e9bb16cde2fb894ae347825a66082ae1fc860bc24f4867138994b98eb65fb02",
+    "cute_attention/vendor/kohakufa_cute/wide_backward.py": "5ce2d2b9039b5b33253b28c1e72f57a239e3540c09b6b343ae2af2f57d2d6b47",
+    "tests/benchmark_ltx_neighborhood.py": "d5927d381479621656bdb82dc203fac28fffc6d8f891388a54f843f9a34feab5",
+    "tests/gpu_neighborhood_3d.py": "d67d27d988f5147b0daedb997c041516d689d14c1177431ade04bd085aef4d63",
+    "tests/ltx_decode_smoke.py": "5f2d875fe0d22685ab2d5f3fa896c87df4e4098248aed12fa6cff1eca621c53c"
+  },
+  "reported_capture_archive": {
+    "file_count": 193,
+    "sha256": "a29e977eced5728b95ebdab53ac99a8233885a1b12b76ea2aaaeaf0d93f2bb2e"
+  }
+}

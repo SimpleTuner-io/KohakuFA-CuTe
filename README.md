@@ -69,6 +69,12 @@ across twelve GPU targets, with historical and experimental runs labeled.
 These are attention-call measurements; graph replay,
 eager execution, inference, and training have distinct timing boundaries.
 
+In a ComfyUI LTX 2.5 integration, complete BF16 VAE decoding of a 384×256,
+33-frame video was **1.29–1.34× faster than Comfy Kitchen on RTX 5090**.
+The [decoder report](docs/neighborhood/reports/ltx25-decoder.md) covers warm
+latency, first-use costs and pixel agreement. Diffusion sampling and video
+encoding are excluded.
+
 ## Documentation
 
 - [Installation and optional runtime](docs/installation.md)

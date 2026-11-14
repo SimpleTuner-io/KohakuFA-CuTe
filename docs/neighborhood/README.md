@@ -149,6 +149,7 @@ traces and receipts remain in the off-host campaign archives.
 
 | Question | Report |
 | --- | --- |
+| Does faster 3D attention improve complete LTX VAE decoding? | [LTX 2.5 decoder](reports/ltx25-decoder.md) |
 | How do windows, backward traversal and original gates work? | [Initial implementation](reports/initial.md) |
 | How did the original default compare on five GPUs? | [Initial performance](reports/performance.md) |
 | What does the bounded H100 schedule select? | [Scheduling](reports/tuning.md) |

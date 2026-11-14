@@ -28,6 +28,7 @@ the neighborhood arithmetic before the corrected method became default.
 | dQ+dK precision / H100 | Combined corrections and column-staged statistics; method now used by default | 0.5% FP16 / 1% BF16 component norm gates on historical fixtures; separate zero/constant-dP gates; held-out cost exceeds 5% aim | [Report](../../docs/neighborhood/reports/dk-precision.md) / [evidence](dk-precision.json) |
 | Combined precision / B200, B300, RTX 4090, RTX 5090, L40S | Same combined method; cross-device qualification supporting current default | Independent component gates and complete-call costs; window-13 and some tails favor other implementations | [Report](../../docs/neighborhood/reports/multigpu-precision.md) / [evidence](multigpu-precision.json) |
 | Default promotion / H100 | Public default versus explicit combined method; final organized source | 29 retained inputs byte-identical with compiled-kernel reuse; 16 GPU methods and four scoped sanitizers pass; no new multi-GPU timing campaign | [Current guide](../../docs/neighborhood/README.md#default-precision) / [compact receipt](default-promotion.json) |
+| 2D architecture extension / A100, RTX 3090, GB10 | Public corrected default versus NATTEN; existing six-device evidence retained | Independent per-head FP64 gates, changed-input graphs and complete forward/training timings; no model speedup claim | [Report](../../docs/neighborhood/reports/2d-architecture-extension.md) / [receipt](2d-architecture-extension.json) |
 
 ## Reading and preserving the evidence
 

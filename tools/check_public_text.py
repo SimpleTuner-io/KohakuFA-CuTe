@@ -21,6 +21,10 @@ PATHS = re.compile(
 )
 HOSTS = re.compile(r"\b[\w.-]+\.(?:local|lan|internal)\b", re.IGNORECASE)
 ATTRIBUTION = re.compile(r"(?im)^\s*(?:co-authored-by|reviewed-by|signed-off-by):[^\n]*")
+PUBLIC_BOT_ATTRIBUTION = re.compile(
+    r"co-authored-by:[ \t]*copilot-swe-agent\[bot\][ \t]+<198982749\+Copilot@users\.noreply\.github\.com>",
+    re.IGNORECASE,
+)
 
 
 class Blocked(Exception):
@@ -65,8 +69,12 @@ def scan(data, private):
     if PATHS.search(text) or HOSTS.search(text) or any(pattern.search(text) for pattern in private):
         raise Blocked
     # Attribution containing a personal email must not slip through under an
-    # identity that differs from the current machine's configuration.
-    if any("@" in match.group() for match in ATTRIBUTION.finditer(text)):
+    # identity that differs from the current machine's configuration. Allow the
+    # public Copilot bot trailer; all text still passes the identity checks above.
+    if any(
+        "@" in match.group() and not PUBLIC_BOT_ATTRIBUTION.fullmatch(match.group().strip())
+        for match in ATTRIBUTION.finditer(text)
+    ):
         raise Blocked
 
 

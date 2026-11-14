@@ -4,6 +4,16 @@ The device-specific policy changes tile ownership and traversal only. Every
 schedule uses the same operand conversions and FP32 arithmetic contract.
 """
 
+from typing import NamedTuple
+
+
+class VolumeUnionSchedule(NamedTuple):
+    """Compact query tile and contiguous neighborhood-union MMA columns."""
+
+    tile: tuple[int, int, int]
+    columns: int
+
+
 DEFAULT_PRECISION = "weighted_dq_reconstructed_dk"
 DEFAULT_KEY_STATISTICS = "column_staged"
 
@@ -67,14 +77,26 @@ def default_volume_schedule(*, device_name, capability, sm_count, shape, spatial
         and shape[-1] == 64
         and dtype in ("float16", "bfloat16")
         and vector == 8
-        and tuple(window) == (11, 11, 11)
-        and spatial[0] >= 11
-        and all(extent >= 64 and extent % 8 == 0 for extent in spatial[1:])
+        and len(window) == 3
+        and all(0 < w <= n for w, n in zip(window, spatial))
     )
     if not eligible:
         return False
-    if "H100PCIE" in normalized_name and tuple(capability) == (9, 0) and sm_count == 114:
-        return ((1, 8, 8), True)
+    union_devices = {
+        ((9, 0), 114): "H100PCIE",
+        ((8, 6), 82): "RTX3090",
+        ((8, 9), 128): "RTX4090",
+        ((12, 0), 170): "RTX5090",
+    }
+    sku = union_devices.get((tuple(capability), sm_count))
+    if sku and normalized_name.replace("-", "").endswith(sku):
+        if tuple(window) in ((3, 5, 5), (3, 7, 7)) and all(n >= 16 and n % 4 == 0 for n in spatial[1:]):
+            return VolumeUnionSchedule((1, 4, 4), 32)
+        if tuple(window) == (11, 11, 11) and all(n >= 64 for n in spatial[1:]):
+            tile = (1, 4, 8) if all(n % 8 == 0 for n in spatial[1:]) else (1, 4, 4)
+            return VolumeUnionSchedule(tile, 32)
+    if tuple(window) != (11, 11, 11) or not all(n >= 64 and n % 8 == 0 for n in spatial[1:]):
+        return False
     warp_devices = {
         ((8, 0), 108): "A100PCIE40GB",
         ((8, 6), 82): "RTX3090",

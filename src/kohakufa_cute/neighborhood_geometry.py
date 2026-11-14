@@ -158,3 +158,13 @@ def compact_volume_tile(iteration, z0, z1, y0, y1, x0, x1, blocks_h, blocks_w):
     y = y0 + iteration // (x1 - x0) % (y1 - y0)
     z = z0 + iteration // ((x1 - x0) * (y1 - y0))
     return (z * blocks_h + y) * blocks_w + x
+
+
+def volume_union_start(query, extent, window, tile, minimum=min, maximum=max):
+    """Start of a fixed window+tile-1 union containing every shifted query window."""
+    return minimum(maximum(query - window // 2, 0), extent - (window + tile - 1))
+
+
+def volume_union_coordinates(index, z, y, x, height, width):
+    """Decode a width-fastest union index; dimensions are compile-time constants."""
+    return z + index // (height * width), y + index // width % height, x + index % width

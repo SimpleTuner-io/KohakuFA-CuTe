@@ -448,7 +448,13 @@ class Attention:
         return stages[None, None, slot], other_stages[None, None, slot]
 
     @cute.jit
-    def load_pair(self, source_a, source_b, right, other_right, batch, head, start, tid, tma_args, barrier, phase):
+    def load_forward(self, source, shared, batch, head, start, tid, query_start):
+        self.load(source, shared, batch, head, start, tid)
+
+    @cute.jit
+    def load_pair(
+        self, source_a, source_b, right, other_right, batch, head, start, tid, tma_args, barrier, phase, query_start=None
+    ):
         if cutlass.const_expr(self.tma):
             tma_a, ta, tma_b, tb = tma_args
             if tid < 32:
@@ -459,8 +465,12 @@ class Attention:
             cute.arch.mbarrier_wait(barrier, phase)
             phase = phase ^ 1
         else:
-            self.load(source_a, right, batch, head, start, tid)
-            self.load(source_b, other_right, batch, head, start, tid)
+            if cutlass.const_expr(query_start is not None):
+                self.load_forward(source_a, right, batch, head, start, tid, query_start)
+                self.load_forward(source_b, other_right, batch, head, start, tid, query_start)
+            else:
+                self.load(source_a, right, batch, head, start, tid)
+                self.load(source_b, other_right, batch, head, start, tid)
             cute.arch.cp_async_commit_group()
             cute.arch.cp_async_wait_group(0)
             cute.arch.sync_threads()
@@ -1659,6 +1669,7 @@ class Attention:
                             tma_args,
                             barrier,
                             phase_tma,
+                            query_start=start,
                         )
                     scores = self.dot(left, right, mma, thread, tid, tcgen_state=tcgen_state, preloaded_a=register_q)
                     if cutlass.const_expr(self.forward_overlap):

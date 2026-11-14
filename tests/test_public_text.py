@@ -215,6 +215,48 @@ class PublicTextTests(unittest.TestCase):
         self.write("outgoing.txt", identity)
         self.assert_blocked(self.guard("--text-file", "outgoing.txt"))
 
+    def test_public_copilot_attribution_in_text_index_and_history(self):
+        trailer = "Co-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>"
+        for text in (trailer, "\n  " + trailer.upper().replace(": ", ":\t") + "  \n"):
+            self.write("outgoing.txt", text, stage=True)
+            result = self.guard("--staged", "--text-file", "outgoing.txt", "--message-stdin", input=text.encode())
+            self.assertEqual((result.returncode, result.stdout, result.stderr), (0, b"", b""))
+        self.git("commit", "--quiet", "-m", "Fixture change\n\n" + trailer)
+        result = self.guard("--history", "--metadata")
+        self.assertEqual((result.returncode, result.stdout, result.stderr), (0, b"", b""))
+
+    def test_copilot_exception_requires_exact_public_bot_trailer(self):
+        name = "copilot-swe-agent[bot]"
+        email = "198982749+Copilot@users.noreply.github.com"
+        trailers = (
+            f"Co-authored-by: Fixture Person <{email}>",
+            f"Co-authored-by: {name} <person@example.invalid>",
+            f"Co-authored-by: {name} <1+Copilot@users.noreply.github.com>",
+            f"Co-authored-by: {name} <{email}.example.invalid>",
+            f"Co-authored-by: {name} <{email}> <person@example.invalid>",
+            f"Co-authored-by: {name} <{email}> extra attribution",
+            f"Reviewed-by: {name} <{email}>",
+            f"Signed-off-by: {name} <{email}>",
+        )
+        for index, trailer in enumerate(trailers):
+            with self.subTest(kind=index):
+                self.write("outgoing.txt", trailer)
+                self.assert_blocked(self.guard("--text-file", "outgoing.txt"))
+
+    def test_copilot_attribution_does_not_hide_private_content(self):
+        trailer = "Co-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>"
+        for private in (
+            self.private_name,
+            "/" + "Users" + "/fixture/report.txt",
+            "fixture-host" + ".internal",
+            "Co-authored-by: Fixture Person <person@example.invalid>",
+        ):
+            self.write("outgoing.txt", trailer + "\n" + private)
+            self.assert_blocked(self.guard("--text-file", "outgoing.txt"))
+        self.git("config", "--add", "privacy.identity", "copilot-swe-agent")
+        self.write("outgoing.txt", trailer)
+        self.assert_blocked(self.guard("--text-file", "outgoing.txt"))
+
     def test_compiler_flags_cannot_hide_absolute_paths(self):
         for flag in ("-I", "-L", "-isystem", "-iquote", "-idirafter", "-iprefix", "-isysroot", "--sysroot="):
             self.write("outgoing.txt", flag + "/" + "home" + "/fixture/include")

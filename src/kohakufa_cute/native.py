@@ -58,6 +58,15 @@ def compile_kernel(mode, tensors, causal, masked, configuration=None):
     return name
 
 
+def compile_neighborhood(tensors, spatial, window):
+    from .neighborhood_kernels import compile_for_tensors
+
+    function = compile_for_tensors("forward", tensors, tuple(spatial), tuple(window))
+    name = f"kohakufa_cute.native.{next(_names)}"
+    tvm_ffi.register_global_func(name, function.__tvm_ffi_object__())
+    return name
+
+
 @lru_cache(maxsize=1)
 def extension():
     library = Path(libinfo.find_libtvm_ffi()).parent

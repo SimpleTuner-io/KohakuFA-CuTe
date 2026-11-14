@@ -1,4 +1,4 @@
-"""Complete eager inference calls: corrected 3D attention versus LTX's SDPA helper.
+"""Complete eager inference calls: corrected 3D attention versus LTX or Comfy Kitchen.
 
 The external helper is supplied as a frozen source file. Raw timings, traces,
 telemetry, and failures belong outside the tracked repository. This times the
@@ -7,6 +7,7 @@ attention operation including its preparation, not a complete decoder.
 
 import argparse
 import hashlib
+import importlib.metadata
 import importlib.util
 import json
 import math
@@ -42,6 +43,8 @@ def heldout_workloads():
         dict(name="heldout-13f", spatial=(13, 64, 96), heads=2, window=(11, 11, 11), blocks=None),
         dict(name="heldout-33f", spatial=(33, 96, 128), heads=1, window=(11, 11, 11), blocks=None),
         dict(name="fallback-tail", spatial=(13, 64, 65), heads=2, window=(11, 11, 11), blocks=None),
+        dict(name="heldout-spatial-tails", spatial=(13, 65, 67), heads=2, window=(11, 11, 11), blocks=None),
+        dict(name="heldout-spatial-tails-wide", spatial=(17, 67, 73), heads=1, window=(11, 11, 11), blocks=None),
     ]
 
 
@@ -110,7 +113,11 @@ def profile(function, path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--ltx-helper", type=Path, required=True)
+    comparators = parser.add_mutually_exclusive_group(required=True)
+    comparators.add_argument("--ltx-helper", type=Path)
+    comparators.add_argument(
+        "--comfy-kitchen", action="store_true", help="Compare the installed Comfy Kitchen public na3d API."
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--source-revision", required=True)
     parser.add_argument("--samples", type=int, default=9)
@@ -136,9 +143,24 @@ def main():
     if revision != args.source_revision or not torch.cuda.is_available():
         parser.error("CUDA and the declared source revision are required.")
     torch.set_num_threads(4)
-    spec = importlib.util.spec_from_file_location("frozen_ltx_na", args.ltx_helper)
-    ltx = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(ltx)
+    if args.comfy_kitchen:
+        import comfy_kitchen as comparator
+        from comfy_kitchen.backends import cuda as kitchen_cuda
+
+        if not kitchen_cuda._EXT_AVAILABLE:
+            parser.error("Comfy Kitchen's CUDA extension is required.")
+        comparator_name = "comfy_kitchen"
+        comparator_metadata = dict(
+            version=importlib.metadata.version("comfy-kitchen"),
+            extension_sha256=hashlib.sha256(Path(kitchen_cuda._C.__file__).read_bytes()).hexdigest(),
+            dispatch="Public na3d API with default backend selection; actual kernels recorded by profiling.",
+        )
+    else:
+        spec = importlib.util.spec_from_file_location("frozen_ltx_na", args.ltx_helper)
+        comparator = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(comparator)
+        comparator_name = "ltx_helper"
+        comparator_metadata = dict(source_sha256=hashlib.sha256(args.ltx_helper.read_bytes()).hexdigest())
     args.output.mkdir(parents=True, exist_ok=True)
     path = args.output / "performance.json"
     properties = torch.cuda.get_device_properties(0)
@@ -146,7 +168,8 @@ def main():
         status="running",
         source_revision=revision,
         benchmark_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        ltx_helper_sha256=hashlib.sha256(args.ltx_helper.read_bytes()).hexdigest(),
+        comparator=comparator_name,
+        comparator_metadata=comparator_metadata,
         torch_version=torch.__version__,
         cuda=torch.version.cuda,
         gpu=properties.name,
@@ -196,13 +219,13 @@ def main():
                         elif name == "compact_candidate":
                             selection = (tuple(args.warp_volume_tile), False)
                         set_experiment_volume(selection, residual=False if name == "previous" else None)
-                        if name == "ltx_helper":
-                            return ltx.na3d(*inputs, case["window"], None, 1.0)
+                        if name == comparator_name:
+                            return comparator.na3d(*inputs, case["window"], None, 1.0)
                         return neighborhood_attention_3d(*inputs, case["window"], None, 1.0)
 
                     functions = {
                         "kohakufa": lambda: execute("kohakufa"),
-                        "ltx_helper": lambda: execute("ltx_helper"),
+                        comparator_name: lambda: execute(comparator_name),
                     }
                     if args.include_previous:
                         functions["previous"] = lambda: execute("previous")

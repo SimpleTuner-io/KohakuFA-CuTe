@@ -1,6 +1,7 @@
 """Boundary checks for the metadata-only production scheduling predicate."""
 
 import unittest
+from math import prod
 
 from kohakufa_cute.neighborhood_schedule import default_schedule
 
@@ -81,6 +82,31 @@ class NeighborhoodScheduleTests(unittest.TestCase):
 
 
 class VolumeScheduleTests(unittest.TestCase):
+    def test_union_devices_small_windows_and_fallback_boundaries(self):
+        from kohakufa_cute.neighborhood_schedule import VolumeUnionSchedule
+
+        for name, capability, sms in (
+            ("NVIDIA H100 PCIe", (9, 0), 114),
+            ("NVIDIA GeForce RTX 3090", (8, 6), 82),
+            ("NVIDIA GeForce RTX 4090", (8, 9), 128),
+            ("NVIDIA GeForce RTX 5090", (12, 0), 170),
+        ):
+            hardware = dict(device_name=name, capability=capability, sm_count=sms)
+            for spatial in ((3, 16, 16), (5, 32, 32), (9, 32, 32), (17, 64, 64)):
+                for window in ((3, 5, 5), (3, 7, 7)):
+                    arguments = dict(shape=(1, 2, prod(spatial), 64), spatial=spatial, window=window)
+                    self.assertEqual(self.select(**hardware, **arguments), VolumeUnionSchedule((1, 4, 4), 32))
+            for spatial in ((3, 12, 16), (3, 16, 17), (2, 16, 16)):
+                self.assertIs(
+                    self.select(**hardware, spatial=spatial, shape=(1, 1, prod(spatial), 64), window=(3, 5, 5)), False
+                )
+            self.assertEqual(self.select(**hardware), VolumeUnionSchedule((1, 4, 8), 32))
+            for spatial in ((13, 64, 65), (13, 65, 67), (17, 67, 73), (17, 128, 132)):
+                self.assertEqual(
+                    self.select(**hardware, spatial=spatial, shape=(1, 2, prod(spatial), 64)),
+                    VolumeUnionSchedule((1, 4, 4), 32),
+                )
+
     def select(self, **changes):
         from kohakufa_cute.neighborhood_schedule import default_volume_schedule
 
@@ -98,7 +124,9 @@ class VolumeScheduleTests(unittest.TestCase):
         return default_volume_schedule(**args)
 
     def test_qualified_owner_and_fallbacks(self):
-        self.assertEqual(self.select(), ((1, 8, 8), True))
+        from kohakufa_cute.neighborhood_schedule import VolumeUnionSchedule
+
+        self.assertEqual(self.select(), VolumeUnionSchedule((1, 4, 8), 32))
         for changes in (
             {"sm_count": 132},
             {"device_name": "NVIDIA H100 MIG"},
@@ -107,7 +135,7 @@ class VolumeScheduleTests(unittest.TestCase):
             {"vector": 1},
             {"vector": 2},
             {"vector": 4},
-            {"window": (3, 7, 7)},
+            {"window": (3, 9, 9)},
             {"spatial": (17, 128, 129)},
             {"dtype": "float32"},
             {"shape": (1, 4, 17 * 128 * 128, 128)},
@@ -121,7 +149,10 @@ class VolumeScheduleTests(unittest.TestCase):
             ("NVIDIA GeForce RTX 4090", (8, 9), 128),
             ("NVIDIA L40S", (8, 9), 142),
         )
+        from kohakufa_cute.neighborhood_schedule import VolumeUnionSchedule
+
         for name, capability, sms in devices:
+            expected = VolumeUnionSchedule((1, 4, 8), 32) if "RTX" in name else ((1, 4, 8), False)
             hardware = dict(device_name=name, capability=capability, sm_count=sms)
             for spatial in ((11, 64, 64), (13, 64, 96), (17, 128, 128), (49, 128, 192)):
                 for dtype in ("float16", "bfloat16"):
@@ -133,16 +164,15 @@ class VolumeScheduleTests(unittest.TestCase):
                                 shape=(1, 4, spatial[0] * spatial[1] * spatial[2], 64),
                                 dtype=dtype,
                             ),
-                            ((1, 4, 8), False),
+                            expected,
                         )
             for changes in (
                 {"vector": 4},
                 {"vector": 2},
-                {"window": (3, 5, 5)},
                 {"window": (11, 9, 11)},
                 {"spatial": (10, 128, 128), "shape": (1, 4, 10 * 128 * 128, 64)},
                 {"spatial": (17, 56, 128), "shape": (1, 4, 17 * 56 * 128, 64)},
-                {"spatial": (17, 128, 132), "shape": (1, 4, 17 * 128 * 132, 64)},
+                {"spatial": (17, 128, 63), "shape": (1, 4, 17 * 128 * 63, 64)},
                 {"shape": (1, 4, 17 * 128 * 128 + 1, 64)},
                 {"shape": (0, 4, 17 * 128 * 128, 64)},
                 {"device_name": name + " MIG"},
@@ -150,6 +180,8 @@ class VolumeScheduleTests(unittest.TestCase):
             ):
                 with self.subTest(device=name, changes=changes):
                     self.assertIs(self.select(**(hardware | changes)), False)
+            if "RTX" not in name:
+                self.assertIs(self.select(**hardware, spatial=(13, 64, 65), shape=(1, 2, 13 * 64 * 65, 64)), False)
 
     def test_unqualified_warp_skus_keep_generic_arithmetic(self):
         for name, capability, sms in (
@@ -158,7 +190,6 @@ class VolumeScheduleTests(unittest.TestCase):
             ("NVIDIA GeForce RTX 3090 Ti", (8, 6), 84),
             ("NVIDIA GeForce RTX 4090 Laptop GPU", (8, 9), 76),
             ("NVIDIA L40", (8, 9), 142),
-            ("NVIDIA GeForce RTX 5090", (12, 0), 170),
         ):
             with self.subTest(device=name):
                 self.assertIs(self.select(device_name=name, capability=capability, sm_count=sms), False)

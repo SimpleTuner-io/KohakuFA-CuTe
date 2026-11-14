@@ -1,5 +1,7 @@
 """Autograd and fake implementations for explicit 2D/3D neighborhood attention."""
 
+from functools import lru_cache
+
 import torch
 
 # The serialized tuning runner can restore the previous autograd behavior as
@@ -7,11 +9,18 @@ import torch
 _MATERIALIZE_OUTPUT_GRADS = False
 
 
+@lru_cache(maxsize=None)
+def _unused_arguments(device):
+    # These operands are never read or written by neighborhood kernels. Keep
+    # ordinary tensors even when the first call is made under inference_mode.
+    with torch.inference_mode(False):
+        return torch.empty(1, device=device, dtype=torch.bool), torch.empty(1, device=device, dtype=torch.int32)
+
+
 def _arguments(q, k, v, out, maximum, logsum, dout=None, gradients=None):
     # Unused operands satisfy the shared kernel signature with constant storage.
     # In particular there is no S*S mask, packed mask, or neighborhood table.
-    mask = torch.empty(1, device=q.device, dtype=torch.bool)
-    blocks = torch.empty(1, device=q.device, dtype=torch.int32)
+    mask, blocks = _unused_arguments(q.device)
     delta = torch.empty_like(maximum) if dout is not None else maximum
     delta_base = delta
     if dout is not None:
@@ -25,25 +34,46 @@ def _arguments(q, k, v, out, maximum, logsum, dout=None, gradients=None):
     return q, k, v, mask, out, maximum, logsum, q if dout is None else dout, delta, dq, dk, dv, blocks, delta_base
 
 
-@torch.library.custom_op("kohakufa_cute::neighborhood_forward", mutates_args=())
-def forward(
+torch.library.define(
+    "kohakufa_cute::neighborhood_forward",
+    "(Tensor q, Tensor k, Tensor v, SymInt[] spatial, SymInt[] window, float scale) -> (Tensor, Tensor, Tensor)",
+    tags=(torch.Tag.pt2_compliant_tag,),
+)
+forward = torch.ops.kohakufa_cute.neighborhood_forward.default
+
+
+@torch.library.impl("kohakufa_cute::neighborhood_forward", "CUDA")
+def forward_impl(
     q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, spatial: list[int], window: list[int], scale: float
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    from .neighborhood_kernels import launch
+    from .neighborhood_kernels import launch, native_forward_enabled
 
+    if native_forward_enabled(spatial):
+        from .native import extension
+
+        return extension().neighborhood_forward(q, k, v, *_unused_arguments(q.device), spatial, window, scale)
     out, maximum, logsum = forward_fake(q, k, v, spatial, window, scale)
     launch("forward", _arguments(q, k, v, out, maximum, logsum), tuple(spatial), tuple(window), scale)
     return out, maximum, logsum
 
 
-@forward.register_fake
+@torch.library.register_fake("kohakufa_cute::neighborhood_forward")
 def forward_fake(q, k, v, spatial, window, scale):
     stats = torch.empty(q.shape[:-1], device=q.device, dtype=torch.float32)
     return torch.empty_like(q), stats, torch.empty_like(stats)
 
 
-@torch.library.custom_op("kohakufa_cute::neighborhood_backward", mutates_args=())
-def backward(
+torch.library.define(
+    "kohakufa_cute::neighborhood_backward",
+    "(Tensor q, Tensor k, Tensor v, Tensor out, Tensor maximum, Tensor logsum, Tensor dout, "
+    "SymInt[] spatial, SymInt[] window, float scale) -> (Tensor, Tensor, Tensor)",
+    tags=(torch.Tag.pt2_compliant_tag,),
+)
+backward = torch.ops.kohakufa_cute.neighborhood_backward.default
+
+
+@torch.library.impl("kohakufa_cute::neighborhood_backward", "CUDA")
+def backward_impl(
     q: torch.Tensor,
     k: torch.Tensor,
     v: torch.Tensor,
@@ -72,7 +102,7 @@ def backward(
     return gradients
 
 
-@backward.register_fake
+@torch.library.register_fake("kohakufa_cute::neighborhood_backward")
 def backward_fake(q, k, v, out, maximum, logsum, dout, spatial, window, scale):
     return tuple(torch.empty_like(t) for t in (q, k, v))
 
@@ -93,4 +123,4 @@ def autograd_backward(ctx, dout, dmaximum, dlogsum):
     return *backward(*ctx.saved_tensors, dout, *ctx.parameters), None, None, None
 
 
-forward.register_autograd(autograd_backward, setup_context=setup_context)
+torch.library.register_autograd(forward, autograd_backward, setup_context=setup_context)

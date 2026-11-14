@@ -214,6 +214,63 @@ void launch(bool backward, const Tensors &tensors, double scale, bool causal, bo
     function.CallPacked(arguments.data(), arguments.size(), &result);
 }
 
+// Exact layouts and alignment specialize spatial gather addressing. The cache
+// retains programs only; every call supplies fresh tensors and the active stream.
+void neighborhood_launch(const Tensors &tensors, const std::vector<int64_t> &spatial,
+                         const std::vector<int64_t> &window, double scale) {
+    c10::cuda::CUDAGuard guard(tensors[0].device());
+    Key key = {2, tensors[0].get_device(), static_cast<int64_t>(spatial.size())};
+    key.insert(key.end(), spatial.begin(), spatial.end());
+    key.push_back(window.size());
+    key.insert(key.end(), window.begin(), window.end());
+    for (const auto &tensor : tensors) {
+        key.push_back(static_cast<int64_t>(tensor.scalar_type()));
+        key.push_back(tensor.dim());
+        auto pointer = reinterpret_cast<uintptr_t>(tensor.data_ptr());
+        key.push_back(std::min<uintptr_t>(16, pointer & -pointer));
+        key.insert(key.end(), tensor.sizes().begin(), tensor.sizes().end());
+        key.insert(key.end(), tensor.strides().begin(), tensor.strides().end());
+    }
+    std::unique_lock<std::mutex> lock(cache_mutex);
+    auto found = programs.find(key);
+    tvm::ffi::Function function;
+    if (found != programs.end()) {
+        recent.splice(recent.begin(), recent, found->second.position);
+        function = found->second.function;
+    } else {
+        lock.unlock();
+        py::gil_scoped_acquire gil;
+        lock.lock();
+        found = programs.find(key);
+        if (found != programs.end()) {
+            recent.splice(recent.begin(), recent, found->second.position);
+            function = found->second.function;
+        } else {
+            auto compiler = py::module_::import("kohakufa_cute.native").attr("compile_neighborhood");
+            auto name = compiler(tensors, spatial, window).cast<std::string>();
+            function = tvm::ffi::Function::GetGlobalRequired(name);
+            tvm::ffi::Function::RemoveGlobal(name);
+            recent.push_front(key);
+            programs.emplace(std::move(key), Entry{function, recent.begin()});
+            if (programs.size() > 128) {
+                programs.erase(recent.back());
+                recent.pop_back();
+            }
+        }
+    }
+    lock.unlock();
+    std::array<DLTensor, 14> dl;
+    std::array<tvm::ffi::AnyView, 15> arguments;
+    for (size_t i = 0; i < tensors.size(); ++i) {
+        at::toDLPackNonOwning(tensors[i], &dl[i]);
+        arguments[i] = &dl[i];
+    }
+    arguments[14] = scale;
+    StreamScope stream(tensors[0].get_device());
+    tvm::ffi::Any result;
+    function.CallPacked(arguments.data(), arguments.size(), &result);
+}
+
 void canonicalize_input(Tensor &tensor) {
     // DLPack represents strides/storage, but cannot carry lazy value bits.
     // Clone the logical values once, before constructing descriptor aliases.
@@ -982,6 +1039,18 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
                               Tensor dout, Tensor blocks, std::optional<Tensor> out, double scale, bool causal) {
         py::gil_scoped_release release;
         return backward(q, k, v, mask.value_or(q), mask.has_value(), maximum, logsum, dout, blocks, out, scale, causal);
+    });
+    module.def("neighborhood_forward", [](Tensor q, Tensor k, Tensor v, Tensor mask, Tensor blocks,
+                                          const std::vector<int64_t> &spatial,
+                                          const std::vector<int64_t> &window, double scale) {
+        py::gil_scoped_release release;
+        c10::cuda::CUDAGuard guard(q.device());
+        auto out = at::empty_like(q);
+        auto maximum = at::empty({q.size(0), q.size(1), q.size(2)}, q.options().dtype(at::kFloat));
+        auto logsum = at::empty_like(maximum);
+        neighborhood_launch({q, k, v, mask, out, maximum, logsum, q, maximum, q, k, v, blocks, maximum},
+                            spatial, window, scale);
+        return std::make_tuple(out, maximum, logsum);
     });
     module.def("cache_size", []() {
         py::gil_scoped_release release;

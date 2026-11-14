@@ -52,7 +52,9 @@ every supported GPU, using `column_staged` statistics and separate correction
 storage. No opt-in flag is needed. The measured complete-call cost is accepted;
 dispatch does not revert to weaker arithmetic on slower GPUs or workloads.
 3D forward also uses a two-term probability product; see the [H100 LTX study](reports/ltx-3d.md)
-and [Ampere/Ada tile qualification](reports/3d-tiles.md).
+and [Ampere/Ada tile qualification](reports/3d-tiles.md). The newer
+[Comfy Kitchen comparison](reports/comfy-kitchen-3d.md) qualifies direct window-union
+traversal on H100 PCIe, RTX 3090, RTX 4090 and RTX 5090.
 The [precision contract](../precision.md#neighborhood-default) owns the equations
 and rounding rules. Ordinary attention retains its separate contract.
 

@@ -17,7 +17,15 @@ from .neighborhood_geometry import (
     volume_bounds,
     volume_tile,
 )
-from .neighborhood_schedule import DEFAULT_KEY_STATISTICS, DEFAULT_PRECISION, default_schedule, default_volume_schedule
+from .neighborhood_schedule import (
+    BASELINE_COLUMNS,
+    BASELINE_TRAVERSAL,
+    DEFAULT_KEY_STATISTICS,
+    DEFAULT_PRECISION,
+    VolumeUnionSchedule,
+    default_schedule,
+    default_volume_schedule,
+)
 
 _bounds = cute.jit(spatial_bounds, preprocess=False)
 _tile = cute.jit(spatial_tile, preprocess=False)
@@ -43,10 +51,16 @@ def set_experiment_volume(configuration=None, *, residual=None):
     if residual is not None and type(residual) is not bool:
         raise ValueError("Expected a boolean or None for the 3D precision control.")
     if configuration is not None and configuration is not False:
-        tile, hopper = configuration
-        if len(tile) != 3 or any(type(n) is not int or n < 1 for n in tile) or type(hopper) is not bool:
-            raise ValueError("Expected a positive spatial tile and a boolean Hopper selection.")
-        configuration = (tuple(tile), hopper)
+        if isinstance(configuration, VolumeUnionSchedule):
+            tile, columns = configuration
+            if len(tile) != 3 or any(type(n) is not int or n < 1 for n in tile) or columns not in (16, 32, 64):
+                raise ValueError("Expected a positive spatial tile and 16, 32 or 64 union columns.")
+            configuration = VolumeUnionSchedule(tuple(tile), columns)
+        else:
+            tile, hopper = configuration
+            if len(tile) != 3 or any(type(n) is not int or n < 1 for n in tile) or type(hopper) is not bool:
+                raise ValueError("Expected a positive spatial tile and a boolean Hopper selection.")
+            configuration = (tuple(tile), hopper)
     global _experiment_volume_schedule, _experiment_volume_precision
     previous = _experiment_volume_schedule, _experiment_volume_precision
     _experiment_volume_schedule, _experiment_volume_precision = configuration, residual
@@ -118,6 +132,11 @@ def effective_schedule(tensors, spatial, window):
     """Resolve concrete cache-key schedules for the actual runtime operands."""
     if _experiment_columns is not None and _experiment_exact_contiguous is not None:
         return _experiment_columns, _experiment_exact_contiguous
+    if len(spatial) == 3:
+        return (
+            BASELINE_COLUMNS if _experiment_columns is None else _experiment_columns,
+            BASELINE_TRAVERSAL if _experiment_exact_contiguous is None else _experiment_exact_contiguous,
+        )
     q, k, v = tensors[:3]
     name, capability, sm_count = _device_schedule_metadata(q.device.index)
     columns, traversal = default_schedule(
@@ -304,11 +323,14 @@ def _compile(
                 vector=vector,
             )
         if len(spatial) == 3 and selected and vector >= 2:
-            from .neighborhood_volume_forward import VolumeForward
+            from .neighborhood_volume_forward import UnionVolumeForward, VolumeForward
 
-            tile, hopper = selected
-            program = VolumeForward(spatial, window, vector, tile)
-            program.hopper = hopper
+            if isinstance(selected, VolumeUnionSchedule):
+                program = UnionVolumeForward(spatial, window, vector, selected.tile, selected.columns)
+            else:
+                tile, hopper = selected
+                program = VolumeForward(spatial, window, vector, tile)
+                program.hopper = hopper
         else:
             program = NeighborhoodAttention(mode, spatial, window, vector, columns[0], exact_contiguous[0])
         if len(spatial) == 3 and volume_precision is not None:
@@ -351,14 +373,19 @@ def _compile(
         )
 
 
-def launch(mode, tensors, spatial, window, scale):
+def compile_for_tensors(mode, tensors, spatial, window):
     columns, traversal = effective_schedule(tensors, spatial, window)
-    function = _compile(
+    unique = {}
+    for tensor in tensors:
+        identity = id(tensor)
+        if identity not in unique:
+            unique[identity] = descriptor(tensor)
+    return _compile(
         tensors[0].device.index,
         mode,
         spatial,
         window,
-        tuple(descriptor(t) for t in tensors),
+        tuple(unique[id(t)] for t in tensors),
         columns,
         traversal,
         _experiment_precision,
@@ -366,5 +393,19 @@ def launch(mode, tensors, spatial, window, scale):
         _experiment_volume_schedule if mode == "forward" else None,
         _experiment_volume_precision if mode == "forward" else None,
     )
+
+
+def native_forward_enabled(spatial):
+    return (
+        len(spatial) == 3
+        and _experiment_columns is None
+        and _experiment_exact_contiguous is None
+        and _experiment_volume_schedule is None
+        and _experiment_volume_precision is None
+    )
+
+
+def launch(mode, tensors, spatial, window, scale):
+    function = compile_for_tensors(mode, tensors, spatial, window)
     with torch.cuda.device(tensors[0].device):
         function(*tensors, scale)

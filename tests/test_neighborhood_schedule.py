@@ -114,6 +114,55 @@ class VolumeScheduleTests(unittest.TestCase):
         ):
             self.assertIs(self.select(**changes), False)
 
+    def test_warp_devices_and_spatial_boundaries(self):
+        devices = (
+            ("NVIDIA A100-PCIE-40GB", (8, 0), 108),
+            ("NVIDIA GeForce RTX 3090", (8, 6), 82),
+            ("NVIDIA GeForce RTX 4090", (8, 9), 128),
+            ("NVIDIA L40S", (8, 9), 142),
+        )
+        for name, capability, sms in devices:
+            hardware = dict(device_name=name, capability=capability, sm_count=sms)
+            for spatial in ((11, 64, 64), (13, 64, 96), (17, 128, 128), (49, 128, 192)):
+                for dtype in ("float16", "bfloat16"):
+                    with self.subTest(device=name, spatial=spatial, dtype=dtype):
+                        self.assertEqual(
+                            self.select(
+                                **hardware,
+                                spatial=spatial,
+                                shape=(1, 4, spatial[0] * spatial[1] * spatial[2], 64),
+                                dtype=dtype,
+                            ),
+                            ((1, 4, 8), False),
+                        )
+            for changes in (
+                {"vector": 4},
+                {"vector": 2},
+                {"window": (3, 5, 5)},
+                {"window": (11, 9, 11)},
+                {"spatial": (10, 128, 128), "shape": (1, 4, 10 * 128 * 128, 64)},
+                {"spatial": (17, 56, 128), "shape": (1, 4, 17 * 56 * 128, 64)},
+                {"spatial": (17, 128, 132), "shape": (1, 4, 17 * 128 * 132, 64)},
+                {"shape": (1, 4, 17 * 128 * 128 + 1, 64)},
+                {"shape": (0, 4, 17 * 128 * 128, 64)},
+                {"device_name": name + " MIG"},
+                {"sm_count": sms - 1},
+            ):
+                with self.subTest(device=name, changes=changes):
+                    self.assertIs(self.select(**(hardware | changes)), False)
+
+    def test_unqualified_warp_skus_keep_generic_arithmetic(self):
+        for name, capability, sms in (
+            ("NVIDIA A100-PCIE-80GB", (8, 0), 108),
+            ("NVIDIA A100-SXM4-40GB", (8, 0), 108),
+            ("NVIDIA GeForce RTX 3090 Ti", (8, 6), 84),
+            ("NVIDIA GeForce RTX 4090 Laptop GPU", (8, 9), 76),
+            ("NVIDIA L40", (8, 9), 142),
+            ("NVIDIA GeForce RTX 5090", (12, 0), 170),
+        ):
+            with self.subTest(device=name):
+                self.assertIs(self.select(device_name=name, capability=capability, sm_count=sms), False)
+
 
 if __name__ == "__main__":
     unittest.main()

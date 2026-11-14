@@ -10,6 +10,11 @@ The [receipt](../../../results/neighborhood/comfy-kitchen-3d.json) retains paire
 samples, per-head errors, hardware and source identities, validation receipts and
 archive hashes. Earlier [LTX helper timings](ltx-3d.md) used a different comparator.
 
+A separate [LTX 2.5 integration study](ltx25-decoder.md) measures the complete
+VAE decode node on RTX 5090, with 1.29–1.34× warm speedups and pixel-agreement
+checks. It has a different device power limit and timing boundary from this
+operator study.
+
 ## What changed
 
 A query patch now gathers a fixed union of its shifted neighborhoods directly.
